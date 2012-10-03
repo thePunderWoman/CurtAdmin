@@ -1,0 +1,95 @@
+﻿@using CurtAdmin
+@{
+    ViewBag.Title = "View Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<CustomerUser> listOfUsers = new List<CustomerUser>();
+
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+}
+    <style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addCert, #massUpload{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > View Users</div>
+<div id="content_container">
+    <h2>Viewing B2B Users</h2>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the users and their B2B completion.</p>
+
+    <div id="loading_area">
+        <p>Loading Users...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Users" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>CustomerID</th>
+                <th>Email</th>
+                <th>Name</th>
+                <th># of tests completed</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CustomerUser user in listOfUsers) {
+                <tr>
+                    <td>@user.customerID</td>
+                    <td>@user.email</td>
+                    <td>@user.name</td>
+                    <td></td>
+                    <td>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var certTable = "";
+    $(function () {
+        certTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+        $('.delete').live('click', function () {
+            var certID = $(this).attr('id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (certID > 0 && confirm('Are you sure you want to delete this certificate?')) {
+                $.get('/Admin_B2B/DeleteCert/' + certID, function (response) {
+                    console.log(response);
+                    if (response.length == 0) {
+                        certTable.fnDeleteRow(table_row);
+                    } else {
+                        showMessage(response);
+                    }
+                }, "html");
+            }
+        });
+    });
+</script>
+
+

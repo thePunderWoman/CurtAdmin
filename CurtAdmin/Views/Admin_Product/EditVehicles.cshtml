@@ -1,0 +1,179 @@
+﻿@{
+    ViewBag.Title = "EditVehicles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    List<CurtAdmin.Models.FullVehicle> part_vehicles = ViewBag.part_vehicles;
+    //List<CurtAdmin.Models.FullVehicle> vehicles = ViewBag.vehicles;
+}
+<style type="text/css">
+    
+    .form_left{
+        width: 555px;
+        display: none;
+    }
+    
+    #attributes {
+        display: none;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        width: 600px;
+        position: relative;
+    }
+    
+    #attributes h4 {
+        width: 400px;
+    }
+    
+    #attributeTable th {
+        border-bottom: 1px solid #777;
+    }
+    
+    #buttons input{
+        width: auto;
+    }
+    
+    #relatedVehicles tr td:nth-child(6){
+        display: none;
+    }
+    
+    td.handles {
+        cursor: move;
+    }
+    
+    tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addVehicle{
+        float:right;
+    }
+</style>
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2>Edit Vehicles for part #@part.partID - @part.shortDesc</h2>
+    <a href="@Url.Content("~/Admin_Vehicles/Add")" title="Add Vehicle" id="addVehicle">
+        <img src="@Url.Content("~/Content/img/addVehicle.png")" alt="Add Vehicle" />
+    </a>
+    <hr style="border-bottom: 1px dotted #343434;clear:right" />
+
+    <form class="form_left">
+        <label for="field">
+            Attribute
+            <img src="@Url.Content("~/Content/img/button_green_add.png")" id="addField" alt="Add Field" style="float:right;width:20px;cursor:pointer" />
+            <select name="field" id="field">
+                <option value="">- Select Attribute -</option>
+                @foreach (string f in ViewBag.fields) {
+                    <option>@f</option>
+                }
+            </select>
+        </label>
+        <label for="value">
+            Value
+            <input type="text" name="value" id="value" value="" placeholder="Enter attribute value..." />
+        </label>
+        <input type="hidden" name="vehicleID" id="vPartID" value="0" />
+        <input type="hidden" name="vehicleID" id="vpAttrID" value="0" />
+        <input type="hidden" name="vehicleID" id="vehicleID" value="0" />
+        <input type="hidden" name="edit" id="edit" value="1" />
+    </form>
+    <div style="clear:both"></div>
+
+    <div id="attributes">
+        <h4>Attributes for </h4>
+        <table id="attributeTable">
+            <thead>
+                <tr>
+                    <th>Attribute</td>
+                    <th>Value</td>
+                    <th></td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="buttons">
+            <a href="javascript:void;" id="addAttribute"><img src="/Content/img/addAttribute.png" alt="Add Attribute" /></a>
+            <input type="reset" name="btnReset" id="btnReset" value="Cancel" />
+        </div>
+    </div>
+
+    <div id="tableContainer" style="display:none">
+        <h3>Related Vehicles</h3>
+        <table id="relatedVehicles">
+            <thead>
+                <tr>
+                    <th>Vehicle ID</th>
+                    <th>Year</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Style</th>
+                    <th style="display: none;"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.Models.FullVehicle v in part_vehicles) {
+                    string mms = v.make + " " + v.model + " " + v.style;
+                    double yr = v.year;
+                    
+                    <tr id="relatedVehicle_@(v.vehicleID)">
+                        <td>@v.vehicleID</td>
+                        <td>@v.year</td>
+                        <td>@v.make</td>
+                        <td>@v.model</td>
+                        <td>@v.style</td>
+                        <td style="display: none;">@v.make @v.model @v.style</td>
+                        <td>
+                            <a href="javascript:void(0)" id="@v.vehicleID" class="edit">Edit</a> | 
+                            <a href="javascript:void(0)" id="@v.vehicleID" class="carryover">Carry Over</a> | 
+                            <a href="javascript:void(0)" id="@v.vehicleID" class="remove">Remove</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr style="border-bottom: 0.5px dotted #343434" />
+
+        <h3>Add a Vehicle</h3>
+        <form action="/Admin_Product/Vehicles" method="get" id="addVehicleForm">
+            <label for="year">
+                Year
+                <select name="year" id="select_year">
+                    <option value="0">- Select Year -</option>
+                    @foreach (CurtAdmin.Year y in ViewBag.years) {
+                        <option value="@y.yearID">@y.year1</option>
+                    }
+                </select>
+            </label>
+            <label for="make">
+                Make
+                <select name="make" id="select_make">
+                    <option value="0">- Select Make -</option>
+                </select>
+            </label>
+            <label for="model">
+                Model
+                <select name="model" id="select_model">
+                    <option value="0">- Select Model -</option>
+                </select>
+            </label>
+            <label for="style">
+                Style
+                <select name="style" id="select_style">
+                    <option value="0">- Select Style -</option>
+                </select>
+            </label>
+            <input type="button" id="addvehicle" value="Add" />
+         </form>
+    </div>
+    <input type="hidden" name="partID" id="partID" value="@part.partID" />
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditVehicles.js")"></script>
+

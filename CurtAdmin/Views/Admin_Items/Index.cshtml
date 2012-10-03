@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "CURT Documentation - Viewing Items";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.docItem> items = new List<CurtAdmin.docItem>();
+    if(ViewBag.items != null){ items = ViewBag.items; }
+    CurtAdmin.DocsLinqDataContext doc_db = new CurtAdmin.DocsLinqDataContext();
+}
+<div id="usersNav">
+    <ul>
+        <li>
+            <a href="@HttpContext.Current.Request.Url.AbsoluteUri" class="active">View Items</a>
+        </li>
+        <li>
+            <a href="@Url.Content("~/Admin_Items/Add")">Add New</a>
+        </li>
+        <!--li>
+            <a href="@Url.Content("~/Admin_Items/ViewDocs")">View Documents</a>
+        </li-->
+    </ul>
+</div>
+<div id="content_container">
+
+    <h2>Viewing All Items(@items.Count)</h2>
+
+    <div style="width: 90%;margin:auto">
+        <table style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Name</th>
+                    <th># Documents</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.docItem item in items) {
+                    int docCount = (from di in doc_db.itemDocs where di.itemID.Equals(item.itemID) select di).Count();
+                    <tr id="item:@item.itemID">
+                        <td style="width:15%">@item.itemID</td>
+                        <td style="width:50%">@item.itemName</td>
+                        <td style="width:15%">@docCount</td>
+                        <td style="width: 15%" class="center">
+                            <select name="action" id="action:@item.itemID" class="action">
+                                <option value="0">Select Action</option>
+                                <option value="edit">Edit</option>
+                                <option value="delete">Remove</option>
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('table').dataTable({
+            "bJQueryUI":true
+        });
+
+        $('.action').live('change',function () {
+            var action = $(this).val();
+            var itemID = $(this).attr('id').split(':')[1];
+            switch (action) {
+                case 'edit':
+                    window.location.href = '/Admin_Items/Edit?item_id=' + itemID;
+                    break;
+                case 'delete':
+                    if (confirm('Are you sure you want to remove this item?')) {
+                        $.get('/Admin_Items/RemoveItem?item_id=' + itemID, function (response) {
+                            if (response == '') {
+                                table.fnDeleteRow($('#item\\:' + itemID).get()[0]);
+                                showMessage('Item was removed.');
+                            } else {
+                                showMessage(response);
+                            }
+                        });
+                    }
+                    break;
+                default:
+                    // DO NOTHING
+            }
+            $(this).val(0);
+        });
+    });
+</script>
+
+

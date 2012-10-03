@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CURT eCommerce Blog</title>
+    <link href="@Url.Content("~/Content/admin.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/demo_table_jui.css")" rel="stylesheet" type="text/css" />
+    <link href='@Url.Content("~/Content/jquery-ui.css")' rel='Stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic' rel='Stylesheet' type='text/css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+    <style type="text/css">
+        .bold{
+            color:Black;
+        }
+        
+        #content_container{
+            width: 95%;
+            margin:auto;
+        }
+        
+        #adminContent{
+            margin: 75px auto;
+            width: 95%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page Header -->
+    <div id="adminHeader">
+        <a href="/" id="logoLink">
+            <img id="curtLogo" src="/Content/img/curtLogo.png" alt="CURT Manufacturing" /> <span>eCommerce Blog</span>
+        </a>
+    </div> <!-- End Header -->
+    <div id="adminContent">
+        <div id="content_container">
+
+            <h3>
+                Our Adventures at Google I/O
+                <span style="font-size: 10pt;font-weight:normal">5/19/2011 8:31 AM by Alex Ninneman &amp; TC Follansbee</span>
+            </h3>
+
+            <hr style="border: 1px solid #ccc;width: 100%;margin:auto" />
+
+            <p>I want to preface this by saying <strong>"I am a programmer, not a blogger"</strong>. So if this ends up being dry and boring, I apologize, but hey, I tried.</p>
+
+            <p>We'll start by giving you a rundown on exactly what Google I/O entails. Every year for the past <span class="bold">4</span> years, Google has put on a conference in San Francisco to showcase some of the new technologies that they are working on building and distributing. Basically, if you want to know what the biggest news in tech is going to be for the next <span class="bold">6</span> mounts, pay attention!</p>
+
+            <p style="text-align:justify">
+                Google invites <span class="bold">web/mobile developers</span> that strongly leverage Google technologies to come and preview some of the new tools that they are building, including both hardware and software. 
+                Lately the biggest buzz for Google has been their impecible impact on the smart phone market with the Android platform.
+                <div style="float:left;width: 80%">
+                    This year the biggest anouncements at Google I/O were the introduction of the new Android operating system that is optimized for tablets. Google was so excited to be releasing the new version of Android for tablets that they wanted to give all their developers a leg up on building the latest applications by giving out 5000 FREE Samsung Galaxy 10.1 tablets to the conference goers.
+                    <p>Along the lines of the Android platform, Google announced the BETA release of <a href="http://music.google.com/about/" target="_blank" title="Google Music">Google Music</a>. This service will allow users to load/purchase music into the cloud and stream music directly onto their Android phones, tablets, and personal computers. So no more worrying about running out of space on your phone to store all those pesky Lady Gaga songs. Unfortunately, this service is only available to the conference goers.</p>
+                    <p>Guess what, the streaming doesn't stop there! Google has appended their already existing <a href="https://market.android.com/movies" title="Android Market" target="_blank">Android Market</a> to accomodate streaming movies. Users can rent a movie at a low rate. The user will then have 30 days to watch the movie that they have rented (similar to Netflix), however, once a user starts watching the movie they only have 24 hours to finish watching the film.</p>
+                </div>
+                <div style="float:right;text-align:center;width:20%">
+                    <img src="/Content/img/io/samsung_tab.jpg" style="width:100%" alt="Samsung Galaxy Tab 10.1" />
+                    <span>Samsung Galaxy Tab 10.1</span>
+                </div>
+            </p>
+            <div style="clear:both"></div>
+            <p>It hasn't been any secret that Google has been developing ChromeOS. ChromeOS is a new operating system that is meant to cater to the netbook, internet user. It will run on lightweight, low-powered netbooks and consist of a beefed up version of the common Chrome browser. Chrome has been well known as the most powerful browser in todays modern computing. Leveraging the ability to do web application gaming, including the announcement of <a href="https://chrome.google.com/webstore/detail/aknpkdffaafgjchaibgeefbgmgeghloj" title="Angry Birds on the Chrome Web Store" target="_blank">Angry Birds on the Chrome Web Store</a>.
+                For me, as a developer, my first question - "How do I build web applications if I can only access web sites?". Thankfully there are numerous developers that are hard at work on solutions for doing cloud web development:
+                <ul>
+                    <li><a href="http://cloud9ide.com" target="_blank">Cloud9</a> - Cloud IDE that works for the main interpreted languages (Javascript, CoffeeScript, PHP, Ruby, and Python). This one's my favorite.</li>
+                    <li><a href="http://coderun.com" target="_blank">CodeRun</a> - Browser based cloud IDE that allow code completion for C#. The support for this project seems to be a little behind. No Razor for C# =(</li>
+                    <li><a href="http://kodingen.com" target="_blank">Kodingen</a> - Another Cloud Development Environment that supports the main interpreted languages.</li>
+                </ul>
+                <p>I think ChromeOS is going to change the way that we do computing, but probably not for another decade. The enterprise solutions are the things that we will never be able to step completely into the cloud for.</p>
+            </p>
+
+            <h4>Sessions</h4>
+
+            <h5>HTML5 Showcase for Web Developers: The Wow and the How</h5>
+            <p>
+                I attended this session to gain some information on utilizing the built in database tools, File System APIs, audio, video, and canvas graphics that come as part of HTML5. 
+                In HTML5 the file input has been extended with an attribute called "multiple". Using the "multiple" attribute, the user is allowed to upload a group of files, folder of files, or a ZIP archive. The browser then has the ability to upload and manipulate multiple files at once. This will play a key part in implementing file browsers in web applications. Another great feature included in HTML5 is the ability to drag and drop files from your local system into the web application.
+                The new specification for CSS3 allows you to do 3D grpahics along with SVG and the canvas element. The cool thing is that we can use CSS (the language that we've been using to style websites for 10 years) and build 3D graphic intensive applications using a common languages. Just don't try to make it work in IE.
+                <br /><a href="http://www.google.com/events/io/2011/sessions/html5-showcase-for-web-developers-the-wow-and-the-how.html" target="_blank">View Session</a>
+            </p>
+
+            <h5>Connecting People and Places ::: Location Based App development using Google APIs</h5>
+            <p>
+                This is actually two different sessions that I attended, but I'm going to sum them up as one here. They both were focused on the same technology, Google Places API. This API allows developers to build applications that can talk directly to Google Places and use the API to get Places data for populating geo-location features (Foursquare, GoWalla, and Facebook Places).
+                <br />
+                <a href="http://www.google.com/events/io/2011/sessions/connecting-people-and-places.html" target="_blank">View Connecting People and Places</a> | <a href="http://www.google.com/events/io/2011/sessions/location-based-app-development-using-google-apis.html" target="_blank">Location Based App development using Google APIs</a>
+            </p>
+
+            <h5>HTML5 Today with Google Chrome Frame</h5>
+            <p>
+                Chrome Frame has been around for a long time, I feel it just has never been utilized to its full potential. Most developers don't implement it because the user must install the application. Until recently, you had to have Administrative Access to your computer in order to install Chrome Frame, so on the enterprise level, it was unreachable. I installed it about a year back and remember building an application a couple days after. When I develop an application, I'll build it on Chrome and then "make it work" on IE. So when I launched IE to see how everything was, I was amazed that the site looked exactly the same as it did in Google Chrome, until I realized that Chrome Frame was the culprit. I'm happy that Google has taken the initiative to clean up on Microsoft's mistakes.
+                <br /><a href="http://www.google.com/events/io/2011/sessions/html5-today-with-google-chrome-frame.html" target="_blank">View Session</a>
+            </p>
+
+            <h5>Web Fonts are changing the Web. Learn Why.</h5>
+            <p>
+                At Google I/O 2010, Google announced the release of <a href="http://www.google.com/webfonts" target="_blank">Google Web Fonts</a>. Typography is something that has been supremely lacking in the web. Typically users were limited to Arial, Courier New, Georgia, Times, Verdana, and Trebuchet. Which in my mind and that of most typographers, is truly disturbing. As a matter of fact, right now you are reading this article in the Ubuntu font face powered by Google Web Fonts. Typography can be very powerful if used properly. It's a very rich design aesthetic that has been under-utilized until now.
+                <br /><a href="http://www.google.com/events/io/2011/sessions/web-fonts-are-changing-the-web-learn-why.html" target="_blank">View Session</a>
+            </p>
+
+            <h5>GWT + HTML5: A web developers dream!</h5>
+            <p>The title doesn't lie, I was gitty walking into this session. GWT is short for Google Web Toolkit, which can be used in Java, Python, and soon Go applications. GWT gives you access to UI components and server-side functions that help you optimize for HTML5 development. There are built in libraries for checking browser compatibility, which allows you to load the page with different features configured for different browser versions.</p>
+            <a href="http://www.google.com/events/io/2011/sessions/gwt-html5-a-web-developers-dream.html" target="_blank" title="View Session">View Session</a>
+
+            <h5>Writing Web Apps in Go</h5>
+            <p>Web back-end languages tend to be a matter of "Speed, reliability, or simplicity: pick one". Not any more. The Go Programming Language is a rock-solid, productive, and high-performance platform for building web applications (and other types of software). This session briefly went over what it takes to set up you Go environment and then get started writing some applications. The Go Team announced the support of Go on the Google App Engine.</p>
+            <a href="http://www.google.com/events/io/2011/sessions/writing-web-apps-in-go.html" title="View Session" target="_blank">View Session</a>
+
+            <h5>How to NFC</h5>
+			<p>Near Field Communication is definitely trending in the world of mobile right now, and Google has put themselves at the forefront of clever adoption. While the common use case right now is mobile payments, Google wants developers to think outside that box and apply NFC to as many things as possible. Including demos of networked gaming, and information transfer between two devices being initiated through NFC technology. I'm excited to see the curious applications NFC gets applied to.</p>
+			<a href="http://www.google.com/events/io/2011/sessions/how-to-nfc.html" title="View Session" target="_blank">View Session</a>
+			
+			<h5>Building Web Apps for Google TV</h5>
+			<p>Covering the ability to make apps using HTML5, or Flash for the TV, speaker Chris Wilson gave some interesting statistics. Chris asks the question "Why is TV interesting?" even though its an old media format, he continues on to state that "80&#37; of US households have a computers, and 90&#37; have a mobile device of some sort, while 99&#37; have one or more TVS". For a user base thats a huge number. These are fast becoming networked devices, and the ability to write simple apps that reach such a user base is pretty cool. The session continues to demo some of the differences in how a user interacts with a TV versus many other devices. One of the key factors being that when people use a TV they are largely in a passive mindset, not aggressive. They don't want to work at all for content.</p>
+			<a href="http://www.google.com/events/io/2011/sessions/building-web-apps-for-google-tv.html" title="View Session" target="_blank">View Session</a>
+			
+			<h5>YouTube's iframe Player: The Future of Embedding</h5>
+			<p>In an effort to bring streaming content to a variety of devices, the speakers pushed the initiative to seperate the "encode" part of the streaming. Using iframe and HTML5 you can embed a raw player object and take advantage of the new API to build your custom player, with controls and notifications on player actions. This means Youtube can serve the correct format optimized for the device, without you having to modify code. With no one browser agreeing on a common format right now this takes the edge off having to pick an encoding format. Pretty cool I say.</p>
+			<a href="http://www.google.com/events/io/2011/sessions/youtube-s-iframe-player-the-future-of-embedding.html" title="View Session" target="_blank">View Session</a>
+
+        </div>
+        <div style="clear:both"></div>
+        <hr style="border-bottom:1px dotted #343434;width:90%;margin-top: 25px;" />
+        <div id="footer_links">
+            <span>
+                &copy; @DateTime.Now.Year CURT Manufacturing 
+                <a href="mailto:websupport@curtmfg.com" title="Support">Support</a>
+             </span>
+        </div>
+        <div id="message_box"><span>Message Box.</span></div>
+    </div>
+</body>
+</html>

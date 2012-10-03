@@ -1,0 +1,36 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CURT Manufacturing Documentation - Login</title>
+    <link href="@Url.Content("~/Content/login.css")" rel="Stylesheet" media="all" type="text/css" />
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post">
+        <div style="color:whitesmoke;font-weight: bold">
+            <img src="@Url.Content("~/Content/img/curtLogo.png")" style="width: 100px" /> 
+            <span style="line-height: 26px;vertical-align: top">Documentation Login</span>
+        </div>
+        <p style="color: whitesmoke;margin:15px 10px">
+            Your password has been reset and e-mailed to the address associated with your account.
+        </p>
+        <p style="color:whitesmoke;margin:15px 10px">
+            If you did not recieve an e-mail containing your new credentials, please contact web support at <a href="mailto:websupport@curtmfg.com" target="_blank" style="color:whitesmoke">websupport@curtmfg.com</a>.
+        </p>
+        <div style="float:right">
+            <a style="color:white" href="@Url.Content("~/Authenticate")">Proceed to Login >>></a>
+        </div>
+    </form>
+        
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#username').focus();
+        });
+    </script>
+
+</body>
+</html>

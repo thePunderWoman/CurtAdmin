@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Edit Question";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    CurtAdmin.B2BQuestion question = new CurtAdmin.B2BQuestion();
+    if(ViewBag.question != null){
+        question = ViewBag.question;
+    }
+    
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+
+}
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@question.Test.Category.certID">View Categories</a> > <a href="/Admin_B2B/ViewTests/@question.Test.catID">View Tests</a> > <a href="/Admin_B2B/ViewQuestions/@question.testID">View Questions</a> > Edit Question</div>
+<div id="content_container">
+    <h2>Edit Question ID# @question.id</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    @if (msg.Length > 0)
+    {
+        <p style="font-weight: bold; color: Green;">@ViewBag.msg</p>
+    }
+    <form action="/Admin_B2B/EditQuestion/@question.id" method="post" class="form_left">
+        <label for="text">
+            Question text
+            <input type="text" name="text" id="text" value="@question.text" />
+        </label>
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Add Certificate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="content_container">
+    <h2>Add New Certificate</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    <form action="/Admin_B2B/AddCert/" method="post" class="form_left">
+        <label for="title">
+            Certificate Name
+            <input type="text" name="title" id="title" placeholder="Enter the Name of the Certificate" required />
+        </label>
+
+        <label for="text">
+            Short Description
+            <input type="text" name="text" id="text" placeholder="Enter a short description." />
+        </label>
+
+        <label for="reqNum">
+            Number of tests needed to complete:
+            <input type="text" name="reqNum" id="reqNum" placeholder="Enter the number of tests required" />
+        </label>
+
+        <label for="logo">
+            Badge Image
+            <input type="hidden" name="logo" id="file" value="" />
+            <div id="photobox">
+                <div id="photo-file">
+                    <img src="/Content/img/noimage.jpg" alt="No Badge Image" />
+                </div>
+                <button type="button" id="choose-photo">Choose</button>
+                <button type="button" id="clear-photo">Clear</button>
+            </div>
+            <div style="clear:both"></div>
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Add" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

@@ -1,0 +1,18 @@
+﻿<div id="searchArea">
+    @if (Session["userID"] != null && Convert.ToInt32(Session["userID"]) > 0) {
+        <span id="userLinks">
+            <a href="@Url.Content("~/Users")" title="Account Information">Account Info</a>
+            <a href="@Url.Content("~/Authenticate/Logout")" title="Logout">Logout</a>
+        </span>
+                
+        <form action="search" method="post" id="docsSearch">
+            <label for="searchTerm">
+                <input type="text" name="searchTerm" id="searchTerm" placeholder="Search" autocomplete="off" />
+            </label>
+            <input type="submit" name="btnSearch" id="btnSearch" value="" />
+            @if (Session["auth_level"] != null && Session["auth_level"].ToString() == "1") {
+                <div id="searchResults"><ul></ul></div>
+            }
+        </form>
+    }
+</div>

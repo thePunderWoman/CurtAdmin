@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "FAQ";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.FAQ> faqs = ViewBag.faqs;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_FAQ/Add")">Add Question/Answer</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2 id="index_title">Frequently Asked Questions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.FAQ faq in faqs) {
+                <tr>
+                    <td>@faq.question</td>
+                    <td>
+                        <a href="/Admin_FAQ/Edit/@faq.faqID" title="Edit">Edit</a> | 
+                        <a href="/Admin_FAQ/Delete/@faq.faqID" title="Delete" class="delete">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="/Scripts/admin/faq.js" type="text/javascript"></script>

@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "ViewAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    h2{
+        float:left;
+    }
+    
+    #addPart{
+        margin: 0px 10px 0px 0px;
+        float:right;
+        line-height: 63px;
+    }
+    
+    #addPart a{
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16pt;
+    }
+    
+    #addPart a img{
+        vertical-align: middle;
+    }
+</style>
+<div id="content_container">
+    <h2>Viewing All Parts ( @ViewBag.parts.Count )</h2>
+    <div id="addPart">
+        <a href="@Url.Content("~/Admin_Products/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
+    </div>
+    <div style="clear:both"></div>
+    <div id="loading_area">
+        <p>Loading parts...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading vehicles..." />
+    </div>
+
+    <table style="display:none">
+        <thead>
+            <tr>
+                <th>Part ID</th>
+                <th>Part</th>
+                <th>Last Modified</th>
+                <th>List Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.ConvertedPart part in ViewBag.parts) {
+                <tr id="part:@part.partID">
+                    <td>@part.partID</td>
+                    <td>@part.shortDesc</td>
+                    <td>@part.dateModified</td>
+                    <td>@part.listPrice</td>
+                    <td class="center">
+                        <select class="action" id="@part.partID">
+                            <option value="0">- Select Action -</option>
+                            <option value="edit">Edit Part</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var partTable = $('table').dataTable({ "bJQueryUI": true });
+        $('#loading_area').slideUp();
+        $('.dataTables_wrapper').fadeIn();
+        $('table').fadeIn();
+
+        $('.action').live('change', function () {
+            var partID = $(this).attr('id');
+            var action = $(this).val();
+            switch (action) {
+
+                case 'edit':
+                    window.location.href = '/Admin_Product/Edit?partID=' + partID;
+                    break;
+
+                case 'delete':
+                    if (partID > 0 && confirm("Are you sure you want to remove this part?\r\nThis cannot be undone!")) {
+                        $.get('/Admin_Product/DeletePart', { 'partID': partID }, function (response) {
+                            if (response.length == 0) {
+                                partTable.fnDeleteRow($('#part\\:' + partID).get()[0]);
+                                showMessage("Part #" + partID + " has been removed.");
+                            } else {
+                                showMessage(response);
+                            }
+                        });
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            $(this).val(0);
+        });
+    });
+</script>

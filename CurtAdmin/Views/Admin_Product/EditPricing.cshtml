@@ -1,0 +1,105 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    List<string> price_types = ViewBag.price_types;
+    List<CurtAdmin.Price> prices = ViewBag.prices;
+    ViewBag.Title = "EditPricing";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    table {
+        width: 100%;
+    }
+    
+    table tbody tr td:nth-child(3) {
+        text-align: center;
+    }
+    
+    h2 {
+        float: left;
+    }
+    
+    #addPrice {
+        float: right;
+        clear: right;
+        cursor: pointer;
+    }
+    
+    .form_left {
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        min-width: 550px;
+        display: none;
+    }
+    
+    .form_left input[type=text] {
+        margin-right: 20px;
+    }
+    
+    #buttons {
+        margin-top: 0px;
+    }
+    
+    #buttons input {
+        width: auto;
+    }
+    
+    #add_price_type {
+        float: right;
+        width: 20px;
+        cursor: pointer;
+        margin-top: 7.5px;
+    }
+</style>
+@{ Html.RenderPartial("PartMenu"); }
+<div id="content_container">
+    <h2>Edit Pricing for Part #@part.partID - @part.shortDesc</h2>
+    <img src="/Content/img/addPrice.png" alt="Add Price" id="addPrice" />
+    <hr style="border-bottom: 1px dotted #343434; clear: both" />
+    <div class="form_left">
+        <label for="price_type">
+            Price Type
+            <img src="/Content/img/button_green_add.png" id="add_price_type" alt="Add Price Type" />
+            <select name="price_type" id="price_type">
+                <option value="0">- Select Price Type -</option>
+                @foreach (string type in price_types) {
+                    <option>@type</option>
+                }
+            </select>
+        </label>
+        <label for="price">
+            Price
+            <input type="text" name="price" id="price" placeholder="0.00" />
+        </label>
+        <div id="buttons">
+            <input type="hidden" name="priceID" id="priceID" value="0" />
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear Price" />
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Price Type</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Price price in prices) {
+                <tr>
+                    <td>@price.priceType</td>
+                    <td>@String.Format("{0:C}", price.price1)</td>
+                    <td>
+                        <a href="javascript:void(0)" id="price_@(price.priceID)" class="edit" data-id="@price.priceID">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" data-id="@price.priceID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="hidden" name="partID" id="partID" value="@part.partID" />
+</div>
+<script src="../../Scripts/admin/Admin_Product/EditPricing.js" type="text/javascript"></script>

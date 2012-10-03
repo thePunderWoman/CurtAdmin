@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Contacts";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.ContactReceiverWithTypes> receivers = ViewBag.receivers;
+    string comma = "";
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Contact")">Contacts</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Receivers")" class="active">Receivers</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddReceiver")">Add Receiver</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/Export")">Export</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage Contact Receivers</h2>
+    <table style="width: 100% !important">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Contact Types</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.ContactReceiverWithTypes r in receivers) {
+                <tr id="receiver:@r.contactReceiverID">
+                    <td>@r.first_name</td>
+                    <td>@r.last_name</td>
+                    <td>@r.email</td>
+                    <td>@for (int i = 0; i < r.types.Count(); i++) {
+                            @((i != 0) ? ", " : "")
+                            @r.types[i].name
+                        }
+                    </td>
+                    <td class="center">
+                        <a href="/Admin_Contact/EditReceiver/@r.contactReceiverID">Edit</a> |
+                        <a href="/Admin_Contact/DeleteReceiver/@r.contactReceiverID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var contacttable = $('table').dataTable({
+            "bJQueryUI": true
+        });
+    });
+</script>

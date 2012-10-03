@@ -1,0 +1,35 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+}
+
+<div id="websiteNav">
+    <ul>
+        <li><a href="@Url.Content("~/Admin_Product/Edit?partID="+part.partID)" title="Part Info" @((ViewBag.active_tab == "info")?"class=active":"")>Info</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditCategories?partID="+part.partID)" title="Part Categories" @((ViewBag.active_tab == "categories")?"class=active":"")>Categories</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditRelated?partID="+part.partID)" title="Related Parts" @((ViewBag.active_tab == "related")?"class=active":"")>Related</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditReviews?partID="+part.partID)" title="Part Reviews" @((ViewBag.active_tab == "reviews")?"class=active":"")>Reviews</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditAttributes?partID="+part.partID)" title="Part Attributes" @((ViewBag.active_tab == "attributes")?"class=active":"")>Attributes</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditContent?partID="+part.partID)" title="Part Content" @((ViewBag.active_tab == "content")?"class=active":"")>Content</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditImages?partID=" + part.partID)" title="Part Images" @((ViewBag.active_tab == "images") ? "class=active" : "")>Images</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditPackages?partID=" + part.partID)" title="Part Packages" @((ViewBag.active_tab == "packages") ? "class=active" : "")>Packages</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditVideos?partID=" + part.partID)" title="Part Videos" @((ViewBag.active_tab == "videos") ? "class=active" : "")>Videos</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditVehicles?partID=" + part.partID)" title="Part Vehicles" @((ViewBag.active_tab == "vehicles") ? "class=active" : "")>Vehicles</a></li>
+        <li><a href="@Url.Content("~/Admin_Product/EditPricing?partID=" + part.partID)" title="Part Pricing" @((ViewBag.active_tab == "prices") ? "class=active" : "")>Prices</a></li>
+        @*<li style="float:right">
+            <a href="@Url.Content("~/Admin_Product/Add")">
+                <img src="@Url.Content("~/Content/img/addPart.png")" style="width:100px" alt="Add Part" />
+            </a>
+        </li>*@
+    </ul>
+</div>
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Product/Add")">Add Part</a>
+    </li>
+    <li class="add">
+        <a id="clonepart" href="@Url.Content("~/Admin_Product/Clone/" + part.partID)">Clone Part</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="clone-dialog"></div>
+<script defer src="/Scripts/admin/clonepart.js"></script>

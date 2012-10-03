@@ -1,0 +1,29 @@
+html {
+    display: block;
+    position: relative;
+}
+
+body {
+    width: 100%;
+    min-width: 0px;
+}
+
+#content_container {
+    position: relative;
+    display: block;
+    margin: 15px 20px;
+}
+
+#content_container h2 {
+    margin: 0;
+}
+
+ul#galleries li.lifile:hover {
+    cursor: pointer;
+    background-color: #ccc;
+}
+
+p.gallerybreadcrumbs {
+    display: block;
+    margin: 10px 0 20px;
+}

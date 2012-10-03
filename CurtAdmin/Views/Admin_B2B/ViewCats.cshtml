@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "View Categories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<CurtAdmin.B2BCategory> listOfCats = new List<CurtAdmin.B2BCategory>();
+    if(ViewBag.listOfCats != null){
+        listOfCats = ViewBag.listOfCats;
+    }
+
+    int certID = 0;
+    if(ViewBag.certID != null){
+        certID = ViewBag.certID;
+    }
+
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+}
+    <style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addCat, #massUpload{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<div id="breadcrumbs"><a href="/Admin_B2B/">B2B</a> > <a href="/Admin_B2B/">Certificates</a> > Categories</div>
+<div id="content_container">
+    <h2>Viewing B2B Categories</h2>
+    <a href="/Admin_B2B/AddCat/@certID" title="Add Category" id="addCat" class="button">
+        Add Category
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the categories and to modify them accordingly.</p>
+
+    <div id="loading_area">
+        <p>Loading Categories...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Categories" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.B2BCategory cat in listOfCats) {
+                <tr>
+                    <td>@cat.id</td>
+                    <td>@cat.title</td>
+                    <td>@cat.text</td>
+                    <td>
+                        <a href="/Admin_B2B/ViewLessons/@cat.id" class="lessons">Lessons</a> | 
+                        <a href="/Admin_B2B/ViewTests/@cat.id" class="tests">Tests</a> | 
+                        <a href="/Admin_B2B/EditCat/@cat.id" class="edit">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" id="@cat.id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var catTable = "";
+    $(function () {
+        catTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+        $('.delete').live('click', function () {
+            var catID = $(this).attr('id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (catID > 0 && confirm('Are you sure you want to delete this category?')) {
+                $.get('/Admin_B2B/DeleteCat/' + catID, function (response) {
+                    if (response.length == 0) {
+                        catTable.fnDeleteRow(table_row);
+                    } else {
+                        showMessage(response);
+                    }
+                }, "html");
+            }
+        });
+    });
+</script>

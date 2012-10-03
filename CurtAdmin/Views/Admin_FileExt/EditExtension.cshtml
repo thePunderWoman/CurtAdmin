@@ -1,0 +1,74 @@
+﻿@model CurtAdmin.FileExt
+
+@{
+    ViewBag.Title = "Add a File Extension";
+    ViewBag.navigation = "_FileNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.FileType> types = ViewBag.types;
+    CurtAdmin.FileExt extension = ViewBag.extension;
+    string error = ViewBag.error;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt")" class="active">Extensions</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddExtension")">Add Extension</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Edit File Extension</h2>
+
+    @if (error.Length != 0) {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    <form action="/Admin_FileExt/EditExtension/@extension.fileExtID" Method="post" class="form_left">
+        <!-- Item Name -->
+        <label for="extension">
+            Extension (include the .)
+            <input type="text" name="extension" id="extension" placeholder="Enter extension..." value="@((Request.Form["extension"] != null) ? Request.Form["extension"] : extension.fileExt1 )" />
+        </label>
+
+        <label for="file">
+            Icon
+            <input type="hidden" name="icon" id="file" value="@((Request.Form["extension"] != null) ? Request.Form["extension"] : extension.fileExt1 )" />
+            <span id="photobox">
+                <div id="photo-file">
+                    @if (extension.fileExtIcon != null && extension.fileExtIcon != "") {
+                        <img src="@extension.fileExtIcon" alt="icon" />
+                    } else {
+                        <img src="/Content/img/file.png" alt="No Icon" />
+                    }
+                </div>
+                <button type="button" id="choose-photo">Choose</button>
+                <button type="button" id="clear-photo">Clear</button>
+            </span>
+            <span style="clear:both"></span>
+        </label>
+
+        <label for="typeid">
+            File Type
+            <select name="typeid" id="typeid">
+                <option value="">Select a Type</option>
+                @foreach (CurtAdmin.FileType type in types) {
+                    <option value="@type.fileTypeID" @((extension.fileTypeID == type.fileTypeID) ? "selected" : "")>@type.fileType1</option>
+                }
+            </select>
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+    </form>
+</div>
+<div id="file-dialog"></div>

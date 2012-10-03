@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Edit Lesson";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    CurtAdmin.B2BLesson lesson = new CurtAdmin.B2BLesson();
+    if(ViewBag.lesson != null){
+        lesson = ViewBag.lesson;
+    }
+
+    CurtAdmin.B2BVideo video = new CurtAdmin.B2BVideo();
+    if(ViewBag.video != null){
+        video = ViewBag.video;   
+    }
+
+    CurtAdmin.B2BResource pdf = new CurtAdmin.B2BResource();
+    if(ViewBag.pdf != null){
+        pdf = ViewBag.pdf;   
+    }
+    
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+
+}
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@lesson.Category.certID">View Categories</a> > <a href="/Admin_B2B/ViewLessons/@lesson.catID">View Lessons</a> > Edit Lesson</div>
+<div id="content_container">
+    <h2>Edit Lesson: @lesson.title</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    @if (msg.Length > 0)
+    {
+        <p style="font-weight: bold; color: Green;">@ViewBag.msg</p>
+    }
+    <form action="/Admin_B2B/EditLesson/@lesson.id" method="post" class="form_left">
+        <label for="title">
+            Lesson Name
+            <input type="text" name="title" id="title" value="@lesson.title" required />
+        </label>
+
+        <label for="text">
+            Short Description
+            <input type="text" name="text" id="text" value="@lesson.Text" />
+        </label>
+
+        <label for="video">
+            YouTube Video ID
+            <input type="text" name="video" id="video" value="@video.embed_link" required />
+        </label>
+
+        <label for="pdf">
+           PDF Path URL - from File Manager (Copy link)
+            <input type="text" name="pdf" id="pdf" value="@pdf.file_path" required />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

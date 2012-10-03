@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>CURT Web Tool Error</title>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic' rel='Stylesheet' type='text/css' />
+    <style type="text/css">
+        body{
+            font-family: 'Ubuntu',arial,serif;
+        }
+        
+        span{
+            font-size: 9pt;
+            font-family: Terminal,'Ubuntu',arial,serif;
+        }
+        
+        #footer_links{
+            margin:auto;
+            border-top: 1px solid #999;
+            width: 75%;
+            text-align:center;
+            font-family: 'Ubuntu',arial,serif;
+        }
+        #footer_links a, #footer_links span{
+            color: #999;
+            font-size: 8pt;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 900px;margin:auto">
+        <div style="width: 500px;margin-left:20%;height: 600px;float:left">
+            <h1 style="text-align:center">Doh! Error 404</h1>
+            <h3 style="text-align:center">The page you requested was not found. Bummer!</h3>
+
+            <div style="border: 1px solid #343434;padding: 2px 0px 5px 4px;">
+                <span>The requested document isn't here.</span><br />
+                <span>I've tried everything.</span><br />
+                <span>And I've got... <strong>nothing</strong>.</span><br />
+                <span>I'm really concerned about this.</span><br />
+                <span>Was it a data issue?</span><br />
+                <span>Or <strong>OH MY</strong> a bad doughnut?</span><br />
+                <span>I'm just a machine.</span><br />
+                <span>I simply can't make these decisions for you.</span><br />
+                <span>I'm only here to serve you.</span><br />
+                <span>But what you want <strong>doesn't</strong> exist!_</span><br />
+            </div>
+            
+        </div>
+        <img src="@Url.Content("~/Content/img/homer.png")" style="float:left" />
+        <div style="clear:both"></div>
+        <div id="footer_links">
+            <span>
+                &copy; @DateTime.Now.Year CURT Manufacturing 
+                <a href="mailto:websupport@curtmfg.com" title="Support">Support</a> | 
+                <a href="/">Home</a> | 
+                <a href="@Url.Content("~/Users")">Account</a> | 
+                <a href="@Url.Content("~/Authenticate/Logout")">Logout</a>
+             </span>
+        </div>
+    </div>
+</body>
+</html>

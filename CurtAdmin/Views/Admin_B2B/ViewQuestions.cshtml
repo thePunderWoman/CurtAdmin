@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "View Questions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    CurtAdmin.B2BTest test = new CurtAdmin.B2BTest();
+
+    if (ViewBag.test != null)
+    {
+        test = ViewBag.test;
+    }
+
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+}
+    <style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addQuestion, #editTest{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+
+<div id="breadcrumbs"><a href="/Admin_B2B/">B2B</a> > <a href="/Admin_B2B/">Certificates</a> > <a href="/Admin_B2B/ViewCats/@test.Category.certID">Categories</a> > <a href="/Admin_B2B/ViewTests/@test.catID">Tests</a> > Questions</div>
+<div id="content_container">
+    <h2>Viewing B2B Questions for - @test.title</h2>
+    <a href="/Admin_B2B/AddQuestion/@test.id" title="Add Question" id="addQuestion" class="button">
+        Add Question
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the questions from a test and the test content and to modify them accordingly.</p>
+
+    <h3>Viewing Questions:</h3>
+    <div id="loading_area">
+        <p>Loading Questions...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Questions" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Text</th>
+                <th>Date Modified</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.B2BQuestion q in test.B2BQuestions.ToList<CurtAdmin.B2BQuestion>())
+            {
+                <tr>
+                    <td>@q.id</td>
+                    <td>@q.text</td>
+                    <td>@q.date_modified</td>
+                    <td>
+                        <a href="/Admin_B2B/ViewAnswers/@q.id" class="edit">Answers</a> | 
+                        <a href="/Admin_B2B/EditQuestion/@q.id" class="edit">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" id="@q.id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var questionsTable = "";
+    $(function () {
+        questionsTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+        $('.delete').live('click', function () {
+            var questionID = $(this).attr('id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (questionID > 0 && confirm('Are you sure you want to delete this Question?')) {
+                $.get('/Admin_B2B/DeleteQuestion/' + questionID, function (response) {
+                    if (response.length == 0) {
+                        questionsTable.fnDeleteRow(table_row);
+                    } else {
+                        showMessage(response);
+                    }
+                }, "html");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,686 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2113338D-452F-4471-A272-D15D31F53F4A}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CurtAdmin</RootNamespace>
+    <AssemblyName>CurtAdmin</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EPPlus">
+      <HintPath>..\packages\EPPlus.3.1.1\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelGenerator">
+      <HintPath>..\packages\ExcelGenerator.1.3\lib\ExcelGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelLibrary">
+      <HintPath>..\packages\ExcelLibrary.1.2011.7.30\lib\ExcelLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Client">
+      <HintPath>..\packages\Google.GData.Client.2.1.0.0\lib\Google.GData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Extensions">
+      <HintPath>..\packages\Google.GData.Extensions.2.1.0.0\lib\Google.GData.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.YouTube">
+      <HintPath>..\packages\Google.GData.YouTube.2.1.0.0\lib\Google.GData.YouTube.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit">
+      <HintPath>..\packages\LinqKit.1.0\lib\35\LinqKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActiveResults\ExcelResult.cs" />
+    <Compile Include="Controllers\AdminBaseController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Admin_AccountController.cs" />
+    <Compile Include="Controllers\Admin_B2BController.cs" />
+    <Compile Include="Controllers\Admin_BlogCategoryController.cs" />
+    <Compile Include="Controllers\Admin_BlogCommentsController.cs" />
+    <Compile Include="Controllers\Admin_BlogController.cs" />
+    <Compile Include="Controllers\Admin_CategoryController.cs" />
+    <Compile Include="Controllers\Admin_ContactController.cs" />
+    <Compile Include="Controllers\Admin_CustomersController.cs" />
+    <Compile Include="Controllers\Admin_EditorController.cs" />
+    <Compile Include="Controllers\Admin_FAQController.cs" />
+    <Compile Include="Controllers\Admin_FileController.cs" />
+    <Compile Include="Controllers\Admin_FileExtController.cs" />
+    <Compile Include="Controllers\Admin_ForumController.cs" />
+    <Compile Include="Controllers\Admin_ItemsController.cs" />
+    <Compile Include="Controllers\Admin_LifestyleController.cs" />
+    <Compile Include="Controllers\Admin_MiscController.cs" />
+    <Compile Include="Controllers\Admin_NewsController.cs" />
+    <Compile Include="Controllers\Admin_ProductCategoriesController.cs" />
+    <Compile Include="Controllers\Admin_ProductController.cs" />
+    <Compile Include="Controllers\Admin_ReviewController.cs" />
+    <Compile Include="Controllers\Admin_SearchController.cs" />
+    <Compile Include="Controllers\Admin_TestimonialController.cs" />
+    <Compile Include="Controllers\Admin_UsersController.cs" />
+    <Compile Include="Controllers\Admin_VehiclesController.cs" />
+    <Compile Include="Controllers\Admin_VideoController.cs" />
+    <Compile Include="Controllers\Admin_WebsiteController.cs" />
+    <Compile Include="Controllers\APIController.cs" />
+    <Compile Include="Controllers\AuthenticateController.cs" />
+    <Compile Include="Controllers\B2BController.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\DocumentationController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImportController.cs" />
+    <Compile Include="Controllers\TestingController.cs" />
+    <Compile Include="Controllers\UserBaseController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\_404Controller.cs" />
+    <Compile Include="CurtDev1.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CurtDev.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="DocsLinq.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DocsLinq.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\API.cs" />
+    <Compile Include="Models\AuthenticateModels.cs" />
+    <Compile Include="B2B.designer.cs">
+      <DependentUpon>B2B.dbml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Models\B2B.cs" />
+    <Compile Include="Models\BlogCategory.cs" />
+    <Compile Include="Models\BlogComment.cs" />
+    <Compile Include="Models\BlogPost.cs" />
+    <Compile Include="Models\ContactModel.cs" />
+    <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\CustomerUser.cs" />
+    <Compile Include="Models\DocumentationModels.cs" />
+    <Compile Include="Models\FAQ.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\FileExtModel.cs" />
+    <Compile Include="Models\FileGallery.cs" />
+    <Compile Include="Models\FileTypeModel.cs" />
+    <Compile Include="Models\Forum.cs" />
+    <Compile Include="Models\GoogleMaps.cs" />
+    <Compile Include="Models\GTools.cs" />
+    <Compile Include="Models\ImageModel.cs" />
+    <Compile Include="Models\ImportProcess.cs" />
+    <Compile Include="Models\ImportService.cs" />
+    <Compile Include="Models\Logger.cs" />
+    <Compile Include="Models\MenuModel.cs" />
+    <Compile Include="Models\ModsModels.cs" />
+    <Compile Include="Models\News.cs" />
+    <Compile Include="Models\OAuth.cs" />
+    <Compile Include="Models\PartVideoModel.cs" />
+    <Compile Include="Models\ProductCatModels.cs" />
+    <Compile Include="Models\ProductModels.cs" />
+    <Compile Include="Models\ReviewModel.cs" />
+    <Compile Include="Models\SalesRep.cs" />
+    <Compile Include="Models\SiteContentModel.cs" />
+    <Compile Include="Models\TestimonialModel.cs" />
+    <Compile Include="Models\TrailerModel.cs" />
+    <Compile Include="Models\UDF.cs" />
+    <Compile Include="Models\UsersModels.cs" />
+    <Compile Include="Models\VehicleModels.cs" />
+    <Compile Include="Models\Video.cs" />
+    <Compile Include="Models\VideoModel.cs" />
+    <Compile Include="Models\ViewModels.cs" />
+    <Compile Include="ProductLinq.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductLinq.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\admin.css" />
+    <Content Include="Content\demo_table.css" />
+    <Content Include="Content\demo_table_jui.css" />
+    <Content Include="Content\editor.css" />
+    <Content Include="Content\gallerific.css" />
+    <Content Include="Content\imageselector.css" />
+    <Content Include="Content\img\addAttribute.png" />
+    <Content Include="Content\img\addCategory.png" />
+    <Content Include="Content\img\addContent.png" />
+    <Content Include="Content\img\addCustomer.png" />
+    <Content Include="Content\img\addLocation.png" />
+    <Content Include="Content\img\addPackage.png" />
+    <Content Include="Content\img\addPart.png" />
+    <Content Include="Content\img\addPrice.png" />
+    <Content Include="Content\img\addReview.png" />
+    <Content Include="Content\img\addVehicle.png" />
+    <Content Include="Content\img\addVideo.png" />
+    <Content Include="Content\img\ajax_loader.gif" />
+    <Content Include="Content\img\altButton.png" />
+    <Content Include="Content\img\back_disabled.jpg" />
+    <Content Include="Content\img\back_enabled.jpg" />
+    <Content Include="Content\img\blue_map_marker.png" />
+    <Content Include="Content\img\box_address.png" />
+    <Content Include="Content\img\button_green_add.png" />
+    <Content Include="Content\img\button_green_delete.png" />
+    <Content Include="Content\img\cancel.png" />
+    <Content Include="Content\img\check.png" />
+    <Content Include="Content\img\curtLogo.png" />
+    <Content Include="Content\img\Cute_Vehicle.png" />
+    <Content Include="Content\img\delete.png" />
+    <Content Include="Content\img\Documents.png" />
+    <Content Include="Content\img\Draft.png" />
+    <Content Include="Content\img\edit.png" />
+    <Content Include="Content\img\error404_bg.jpg" />
+    <Content Include="Content\img\eyeglass.png" />
+    <Content Include="Content\img\file.png" />
+    <Content Include="Content\img\forward_disabled.jpg" />
+    <Content Include="Content\img\forward_enabled.jpg" />
+    <Content Include="Content\img\hide_arrow.gif" />
+    <Content Include="Content\img\homer.png" />
+    <Content Include="Content\img\io\samsung_tab.jpg" />
+    <Content Include="Content\img\makeprimary.png" />
+    <Content Include="Content\img\mass_upload.png" />
+    <Content Include="Content\img\noimage.jpg" />
+    <Content Include="Content\img\nophoto.jpg" />
+    <Content Include="Content\img\pencil.png" />
+    <Content Include="Content\img\populate.png" />
+    <Content Include="Content\img\Portfolio.png" />
+    <Content Include="Content\img\productCategories.png" />
+    <Content Include="Content\img\save.png" />
+    <Content Include="Content\img\show_arrow.gif" />
+    <Content Include="Content\img\small_ajaxloader.gif" />
+    <Content Include="Content\img\sort_asc.png" />
+    <Content Include="Content\img\sort_asc_disabled.png" />
+    <Content Include="Content\img\sort_both.png" />
+    <Content Include="Content\img\sort_desc.png" />
+    <Content Include="Content\img\sort_desc_disabled.png" />
+    <Content Include="Content\img\star.png" />
+    <Content Include="Content\img\trash.png" />
+    <Content Include="Content\img\twitter_bird.png" />
+    <Content Include="Content\img\twitter_bird1.jpg" />
+    <Content Include="Content\img\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\img\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\img\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\img\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\img\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\img\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\img\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\img\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\img\ui-icons_222222_256x240.png" />
+    <Content Include="Content\img\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\img\ui-icons_454545_256x240.png" />
+    <Content Include="Content\img\ui-icons_888888_256x240.png" />
+    <Content Include="Content\img\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\img\uploaded\Desert.jpg" />
+    <Content Include="Content\img\uploaded\_B2H0550.jpg" />
+    <Content Include="Content\img\User.png" />
+    <Content Include="Content\jquery-linedtextarea.css" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery.multiselect.css" />
+    <Content Include="Content\locator_csv\readme.txt" />
+    <Content Include="Content\login.css" />
+    <Content Include="Content\logs\log.txt" />
+    <Content Include="Content\public.css" />
+    <Content Include="Content\signup.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\video.css" />
+    <Content Include="CurtDev.dbml">
+      <SubType>Designer</SubType>
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>CurtDev1.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\admin\add_edit_vehicle.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditAttributes.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditCategories.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditContent.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditPackage.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditPricing.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditRelated.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditReviews.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditVehicles.js" />
+    <Content Include="Scripts\admin\Admin_Product\EditVideos.js" />
+    <Content Include="Scripts\admin\blog.js" />
+    <Content Include="Scripts\admin\clonepart.js" />
+    <Content Include="Scripts\admin\cms.js" />
+    <Content Include="Scripts\admin\custusers_home.js" />
+    <Content Include="Scripts\admin\EditCategoryContent.js" />
+    <Content Include="Scripts\admin\faq.js" />
+    <Content Include="Scripts\admin\fileexts.js" />
+    <Content Include="Scripts\admin\forum.js" />
+    <Content Include="Scripts\admin\forummoderate.js" />
+    <Content Include="Scripts\admin\forumspam.js" />
+    <Content Include="Scripts\admin\gallery.js" />
+    <Content Include="Scripts\admin\ipblock.js" />
+    <Content Include="Scripts\admin\jquery-linedtextarea.js" />
+    <Content Include="Scripts\admin\jquery-ui-timepicker-addon.js" />
+    <Content Include="Scripts\admin\jquery.easing.1.3.js" />
+    <Content Include="Scripts\admin\news.js" />
+    <Content Include="Scripts\admin\partimages.js" />
+    <Content Include="Scripts\admin\resource_admin.js" />
+    <Content Include="Scripts\admin\reviews.js" />
+    <Content Include="Scripts\admin\search.js" />
+    <Content Include="Scripts\admin\selectfile.js" />
+    <Content Include="Scripts\admin\testimonials.js" />
+    <Content Include="Scripts\admin\thread.js" />
+    <Content Include="Scripts\admin\threads.js" />
+    <Content Include="Scripts\admin\trailers.js" />
+    <Content Include="Scripts\admin\users_home.js" />
+    <Content Include="Scripts\admin\video.js" />
+    <Content Include="Scripts\admin\website_menus.js" />
+    <Content Include="Scripts\fileiframe.js" />
+    <Content Include="Scripts\fileuploader.js" />
+    <None Include="Scripts\jquery-1.4.4-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.4.4.js" />
+    <Content Include="Scripts\jquery-1.4.4.min.js" />
+    <Content Include="Scripts\jquery-1.5.2.js" />
+    <Content Include="Scripts\jquery-1.5.2.min.js" />
+    <None Include="Scripts\jquery-1.6.3-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.6.3.js" />
+    <Content Include="Scripts\jquery-1.6.3.min.js" />
+    <Content Include="Scripts\jquery-impromptu.4.0.min.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.dataTables.datesort.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery.galleriffic.js" />
+    <Content Include="Scripts\jquery.multiselect.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MicrosoftAjax.debug.js" />
+    <Content Include="Scripts\MicrosoftAjax.js" />
+    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Scripts\MicrosoftMvcAjax.js" />
+    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Scripts\MicrosoftMvcValidation.js" />
+    <Content Include="Scripts\modernizr-2.0.6-development-only.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\APIDocs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\locator_csv\1.xlsx" />
+    <Content Include="Content\locator_csv\10.xlsx" />
+    <Content Include="Content\locator_csv\11.xlsx" />
+    <Content Include="Content\locator_csv\12.xlsx" />
+    <Content Include="Content\locator_csv\13.xlsx" />
+    <Content Include="Content\locator_csv\14.xlsx" />
+    <Content Include="Content\locator_csv\15.xlsx" />
+    <Content Include="Content\locator_csv\16.xlsx" />
+    <Content Include="Content\locator_csv\17.xlsx" />
+    <Content Include="Content\locator_csv\18.xlsx" />
+    <Content Include="Content\locator_csv\2.xlsx" />
+    <Content Include="Content\locator_csv\3.xlsx" />
+    <Content Include="Content\locator_csv\4.xlsx" />
+    <Content Include="Content\locator_csv\6.xlsx" />
+    <Content Include="Content\locator_csv\7.xlsx" />
+    <Content Include="Content\locator_csv\8.xlsx" />
+    <Content Include="Content\locator_csv\9.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="B2B.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>B2B.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CurtDev.dbml.layout">
+      <DependentUpon>CurtDev.dbml</DependentUpon>
+    </None>
+    <Content Include="DocsLinq.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>DocsLinq.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="B2B.dbml.layout">
+      <DependentUpon>B2B.dbml</DependentUpon>
+    </None>
+    <Content Include="ProductLinq.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>ProductLinq.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin_Account\FullList.cshtml" />
+    <Content Include="Views\Admin_Account\Index.cshtml" />
+    <Content Include="Views\Admin_B2B\AddAnswer.cshtml" />
+    <Content Include="Views\Admin_B2B\AddCat.cshtml" />
+    <Content Include="Views\Admin_B2B\AddCert.cshtml" />
+    <Content Include="Views\Admin_B2B\AddLesson.cshtml" />
+    <Content Include="Views\Admin_B2B\AddQuestion.cshtml" />
+    <Content Include="Views\Admin_B2B\AddTest.cshtml" />
+    <Content Include="Views\Admin_B2B\EditAnswer.cshtml" />
+    <Content Include="Views\Admin_B2B\EditCat.cshtml" />
+    <Content Include="Views\Admin_B2B\EditCert.cshtml" />
+    <Content Include="Views\Admin_B2B\EditLesson.cshtml" />
+    <Content Include="Views\Admin_B2B\EditQuestion.cshtml" />
+    <Content Include="Views\Admin_B2B\EditTest.cshtml" />
+    <Content Include="Views\Admin_B2B\Index.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewAnswers.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewCats.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewLessons.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewQuestions.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewTest.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewTests.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewUsers.cshtml" />
+    <Content Include="Views\Admin_BlogCategory\Add.cshtml" />
+    <Content Include="Views\Admin_BlogCategory\Edit.cshtml" />
+    <Content Include="Views\Admin_BlogCategory\Index.cshtml" />
+    <Content Include="Views\Admin_BlogComments\Index.cshtml" />
+    <Content Include="Views\Admin_BlogComments\PostComments.cshtml" />
+    <Content Include="Views\Admin_BlogComments\ViewComment.cshtml" />
+    <Content Include="Views\Admin_Blog\Add.cshtml" />
+    <Content Include="Views\Admin_Blog\Edit.cshtml" />
+    <Content Include="Views\Admin_Blog\Index.cshtml" />
+    <Content Include="Views\Admin_Category\Add.cshtml" />
+    <Content Include="Views\Admin_Category\Edit.cshtml" />
+    <Content Include="Views\Admin_Category\Index.cshtml" />
+    <Content Include="Views\Admin_Contact\AddReceiver.cshtml" />
+    <Content Include="Views\Admin_Contact\AddType.cshtml" />
+    <Content Include="Views\Admin_Contact\EditReceiver.cshtml" />
+    <Content Include="Views\Admin_Contact\index.cshtml" />
+    <Content Include="Views\Admin_Contact\receivers.cshtml" />
+    <Content Include="Views\Admin_Contact\types.cshtml" />
+    <Content Include="Views\Admin_Contact\ViewContact.cshtml" />
+    <Content Include="Views\Admin_Customers\Add.cshtml" />
+    <Content Include="Views\Admin_Customers\AddLocation.cshtml" />
+    <Content Include="Views\Admin_Customers\Edit.cshtml" />
+    <Content Include="Views\Admin_Customers\EditLocation.cshtml" />
+    <Content Include="Views\Admin_Customers\Index.cshtml" />
+    <Content Include="Views\Admin_Customers\Locations.cshtml" />
+    <Content Include="Views\Admin_Customers\MassUpload.cshtml" />
+    <Content Include="Views\Admin_Customers\ViewCustomers.cshtml" />
+    <Content Include="Views\Admin_Editor\Index.cshtml" />
+    <Content Include="Views\Admin_FAQ\Add.cshtml" />
+    <Content Include="Views\Admin_FAQ\Edit.cshtml" />
+    <Content Include="Views\Admin_FAQ\Index.cshtml" />
+    <Content Include="Views\Admin_FileExt\AddExtension.cshtml" />
+    <Content Include="Views\Admin_FileExt\AddType.cshtml" />
+    <Content Include="Views\Admin_FileExt\EditExtension.cshtml" />
+    <Content Include="Views\Admin_FileExt\EditType.cshtml" />
+    <Content Include="Views\Admin_FileExt\index.cshtml" />
+    <Content Include="Views\Admin_FileExt\types.cshtml" />
+    <Content Include="Views\Admin_File\CKGallery.cshtml" />
+    <Content Include="Views\Admin_File\CKUpload.cshtml" />
+    <Content Include="Views\Admin_File\FrameGallery.cshtml" />
+    <Content Include="Views\Admin_File\Gallery.cshtml" />
+    <Content Include="Views\Admin_Forum\AddGroup.cshtml" />
+    <Content Include="Views\Admin_Forum\AddPost.cshtml" />
+    <Content Include="Views\Admin_Forum\AddTopic.cshtml" />
+    <Content Include="Views\Admin_Forum\blockedIPs.cshtml" />
+    <Content Include="Views\Admin_Forum\EditGroup.cshtml" />
+    <Content Include="Views\Admin_Forum\EditTopic.cshtml" />
+    <Content Include="Views\Admin_Forum\Index.cshtml" />
+    <Content Include="Views\Admin_Forum\Moderate.cshtml" />
+    <Content Include="Views\Admin_Forum\Spam.cshtml" />
+    <Content Include="Views\Admin_Forum\Thread.cshtml" />
+    <Content Include="Views\Admin_Forum\Threads.cshtml" />
+    <Content Include="Views\Admin_Forum\Topics.cshtml" />
+    <Content Include="Views\Admin_Items\Add.cshtml" />
+    <Content Include="Views\Admin_Items\Edit.cshtml" />
+    <Content Include="Views\Admin_Items\Index.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\Add.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\AddTrailer.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\Content.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\Edit.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\EditTrailer.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\EditTrailers.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\Index.cshtml" />
+    <Content Include="Views\Admin_Lifestyle\trailers.cshtml" />
+    <Content Include="Views\Admin_Misc\ImageImport.cshtml" />
+    <Content Include="Views\Admin_Misc\ImportPolygons.cshtml" />
+    <Content Include="Views\Admin_Misc\Index.cshtml" />
+    <Content Include="Views\Admin_Misc\UnitsOfMeasure.cshtml" />
+    <Content Include="Views\Admin_Misc\VideoTypes.cshtml" />
+    <Content Include="Views\Admin_News\Add.cshtml" />
+    <Content Include="Views\Admin_News\Edit.cshtml" />
+    <Content Include="Views\Admin_News\Index.cshtml" />
+    <Content Include="Views\Admin_ProductCategories\Add.cshtml" />
+    <Content Include="Views\Admin_ProductCategories\CategoryItems.cshtml" />
+    <Content Include="Views\Admin_ProductCategories\Content.cshtml" />
+    <Content Include="Views\Admin_ProductCategories\Edit.cshtml" />
+    <Content Include="Views\Admin_ProductCategories\Index.cshtml" />
+    <Content Include="Views\Admin_Product\Add.cshtml" />
+    <Content Include="Views\Admin_Product\Edit.cshtml" />
+    <Content Include="Views\Admin_Product\EditAttributes.cshtml" />
+    <Content Include="Views\Admin_Product\EditCategories.cshtml" />
+    <Content Include="Views\Admin_Product\EditContent.cshtml" />
+    <Content Include="Views\Admin_Product\EditImages.cshtml" />
+    <Content Include="Views\Admin_Product\EditPackages.cshtml" />
+    <Content Include="Views\Admin_Product\EditPricing.cshtml" />
+    <Content Include="Views\Admin_Product\EditRelated.cshtml" />
+    <Content Include="Views\Admin_Product\EditReviews.cshtml" />
+    <Content Include="Views\Admin_Product\EditVehicles.cshtml" />
+    <Content Include="Views\Admin_Product\EditVideos.cshtml" />
+    <Content Include="Views\Admin_Product\Index.cshtml" />
+    <Content Include="Views\Admin_Product\PartMenu.cshtml" />
+    <Content Include="Views\Admin_Product\ViewAll.cshtml" />
+    <Content Include="Views\Admin_Reviews\Index.cshtml" />
+    <Content Include="Views\Admin_Testimonial\Approved.cshtml" />
+    <Content Include="Views\Admin_Testimonial\Index.cshtml" />
+    <Content Include="Views\Admin_Users\Add.cshtml" />
+    <Content Include="Views\Admin_Users\Customers.cshtml" />
+    <Content Include="Views\Admin_Users\Edit.cshtml" />
+    <Content Include="Views\Admin_Users\Index.cshtml" />
+    <Content Include="Views\Admin_Vehicles\Add.cshtml" />
+    <Content Include="Views\Admin_Vehicles\Edit.cshtml" />
+    <Content Include="Views\Admin_Vehicles\Index.cshtml" />
+    <Content Include="Views\Admin_Video\Index.cshtml" />
+    <Content Include="Views\Admin_Website\AddContent.cshtml" />
+    <Content Include="Views\Admin_Website\AddLink.cshtml" />
+    <Content Include="Views\Admin_Website\AddMenu.cshtml" />
+    <Content Include="Views\Admin_Website\EditContent.cshtml" />
+    <Content Include="Views\Admin_Website\EditLink.cshtml" />
+    <Content Include="Views\Admin_Website\EditMenu.cshtml" />
+    <Content Include="Views\Admin_Website\Index.cshtml" />
+    <Content Include="Views\Admin_Website\Menus.cshtml" />
+    <Content Include="Views\API\Index.cshtml" />
+    <Content Include="Views\Authenticate\Forgot.cshtml" />
+    <Content Include="Views\Authenticate\Index.cshtml" />
+    <Content Include="Views\Authenticate\Signup.cshtml" />
+    <Content Include="Views\Authenticate\userFound.cshtml" />
+    <Content Include="Views\Blog\Index.cshtml" />
+    <Content Include="Views\Documentation\Category.cshtml" />
+    <Content Include="Views\Documentation\Index.cshtml" />
+    <Content Include="Views\Documentation\Item.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Import\Import.cshtml" />
+    <Content Include="Views\Import\Start.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\Navigation\_BlogNavigation.cshtml" />
+    <Content Include="Views\Shared\Navigation\_CategoryNavigation.cshtml" />
+    <Content Include="Views\Shared\Navigation\_FileNavigation.cshtml" />
+    <Content Include="Views\Shared\Navigation\_ForumNavigation.cshtml" />
+    <Content Include="Views\Shared\Navigation\_LifestyleNavigation.cshtml" />
+    <Content Include="Views\Shared\Navigation\_MiscNavigation.cshtml" />
+    <Content Include="Views\Shared\Navigation\_WebsiteNavigation.cshtml" />
+    <Content Include="Views\Shared\_EditorLayout.cshtml" />
+    <Content Include="Views\Shared\_FileListing.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Shared\_Head.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LogOnPartial.cshtml" />
+    <Content Include="Views\Shared\_Search.cshtml" />
+    <Content Include="Views\Shared\_SideBar.cshtml" />
+    <Content Include="Views\Shared\_UploadForm.cshtml" />
+    <Content Include="Views\Testing\Index.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\_404\Index.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DocsLinq.dbml.layout">
+      <DependentUpon>DocsLinq.dbml</DependentUpon>
+    </None>
+    <None Include="ProductLinq.dbml.layout">
+      <DependentUpon>ProductLinq.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>63760</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:62887/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

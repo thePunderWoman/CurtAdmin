@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Edit Contact Receiver";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string error = ViewBag.error;
+    CurtAdmin.Models.ContactReceiverWithTypes receiver = ViewBag.receiver;
+    List<CurtAdmin.ContactType> types = ViewBag.types;
+    List<CurtAdmin.ContactType> rectypes = receiver.types;
+}
+<link href="/Content/jquery.multiselect.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<script type="text/javascript" src="/Scripts/jquery.multiselect.min.js"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Contact")">Contacts</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Receivers")">Receivers</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddReceiver")" class="active">Add Receiver</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/Export")">Export</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Add a Receiver</h2>
+
+    @if (error.Length != 0) {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    <form action="/Admin_Contact/EditReceiver/@receiver.contactReceiverID" Method="post" class="form_left">
+        <!-- Item Name -->
+        <label for="first_name">
+            First Name
+            <input type="text" name="first_name" id="first_name" placeholder="Enter first name..." value="@((Request.Form["first_name"] != null) ? Request.Form["first_name"] : receiver.first_name)" />
+        </label>
+
+        <label for="last_name">
+            Last Name
+            <input type="text" name="last_name" id="last_name" placeholder="Enter last name..." value="@((Request.Form["last_name"] != null) ? Request.Form["last_name"] : receiver.last_name)" />
+        </label>
+
+        <label for="email">
+            Email
+            <input type="email" name="email" id="email" placeholder="Enter email address..." value="@((Request.Form["email"] != null) ? Request.Form["email"] : receiver.email)" />
+        </label>
+
+        <label for="types">
+            Contact Types
+            <select name="types" id="types" multiple="true">
+                @foreach (CurtAdmin.ContactType type in types) {
+                    <option value="@type.contactTypeID" @((rectypes.Any<CurtAdmin.ContactType>(x => x.contactTypeID == type.contactTypeID)) ? "selected=selected" : "")>@type.name</option>
+                }
+            </select>
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#types").multiselect({
+            noneSelectedText: 'Select types',
+            selectedList: 6
+        });
+    });
+</script>

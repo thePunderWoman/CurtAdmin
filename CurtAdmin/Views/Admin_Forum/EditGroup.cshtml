@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Add Forum Group";
+    ViewBag.navigation = "_ForumNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.FullGroup group = ViewBag.group;
+}
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Forum/Topics/" + group.forumGroupID)">Topics</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2>Edit Forum Group: @group.name</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p>@ViewBag.error</p>
+    }
+    <form action="/Admin_Forum/SaveGroup/@group.forumGroupID" method="post" class="form_left">
+        <label for="name">
+            Group Name
+            <input type="text" name="name" id="name" placeholder="Enter the Name of the Group" required value="@ViewBag.name" />
+        </label>
+
+        <label for="description">
+            Group Description
+            <textarea name="description" id="description" placeholder="Enter the Group Description" rows="5" cols="50">@ViewBag.description</textarea>
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>

@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Edit Images";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    List<CurtAdmin.Models.ImageSize> sizes = ViewBag.sizes;
+    int imgcount = 0;
+    foreach(CurtAdmin.Models.ImageSize size in sizes) {
+        imgcount += size.images.Count;   
+    }
+}
+
+<script src="/Scripts/admin/partimages.js" type="text/javascript"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2>Images for Part #@part.partID - @part.shortDesc</h2>
+    <ul id="subNav" class="imagesizes">
+        @foreach (CurtAdmin.Models.ImageSize size in sizes) {
+            <li><a href="#size_@(size.sizeID)">@size.size</a></li>
+        }
+        <li class="clear"></li>
+    </ul>
+    <div id="sizeContainer">
+        <form id="addimage" action="/Admin_Product/AddImage" method="post">
+            <input type="hidden" name="partID" id="partID" value="@part.partID" />
+            <input type="hidden" name="size" id="size" value="" />
+            <label for="file">Image Path: </label>
+            <input type="text" name="image" id="file" value="" />
+            <br />
+            <button type="button" id="import-images">Import Images</button>
+            <button type="button" id="choose-photo">Choose</button>
+            <input type="submit" id="upload-photo" value="Add Image" />
+        </form>
+        @foreach (CurtAdmin.Models.ImageSize size in sizes) {
+            <ul class="imagesize" id="size_@(size.sizeID)">
+                <li class="title">@size.size Images</li>
+                @foreach (CurtAdmin.PartImage image in size.images) {
+                    <li class="partimage" id="partimage_@(image.imageID)">
+                        <img src="@image.path" alt="image-@image.sort" />
+                        <span class="imagedetail">
+                            Dimensions: @image.width x @image.height<br />
+                            <a href="#" class="deleteimage" id="deleteimage_@(image.imageID)">Delete</a>
+                        </span>
+                        <span class="clear"></span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+<div id="file-dialog"></div>

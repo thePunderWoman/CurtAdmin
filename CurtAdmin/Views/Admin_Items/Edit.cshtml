@@ -1,0 +1,339 @@
+﻿@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.DocsLinqDataContext doc_db = new CurtAdmin.DocsLinqDataContext();
+    List<CurtAdmin.Models.UserComment> comments = ViewBag.comments;
+}
+
+<div id="usersNav">
+    <ul>
+        <li>
+            <a href="@Url.Content("~/Admin_Items")">View Items</a>
+        </li>
+        <li>
+            <a href="@Url.Content("~/Admin_Items/Add")">Add New</a>
+        </li>
+        <!--li>
+            <a href="@Url.Content("~/Admin_Items/ViewDocs")">View Documents</a>
+        </li-->
+    </ul>
+</div>
+<div id="content_container">
+    <h2>Editing @ViewBag.item.itemName </h2>
+
+    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
+        <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
+            <p style="color:whitesmoke;text-decoration:underline;font-size:14pt;margin-left:40px">Please fix the following errors:</p>
+            <ul style="list-style: none">
+                @foreach (string message in ViewBag.error_messages) {
+                    <li>- @message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <ul class="tabs">
+        <li>
+            <a class="tab active" href="#info" id="info_tab">Info</a>
+        </li>
+        <li>
+            <a class="tab" href="#comments" id="comments_tab">Comments</a>
+        </li>
+        <li>
+            <a class="tab" href="#html" id="htmleditor_tab">HTML</a>
+        </li>
+        <li>
+            <a class="tab" href="#categories" id="categories_tab">Categories</a>
+        </li>
+        <li><a class="tab" href="#documents" id="documents_tab">Documents</a></li>
+    </ul>
+
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" enctype="multipart/form-data" method="post" class="form">
+        <div class="tab_container">
+            <div class="tab_content" id="info">
+                <div class="form_left">
+                    <!-- Item Name -->
+                    <label for="itemName">
+                        Name
+                        <input type="text" name="itemName" id="itemName" placeholder="Enter the name of the item..." value="@ViewBag.item.itemName" />
+                    </label>
+
+                    <!-- Item Name -->
+                    <label for="itemDescription">
+                        Description
+                        <textarea rows="5" cols="48" style="float:right" name="itemDescription" id="itemDescription" placeholder="Enter descriptive text...">@ViewBag.item.itemDescription</textarea>
+                    </label>
+
+                    <!-- Execution Example -->
+                    <label for="executionExample">
+                        Execution
+                        <textarea rows="5" cols="48" style="float:right" name="executionExample" id="executionExample" placeholder="Demonstrate Execution...">@ViewBag.item.executionExample</textarea>
+                    </label>
+
+                    <!-- Result Example -->
+                    <label for="resultExample">
+                        Result
+                        <textarea rows="5" cols="48" style="float:right" name="resultExample" id="resultExample" placeholder="Enter the result...">@ViewBag.item.resultExample</textarea>
+                    </label><br /><br />
+
+                    <!-- Code Link -->
+                    <label for="codeLink">
+                        Code Link
+                        <input type="url" name="codeLink" id="codeLink" placeholder="Enter GitHub link...." value="@ViewBag.item.codeLink" />
+                    </label>
+
+                    <!-- Author -->
+                    <label for="author">
+                        Author @ViewBag.item.author
+                        <select name="author" id="author">
+                            <option value="0">Select Author</option>
+                            @foreach (CurtAdmin.user u in ViewBag.users) {
+                                <option value="@u.userID" @((u.userID == ViewBag.item.author) ? "selected='selected'" : "")>@u.fname @u.lname</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+                <div class="form_right">
+                    <p>1. Enter the name of the document item.</p>
+                    <p>2. Give a breif overview of the purpose of this function.</p>
+                    <p>3. Show example of how this could be executed.</p>
+                    <p>4. Display the result of the example implementation.</p>
+                    <p>5. Give the user a link to the GitHub page that holds the code behind.</p>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+                
+            <div class="tab_content" id="comments">
+                @if (comments.Count == 0) {
+                    <p>No Comments for this item.</p>
+                } else {
+                    foreach (CurtAdmin.Models.UserComment comment in comments) {
+                        <div class="comment">
+                            <span class="name">@comment.fname @comment.lname @((comment.isAdmin == 1)?" - Administrator":"")</span>
+                            <span class="comment_delete_container">
+                                [<a href="javascript:void(0)" class="comment_delete" id="@comment.commentID">X</a>]
+                            </span>
+                            <a href="javascript:void(0)" class="comment_reply" id="@comment.commentID">Reply</a>
+                            <br />
+                            <div class="comment_text"><span>@comment.comment</span></div>
+                        </div>
+            
+                        List<CurtAdmin.Models.UserComment> replies = CurtAdmin.Models.Documentation.GetItemCommentReplies(comment.commentID);
+                        int i = 0;
+                        while (replies.Count > 0) {
+                            if (replies.Count < i || replies.Count == i) {
+                                i = i - 1;
+                            }else{
+                                <div class="comment" style="margin-left: 2%">
+                                    <span class="name">@replies[i].fname @replies[i].lname @((replies[i].isAdmin == 1)?" - Administrator":"")</span>
+                                    <span class="comment_delete_container">
+                                        [<a href="javascript:void(0)" class="comment_delete" id="@replies[i].commentID">X</a>]
+                                    </span>
+                                    <a href="javascript:void(0)" class="comment_reply" id="@replies[i].commentID">Reply</a><br />
+                                    <div class="comment_text"><span>@replies[i].comment</span></div>
+                                </div>
+                
+                                List<CurtAdmin.Models.UserComment> nextReplies = CurtAdmin.Models.Documentation.GetItemCommentReplies(replies[i].commentID);
+                                int j = i + 1;
+                                foreach (CurtAdmin.Models.UserComment nextReply in nextReplies) {
+                                    replies.Insert(j, nextReply);
+                                    j++;
+                                }
+                                replies.Remove(replies[i]);
+                                i++;
+                            }
+                        }
+                    }
+                }
+            </div>
+            <div class="tab_content" id="htmleditor">
+                <label for="html">
+                    <strong>Enter HTML</strong><br />
+                    <textarea rows="15" cols="50" name="html" id="html" style="width: 90%">@ViewBag.item.itemHTML</textarea>
+                </label>
+                <div style="clear:both"></div>
+            </div>
+            <div class="tab_content" id="categories">
+                <div class="form_left">
+                    <!-- Display Categories -->
+                    <label for="catID">
+                        Add Category
+                        <input type="button" id="addCategory" name="addCategory" value="Add"  style="margin-top: 3px" />
+                        <select name="catID" id="catID">
+                            <option value="0">Select Category</option>
+                            @foreach (CurtAdmin.category cat in ViewBag.categories) {
+                                <option value="@cat.catID">@cat.catName</option>
+                            }
+                        </select>
+                        
+                    </label>
+                </div>
+                <table id="catTable" style="width: 100%; marign:auto">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (CurtAdmin.category cat in ViewBag.item_cats) {
+                            <tr id="cat:@cat.catID">
+                                <td>
+                                    @cat.catName
+                                    <input type="hidden" name="cat" id="newCat:@cat.catID" value="@cat.catID" />
+                                </td>
+                                <td style="width:15%" class="center"><a href="javascript:void(0)" class="static" id="@cat.catID">Remove</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div style="clear:both"></div>
+            </div>
+
+            <div class="tab_content" id="documents">
+                <div class="form_left">
+                    <label for="documentName">
+                        Document Name
+                        <input type="text" name="documentName" id="documentName" placeholder="Enter document's name..." />
+                    </label>
+                    <label for="document">
+                        Upload File
+                        <input type="file" name="fileUpload" id="fileUpload" />
+                    </label>
+                </div>
+                <div style="clear:both"></div>
+
+                <table id="documentTable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date Added</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (CurtAdmin.document doc in ViewBag.documents) {
+                            <tr>
+                                <td><a href="@Url.Content(doc.documentPath)" target="_blank">@doc.documentTitle</a></td>
+                                <td>@(Convert.ToDateTime(doc.dateAdded))</td>
+                                <td>
+                                    <a href="javascript:void(0)" class="removeDoc" id="@doc.docID" title="Remove @doc.documentTitle">Remove</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+            <input type="hidden" name="itemID" id="itemID" value="@ViewBag.item.itemID" />
+        </div>
+        <div style="clear:both"></div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var catTable = $('#catTable').dataTable({ "bJQueryUI": true });
+        var documentTable = $('#documentTable').dataTable({ "bJQueryUI": true });
+
+        $('.tab_content').hide();
+        $('#info').show();
+
+        $('.tab').click(function () {
+            var tab = $(this).attr('id').split('_')[0];
+            if (!$('#' + tab).is(':visible')) {
+                $('.tab_content').hide();
+                $('#' + tab).slideDown();
+                $('.tab').removeClass('active');
+                $(this).addClass('active');
+            }
+        });
+
+        $('#addCategory').click(function () {
+            // Get the ID of the category we're adding
+            var catID = $('#catID').val();
+            var itemID = $('#itemID').val();
+            if (catID > 0 && itemID > 0) {
+
+                // Make sure the category we're trying to add isn't already in the table
+                var existing = $(table).find('#' + catID).get()[0];
+                if (existing == undefined) {
+                    $.get('/Admin_Items/AddItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
+                        if (response == "") {
+                            var newCat_input = '<input type="hidden" name="cat" id="newCat:' + catID + '" value="' + catID + '" />';
+                            $(this).after(newCat_input);
+
+                            // Compile the rows action link
+                            var row_action = '<a href="javascript:void(0)" class="dynamic" id="' + catID + '">Remove</a>';
+
+                            catTable.fnAddData([$("#catID option[value='" + catID + "']").val(catID).text(), row_action]);
+                            showMessage("Category Added");
+                        } else {
+                            showMessage(response);
+                        }
+                    });
+
+                } else {
+                    showMessage("Error: Duplicate Entry");
+                }
+            }
+            $('#catID').val(0);
+        });
+
+        $('.dynamic').live('click', function () {
+            var catID = $(this).attr('id');
+            $('#newCat\\:' + catID).remove();
+            catTable.fnDeleteRow($(this).parent().parent().get()[0]);
+            showMessage("Category removed");
+        });
+
+        $('.static').click(function () {
+            if (confirm('Are you sure you want to remove this category from the item?')) {
+                var catID = $(this).attr('id');
+                var itemID = $('#itemID').val();
+                $.get('/Admin_Items/DeleteItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
+                    if (response == '') {
+                        catTable.fnDeleteRow($('#cat\\:' + catID).get()[0]);
+                        showMessage("Cateogry removed");
+                    } else {
+                        showMessage(response);
+                    }
+                });
+            }
+        });
+
+        $('.comment_delete').click(function () {
+            if (confirm('Are you sure you want to delete this comment and all replies tied to it?')) {
+                var commentID = $(this).attr('id');
+                $.get('/Documentation/RemoveComment', { 'comment_id': commentID }, function (response) {
+                    if (response == '') {
+                        window.location.reload();
+                    } else {
+                        showMessage(response);
+                    }
+                });
+            }
+        });
+
+        $('.removeDoc').live('click', function () {
+            var docID = $(this).attr('id');
+            var clicked_link = $(this);
+            if (docID > 0 && confirm('Are you sure you want to remove this document?')) {
+                $.get('/Admin_Items/DeleteDocument', { 'docID': docID }, function (response) {
+                    if (response == "") {
+                        documentTable.fnDeleteRow($(clicked_link).parent().parent().get()[0]);
+                        showMessage("Document removed");
+                    } else {
+                        showMessage(response);
+                    }
+                });
+            }
+        });
+    });
+</script>
+

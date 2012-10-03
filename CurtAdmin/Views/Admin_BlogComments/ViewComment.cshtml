@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.navigation = "_BlogNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.CommentWithPost comment = ViewBag.comment;
+    CurtAdmin.BlogPost post = comment.post;
+    string errors = Request.QueryString.Get("err");
+}
+
+<div id="content_container">
+    <h2>View Comment</h2>
+    @if (errors != null && errors.Length > 0)
+    {
+        <p>@errors</p>
+    }
+
+    <h3>Comment for Post: <a href="http://beta.curtmfg.com/Blog/Post/@(String.Format("{0:M-dd-yyyy}",post.publishedDate))/@(Server.UrlEncode(@post.slug))">@post.post_title</a></h3>
+    <p>Name: @comment.name</p>
+    @if (comment.email != null) {
+        <p>Email: @comment.email</p>
+    }
+    <p>Posted On: @(String.Format("{0:MMM d, yyyy} at {0:h:mm tt}",comment.createdDate))</p>
+    <p>Comment: @comment.comment_text</p>
+</div>

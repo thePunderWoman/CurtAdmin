@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.category> categories = new List<CurtAdmin.category>();
+    categories = ViewBag.cateogries;
+}
+
+@if (categories != null && categories.Count > 0) {
+    <div id="usersNav">
+        <ul>
+            @foreach (CurtAdmin.category cat in categories) {
+                <li>
+                    <a href="@Url.Content("~/Documentation/Category?cat_id="+cat.catID)">@cat.catName</a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+<div id="content_container">
+    <h2>CURT Documentation</h2>
+
+    <p>In this section you will find eCommerce documentation for all of the tools that we create for our customers. This will include all versions of the API, the HitchWidget&trade;, and the CURT eLocal Program.</p>
+
+    <p>If you feel there is insufficient examples or descriptive text for an element of our tools. Please use the contact form that can be located using the link in the top right corner of your screen.</p>
+
+    <p>Thank you,</p><br />
+
+    <p>CURT Documentation Administrator</p>
+</div>
+
+

@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "CURT Documentation - Add New Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="usersNav">
+    <ul>
+        <li>
+            <a href="@Url.Content("~/Admin_Items")">View Items</a>
+        </li>
+        <li>
+            <a href="@Url.Content("~/Admin_Items/Add")" class="active">Add New</a>
+        </li>
+        <!--li>
+            <a href="@Url.Content("~/Admin_Items/ViewDocs")">View Documents</a>
+        </li-->
+    </ul>
+</div>
+<div id="content_container">
+    <h2>Adding New Item</h2>
+
+    <ul class="tabs">
+        <li>
+            <a class="tab active" href="#info" id="info_tab">Info</a>
+        </li>
+        <li>
+            <a class="tab" href="#htmleditor" id="htmleditor_tab">HTML</a>
+        </li>
+        <li>
+            <a class="tab" href="#categories" id="categories_tab">Categories</a>
+        </li>
+    </ul>
+
+    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
+        <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
+            <p style="color:whitesmoke;text-decoration:underline;font-size:14pt;margin-left:40px">Please fix the following errors:</p>
+            <ul style="list-style: none">
+                @foreach (string message in ViewBag.error_messages) {
+                    <li>- @message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form">
+        <div class="tab_container">
+            <div class="tab_content" id="info">
+                <div class="form_left">    
+                    <!-- Item Name -->
+                    <label for="itemName">
+                        Name
+                        <input type="text" name="itemName" id="itemName" placeholder="Enter the name of the item..." value="@ViewBag.itemName" />
+                    </label>
+
+                    <!-- Item Name -->
+                    <label for="itemDescription">
+                        Description
+                        <textarea rows="5" cols="48" style="float:right" name="itemDescription" id="itemDescription" placeholder="Enter descriptive text...">@ViewBag.itemDescription</textarea>
+                    </label>
+
+                    <!-- Execution Example -->
+                    <label for="executionExample">
+                        Execution
+                        <textarea rows="5" cols="48" style="float:right" name="executionExample" id="executionExample" placeholder="Demonstrate Execution...">@ViewBag.executionExample</textarea>
+                    </label>
+
+                    <!-- Result Example -->
+                    <label for="resultExample">
+                        Result
+                        <textarea rows="5" cols="48" style="float:right" name="resultExample" id="resultExample" placeholder="Enter the result...">@ViewBag.resultExample</textarea>
+                    </label><br /><br />
+
+                    <!-- Code Link -->
+                    <label for="codeLink">
+                        Code Link
+                        <input type="url" name="codeLink" id="codeLink" placeholder="Enter GitHub link...." value="@ViewBag.codeLink" />
+                    </label>
+
+                    <!-- Author -->
+                    <label for="author">
+                        Author
+                        <select name="author" id="author">
+                            <option value="0">Select Author</option>
+                            @foreach (CurtAdmin.user u in ViewBag.users) {
+                                <option value="@u.userID" @((u.userID == ViewBag.author)?"selected='selected'":"")>@u.fname @u.lname</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+                <div class="form_right">
+                    <p>1. Enter the name of the document item.</p>
+                    <p>2. Give a breif overview of the purpose of this function.</p>
+                    <p>3. Show example of how this could be executed.</p>
+                    <p>4. Display the result of the example implementation.</p>
+                    <p>5. Give the user a link to the GitHub page that holds the code behind.</p>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+
+            <div class="tab_content" id="htmleditor">
+                <label for="html">
+                    <strong>Enter HTML</strong><br />
+                    <textarea rows="15" cols="50" name="html" id="html" style="width: 90%">@ViewBag.itemHTML</textarea>
+                </label>
+                <div style="clear:both"></div>
+            </div>
+
+            <div class="tab_content" id="categories">
+                <div class="form_left">
+                    <!-- Display Categories -->
+                    <label for="catID">
+                        Add Category
+                        <input type="button" id="addCategory" name="addCategory" value="Add"  style="margin-top: 3px" />
+                        <select name="catID" id="catID">
+                            <option value="0">Select Category</option>
+                            @foreach (CurtAdmin.category cat in ViewBag.categories) {
+                                <option value="@cat.catID">@cat.catName</option>
+                            }
+                        </select>
+                        
+                    </label>
+                </div>
+                <table style="width: 100%; marign:auto">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+
+                <div style="clear:both"></div>
+            </div>
+        </div>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+        <div style="clear:both"></div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        var table = $('table').dataTable();
+        $('.tab_content').hide();
+        $('#info').show();
+
+        $('.tab').click(function () {
+            var tab = $(this).attr('id').split('_')[0];
+            if (!$('#' + tab).is(':visible')) {
+                $('.tab_content').hide();
+                $('#' + tab).slideDown();
+                $('.tab').removeClass('active');
+                $(this).addClass('active');
+            }
+        });
+
+        $('#addCategory').click(function () {
+            // Get the ID of the category we're adding
+            var catID = $('#catID').val();
+            if (catID > 0) {
+
+                // Make sure the category we're trying to add isn't already in the table
+                var existing = $(table).find('#' + catID).get()[0];
+                if (existing == undefined) {
+                    var newCat_input = '<input type="hidden" name="cat" id="newCat:' + catID + '" value="' + catID + '" />';
+                    $(this).after(newCat_input);
+
+                    // Compile the rows action link
+                    var row_action = '<a href="javascript:void(0)" class="dynamic" id="' + catID + '">Remove</a>';
+
+                    table.fnAddData([$("#catID option[value='" + catID + "']").val(catID).text(), row_action]);
+                    showMessage("Category Added");
+                } else {
+                    showMessage("Error: Duplicate Entry");
+                }
+            }
+            $('#catID').val(0);
+        });
+
+        $('.dynamic').live('click', function () {
+            var catID = $(this).attr('id');
+            $('#newCat\\:' + catID).remove();
+            table.fnDeleteRow($(this).parent().parent().get()[0]);
+            showMessage("Category removed");
+        });
+    });
+</script>

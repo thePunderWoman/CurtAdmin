@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "File Extensions";
+    ViewBag.navigation = "_FileNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.FileExtension> extensions = ViewBag.extensions;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/fileexts.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt")" class="active">Extensions</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddExtension")">Add Extension</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage File Extensions</h2>
+    <table style="width: 100% !important">
+        <thead>
+            <tr>
+                <th>Extension</th>
+                <th>Icon</th>
+                <th>File Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.FileExtension e in extensions) {
+                <tr id="extension:@e.fileExtID">
+                    <td style="text-align: center;">@e.fileExt1</td>
+                    <td style="text-align: center;">
+                        @if (e.fileExtIcon != null && e.fileExtIcon != "") {
+                            <img class="extensionIcon" src="@e.fileExtIcon" alt="extension" />
+                        } else {
+                            <text>No Icon</text>
+                        }
+                    </td>
+                    <td style="text-align: center;">@e.FileType.fileType1</td>
+                    <td class="center">
+                        <a href="/Admin_FileExt/EditExtension/@e.fileExtID">Edit</a>
+                        <a class="delete" href="/Admin_FileExt/DeleteExtension/@e.fileExtID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('table').dataTable({
+            "bJQueryUI": true
+        });
+    });
+</script>

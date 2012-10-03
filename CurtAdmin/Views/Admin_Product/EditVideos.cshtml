@@ -1,0 +1,99 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    ViewBag.Title = "CURT Web Tool Part #"+part.partID+" Content";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.PartVideo> videos = ViewBag.videos;
+}
+<style type="text/css">
+    .form_left{
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        min-width: 550px;
+        display: none;
+    }
+    
+    #buttons{ margin-top: 0px; }
+    
+    #buttons input{
+        width: auto;
+    }
+    
+    table tbody td {
+        text-align: center;
+    }
+    
+</style>
+
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2 style="float:left">Edit Videos for Part #@part.partID - @part.shortDesc</h2>
+    <a href="javascript:void(0)" id="addVideo" style="float: right;" title="Add Video">
+        <img src="@Url.Content("~/Content/img/addVideo.png")" alt="Add Video" />
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+
+    <form class="form_left">
+        <label for="videoType">
+            Video Type
+            <select name="videoType" id="videoType">
+                <option value="">- Select Video Type -</option>
+                @foreach (CurtAdmin.videoType type in ViewBag.video_types) {
+                    <option value="@type.vTypeID">@type.name</option>
+                }
+            </select>
+        </label>
+
+        <label for="video" style="height:auto">
+            YouTube Video ID
+            <input type="text" name="video" id="video" placeholder="Enter YouTube Video ID here..." />
+            <span style="clear:both; display: block;"></span>
+        </label>
+
+        <label for="isPrimary" style="height:auto">
+            Primary Video?
+            <input type="checkbox" name="isPrimary" id="isPrimary" value="true" />
+            <span style="clear:both; display: block;"></span>
+        </label>
+
+        <div style="clear:both"></div>
+        <input type="hidden" name="pVideoID" id="pVideoID" value="0" />
+        <input type="hidden" name="partID" id="partID" value="@part.partID" />
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Cancel" />
+        </div>
+    </form>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Video Type</th>
+                <th>Video</th>
+                <th>Primary</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(CurtAdmin.PartVideo video in videos) {
+                <tr>
+                    <td>@video.videoType.name</td>
+                    <td>
+                        <iframe width="177" height="140" data-video="@video.video" src="http://www.youtube.com/embed/@video.video" frameborder="0" allowfullscreen></iframe>
+                    </td>
+                    <td>@((video.isPrimary) ? "Yes" : "No")</td>
+                    <td>
+                        <a href="javascript:void(0)" class="edit" data-id="@video.pVideoID" title="Edit Video">Edit</a> | 
+                        <a href="javascript:void(0)" class="remove" data-id="@video.pVideoID" title="Remove Video">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditVideos.js")"></script>
+

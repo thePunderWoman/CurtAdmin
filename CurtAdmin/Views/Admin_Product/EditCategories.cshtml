@@ -1,0 +1,60 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    ViewBag.Title = "EditCategories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    #addCat{
+        background: url('/Content/img/cancel.png');
+        background-repeat: no-repeat;
+        color: White;
+        font-size: 14pt;
+        font-weight: bold;
+        border: none;
+        width: 180px;
+        height: 49px;
+        font-family: 'Ubuntu',arial,serif;
+        cursor: pointer;
+    }
+</style>
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2>Editing Categories for Part #@part.partID - @part.shortDesc</h2>
+
+    <!-- Add new category associations -->
+    <div class="form_left" style="width: 100%">
+        <label for="catID">
+            Select Category
+            <select name="catID" id="catID" style="float:none">
+                <option value="0">- Select Category -</option>
+                @foreach (CurtAdmin.Models.DetailedCategories cat in ViewBag.cats) {
+                    <option value="@cat.catID">@cat.catTitle</option>
+                }
+            </select>
+            <input type="button" name="addCat" id="addCat" value="Add Category" />
+            <input type="hidden" name="shortDesc" id="shortDesc" value="@part.shortDesc" />
+            <input type="hidden" name="partID" id="partID" value="@part.partID" />
+        </label>
+    </div>
+
+    <!-- List the categories tied to this part -->
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.DetailedCategories part_cat in ViewBag.part_cats) {
+                <tr id="catRow:@part_cat.catID">
+                    <td>@part_cat.catTitle</td>
+                    <td><a href="javascript:void(0)" class="remove" id="@part_cat.catID">Remove</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditCategories.js")"></script>

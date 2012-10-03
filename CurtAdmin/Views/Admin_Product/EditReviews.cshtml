@@ -1,0 +1,142 @@
+﻿@{
+    ViewBag.Title = "EditReviews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.ReviewDetail> reviews = ViewBag.reviews;
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+}
+<style type="text/css">
+    h2{
+        float:left;
+    }
+    
+    #addReview{
+        margin: 0px 10px 0px 0px;
+        float:right;
+        line-height: 63px;
+        cursor: pointer;
+    }
+    
+    #addReview img{
+        vertical-align: middle;
+    }
+    
+    #reviewForm
+    {
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        display: none;
+    }
+    
+    #buttons
+    {
+        margin-top: 0px;
+    }
+    
+    input[type=checkbox]
+    {
+        text-align:center;
+    }
+    
+    tr td:nth-child(5), tr td:nth-child(6), tr td:nth-child(7)
+    {
+        text-align:center;
+    }
+</style>
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2>Edit Reviews for Part #@part.partID - @part.shortDesc</h2>
+    <div id="addReview">
+        <img src="@Url.Content("~/Content/img/addReview.png")" alt="Add Review" />
+    </div>
+    <div style="clear:both"></div>
+    <hr style="border-bottom: 1px dotted #343434" />
+
+    <div id="reviewForm" class="form_left">
+        <label for="name">
+            Reviewer Name
+            <input type="text" name="name" id="name" placeholder="Enter name of reviewer" />
+        </label>
+
+        <label for="email">
+            Reviewer Email
+            <input type="text" name="email" id="email" placeholder="Enter email of reviewer" />
+        </label>
+
+        <label for="rating">
+            Rating
+            <input type="text" name="rating" id="rating" placeholder="Enter rating (0 to 5)" />
+        </label>
+
+        <label for="subject">
+            Subject
+            <input type="text" name="subject" id="subject" placeholder="Enter subject" />
+        </label>
+
+        <label for="review_text" style="height:auto">
+            Review<br />
+            <textarea rows="4" cols="65" name="review_text" id="review_text" placeholder="Enter the review..."></textarea>
+        </label>
+        <div style="clear:both"></div>
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear Review" />
+        </div>
+    </div>
+
+
+    <table id="reviewTable">
+        <thead>
+            <tr>
+                <th>Review ID</th>
+                <th>Part ID</th>
+                <th>Rating</th>
+                <th>Customer</th>
+                <th>Reviewer Name</th>
+                <th>Date Added</th>
+                <th>Subject</th>
+                <th>Approved</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.ReviewDetail review in reviews) {
+                <tr id="review:@review.reviewID">
+                    <td>@review.reviewID</td>
+                    <td>@review.partID</td>
+                    <td><div class="starrating"><span style="width: @(((double)review.rating / 5) * 100)%;"></div></td>
+                    <td>@review.customer</td>
+                    <td>@review.name</td>
+                    <td>@String.Format("{0:M/d/yyyy h:mm tt}", review.createdDate)</td>
+                    <td>@review.subject</td>
+                    <td>
+                        <input type="checkbox" name="approved" id="approved:@review.reviewID" class="isApproved" value="true" @((review.approved) ? "checked='checked'" : "") />
+                    </td>
+                    <td>
+                        <select name="action" class="action" id="@review.reviewID">
+                            <option value="0">- Select Action -</option>
+                            <option value="view">View</option>
+                            <option value="edit">Edit</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="hidden" name="partID" id="partID" value="@part.partID" />
+    <input type="hidden" name="reviewID" id="reviewID" value="0" />
+</div>
+<div id="viewReview" style="display: none;">
+    <p id="viewName"></p>
+    <p id="viewEmail"></p>
+    <p id="viewDate"></p>
+    <p id="viewRating"></p>
+    <p id="viewSubject"></p>
+    <p id="viewText"></p>
+    <p id="viewCustomer"></p>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditReviews.js")"></script>

@@ -1,0 +1,92 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = new CurtAdmin.Models.ConvertedPart();
+    List<CurtAdmin.Models.ConvertedPart> related_parts = new List<CurtAdmin.Models.ConvertedPart>();
+    List<CurtAdmin.Models.ConvertedPart> parts = new List<CurtAdmin.Models.ConvertedPart>();
+    if (ViewBag.part != null) { part = ViewBag.part; }
+    if (ViewBag.related_parts != null) { related_parts = ViewBag.related_parts; }
+    if (ViewBag.parts != null) { parts = ViewBag.parts; }
+    ViewBag.Title = "CURT Admin - Related Parts for " + part.shortDesc;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    #tableContainer
+    {
+        display:none;
+    }
+</style>
+
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2>Add Related Parts for Part #@part.partID - @part.shortDesc</h2>
+
+    <hr style="margin: 10px 0px; border-bottom: 1px dotted #343434;with:95%;margin:auto;" />
+
+    <div style="clear:both"></div>
+    <div id="loading_area">
+        <p>Loading parts...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading vehicles..." />
+    </div>
+
+    <div id="tableContainer">
+        <h3>Related Parts</h3>
+        <table id="relatedParts">
+            <thead>
+                <tr>
+                    <th>Part #</th>
+                    <th>Part</th>
+                    <th>Last Modified</th>
+                    <th>List Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.Models.ConvertedPart rp in related_parts) {
+                    <tr id="related:@rp.partID">
+                        <td>@rp.partID</td>
+                        <td>@rp.shortDesc</td>
+                        <td>@rp.dateModified</td>
+                        <td>@rp.listPrice</td>
+                        <td>
+                            <a href="javascript:void(0)" title="Remove @rp.shortDesc" class="remove center" id="@rp.partID">Remove</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <hr style="margin: 10px 0px; border-bottom: 1px dotted #343434;with:95%;margin:auto;" />
+
+        <h3>All Parts</h3>
+        <table id="allParts">
+            <thead>
+                <tr>
+                    <th>Part #</th>
+                    <th>Part</th>
+                    <th>Last Modified</th>
+                    <th>List Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.Models.ConvertedPart p in parts) {
+                    List<CurtAdmin.Models.ConvertedPart> found_id = related_parts.Where(x => x.partID == p.partID).ToList<CurtAdmin.Models.ConvertedPart>();
+                    if(found_id.Count == 0){
+                        <tr id="all:@p.partID">
+                            <td>@p.partID</td>
+                            <td>@p.shortDesc</td>
+                            <td>@p.dateModified</td>
+                            <td>@p.listPrice</td>
+                            <td>
+                                <a href="javascript:void(0)" title="Add @p.shortDesc" class="add center" id="@p.partID">Add</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <input type="hidden" name="partID" id="partID" value="@part.partID" />
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditRelated.js")"></script>

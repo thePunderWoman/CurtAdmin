@@ -1,0 +1,93 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    string UPC = ViewBag.UPC;
+    ViewBag.Title = "CURT Admin - Editing " + part.shortDesc;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .form_left #buttons #btnContinue{
+        background: url('/Content/img/altButton.png');
+        background-repeat: no-repeat;
+        width: 180px;
+        height: 49px;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2>Editing Part #@part.partID - @part.shortDesc</h2>
+
+    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
+        <div id="error_box">
+            <p>Please fix the following errors:</p>
+            <ul>
+                @foreach (string message in ViewBag.error_messages) {
+                    <li>- @message</li>
+                }
+            </ul>
+        </div>
+    }
+    
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form">
+        <div class="form_left">
+            <label for="partID">
+                Part Number
+                <input type="text" name="partID" id="partID" required="required" disabled="disabled" placeholder="Enter the part number..." value="@part.partID" />
+            </label>
+
+            <label for="shortDesc">
+                Short Part Description
+                <input type="text" name="shortDesc" id="shortDesc" required="required" placeholder="Enter a brief description of the part..." value="@part.shortDesc" />
+            </label>
+
+            <label for="status">
+                Part Status
+                <select name="status" id="status">
+                    <option value="600" @((part.status == 600) ? "selected=selected" : "")>600 - Not Yet Available</option>
+                    <option value="800" @((part.status == 800) ? "selected=selected" : "")>800 - Active</option>
+                    <option value="900" @((part.status == 900) ? "selected=selected" : "")>900 - While Supplies Last</option>
+                    <option value="999" @((part.status == 999) ? "selected=selected" : "")>999 - Discontinued</option>
+                </select>
+            </label>
+
+            <label for="oldPartNumber">
+                Old Part Number
+                <input type="text" name="oldPartNumber" id="oldPartNumber" placeholder="Enter the old CURT part number..." value="@part.oldPartNumber" />
+            </label>
+
+            <label for="UPC">
+                UPC
+                <input type="text" name="UPC" id="UPC" placeholder="Enter UPC..." value="@UPC" required />
+            </label>
+
+            <label for="priceCode">
+                Price Code
+                <input type="text" name="priceCode" id="priceCode" placeholder="Enter price code..." value="@part.priceCode" />
+            </label>
+
+            <label for="classID">
+                Product Class
+                <select name="classID" id="classID">
+                    <option value="0">- Select Class -</option>
+                    @foreach (CurtAdmin.Class c in ViewBag.classes) {
+                        <option value="@c.classID" @((part.pClass == c.classID)?"selected='selected'":"")>@c.class1</option>
+                    }
+                </select>
+            </label>
+
+            <label for="featured">
+                Featured
+                <input type="checkbox" name="featured" id="featured" value="true" @((part.featured) ? "checked" : "")/>
+            </label>
+
+            <div id="buttons">
+                <input type="submit" name="btnContinue" id="btnContinue" value="Save &amp; Continue" />
+                <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+                <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+            </div>
+        </div>
+        
+    </form>
+</div>

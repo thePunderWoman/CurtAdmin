@@ -1,0 +1,8 @@
+#page {
+    display: block;
+}
+
+#page #thumbs {
+    float: left;
+    width: 25%;
+}

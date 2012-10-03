@@ -1,0 +1,89 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>CURT Documentation - Sign Up</title>
+    <link href="@Url.Content("~/Content/signup.css")" rel="stylesheet" media="all" />
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+    @if (ViewBag.submitted != 1) {
+        <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post">
+            <div style="color:whitesmoke;font-weight: bold">
+                <img src="@Url.Content("~/Content/img/curtLogo.png")" style="width: 100px" /> 
+                <span style="line-height: 26px;vertical-align: top">Documentation Sign Up</span>
+            </div>
+            @if (ViewBag.error_messages != null) {
+                foreach (string e in ViewBag.error_messages) {
+                    <p style="color: #e44f31;margin:0px;margin-left:10px">- @e</p>
+                }
+            }
+            <p id="required">All fields are required.</p>
+            <label for="fname">
+                First Name
+                <input type="text" name="fname" id="fname" placeholder="Enter your first name..." value="@ViewBag.fname" required />
+            </label>
+            <label for="lname">
+                <span style="float:left">Last Name</span>
+                <input type="text" name="lname" id="lname" placeholder="Enter your last name..." value="@ViewBag.lname" required />
+            </label>
+            <label for="new_username">
+                Username
+                <input type="text" name="new_username" id="new_username" placeholder="Enter desired username..." value="@ViewBag.new_username" required />
+            </label>
+            <label for="email">
+                E-Mail
+                <input type="email" name="email" id="email" placeholder="Enter your e-mail address..." value="@ViewBag.email" required />
+            </label>
+            <label for="phone">
+                Phone
+                <input type="text" name="phone" id="phone" placeholder="Enter your phone number..." value="@ViewBag.phone" required />
+            </label>
+            <label for="address">
+                Address
+                <input type="text" name="address" id="address" placeholder="Enter your address..." value="@ViewBag.address" required />
+            </label>
+            <label for="city">
+                City
+                <input type="text" name="city" id="city" placeholder="Enter your city..." value="@ViewBag.city" required />
+            </label>
+            <label for="stateID">
+                State
+                <select name="stateID" id="stateID" required>
+                    <option value="0">Select State</option>
+                    @foreach (CurtAdmin.State s in ViewBag.states) {
+                        <option value="@s.stateID" @((ViewBag.stateID == s.stateID) ? "selected='selected'" : "")>@s.abbr</option>
+                    }
+                </select>
+            </label>
+            <label for="dealer">
+                Register as Dealer?
+                <input type="checkbox" name="dealer" id="dealer" value="1" @((ViewBag.isDealer == 1)?"checked='checked'":"") />
+            </label>
+        
+            <label for="comments" style="height: 125px">
+                Comments <span style="font-size: 9pt;font-weight: normal">( Tell us who you are. )</span>
+                <textarea name="comments" id="comments" rows="5" cols="45" placeholder="Enter any comments here..." required>@ViewBag.comments</textarea>
+            </label>
+            <div style="clear:both"></div>
+            <input type="submit" name="btnSignup" id="btnSignup" value="Sign Up" />
+            <span id="already">Already a user? <a href="@Url.Content("~/Authenticate")" title="Login">Login</a></span>
+            <span id="forgot">Forgot Login? <a href="@Url.Content("~/Authenticate/Forgot")" title="Forgot account">Remind me.</a></span>
+            <div style="clear:both"></div>
+        </form>
+    } else {
+        <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post">
+            <div style="color:whitesmoke;font-weight: bold">
+                <img src="@Url.Content("~/Content/img/curtLogo.png")" style="width: 100px" /> 
+                <span style="line-height: 26px;vertical-align: top">Documentation Sign Up</span>
+            </div>
+            <p style="color: whitesmoke;margin-left:10px;font-size: 14pt">Thank you for your submission.</p><br />
+            <p style="color: whitesmoke;margin:0px;margin-left:10px">We will review the information that you submitted and you will receive an e-mail notification when we activate your account.</p>
+        </form>
+    }
+</body>
+</html>

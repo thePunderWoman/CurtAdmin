@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "Edit Lifestyle";
+    ViewBag.navigation = "_LifestyleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.DetailedCategories category = new CurtAdmin.Models.DetailedCategories();
+    if(ViewBag.cat != null){ category = ViewBag.cat; }
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Lifestyle/Edit?catID=" + category.catID)">Info</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Lifestyle/Content?catID=" + category.catID)">Content</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Add New Lifestyle Category</h2>
+
+    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
+        <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
+            <p style="color:whitesmoke;text-decoration:underline;font-size:14pt;margin-left:40px">Please fix the following errors:</p>
+            <ul style="list-style: none">
+                @foreach (string message in ViewBag.error_messages) {
+                    <li>- @message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form">
+        <div class="form_left">
+            <label for="catTitle">
+                CatTitle
+                <input type="text" name="catTitle" id="catTitle" placeholder="Enter the category title..." value="@category.catTitle" required />
+                <span class="inputHelper">* Required field.</span>
+            </label>
+
+            <label for="parentID">
+                Parent Category
+                <select name="parentID" id="parentID">
+                    <option value="0">- Select Parent Category -</option>
+                    @foreach (CurtAdmin.Models.DetailedCategories cat in ViewBag.cats) {
+                        <option value="@cat.catID" @((category.parentID == @cat.catID)?"selected='selected'":"")>@cat.catTitle</option>
+                    }
+                </select>
+            </label>
+            
+            <label for="image">
+                Category Image
+                <input type="hidden" name="image" id="file" value="@category.image" />
+                <div id="photobox">
+                    <div id="photo-file">
+                        @if (category.image != null && category.image != "") {
+                            <img src="@category.image" alt="photo" />
+                        } else {
+                            <img src="/Content/img/noimage.jpg" alt="No Photo" />
+                        }
+                    </div>
+                    <button type="button" id="choose-photo">Choose</button>
+                    <button type="button" id="clear-photo">Clear</button>
+                </div>
+                <div style="clear:both"></div>
+
+            </label>
+
+
+            <label for="isLifestyle">
+                Lifestyle?
+                <input type="checkbox" name="isLifestyle" id="isLifeStyle" value="1" @((category.isLifestyle == 1)?"checked='checked'":"") />
+            </label>
+
+            <label for="shortDesc" style="height:auto">
+                Short Description<br />
+                <textarea cols="70" rows="4" name="shortDesc" placeholder="Enter a brief description...">@category.shortDesc</textarea>
+            </label>
+
+            <label for="longDesc" style="height:auto">
+                Long Description<br />
+                <textarea cols="70" rows="7" id="longDesc" name="longDesc" placeholder="Enter a more lengthy description...">@category.longDesc</textarea>
+            </label>
+
+            <div class="clear"></div>
+            <div id="buttons">
+                <input type="submit" name="btnSave" id="btnSave" value="Save" />
+                <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div id="file-dialog"></div>

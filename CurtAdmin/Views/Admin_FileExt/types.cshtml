@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "File Extensions";
+    ViewBag.navigation = "_FileNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.FileType> types = ViewBag.types;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/fileexts.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt")" class="active">Extensions</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddExtension")">Add Extension</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage File Types</h2>
+    <table style="width: 100% !important">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.FileType t in types) {
+                <tr id="type:@t.fileTypeID">
+                    <td>@t.fileType1</td>
+                    <td class="center">
+                        <a href="/Admin_FileExt/EditType/@t.fileTypeID">Edit</a>
+                        <a class="delete" href="/Admin_FileExt/DeleteType/@t.fileTypeID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('table').dataTable({
+            "bJQueryUI": true
+        });
+    });
+</script>

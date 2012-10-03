@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Edit Test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    CurtAdmin.B2BTest test = new CurtAdmin.B2BTest();
+    if(ViewBag.test != null){
+        test = ViewBag.test;
+    }
+    
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+
+}
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@test.Category.certID">View Categories</a> > <a href="/Admin_B2B/ViewTests/@test.catID">View Tests</a> > Edit Test</div>
+<div id="content_container">
+    <h2>Edit Test: @test.title</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    @if (msg.Length > 0)
+    {
+        <p style="font-weight: bold; color: Green;">@ViewBag.msg</p>
+    }
+    <form action="/Admin_B2B/EditTest/@test.id" method="post" class="form_left">
+        <label for="title">
+            Test Name
+            <input type="text" name="title" id="title" value="@test.title" required />
+        </label>
+
+        <label for="text">
+            Short Description
+            <input type="text" name="text" id="text" value="@test.text" />
+        </label>
+
+        <label for="minPassPercent">
+            Minimum Pass Percentage
+            <input type="text" name="minPassPercent" id="minPassPercent" value="@test.min_pass_percent" required />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.category> categories = new List<CurtAdmin.category>();
+    categories = ViewBag.cateogries;
+    List<CurtAdmin.category> sub_categories = new List<CurtAdmin.category>();
+    sub_categories = ViewBag.sub_categories;
+    CurtAdmin.category category = ViewBag.category;
+}
+
+@if (categories != null && categories.Count > 0) {
+    <div id="usersNav">
+        <ul>
+            @foreach (CurtAdmin.category cat in categories) {
+                <li>
+                    <a href="@Url.Content("~/Documentation/Category?cat_id=" + cat.catID)" @((cat.catID == category.catID || cat.catID == category.parentID) ? "class=active" : "")>@cat.catName</a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+@if (sub_categories != null && sub_categories.Count > 0) {
+    <div class="subNav">
+        <ul>
+            @foreach (CurtAdmin.category sub_cat in sub_categories) {
+                <li>
+                    <a href="@Url.Content("~/Documentation/Category?cat_id=" + sub_cat.catID)" @((sub_cat.catID == category.catID || sub_cat.catID == category.parentID) ? "class=active" : "")>@sub_cat.catName</a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+<div id="content_container">
+    <h2>@category.catName</h2>
+
+    <p>@category.comments</p>
+    
+    @if (sub_categories.Count > 0) {
+        <h4>Sub-Categories</h4>
+        <p>There are sub-categories for this category. This is likely due to versioning. The sub-categories are likely different iterations of the parent category. The highest version number will be the most recent build.</p>
+        
+        <table id="sub_cat_table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Documentation Item Count</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (CurtAdmin.category sub_cat in sub_categories) {
+                CurtAdmin.DocsLinqDataContext db = new CurtAdmin.DocsLinqDataContext();
+                int itemCount = (from ci in db.cat_items
+                                 where ci.catID.Equals(sub_cat.catID)
+                                 select ci).Count();
+                <tr>
+                    <td>
+                        <a href="@Url.Content("~/Documentation/Category?cat_id=" + sub_cat.catID)">@sub_cat.catName</a>
+                    </td>
+                    <td>@itemCount</td>
+                    
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    @if (ViewBag.items.Count > 0) {
+        <h4>Documented Items associated with this category</h4>
+        <hr style="width: 100%;border: 1px dotted #999" />
+        <ul>
+            @foreach (CurtAdmin.docItem item in ViewBag.items) {
+                <li><a href="@Url.Content("~/Documentation/Item?item_id=" + item.itemID)">@item.itemName</a></li>
+            }
+        </ul>
+    }
+
+</div>
+

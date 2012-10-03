@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Add Vehicle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .col{
+        min-width: 15%;
+        border-right: 1px dotted #ccc;
+        padding: 0px 5px;
+        float:left;
+        max-height: 150px;
+    }
+    
+    #col4{
+        border-right: none;
+    }
+    
+    .addImg, .delImg, .editImg{
+        width: 20px;
+        height: 20px;
+        vertical-align: top;
+        display: none;
+        cursor: pointer;
+    }
+    
+    .prompt_text{
+        width:90%;
+        border:2px solid #343434;
+        border-radius:4px 4px 4px;
+        height: 25px;
+        line-height: 21px;
+        padding: 2px;
+    }
+</style>
+<div id="pageNav">
+    <ul>
+        <li>
+            <a href="@Url.Content("~/Admin_Vehicles")">View Vehicles</a>
+        </li>
+        <li>
+            <a href="@Url.Content("~/Admin_Vehicles/Add")" class="active">Add New</a>
+        </li>
+    </ul>
+</div>
+<div id="content_container">
+    <div id="vehicle_header">
+        <h2>Add New Vehicle</h2>
+
+        <form action="@Url.Content("~/Admin_Vehicles/FindVehicle")" method="post" class="form">
+            <label for="vehicleStr">
+                <input type="search" name="vehicleStr" id="vehicleStr" placeholder="Search for vehicle" />
+                <input type="submit" name="btnSearchVechile" id="btnSearchVehicle" value="" />
+            </label>
+        </form>
+        <div style="clear:both"></div>
+    </div>
+
+    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
+        <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
+            <p style="color:whitesmoke;text-decoration:underline;font-size:14pt;margin-left:40px">Please fix the following errors:</p>
+            <ul style="list-style: none">
+                @foreach (string message in ViewBag.error_messages) {
+                    <li>- @message</li>
+                }
+            </ul>
+        </div>
+    }
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post">
+        <div id="col1" class="col">
+            <label for="year">
+                Year<br />
+                <select name="year" id="year">
+                    <option value="0">- Select Year -</option>
+                    @foreach (CurtAdmin.Year y in ViewBag.years) {
+                        <option value="@y.yearID">@y.year1</option>
+                    }
+                </select>
+                <img src="@Url.Content("~/Content/img/button_green_add.png")" class="addImg" id="addYear" alt="Add New Year" title="Add New Year" />
+                <img src="@Url.Content("~/Content/img/edit.png")" class="editImg" id="editYear" alt="Edit Year" title="Edit Year" />
+                <img src="@Url.Content("~/Content/img/trash.png")" class="delImg" id="delYear" alt="Delete Year" title="Delete Year" />
+            </label>
+        </div>
+
+        <div id="col2" class="col">
+            <label for="make">
+                Make<br />
+                <select name="make" id="make">
+                    <option value="0">- Select Make -</option>
+                    @foreach (CurtAdmin.Make m in ViewBag.makes) {
+                        <option value="@m.makeID">@m.make1</option>
+                    }
+                </select>
+                <img src="@Url.Content("~/Content/img/button_green_add.png")" class="addImg" id="addMake" alt="Add New Make" title="Add New Make" />
+                <img src="@Url.Content("~/Content/img/edit.png")" class="editImg" id="editMake" alt="Edit Make" title="Edit Make" />
+                <img src="@Url.Content("~/Content/img/trash.png")" class="delImg" id="delMake" alt="Delete Make" title="Delete Make" />
+            </label>
+        </div>
+
+        <div id="col3" class="col">
+            <label for="model">
+                Model<br />
+                <select name="model" id="model">
+                    <option value="0">- Select Model -</option>
+                    @foreach (CurtAdmin.Model m in ViewBag.models) {
+                        <option value="@m.modelID">@m.model1</option>
+                    }
+                </select>
+                <img src="@Url.Content("~/Content/img/button_green_add.png")" class="addImg" id="addModel" alt="Add New Model" title="Add New Model" />
+                <img src="@Url.Content("~/Content/img/edit.png")" class="editImg" id="editModel" alt="Edit Model" title="Edit Model" />
+                <img src="@Url.Content("~/Content/img/trash.png")" class="delImg" id="delModel" alt="Delete Model" title="Delete Model" />
+            </label>
+        </div>
+
+        <div id="col4" class="col">
+            <label for="style">
+                Style<br />
+                <select name="style" id="style">
+                    <option value="0">- Select Style -</option>
+                    @foreach (CurtAdmin.Model m in ViewBag.models) {
+                        <option value="@m.modelID">@m.model1</option>
+                    }
+                </select>
+                <img src="@Url.Content("~/Content/img/button_green_add.png")" class="addImg" id="addStyle" alt="Add New Style" title="Add New Style" />
+                <img src="@Url.Content("~/Content/img/edit.png")" class="editImg" id="editStyle" alt="Edit Style" title="Edit Style" />
+                <img src="@Url.Content("~/Content/img/trash.png")" class="delImg" id="delStyle" alt="Delete Style" title="Delete Style" />
+            </label>
+        </div>
+        <div style="clear:both"></div>
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/add_edit_vehicle.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-impromptu.4.0.min.js")"></script>
+

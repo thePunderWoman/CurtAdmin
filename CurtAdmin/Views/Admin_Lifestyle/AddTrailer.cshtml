@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Add";
+    ViewBag.navigation = "_LifestyleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.DetailedCategories> cats = ViewBag.cats;
+    List<string> lifestyles = ViewBag.lifestyles;
+    List<string> classes = new List<string>();
+    classes.Add("Class 1 Receiver");
+    classes.Add("Class 2 Receiver");
+    classes.Add("Class 3 Receiver");
+    classes.Add("Class 4 Receiver");
+    classes.Add("Class 5 Receiver");
+}
+<link href="/Content/jquery.multiselect.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/Scripts/jquery.multiselect.min.js"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Lifestyle/AddTrailer")">Add Trailer</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Add New Trailer</h2>
+
+    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
+        <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
+            <p style="color:whitesmoke;text-decoration:underline;font-size:14pt;margin-left:40px">Please fix the following errors:</p>
+            <ul style="list-style: none">
+                @foreach (string message in ViewBag.error_messages) {
+                    <li>- @message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form">
+        <div class="form_left">
+            <label for="name">
+                Name
+                <input type="text" name="name" id="name" placeholder="Enter the trailer name..." value="@ViewBag.name" required />
+                <span class="inputHelper">* Required field.</span>
+            </label>
+
+            <label for="image">
+                Trailer Image
+                <input type="hidden" name="image" id="file" value="@ViewBag.image" />
+                <div id="photobox">
+                    <div id="photo-file">
+                        @if (ViewBag.image != null && ViewBag.image != "") {
+                            <img src="@ViewBag.image" alt="photo" />
+                        } else {
+                            <img src="/Content/img/noimage.jpg" alt="No Photo" />
+                        }
+                    </div>
+                    <button type="button" id="choose-photo">Choose</button>
+                    <button type="button" id="clear-photo">Clear</button>
+                </div>
+                <div style="clear:both"></div>
+            </label>
+
+            <label for="tw">
+                Tongue Weight (lbs)<br />
+                <input type="number" id="tw" name="tw" placeholder="Enter a Tongue Weight in lbs..." value="@ViewBag.tw" required />
+            </label>
+
+            <label for="gtw">
+                Gross Tongue Weight (lbs)<br />
+                <input type="number" id="gtw" name="gtw" placeholder="Enter a Gross Tongue Weight in lbs..." value="@ViewBag.gtw" />
+            </label>
+
+            <label for="hitchClass">
+                Hitch Class<br />
+                <select id="hitchClass" name="hitchClass">
+                    <option value="">Select a class...</option>
+                    @foreach (string classstr in classes) {
+                        <option value="@classstr" @((ViewBag.hitchClass == classstr) ? "selected" : "")>@classstr</option>
+                    }
+                </select>
+            </label>
+
+            <label for="shortDesc" style="height:auto">
+                Short Description<br />
+                <textarea cols="70" rows="4" name="shortDesc" placeholder="Enter a brief description...">@ViewBag.shortDesc</textarea>
+            </label>
+
+            <label for="message" style="height:auto">
+                "Can't Tow" Message<br />
+                <textarea cols="70" rows="7" id="message" name="message" placeholder="Enter a message for the 'Why Can't I tow this?' section...">@ViewBag.message</textarea>
+            </label>
+
+            <label for="lifestyles">
+                Lifestyles
+                <select name="lifestyles" id="lifestyles" multiple="multiple">
+                    <option value="">No Lifestyle</option>
+                    @foreach (CurtAdmin.Models.DetailedCategories lifestyle in cats) {
+                        <option value="@lifestyle.catID" @((lifestyles.Any<string>(x => x == lifestyle.catID.ToString())) ? "selected=selected" : "")>@lifestyle.catTitle</option>
+                    }
+                </select>
+            </label>
+
+            <div class="clear"></div>
+            <div id="buttons">
+                <input type="submit" name="btnSave" id="btnSave" value="Save" />
+                <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div id="file-dialog"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#lifestyles").multiselect({
+            noneSelectedText: 'Select lifestyle',
+            selectedList: 4
+        });
+    });
+</script>

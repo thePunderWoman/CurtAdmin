@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "View Tests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<CurtAdmin.B2BTest> listOfTests = new List<CurtAdmin.B2BTest>();
+    if(ViewBag.listOfTests != null){
+        listOfTests= ViewBag.listOfTests;
+    }
+
+    int catID = 0;
+    if(ViewBag.catID != null){
+        catID = ViewBag.catID;
+    }
+
+    CurtAdmin.B2BCategory cat = new CurtAdmin.B2BCategory();
+    if(ViewBag.cat != null){
+    cat = ViewBag.cat;
+    }
+
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+}
+    <style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addTest, #massUpload{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<div id="breadcrumbs"><a href="/Admin_B2B/">B2B</a> > <a href="/Admin_B2B/">Certificates</a> > <a href="/Admin_B2B/ViewCats/@cat.certID">Categories</a> > Tests</div>
+<div id="content_container">
+    <h2>Viewing B2B Tests</h2>
+    <a href="/Admin_B2B/AddTest/@catID" title="Add Test" id="addTest" class="button">
+        Add Test
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the test(s) and to modify them accordingly.</p>
+
+    <div id="loading_area">
+        <p>Loading Tests...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Tests" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Minimum Passing %</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.B2BTest test in listOfTests) {
+                <tr>
+                    <td>@test.id</td>
+                    <td>@test.title</td>
+                    <td>@test.text</td>
+                    <td>@test.min_pass_percent</td>
+                    <td>
+                        <a href="/Admin_B2B/ViewQuestions/@test.id" class="Questions">Questions</a> |  
+                        <a href="/Admin_B2B/EditTest/@test.id" class="edit">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" id="@test.id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var testTable = "";
+    $(function () {
+        testTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+        $('.delete').live('click', function () {
+            var testID = $(this).attr('id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (testID > 0 && confirm('Are you sure you want to delete this test?')) {
+                $.get('/Admin_B2B/DeleteTest/' + testID, function (response) {
+                    if (response.length == 0) {
+                        testTable.fnDeleteRow(table_row);
+                    } else {
+                        showMessage(response);
+                    }
+                }, "html");
+            }
+        });
+    });
+</script>

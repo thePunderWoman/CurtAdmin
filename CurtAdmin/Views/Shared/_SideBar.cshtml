@@ -1,0 +1,25 @@
+﻿<!-- Sidebar navigation -->
+<div id="sidebar">
+    <ul>
+        @if (ViewBag.Modules != null) {
+            foreach (CurtAdmin.module module in ViewBag.Modules) {
+                <li>
+                    <a href="@module.module_path" @((ViewBag.activeModule == module.module1)?"class=active_module":"")>
+                        @if(module.img_path != null && module.img_path.Length > 0){
+                            <span>
+                                <img src="@Url.Content("~/Content/img/"+module.img_path)" alt="@module.module1" />
+                            </span>
+                        }
+                        @module.module1.Trim()
+                    </a>
+                </li>
+            }
+        }
+        @if (Session["userID"] != null && Convert.ToInt32(Session["userID"]) > 0) {
+            <li>
+                <a href="@Url.Content("~/Authenticate/Logout")">Logout</a>
+            </li>
+        }
+    </ul>
+</div> <!-- End Sidebar -->
+<div id="sidebar_border"></div>

@@ -1,0 +1,14 @@
+﻿<hr style="border-bottom:1px dotted #343434;width:90%;margin-top: 25px;" />
+<div id="footer_links">
+    <span>
+        &copy; @DateTime.Now.Year CURT Manufacturing 
+        <a href="mailto:websupport@curtmfg.com" title="Support">Support</a>
+        @if (Session["userID"] != null && Convert.ToInt32(Session["userID"]) > 0) {
+            <span>&nbsp;|&nbsp;</span>
+            <a href="/">Home</a><span>&nbsp;|&nbsp;</span>
+            <a href="@Url.Content("~/Users")">Account</a><span>&nbsp;|&nbsp;</span>
+            <a href="@Url.Content("~/Authenticate/Logout")">Logout</a>
+        }
+        </span>
+</div>
+<div id="message_box"><span>Message Box.</span></div>

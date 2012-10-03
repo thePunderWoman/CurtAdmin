@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Add Forum Post";
+    ViewBag.navigation = "_ForumNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.FullTopic topic = ViewBag.topic;
+}
+
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + topic.TopicGroupID)">Add Topic</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddPost/" + topic.topicID)">Start Thread</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2>Add Post to Topic "@topic.name"</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p>@ViewBag.error</p>
+    }
+    <form action="/Admin_Forum/AddPost/@topic.topicID" method="post" class="form_left">
+        <label for="title">
+            Title
+            <input type="text" name="titlestr" id="titlestr" placeholder="Enter the Title of the post" required value="@ViewBag.titlestr" />
+        </label>
+
+        <label for="post">
+            Post
+            <textarea name="post" id="post" placeholder="Enter the Post Content" rows="5" cols="50">@ViewBag.post</textarea>
+        </label>
+
+        <label for="sticky">
+            Sticky Post?
+            <input type="checkbox" id="sticky" name="sticky" value="true" @((ViewBag.sticky) ? "checked='checked'" : "") />
+        </label>
+
+        <div class="clear"></div>
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>

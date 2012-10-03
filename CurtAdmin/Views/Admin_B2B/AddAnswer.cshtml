@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Add Answer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    int questionID = 0;
+    if (ViewBag.questionID != null)
+    {
+        questionID = ViewBag.questionID;
+    }
+
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="content_container">
+    <h2>Add New Answer</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    <form action="/Admin_B2B/AddAnswer/@questionID" method="post" class="form_left">
+        <label for="text">
+            Answer Text
+            <input type="text" name="text" id="text" placeholder="Enter the answer" required />
+        </label>
+        <label for="isCorrect">
+            Correct Answer
+            <input type="checkbox" name="isCorrect" id="isCorrect"/>
+        </label>
+
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Add" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    h2{
+        float:left;
+    }
+    
+    #addPart{
+        margin: 0px 10px 0px 0px;
+        float:right;
+        line-height: 63px;
+    }
+    
+    #addPart a{
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16pt;
+    }
+    
+    #addPart a img{
+        vertical-align: middle;
+    }
+</style>
+<div id="content_container">
+    <h2>View Parts by category</h2>
+    <div id="addPart">
+        <a href="@Url.Content("~/Admin_Product/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
+    </div>
+    <div style="clear:both"></div>
+
+    <p>Loading all the parts onto one page would take a little while. So how about you select a category of parts to view? Might make things a little less painless.</p>
+
+    <p style="font-size: 8pt">However, if you're one of those people who love agonizing wait times.....<a href="@Url.Content("~/Admin_Product/ViewAll")">click here</a> and grab some coffee.</p>
+    
+    <div id="loading_area">
+        <p>Loading categories...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading categories..." />
+    </div>
+    <table style="display:none">
+        <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Category</th>
+                <th>Date Added</th>
+                <th>Parent</th>
+                <th># Parts</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.DetailedCategories cat in ViewBag.cats) {
+                <tr id="catRow:@cat.catID">
+                    <td>@cat.catID</td>
+                    <td>@cat.catTitle</td>
+                    <td>@cat.dateAdded</td>
+                    <td>@cat.parentCat</td>
+                    <td>@cat.partCount</td>
+                    <td class="center">
+                        <a href="/Admin_ProductCategories/CategoryItems?catID=@cat.catID">View Parts</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                    <td></td>
+                    <td>Uncategorized Parts</td>
+                    <td></td>
+                    <td></td>
+                    <td>@ViewBag.unknown</td>
+                    <td class="center">
+                        <a href="/Admin_ProductCategories/CategoryItems?unknown=unknown">View Parts</a>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var catTable = $('table').dataTable({ "bJQueryUI": true });
+        $('#loading_area').slideUp();
+        $('.dataTables_wrapper').fadeIn();
+        $('table').fadeIn();
+    });
+</script>

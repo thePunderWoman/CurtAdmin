@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="alex_db" Class="DocsLinqDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=alex_db;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="alex_dbConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.documents" Member="documents">
+    <Type Name="document">
+      <Column Name="docID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="typeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="documentTitle" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="documentPath" Type="System.String" DbType="Varchar(2000) NULL" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="dateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="document_documentType" Member="documentTypes" ThisKey="typeID" OtherKey="typeID" Type="documentType" />
+      <Association Name="document_itemDoc" Member="itemDocs" ThisKey="docID" OtherKey="docID" Type="itemDoc" />
+    </Type>
+  </Table>
+  <Table Name="dbo.documentTypes" Member="documentTypes">
+    <Type Name="documentType">
+      <Column Name="typeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="type" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="document_documentType" Member="document" ThisKey="typeID" OtherKey="typeID" Type="document" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.itemDocs" Member="itemDocs">
+    <Type Name="itemDoc">
+      <Column Name="docID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="itemID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="itemDocID" Type="System.Int32" DbType="INT NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Association Name="document_itemDoc" Member="document" ThisKey="docID" OtherKey="docID" Type="document" IsForeignKey="true" />
+      <Association Name="docItem_itemDoc" Member="docItem" ThisKey="itemID" OtherKey="itemID" Type="docItem" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.user_modules" Member="user_modules">
+    <Type Name="user_module">
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="moduleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="user_modules_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Association Name="module_user_module" Member="module" ThisKey="moduleID" OtherKey="moduleID" Type="module" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.States" Member="States">
+    <Type Name="State">
+      <Column Name="stateID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="state" Member="state1" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="abbr" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.categories" Member="categories">
+    <Type Name="category">
+      <Column Name="catID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="parentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="catName" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="comments" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="moduleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="category_module" Member="modules" ThisKey="moduleID" OtherKey="moduleID" Type="module" />
+      <Association Name="cat_item_category" Member="cat_item" ThisKey="catID" OtherKey="catID" Type="cat_item" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.docItems" Member="docItems">
+    <Type Name="docItem">
+      <Column Name="itemID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="itemName" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="itemDescription" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="executionExample" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="resultExample" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="codeLink" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="dateModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="author" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="itemHTML" Type="System.String" DbType="Text" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="docItem_itemDoc" Member="itemDocs" ThisKey="itemID" OtherKey="itemID" Type="itemDoc" />
+      <Association Name="cat_item_docItem" Member="cat_item" ThisKey="itemID" OtherKey="itemID" Type="cat_item" IsForeignKey="true" />
+      <Association Name="itemComment_docItem" Member="itemComment" ThisKey="itemID" OtherKey="itemID" Type="itemComment" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.cat_items" Member="cat_items">
+    <Type Name="cat_item">
+      <Column Name="catID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="itemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cat_items_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Association Name="cat_item_category" Member="categories" ThisKey="catID" OtherKey="catID" Type="category" />
+      <Association Name="cat_item_docItem" Member="docItems" ThisKey="itemID" OtherKey="itemID" Type="docItem" />
+    </Type>
+  </Table>
+  <Table Name="dbo.itemComments" Member="itemComments">
+    <Type Name="itemComment">
+      <Column Name="commentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="comment" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="itemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="parentComment" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="itemComment_docItem" Member="docItems" ThisKey="itemID" OtherKey="itemID" Type="docItem" />
+    </Type>
+  </Table>
+  <Table Name="dbo.modules" Member="modules">
+    <Type Name="module">
+      <Column Name="moduleID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="module" Member="module1" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="module_path" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="module_type" Type="System.String" DbType="VarChar(25) NOT NULL" CanBeNull="false" />
+      <Column Name="img_path" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="module_user_module" Member="user_modules" ThisKey="moduleID" OtherKey="moduleID" Type="user_module" />
+      <Association Name="category_module" Member="category" ThisKey="moduleID" OtherKey="moduleID" Type="category" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.resource_listings" Member="resource_listings">
+    <Type Name="resource_listing">
+      <Column Name="resourceID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="resource_name" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="resource_url" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="username" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="password" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="comments" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="resource_listing_resource_user" Member="resource_users" ThisKey="resourceID" OtherKey="resourceID" Type="resource_user" />
+    </Type>
+  </Table>
+  <Table Name="dbo.resource_users" Member="resource_users">
+    <Type Name="resource_user">
+      <Column Name="resource_user_key" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="resourceID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="resource_listing_resource_user" Member="resource_listing" ThisKey="resourceID" OtherKey="resourceID" Type="resource_listing" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.users" Member="users">
+    <Type Name="user">
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="fname" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="lname" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="website" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="phone" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="fax" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="isAdmin" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="comments" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="dateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="isActive" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="superUser" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="stateID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="city" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="address" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="isDealer" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="biography" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="photo" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

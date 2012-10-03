@@ -1,0 +1,17 @@
+﻿@using CurtAdmin.Models;
+@{
+    ViewBag.Title = "Import Status";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.ImportProcess status = ViewBag.status ?? new CurtAdmin.ImportProcess();
+}
+
+<div id="content_container">
+    <h2>Import Status</h2>
+    @if (status != null && status.ID > 0) {
+        if (status.endTime.Equals(null)) {
+            <p>Process Currently Running.  Started at @String.Format("{0:M/d/yyyy} at {0:h:mm tt}", status.startTime).</p>
+        } else {
+            <p>Process last Completed on @String.Format("{0:M/d/yyyy} at {0:h:mm tt}", status.endTime).</p>
+        }
+    }
+</div>

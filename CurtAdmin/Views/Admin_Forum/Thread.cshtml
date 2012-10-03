@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Forum / Message Thread";
+    ViewBag.navigation = "_ForumNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int groupid = ViewBag.groupid;
+    CurtAdmin.Models.Thread thread = ViewBag.thread;
+    List<CurtAdmin.Models.Post> posts = thread.posts;
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Forum/Threads/" + thread.topicID)">Threads</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + groupid)">Add Topic</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddPost/" + thread.topicID)">Start Thread</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2 id="index_title">Thread: <span>@posts[0].title</span></h2>
+    <div id="posts">
+        @foreach (CurtAdmin.Models.Post post in posts) {
+            <div class="forumpost" id="post_@(post.postID)">
+                <div class="datebox">
+                    <p><strong>Posted On</strong><br />@String.Format("{0:dddd, MMMM d, yyyy} at {0: h:mm tt}",post.createdDate)</p>
+                    <p><strong>By</strong><br />@((post.email != "") ? Html.Raw("<a href='mailto:" + post.email + "'>" + post.getName() + "</a>") : Html.Raw(post.getName()))
+                        @if (post.company != "") {
+                            <br />@post.company
+                        }
+                    </p>
+                    <p class="ipaddress"><strong>IP</strong> @post.IPAddress</p>
+                </div>
+                <div class="postbox">
+                    <p class="title">@post.title</p>
+                    <div class="controls">
+                        <a href="/Admin_Forum/Approve/@post.postID" data-id="@post.postID" class="approve">@((post.approved) ? "Unapprove" : "Approve")</a> |
+                        <a href="/Admin_Forum/EditPost/@post.postID" data-id="@post.postID" class="edit">Edit</a> | 
+                        <a href="/Admin_Forum/FlagPost/@post.postID" data-id="@post.postID" class="flag">Spam</a> | 
+                        <a href="/Admin_Forum/BlockIP/@post.postID" data-id="@post.postID" class="block">Block IP</a> | 
+                        <a href="/Admin_Forum/DeletePost/@post.postID" data-id="@post.postID" class="delete">Delete</a></div>
+                    <p>@post.post</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+        }
+    </div>
+    <a href="#" id="addreply" class="button" style="margin-top: 10px;">Reply to Thread</a>
+</div>
+<div id="postform" style="display: none;">
+    <form class="form_left">
+        <input type="hidden" id="threadID" name="threadID" value="@thread.threadID" />
+        <input type="hidden" id="postID" name="postID" value="0" />
+        <input type="hidden" id="parentID" name="parentID" value="0" />
+        <input type="hidden" id="edit" name="edit" value="false" />
+        <label for="title">Title</label>
+        <input type="text" name="titlestr" id="titlestr" placeholder="Enter the Title of the post" required value="@ViewBag.titlestr" />
+        <label for="post">Post</label>
+        <textarea name="post" id="post" placeholder="Enter the Post Content" rows="5" cols="50">@ViewBag.post</textarea>
+        <label for="sticky">Sticky Post?</label>
+        <input type="checkbox" id="sticky" name="sticky" value="true" />
+        <div class="clear"></div>
+    </form>
+</div>
+<script src="/Scripts/admin/thread.js" type="text/javascript"></script>

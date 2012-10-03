@@ -1,0 +1,106 @@
+﻿@using CurtAdmin.Models;
+@{
+    ViewBag.Title = "Website Content";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string error = ViewBag.error;
+    string message = ViewBag.message;
+    ContentPage content = ViewBag.content;
+    List<CurtAdmin.SiteContentRevision> revisions = content.revisions;
+    CurtAdmin.SiteContentRevision revision = revisions.Find(x => x.active == true);
+}
+
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Content")">Manage Content</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Menus")">Manage Menus</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Add a Content Page</h2>
+
+    @if (error.Length != 0) {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    @if (message != null && message.Length != 0) {
+        <p style="font-weight: bold; color: Green;">@message</p>
+    }
+    <form action="/Admin_Website/Content/Edit/@content.contentID" Method="post" id="saveform" class="form_left">
+
+        <!-- Item Name -->
+        <label for="page_title">
+            Title
+            <input type="text" name="page_title" id="page_title" placeholder="Enter the title of the page..." value="@((Request.QueryString["page_title"] != null && Request.QueryString["page_title"].Length > 0) ? Request.QueryString["page_title"] : content.page_title)" />
+        </label>
+
+        <label for="page_content" id="label_page_content">
+            Content
+            <br />
+            <textarea name="page_content" class="page_content" rows="10" cols="50" id="page_content" placeholder="Enter the Page Content">@((Request.QueryString["page_content"] != null && Request.QueryString["page_content"].Length > 0) ? Request.QueryString["page_content"] : revision.content_text)</textarea>
+        </label>
+
+        <label for="keywords">
+            Keywords
+            <input type="text" name="keywords" id="keywords" placeholder="Enter the keywords" value="@((Request.QueryString["keywords"] != null && Request.QueryString["keywords"].Length > 0) ? Request.QueryString["keywords"] : content.keywords)" />
+        </label>
+
+        <label for="meta_title">
+            Meta Title
+            <input type="text" name="meta_title" id="meta_title" placeholder="Enter the SEO Title" value="@((Request.QueryString["meta_title"] != null && Request.QueryString["meta_title"].Length > 0) ? Request.QueryString["meta_title"] : content.meta_title)" />
+        </label>
+
+        <label for="meta_description">
+            Meta Description
+            <input type="text" name="meta_description" id="meta_description" placeholder="Enter the SEO Description" value="@((Request.QueryString["meta_description"] != null && Request.QueryString["meta_description"].Length > 0) ? Request.QueryString["meta_description"] : content.meta_description)" />
+        </label>
+
+        <label for="canonical">
+            Canonical Link
+            <input type="text" name="canonical" id="canonical" placeholder="Enter the Canonical Link" value="@((Request.QueryString["canonical"] != null && Request.QueryString["canonical"].Length > 0) ? Request.QueryString["canonical"] : content.canonical)" />
+        </label>
+
+        @if (!(content.published)) {
+            <input type="hidden" name="publish" id="publish" value="false" />
+        } else {
+            <label for="publish">
+                Published
+                <input type="checkbox" name="publish" id="publish" value="true" checked />
+            </label>
+        }
+
+        <label for="requireAuthentication">
+            Require User Login to View?
+            <input type="checkbox" name="requireAuthentication" id="requireAuthentication" value="true" @((content.requireAuthentication) ? "checked" : "") />
+        </label>
+
+        <div id="buttons">
+            <a href="/Admin_Website/" title="Cancel" id="btnCancel" class="cancel">Cancel</a>
+            @if (!(content.published)) {
+                <input type="button" id="btnSubmitPublish" name="btnSubmitPublish" value="Save & Publish" />
+            }
+            <input type="submit" id="btnSave" name="btnSave" value="Save" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        CKEDITOR.replace('page_content', {
+            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
+            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageWindowWidth: '640',
+            filebrowserImageWindowHeight: '480'
+        });
+
+        $('#btnSubmitPublish').click(function () {
+            $('#publish').val("true");
+            $('#saveform').submit();
+        });
+
+    });
+</script>

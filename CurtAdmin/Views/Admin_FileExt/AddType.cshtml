@@ -1,0 +1,41 @@
+﻿@model CurtAdmin.FileType
+
+@{
+    ViewBag.Title = "Add a File Type";
+    ViewBag.navigation = "_FileNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string error = ViewBag.error;
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt")" class="active">Extensions</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_FileExt/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_FileExt/AddExtension")">Add Extension</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Add a File Type</h2>
+
+    @if (error.Length != 0) {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    <form action="/Admin_FileExt/AddType" Method="post" class="form_left">
+        <!-- Item Name -->
+        <label for="fileType">
+            Name
+            <input type="text" name="fileType" id="fileType" placeholder="Enter name..." value="@((Request.Form["fileType"] != null) ? Request.Form["fileType"] : "")" />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+    </form>
+</div>

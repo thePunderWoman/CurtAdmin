@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "All Unapproved Reviews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.ReviewDetail> reviews = ViewBag.reviews;
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+}
+<style type="text/css">
+    
+    #buttons
+    {
+        margin-top: 0px;
+    }
+    
+    input[type=checkbox]
+    {
+        text-align:center;
+    }
+    
+    tr td:nth-child(5), tr td:nth-child(6), tr td:nth-child(7)
+    {
+        text-align:center;
+    }
+</style>
+<div id="content_container">
+    <h2>Unapproved Reviews</h2>
+
+    <table id="reviewTable">
+        <thead>
+            <tr>
+                <th>Review ID</th>
+                <th>Part ID</th>
+                <th>Rating</th>
+                <th>Customer</th>
+                <th>Reviewer Name</th>
+                <th>Date Added</th>
+                <th>Subject</th>
+                <th>Approved</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.ReviewDetail review in reviews) {
+                <tr id="review:@review.reviewID">
+                    <td>@review.reviewID</td>
+                    <td>@review.partID</td>
+                    <td><div class="starrating"><span style="width: @(((double)review.rating / 5) * 100)%;"></div></td>
+                    <td>@review.customer</td>
+                    <td>@review.name</td>
+                    <td>@String.Format("{0:M/d/yyyy h:mm tt}", review.createdDate)</td>
+                    <td>@review.subject</td>
+                    <td>
+                        <input type="checkbox" name="approved" id="approved:@review.reviewID" class="isApproved" value="true" @((review.approved) ? "checked='checked'" : "") />
+                    </td>
+                    <td>
+                        <select name="action" class="action" id="@review.reviewID">
+                            <option value="0">- Select Action -</option>
+                            <option value="view">View</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/reviews.js")"></script>
+
+<div id="viewReview" style="display: none;">
+    <p id="viewName"></p>
+    <p id="viewEmail"></p>
+    <p id="viewDate"></p>
+    <p id="viewRating"></p>
+    <p id="viewSubject"></p>
+    <p id="viewText"></p>
+    <p id="viewCustomer"></p>
+</div>

@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Edit";
+    ViewBag.navigation = "_BlogNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.BlogCategory category = ViewBag.category;
+    string errors = Request.QueryString.Get("err");
+}
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_BlogCategory/Add")">Add Category</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>Edit Category</h2>
+    @if (errors != null && errors.Length > 0)
+    {
+        <p>@errors</p>
+    }
+    <form method="post" action="/Admin_BlogCategory/Save/@category.blogCategoryID" class="form_left">
+        <label for="name">
+            Name
+            <input type="text" name="name" id="name" placeholder="Enter the Category Name" value="@((ViewBag.name != null && ViewBag.name.Length > 0) ? ViewBag.name : @category.name)" />
+        </label>
+
+        <div class="buttons">
+            <input type="submit" id="btnSubmit" name="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>

@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Edit Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    CurtAdmin.B2BCategory cat = ViewBag.cat ?? new CurtAdmin.B2BCategory();
+    
+    string msg = ViewBag.msg ?? "";
+
+}
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@cat.certID">View Categories</a> > Edit Category</div>
+<div id="content_container">
+    <h2>Edit Category: @cat.title</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    @if (msg.Length > 0)
+    {
+        <p style="font-weight: bold; color: Green;">@ViewBag.msg</p>
+    }
+    <form action="/Admin_B2B/EditCat/@cat.id" method="post" class="form_left">
+        <label for="title">
+            Category Name
+            <input type="text" name="title" id="title" value="@cat.title" required />
+        </label>
+
+        <label for="text">
+            Short Description
+            <input type="text" name="text" id="text" value="@cat.text" />
+        </label>
+
+        <label for="logo">
+            Category Image
+            <input type="hidden" name="logo" id="file" value="@cat.image_path" />
+            <div id="photobox">
+                <div id="photo-file">
+                    <img src="@cat.image_path" alt="Saved Image" />
+                </div>
+                <button type="button" id="choose-photo">Choose</button>
+                <button type="button" id="clear-photo">Clear</button>
+            </div>
+            <div style="clear:both"></div>
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

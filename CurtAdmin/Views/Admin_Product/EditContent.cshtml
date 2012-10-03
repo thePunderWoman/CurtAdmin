@@ -1,0 +1,89 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    ViewBag.Title = "CURT Web Tool Part #"+part.partID+" Content";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .form_left{
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        min-width: 550px;
+        display: none;
+    }
+    
+    #buttons{ margin-top: 0px; }
+    
+    #buttons input{
+        width: auto;
+    }
+    
+    tr td:nth-child(3){
+        text-align: center;
+    }
+</style>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2 style="float:left">Edit Content for Part #@part.partID - @part.shortDesc</h2>
+    <a href="javascript:void(0)" id="addContent" style="float:right">
+        <img src="@Url.Content("~/Content/img/addContent.png")" alt="Add Content" />
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+
+    <form class="form_left">
+        <label for="contentType">
+            Content Type
+            <select name="contentType" id="contentType">
+                <option value="">- Select Content Type -</option>
+                @foreach (CurtAdmin.ContentType type in ViewBag.content_types) {
+                    <option value="@type.cTypeID">@type.type</option>
+                }
+            </select>
+        </label>
+
+        <label for="content" style="height:auto">
+            Content<br />
+            <textarea cols="60" rows="5" name="content" id="content" placeholder="Enter part content here..."></textarea>
+            <span style="clear:both; display: block;"></span>
+        </label>
+        <div style="clear:both"></div>
+        <input type="hidden" name="contentID" id="contentID" value="0" />
+        <input type="hidden" name="partID" id="partID" value="@part.partID" />
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Cancel" />
+        </div>
+    </form>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Content Type</th>
+                <th>Content</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(CurtAdmin.Models.FullContent content in ViewBag.part_content){
+                <tr>
+                    <td>@content.content_type</td>
+                    <td>
+                        @((content.content.Length > 400)?content.content.Substring(0,400):content.content)
+                    </td>
+                    <td>
+                        <a href="javascript:void(0)" class="edit" id="@content.contentID" title="Edit Content">Edit</a> | 
+                        <a href="javascript:void(0)" class="remove" id="@content.contentID" title="Remove Content">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditContent.js")"></script>
+

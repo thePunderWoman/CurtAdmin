@@ -1,0 +1,27 @@
+﻿@using CurtAdmin.Models;
+@{
+    ViewBag.Title = "Import Polygons";
+    ViewBag.navigation = "_MiscNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = ViewBag.message ?? "";
+    List<string> errors = ViewBag.errors ?? new List<string>();
+}
+
+<div id="content_container">
+    <h2>Import Polygons</h2>
+    @if (message != "") {
+        <p>@message</p>
+    }
+    @if (errors.Count > 0) {
+        <p style="font-weight: bold; color: Red;">Errors:</p>
+        <ul style="font-weight: bold; color: Red;">
+            @foreach (string e in errors) {
+                <li>@e</li>
+            }
+        </ul>
+    }
+    <form action="/Admin_Misc/ImportPolygons" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <input type="submit" value="upload" />
+    </form>
+</div>

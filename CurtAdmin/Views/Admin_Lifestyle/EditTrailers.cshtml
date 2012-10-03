@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Trailers";
+    ViewBag.navigation = "_LifestyleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Trailer> trailers = ViewBag.trailers;
+    CurtAdmin.Models.DetailedCategories category = ViewBag.category;
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Lifestyle/AddTrailerToLifestyle")" id="AddTrailer">Add Trailer To Lifestyle</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Trailers for @category.catTitle Lifestyle</h2>
+    <input type="hidden" id="categoryID" value="@category.catID" />
+    <div id="loading_area">
+        <p>Loading trailers...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading trailers..." />
+    </div>
+
+    <table style="display:none">
+        <thead>
+            <tr>
+                <th>Trailer ID</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>TW (lbs)</th>
+                <th>GTW (lbs)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Trailer trailer in trailers) {
+                <tr id="trailerRow:@trailer.trailerID">
+                    <td>@trailer.trailerID</td>
+                    <td>@trailer.name</td>
+                    <td>
+                        @if (trailer.image != null && trailer.image != "") {
+                            <img class="trailerImage" src="@trailer.image" alt="Trailer Image" />
+                        } else {
+                            <text>No Image</text>
+                        }
+                    </td>
+                    <td>@trailer.TW</td>
+                    <td>@trailer.GTW</td>
+                    <td class="center">
+                        <select class="action" id="@trailer.trailerID">
+                            <option value="0">- Select Option -</option>
+                            <option value="edit">Edit</option>
+                            <option value="delete">Remove From Lifestyle</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div id="trailerselect">
+    
+</div>
+<script type="text/javascript" src="/Scripts/admin/trailers.js"></script>

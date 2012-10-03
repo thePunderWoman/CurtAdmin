@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="CurtData" Class="ProductLinqDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=10.10.90.83;Initial Catalog=CurtData;User ID=curtDuser1" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CurtDataConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Category" Member="Categories">
+    <Type Name="Category">
+      <Column Name="CatID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ParentID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CatTitle" Type="System.String" DbType="NChar(42)" CanBeNull="true" />
+      <Column Name="CatTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="shortDesc" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="longDesc" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="CatImage" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CatParts" Member="CatParts">
+    <Type Name="CatPart">
+      <Column Name="vchProductCode" Type="System.String" DbType="NVarChar(25) NOT NULL" CanBeNull="false" />
+      <Column Name="CatID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ParentID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Connector" Member="Connectors">
+    <Type Name="Connector">
+      <Column Name="iConnectorID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="vchConnectorCode" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="vchConnectorUPC" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="mConnectorList" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="mConnectorMap" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="fConnectorShippingWeight" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="vchConnectorInstallTime" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="txtConnectorNotes" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="iVehicleID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="iConnectorClassID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Vehicle_Connector" Member="Vehicle" ThisKey="iVehicleID" OtherKey="iVehicleID" Type="Vehicle" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CParts" Member="CParts">
+    <Type Name="CPart">
+      <Column Name="vchProductCode" Type="System.String" DbType="NVarChar(25) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="vchPartUPC" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="vchSDesc" Type="System.String" DbType="NVarChar(75)" CanBeNull="true" />
+      <Column Name="vchCategDesc" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="SGID" Type="System.String" DbType="NChar(16)" CanBeNull="true" />
+      <Column Name="SGRetail" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="vchParams" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="StdMount" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="EuroMount1" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="EuroMount2" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CategoryType" Member="CategoryTypes">
+    <Type Name="CategoryType">
+      <Column Name="CatTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CatTypeDesc" Type="System.String" DbType="NVarChar(25) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Product" Member="Products">
+    <Type Name="Product">
+      <Column Name="iProductID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="vchProductCode" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="vchPriceCode" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="vchHitchUPC" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="mHitchList" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="mHitchMap" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="fShippingWeight" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="vchWC" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="vchWD" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="vchCapacity" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="txtNote1" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="txtNote2" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="txtNote3" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="txtNote4" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="vchDrilling" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="vchUPCList" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="vchExposed" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="vchShortDesc" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="iVehicleID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="iProductClassID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="dtDateMod" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="txtBullet1" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="txtBullet2" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="txtBullet3" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="txtBullet4" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="txtBullet5" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="vchLongDesc" Type="System.String" DbType="NVarChar(1500)" CanBeNull="true" />
+      <Column Name="iUniqueIdentifier" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="dtDateLastTouched" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="txtNote6" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="InstallTime" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SGID" Type="System.String" DbType="NChar(16)" CanBeNull="true" />
+      <Column Name="CURTID" Type="System.String" DbType="NChar(16)" CanBeNull="true" />
+      <Column Name="SGRetail" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="SGMemPrice" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="InstallSheet" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="mHitchJobber" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Association Name="Vehicle_Product" Member="Vehicle" ThisKey="iVehicleID" OtherKey="iVehicleID" Type="Vehicle" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Vehicle" Member="Vehicles">
+    <Type Name="Vehicle">
+      <Column Name="iVehicleID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="vchYear" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="vchMake" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="vchModel" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="vchStyle" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="vchInstallTime" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="Vehicle_Connector" Member="Connectors" ThisKey="iVehicleID" OtherKey="iVehicleID" Type="Connector" />
+      <Association Name="Vehicle_Product" Member="Products" ThisKey="iVehicleID" OtherKey="iVehicleID" Type="Product" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleYear" Member="VehicleYears">
+    <Type Name="VehicleYear">
+      <Column Name="vchYear" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="MountType" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

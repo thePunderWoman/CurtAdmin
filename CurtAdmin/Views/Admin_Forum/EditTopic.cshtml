@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Add Forum Topic";
+    ViewBag.navigation = "_ForumNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.FullTopic topic = ViewBag.topic;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + topic.TopicGroupID)">Add Topic</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2>Edit Topic "@topic.name"</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p>@ViewBag.error</p>
+    }
+    <form action="/Admin_Forum/SaveTopic/@topic.topicID" method="post" class="form_left">
+        <input type="hidden" name="groupid" id="groupid" value="@topic.TopicGroupID" />
+        <label for="name">
+            Topic Name
+            <input type="text" name="name" id="name" placeholder="Enter the Name of the Topic" required value="@ViewBag.name" />
+        </label>
+
+        <label for="description">
+            Topic Description
+            <textarea name="description" id="description" placeholder="Enter the Topic Description" rows="5" cols="50">@ViewBag.description</textarea>
+        </label>
+
+        <label for="image">
+            Image
+            <input type="hidden" name="image" id="file" value="@ViewBag.image" />
+            <div id="photobox">
+                <div id="photo-file">
+                    @if (ViewBag.image != null && ViewBag.image != "") {
+                        <img src="@ViewBag.image" alt="photo" />
+                    } else {
+                        <img src="/Content/img/noimage.jpg" alt="No Photo" />
+                    }
+                </div>
+                <button type="button" id="choose-photo">Choose</button>
+                <button type="button" id="clear-photo">Clear</button>
+            </div>
+            <div style="clear:both"></div>
+
+        </label>
+
+        <label for="description">
+            Open to Posting?
+            <input type="checkbox" name="closed" id="closed" value="false" @((!ViewBag.closed) ? "checked='checked'" : "") />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>
+<div id="file-dialog"></div>

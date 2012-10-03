@@ -1,0 +1,87 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    ViewBag.Title = "CURT Web Tool Part #"+part.partID+" Attributes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    h2{
+        float:left;
+    }
+    
+    #addAttribute{
+        float:right;
+    }
+    
+    tr td:nth-child(3){
+        text-align: center;
+    }
+    
+    td.handles {
+        cursor: move;
+    }
+    
+    .form_left{
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        min-width: 550px;
+        display: none;
+    }
+    
+    #buttons{ margin-top: 0px; }
+</style>
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2>Edit Attributes for Part #@part.partID - @part.shortDesc</h2>
+    <a href="javascript:void(0)" id="addAttribute" title="Add Attribute">
+        <img src="@Url.Content("~/Content/img/addAttribute.png")" alt="Add Attribute" />
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+
+    <form class="form_left">
+        <label for="field">
+            Attribute
+            <img src="@Url.Content("~/Content/img/button_green_add.png")" id="addField" alt="Add Field" style="float:right;width:20px;cursor:pointer" />
+            <select name="field" id="field">
+                <option value="">- Select Attribute -</option>
+                @foreach (string f in ViewBag.fields) {
+                    <option>@f</option>
+                }
+            </select>
+        </label>
+        <label for="value">
+            Value
+            <input type="text" name="value" id="value" value="" placeholder="Enter attribute value..." />
+        </label>
+        <input type="hidden" name="attrID" id="attrID" value="0" />
+        <input type="hidden" name="partID" id="partID" value="@part.partID" />
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear Attribute" />
+        </div>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.PartAttribute attr in ViewBag.attributes) {
+                <tr class="sortable" id="attr_@(attr.pAttrID)">
+                    <td class="handles">@attr.field</td>
+                    <td class="handles">@attr.value</td>
+                    <td>
+                        <a href="javascript:void(0)" class="edit" id="@attr.pAttrID" title="Edit @attr.field">Edit</a> | 
+                        <a href="javascript:void(0)" class="remove" id="@attr.pAttrID" title="Remove @attr.field">Remove</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditAttributes.js")"></script>

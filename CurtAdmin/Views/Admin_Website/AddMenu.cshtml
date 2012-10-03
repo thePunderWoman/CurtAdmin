@@ -1,0 +1,54 @@
+﻿@model CurtAdmin.Menu
+
+@{
+    ViewBag.Title = "Add a Menu";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string error = ViewBag.error;
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Content")">Manage Content</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Menus")">Manage Menus</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Website/Menu/Add")" class="active">Add Menu</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>Add a Menu</h2>
+
+    @if (error.Length != 0) {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    <form action="/Admin_Website/Menu/Add" Method="post" class="form_left">
+        <!-- Item Name -->
+        <label for="menu_name">
+            Name
+            <input type="text" name="menu_name" id="menu_name" placeholder="Enter the name of the menu..." value="" />
+        </label>
+
+        <label for="display_name">
+            Display Name
+            <input type="text" name="display_name" id="display_name" placeholder="Enter the display name of the menu..." value="" />
+        </label>
+
+        <label for="requireAuthentication">
+            Require User Login to View?
+            <input type="checkbox" name="requireAuthentication" id="requireAuthentication" value="true" />
+        </label>
+
+        <label for="showOnSitemap">
+            Show on Footer Sitemap?
+            <input type="checkbox" name="showOnSitemap" id="showOnSitemap" value="true" />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+    </form>
+</div>

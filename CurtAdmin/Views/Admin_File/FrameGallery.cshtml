@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "~/Views/Shared/_EditorLayout.cshtml";
+    List<CurtAdmin.FileGallery> breadcrumbs = ViewBag.breadcrumbs;
+    CurtAdmin.Models.Gallery gallery = ViewBag.gallery;
+}
+<div id="frame_container">
+    <h2 id="index_title">File Manager</h2>
+    <p class="gallerybreadcrumbs">
+        <a href="/Admin_File/FrameIndex?@Request.QueryString">Root</a> @((gallery.name != "Root") ? ">" : "") 
+        @foreach (CurtAdmin.FileGallery crumb in breadcrumbs.Reverse<CurtAdmin.FileGallery>()) {
+            <a href="/Admin_File/FrameGallery/@crumb.fileGalleryID?@Request.QueryString">@crumb.name</a> <text>></text>
+        }
+        @((gallery.name != "Root") ? gallery.name : "")
+    </p>
+    <form id="addgalleryform" action="/Admin_File/AddGallery" method="post">
+        <label for="galleryname">Name:</label>
+        <input type="hidden" id="parentid" name="parentid" value="@gallery.fileGalleryID" />
+        <input type="hidden" id="location" name="location" value="framegallery" />
+        <input type="text" name="galleryname" id="galleryname" value="" placeholder="Enter name" required="true" />
+        <input type="submit" id="addgallery" value="Add Folder" />
+    </form>
+    <div id="sortgallery">
+        Sort By: 
+        <a href="#name" data-sort="name" data-galleryid="@gallery.fileGalleryID">Name</a> |
+        <a href="#date" data-sort="date" data-galleryid="@gallery.fileGalleryID">Date</a> |
+        <a href="#type" data-sort="type" data-galleryid="@gallery.fileGalleryID">Type</a> |
+        <a href="#size" data-sort="size" data-galleryid="@gallery.fileGalleryID">Size</a>
+    </div>
+    <ul id="galleries">
+        <li id="dropzone">
+            <span class="plus">&#43;</span>
+            <span class="text">Drag File Here</span>
+            <progress id="loader" value="0" max="100"></progress >
+            <span class="preserve"><label for="preserve">Preserve Filename?</label><input type="checkbox" id="preserve" value="1" /></span>
+        </li>
+        @if (gallery.subgalleries.Count() > 0) {
+            foreach (CurtAdmin.Models.Gallery g in gallery.subgalleries) {
+                <li class="ligallery" id="gallery_@(g.fileGalleryID)">
+                    <a class="gallery" href="/Admin_File/FrameGallery/@g.fileGalleryID?@Request.QueryString">
+                        <span class="folder contextmenu">
+                            @if (g.files.Count() > 0) {
+                                if (g.files[0].extension.FileType.fileType1.ToLower() == "image") {
+                                    <img src="@g.files[0].path" alt="@g.name" class="@(((Convert.ToDouble(g.files[0].width) / g.files[0].height) < 1.72) ? "tall" : "wide")" />
+                                } else if (g.files[0].extension.fileExtIcon != null && g.files[0].extension.fileExtIcon != "") {
+                                    // Show Icon
+                                    <img src="@g.files[0].extension.fileExtIcon" alt="@g.name" class="tall" />
+                                } else {
+                                    // Do Nothing   
+                                    <img src="/Content/img/file.png" alt="@g.name" class="tall" />
+                                }
+                            }
+                        </span>
+                        <span class="galleryname"><strong>@g.name</strong> @g.subgalleries.Count() subfolders; @g.files.Count() files</span>
+                    </a>
+                    <ul class="menu">
+                        <li><a class="renamegallery" href="/Admin_File/RenameGallery/@g.fileGalleryID" id="renamegallery_@(g.fileGalleryID)">Rename</a></li>
+                        <li><a class="deletegallery" href="/Admin_File/DeleteGallery/@g.fileGalleryID" id="delgallery_@(g.fileGalleryID)">Delete</a></li>
+                    </ul>
+                </li>
+            }
+        }
+        @if (gallery.files.Count() > 0) {
+            foreach (CurtAdmin.Models.FullFile file in gallery.files) {
+                <li class="lifile" id="file_@(file.fileID)">
+                    <span class="filebox">
+                        @if (file.extension.FileType.fileType1.ToLower() == "image") {
+                            <img src="@file.path" alt="@file.name" class="@(((Convert.ToDouble(file.width) / file.height) < 1.4) ? "tall" : "wide") contextmenu" />
+                        } else if (file.extension.fileExtIcon != null && file.extension.fileExtIcon != "") {
+                            <img src="@file.extension.fileExtIcon" alt="@file.name" class="tall contextmenu" />
+                        } else {
+                            <img src="/Content/img/file.png" alt="@file.name" class="tall contextmenu" />
+                        }
+                    </span>
+                    <span class="filename">
+                        <strong>@file.name</strong> path: <a href="@file.path">link</a>
+                        @if (file.extension.FileType.fileType1.ToLower() == "image") {
+                            <text><br />dimensions: @file.height x @file.width</text>
+                        } else {
+                            <text>type: @file.extension.fileExt1</text>   
+                        }
+                        <br />
+                        @String.Format("{0:M/d/yyyy h:mm tt}",file.createdDate)
+                        <br />
+                        @if(file.size < 1024) {
+                            <text>@file.size Bytes</text>
+                        } else if (file.size >= 1024 && file.size < 1048576) {
+                            <text>@String.Format("{0:0.00}",(Convert.ToDouble(file.size) / 1024)) KB</text>
+                        } else if (file.size >= 1048576 && file.size < 1073741824) {
+                            <text>@String.Format("{0:0.00}",(Convert.ToDouble(file.size) / 1048576)) MB</text>
+                        } else {
+                            <text>@String.Format("{0:0.00}",(Convert.ToDouble(file.size) / 1073741824)) GB</text>
+                        }
+                    </span>
+                    <ul class="menu">
+                        <li><a class="renamefile" href="/Admin_File/RenameFile/@file.fileID" id="renamefile_@(file.fileID)">Rename</a></li>
+                        <li><a class="deletefile" href="/Admin_File/DeleteFile/@file.fileID" id="delfile_@(file.fileID)">Delete</a></li>
+                        <li><a class="refreshfile" href="/Admin_File/RefreshFile/@file.fileID" id="refreshfile_@(file.fileID)">Refresh</a></li>
+                    </ul>
+                </li>
+            }
+        }
+        <li class="clear"></li>
+    </ul>
+    <div class="clear"></div>
+</div>
+<div id="renameForm">
+    <form id="rename" action="/Admin_File/Rename" method="post">
+        <input type="hidden" id="fileid" name="fileid" value="0" />
+        <input type="hidden" id="galleryid" name="galleryid" value="0" />
+        <label for="newname">Name:</label>
+        <input type="text" name="newname" id="newname" value="" />
+    </form>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('.lifile').live('click', function () {
+            var url = $(this).find("span.filebox img").attr('src');
+            window.parent.selectFile(url);
+        });
+    });
+</script>

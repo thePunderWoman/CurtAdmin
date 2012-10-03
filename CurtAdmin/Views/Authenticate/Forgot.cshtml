@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>CURT Manufacturing - Labs</title>
+        <link href="@Url.Content("~/Content/login.css")" rel="stylesheet" media="all" />
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic' rel='Stylesheet' type='text/css' />
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.5b1.js"></script>
+    </head>
+    <body>
+        <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post">
+            <div style="color:whitesmoke;font-weight: bold">
+                <img src="@Url.Content("~/Content/img/curtLogo.png")" style="width: 100px" />
+                <span style="line-height: 26px;vertical-align: top">Documentation Login</span>
+            </div>
+            @if(ViewBag.Message != ""){
+                <p style="color: #e44f31;margin:0px">@ViewBag.Message</p>
+            }
+            <label for="username">
+                Username
+                <input type="text" name="username" id="username" />
+            </label>
+            <span style="display:block;color:white;text-align:center;margin: 5px 0px">----------------------------- Or -----------------------------</span>
+            <label for="email">
+                E-Mail
+                <input type="email" name="email" id="email" />
+            </label><br />
+            <input type="submit" name="btnForgot" id="btnForgot" value="Remind Me" /><br />
+            <div style="float:right;">
+                <a style="color:white" href="@Url.Content("~/Authenticate/Signup")">Sign Up</a>
+            </div>
+        </form>
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#username').focus();
+
+                $('#btnForgot').click(function () {
+                    $('form').find('p').remove();
+                    if ($.trim($('#username').val()).length == 0 && $.trim($('#email').val()).length == 0) {
+                        $('label:first').before('<p style="color:#e44f31;margin:0px">You must enter a username or e-mail address.</p>');
+                        return false;
+                    }
+                    return true;
+                });
+
+            });
+        </script>
+    </body>
+</html>

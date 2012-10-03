@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Forum / Message Thread";
+    ViewBag.navigation = "_ForumNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.Post> posts = ViewBag.posts;
+}
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2 id="index_title">Moderate Posts</h2>
+    <div id="posts">
+        @foreach (CurtAdmin.Models.Post post in posts) {
+            <div class="forumpost" id="post_@(post.postID)">
+                <div class="datebox">
+                    <p><strong>Posted On</strong><br />@String.Format("{0:dddd, MMMM d, yyyy} at {0: h:mm tt}",post.createdDate)</p>
+                    <p><strong>By</strong><br />@((post.email != "") ? Html.Raw("<a href='mailto:" + post.email + "'>" + post.getName() + "</a>") : Html.Raw(post.getName()))
+                        @if (post.company != "") {
+                            <br />@post.company
+                        }
+                    </p>
+                    <p class="ipaddress"><strong>IP</strong> @post.IPAddress</p>
+                </div>
+                <div class="postbox">
+                    <p class="title">@post.title</p>
+                    <div class="controls">
+                        <a href="/Admin_Forum/Approve/@post.postID" data-id="@post.postID" class="approve">@((post.approved) ? "Unapprove" : "Approve")</a> |
+                        <a href="/Admin_Forum/EditPost/@post.postID" data-id="@post.postID" class="edit">Edit</a> | 
+                        <a href="/Admin_Forum/FlagPost/@post.postID" data-id="@post.postID" class="flag">Spam</a> | 
+                        <a href="/Admin_Forum/BlockIP/@post.postID" data-id="@post.postID" class="block">Block IP</a> | 
+                        <a href="/Admin_Forum/DeletePost/@post.postID" data-id="@post.postID" class="delete">Delete</a></div>
+                    <p>@post.post</p>
+                </div>
+                <div class="clear"></div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="/Scripts/admin/forummoderate.js" type="text/javascript"></script>

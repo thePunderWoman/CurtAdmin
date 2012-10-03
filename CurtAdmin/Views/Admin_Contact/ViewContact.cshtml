@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "View Contact";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Contact contact = ViewBag.contact;
+}
+<style type="text/css"">
+    #contact_box {
+	    display: block;
+    }
+	#contact_box strong {
+		font-weight: bold;
+		float: left;
+		width: 100px;
+		clear: left;
+		padding: 3px 0;
+    }
+	#contact_box p {
+		margin: 0;
+		float: left;
+		clear: none;
+		width: 600px;
+		padding: 3px 0;
+	}
+	#contact_box a {
+	    margin-top: 10px;
+	}
+</style>
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Contact")">Contacts</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Receivers")">Receivers</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddReceiver")">Add Receiver</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/Export")">Export</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>View Contact</h2>
+    <div id="contact_box">
+        <strong>Name:</strong>
+        <p>@contact.first_name @contact.last_name</p>
+    
+        <strong>Email:</strong>
+        <p>@contact.email</p>
+
+        @if (contact.phone != "") {
+            <strong>Phone:</strong>
+            <p>@contact.phone</p>
+        }
+        @if (contact.address1 != "") {
+            <strong>Address:</strong>
+            <p>@contact.address1<br />
+                @if (contact.address2 != "") {
+                    @contact.address2<br />
+                }
+                @if (contact.city != "") {
+                    @contact.city
+                }
+                @if (contact.state != "") {
+                    @((contact.city != "") ? ", " : "") @contact.state
+                }
+                @if (contact.postalcode != "") {
+                    <text> </text>@contact.postalcode
+                }
+            </p>
+        }
+        <strong>Reason:</strong>
+        <p>@contact.type</p>
+
+        <strong>Subject:</strong>
+        <p>@contact.subject</p>
+
+        <strong>Message:</strong>
+        <p>@contact.message</p>
+        <div class="clear"></div>    <a href="javascript:history.back(1);">&lt; Back</a>
+    </div>
+</div>

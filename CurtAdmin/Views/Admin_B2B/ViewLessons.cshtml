@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "View Lessons";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    List<CurtAdmin.B2BLesson> listOfLessons = new List<CurtAdmin.B2BLesson>();
+    if(ViewBag.listOfLessons != null){
+        listOfLessons = ViewBag.listOfLessons;
+    }
+
+    int catID = 0;
+    if (ViewBag.catID != null)
+    {
+        catID = ViewBag.catID;
+    }
+    CurtAdmin.B2BCategory cat = new CurtAdmin.B2BCategory();
+    if(ViewBag.cat != null){
+        cat = ViewBag.cat;   
+    }
+
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+}
+    <style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addLesson, #massUpload{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<div id="breadcrumbs"><a href="/Admin_B2B/">B2B</a> > <a href="/Admin_B2B/">Certificates</a> > <a href="/Admin_B2B/ViewCats/@cat.certID">Categories</a> > Lessons</div>
+<div id="content_container">
+    <h2>Viewing B2B Lessons</h2>
+    <a href="/Admin_B2B/AddLesson/@catID" title="Add Lesson" id="addLesson" class="button">
+        Add Lesson
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the Lessons and to modify them accordingly.</p>
+
+    <div id="loading_area">
+        <p>Loading Lessons...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Lesson" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.B2BLesson Lesson in listOfLessons)
+            {
+                <tr>
+                    <td>@Lesson.id</td>
+                    <td>@Lesson.title</td>
+                    <td>@Lesson.Text</td>
+                    <td>
+                        <a href="/Admin_B2B/EditLesson/@Lesson.id" class="edit">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" id="@Lesson.id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var LessonsTable = "";
+    $(function () {
+        LessonsTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+        $('.delete').live('click', function () {
+            var LessonID = $(this).attr('id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (LessonID > 0 && confirm('Are you sure you want to delete this Lesson?')) {
+                $.get('/Admin_B2B/DeleteLesson/' + LessonID, function (response) {
+                    if (response.length == 0) {
+                        LessonsTable.fnDeleteRow(table_row);
+                    } else {
+                        showMessage(response);
+                    }
+                }, "html");
+            }
+        });
+    });
+</script>

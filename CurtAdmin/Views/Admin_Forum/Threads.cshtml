@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Forum / Message Board";
+    ViewBag.navigation = "_ForumNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.FullTopic topic = ViewBag.topic;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Forum/Topics/" + topic.TopicGroupID)">Topics</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + topic.TopicGroupID)">Add Topic</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddPost/" + topic.topicID)">Start Thread</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2 id="index_title">Threads for "@topic.name"</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Thread</th>
+                <th>Replies</th>
+                <th>Recent Post</th>
+                <th>Open</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.Thread thread in topic.threads) {
+                <tr>
+                    <td>@thread.firstPost.title</td>
+                    <td style="text-align: center;">@(thread.count - 1)</td>
+                    <td style="text-align: center;">@String.Format("{0:M/dd/yyyy} at {0:h:mm tt}", thread.latestPost.createdDate)</td>
+                    <td style="text-align: center;">@((!thread.closed) ? "Yes" : "No")</td>
+                    <td style="text-align: center;">
+                        <a href="/Admin_Forum/Thread/@thread.threadID" title="Posts">Posts</a> |
+                        <a href="/Admin_Forum/DeleteThread/@thread.threadID" title="Delete" class="deletethread">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="/Scripts/admin/threads.js" type="text/javascript"></script>

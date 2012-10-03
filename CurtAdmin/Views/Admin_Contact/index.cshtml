@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Contacts";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Contact> contacts = ViewBag.contacts;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Contact")" class="active">Contacts</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Receivers")">Receivers</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddType")">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddReceiver")">Add Receiver</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/Export")">Export</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage Website Contacts</h2>
+    <table style="width: 100% !important">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Contact c in contacts) {
+                <tr id="contact:@c.contactID">
+                    <td>@c.first_name</td>
+                    <td>@c.last_name</td>
+                    <td>@c.email</td>
+                    <td>@c.type</td>
+                    <td>@String.Format("{0:M/d/yyyy h:mm tt}", c.createdDate)</td>
+                    <td class="center">
+                        <a href="/Admin_Contact/ViewContact/@c.contactID">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var contacttable = $('table').dataTable({
+            "bJQueryUI": true,
+            "aoColumns": [
+            null,
+            null,
+            null,
+            null,
+            { "sType": "date" },
+            null
+        ],
+            "aaSorting": [[4, "desc"]]
+        });
+    });
+</script>

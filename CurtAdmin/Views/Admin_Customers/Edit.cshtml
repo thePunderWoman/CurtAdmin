@@ -1,0 +1,279 @@
+﻿@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Customer customer = ViewBag.customer;
+    List<CurtAdmin.Models.FullCountry> countries = ViewBag.countries;
+    List<CurtAdmin.DealerType> dealer_types = ViewBag.dealer_types;
+    List<CurtAdmin.DealerTier> dealer_tiers = ViewBag.dealer_tiers;
+    List<CurtAdmin.MapixCode> mapix_codes = ViewBag.mapix_codes;
+    List<CurtAdmin.SalesRepresentative> sales_reps = ViewBag.sales_reps;
+    List<CurtAdmin.Customer> customers = ViewBag.customers;
+}
+<style type="text/css">
+    #map_container #map{
+        width: 325px;
+        height: 325px;
+        border: 1px solid #343434;
+        border-radius: 3px 3px 3px;
+    }
+    
+    #map_container{
+        float:left;
+        margin-left: 15px;
+    }
+    
+    input.error{
+        border: 3px inset #bd0100;
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="content_container">
+    <h2>Edit Customer # @customer.customerID</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color:Red;">@ViewBag.error</p>
+    }
+
+    <form method="post" action="@HttpContext.Current.Request.Url.AbsoluteUri" class="form_left">
+        <label for="name">
+            Customer Name
+            <input type="text" name="name" id="name" placeholder="Enter the Name of the Customer" value="@customer.name" required />
+        </label>
+
+        <label for="customerID">
+            Customer ID
+            <input type="text" name="customerID" id="customerID" placeholder="Enter the CustomerID" value="@customer.customerID" />
+        </label>
+
+        <label for="parentID">
+            Parent Customer (Buys through another CURT client)
+            <select name="parentID" id="parentID">
+                <option value="">- Select Client -</option>
+                @foreach (CurtAdmin.Customer cust in customers) {
+                    <option value="@cust.customerID" @((customer.parentID == cust.customerID && cust.customerID != null) ? "selected" : "")>@cust.name</option>
+                }
+            </select>
+        </label>
+
+        <label for="email">
+            E-Mail
+            <input type="email" name="email" id="email" placeholder="Enter the E-Mail Address" value="@customer.email" />
+        </label>
+
+        <label for="phone">
+            Phone
+            <input type="tel" name="phone" id="phone" placeholder="Enter the Phone Number" value="@customer.phone" />
+        </label>
+
+        <label for="fax">
+            Fax
+            <input type="tel" name="fax" id="fax" placeholder="Enter the Fax Number" value="@customer.fax" />
+        </label>
+
+        <label for="address">
+            Address
+            <input type="text" name="address" id="address" placeholder="Enter the Street Address" value="@customer.address" />
+        </label>
+
+        <label for="address2">
+            Address Line 2
+            <input type="text" name="address2" id="address2" placeholder="Enter Address Line 2 (optional)" value="@customer.address2" />
+        </label>
+
+        <label for="city">
+            City
+            <input type="text" name="city" id="city" placeholder="Enter the City" value="@customer.city" />
+        </label>
+
+        <label for="state">
+            State / Province
+            <select name="state" id="state">
+                <option value="0">- Select State / Province -</option>
+                @foreach (CurtAdmin.Models.FullCountry country in countries) {
+                    <optgroup label="@country.name">
+                        @foreach (CurtAdmin.PartStates state in country.states) {
+                            <option value="@state.stateID" @((customer.stateID == state.stateID) ? "selected=selected" : "")>@(state.abbr + " - " + state.state1)</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </label>
+
+        <label for="postal_code">
+            Postal Code
+            <input type="text" name="postal_code" id="postal_code" placeholder="Enter Postal Code" value="@customer.postal_code" />
+        </label>
+
+        <label for="contact_person">
+            Contact Person
+            <input type="text" name="contact_person" id="contact_person" placeholder="Enter Primary Contact Name" value="@customer.contact_person" />
+        </label>
+
+        <label for="website">
+            Website
+            <input type="url" name="website" id="website" placeholder="Enter customer's web address" value="@customer.website" />
+        </label>
+
+        <label for="logo">
+            Customer Logo
+            <input type="hidden" name="logo" id="file" value="@customer.logo" />
+            <div id="photobox">
+                <div id="photo-file">
+                    @if (customer.logo != null && customer.logo != "") {
+                        <img src="@customer.logo" alt="logo" />
+                    } else {
+                        <img src="/Content/img/noimage.jpg" alt="No Logo" />
+                    }
+                </div>
+                <button type="button" id="choose-photo">Choose</button>
+                <button type="button" id="clear-photo">Clear</button>
+            </div>
+            <div style="clear:both"></div>
+        </label>
+
+        <label for="searchURL">
+            Search / Part URL
+            <input type="url" name="searchURL" id="searchURL" placeholder="Enter customer's part url" value="@customer.searchURL" />
+        </label>
+
+        <label for="APIKey">
+            API Key
+            <input type="text" name="APIKey" id="APIKey" value="@customer.APIKey" readonly="readonly" />
+        </label>
+
+        <label for="dealer_type">
+            Dealer Type
+            <select name="dealer_type" id="dealer_type" required>
+                <option value="0">- Select Type -</option>
+                @foreach (CurtAdmin.DealerType type in dealer_types) {
+                    <option value="@type.dealer_type" @((customer.dealer_type == type.dealer_type)?"selected":"")>@type.type@((type.online) ? " (online)" : "")</option>
+                }
+            </select>
+        </label>
+
+        <label for="tier">
+            Dealer Tier
+            <select name="tier" id="tier" required>
+                @foreach (CurtAdmin.DealerTier tier in dealer_tiers) {
+                    <option value="@tier.ID" @((customer.tier == tier.ID)?"selected":"")>@tier.tier</option>
+                }
+            </select>
+        </label>
+
+        <label for="mapixCodeID">
+            Mapics Code
+            <select name="mapixCodeID" id="mapixCodeID">
+                <option value="0">- Select Code -</option>
+                @foreach (CurtAdmin.MapixCode code in mapix_codes) {
+                    <option value="@code.mCodeID" @((customer.mCodeID == code.mCodeID)?"selected":"")>@code.description (@code.code)</option>
+                }
+            </select>
+        </label>
+
+        <label for="salesRepID">
+            Sales Rep
+            <select name="salesRepID" id="salesRepID">
+                <option value="0">- Select Representative -</option>
+                @foreach (CurtAdmin.SalesRepresentative rep in sales_reps) {
+                    <option value="@rep.salesRepID" @((customer.salesRepID == rep.salesRepID)?"selected":"")>@rep.name (@rep.code)</option>
+                }
+            </select>
+        </label>
+
+        <label for="isdummy">
+            Show on Where To Buy?
+            Yes <input type="radio" id="isdummy" name="isdummy" value="false" @((!customer.isDummy) ? "checked" : "") />
+            No <input type="radio" name="isdummy" value="true" @((customer.isDummy) ? "checked" : "") />
+        </label>
+
+        <div id="buttons">
+            <input type="hidden" name="cust_id" id="cust_id" value="@customer.cust_id" />
+            <input type="hidden" name="latitude" id="latitude" value="@customer.latitude" />
+            <input type="hidden" name="longitude" id="longitude" value="@customer.longitude" />
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+
+    <div id="map_container">
+        <div id="map"></div>
+        <a href="javascript:void(0)" id="view_locations">View All Locations</a>
+    </div>
+</div>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+    var marker;
+    var map;
+    $(document).ready(function () {
+        var lat = $('#latitude').val();
+        var long = $('#longitude').val();
+        var latlng = new google.maps.LatLng(lat, long);
+        var options = {
+            zoom: 10,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById('map'), options);
+
+        marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            title: $('#name').val(),
+            draggable: false,
+            animation: google.maps.Animation.BOUNCE
+        });
+        google.maps.event.addListener(marker, 'click', toggleBounce);
+
+        $('#view_locations').live('click', function () {
+            // Get the locations for this customer
+            var custID = $('#cust_id').val();
+            $.getJSON('/Admin_Customers/GetLocations/' + custID, function (response) {
+                $.each(response, function (i, loc) {
+                    var loc_latlng = new google.maps.LatLng(loc.latitude, loc.longitude);
+                    var image = '/Content/img/blue_map_marker.png';
+
+                    var new_mark = new google.maps.Marker({
+                        position: loc_latlng,
+                        map: map,
+                        title: loc.name,
+                        draggable: false,
+                        animation: google.maps.Animation.DROP,
+                        icon: image
+                    });
+                    google.maps.event.addListener(new_mark, 'click', toggleBounce);
+
+                    var loc_link = '<a href="/Admin_Customers/EditLocation/' + loc.locationID + '" title="Edit Location" style="display:block">' + loc.name + '</a>';
+                    $('#view_locations').after(loc_link);
+                });
+                $('#view_locations').remove();
+                if (response.length == 0) {
+                    showMessage("No locations.");
+                }
+            });
+        });
+
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+
+    
+
+    function toggleBounce() {
+        if (marker.getAnimation() != null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+
+</script>
+<div id="file-dialog"></div>

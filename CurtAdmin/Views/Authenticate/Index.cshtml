@@ -1,0 +1,54 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CURT Manufacturing Documentation - Login</title>
+    <link href="@Url.Content("~/Content/login.css")" rel="Stylesheet" media="all" type="text/css" />
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic' rel='Stylesheet' type='text/css' />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.5b1.js"></script>
+
+</head>
+<body>
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post">
+        <div style="color:whitesmoke;font-weight: bold">
+            <img src="@Url.Content("~/Content/img/curtLogo.png")" style="width: 100px" /> 
+            <span style="line-height: 26px;vertical-align: top">Documentation Login</span>
+        </div>
+        @if(ViewBag.Message != ""){
+            <p style="color: #e44f31;margin:0px;margin-left:100px">@ViewBag.Message</p>
+        }
+        <label for="username">
+            Username
+            <input type="text" name="username" id="username" />
+        </label><br />
+        <label for="password">
+            Password
+            <input type="password" name="password" id="password" />
+        </label><br />
+        <div style="clear:both"></div>
+        <input type="submit" name="btnLogin" id="btnLogin" value="Login" /><br />
+        <div style="border-bottom: 1px dotted #999;margin-bottom:10px;text-align:right">
+            <label for="rememberMe" style="font-size:8pt;line-height:10px">
+                Remember Me
+                <input type="checkbox" name="rememberMe" id="rememberMe" value="1" />
+            </label>
+        </div>
+        <div style="float:left;">
+            <a style="color:white" href="@Url.Content("~/Authenticate/Forgot")">Forgot Username/Password?</a>
+        </div>
+        <div style="float:right;">
+            <a style="color:white" href="@Url.Content("~/Authenticate/Signup")">Sign Up</a>
+        </div>
+    </form>
+        
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#username').focus();
+        });
+    </script>
+
+</body>
+</html>

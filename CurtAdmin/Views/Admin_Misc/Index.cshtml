@@ -1,0 +1,180 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.navigation = "_MiscNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.ContentType> types = ViewBag.types;
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Misc/AddContentType")" id="addContentType">Add</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Content Types</h2>
+    <div style="clear:both"></div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Type ID</th>
+                <th>Type</th>
+                <th>HTML?</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.ContentType t in types) {
+                <tr id="typeRow:@t.cTypeID">
+                    <td>@t.cTypeID</td>
+                    <td>@t.type</td>
+                    <td>@((t.allowHTML) ? "Yes" : "No")</td>
+                    <td class="center">
+                        <a href="/Admin_Misc/EditContentType?cTypeID=@t.cTypeID" id="edit_@(t.cTypeID)" class="edit">Edit</a> |
+                        <a href="/Admin_Misc/DeleteContentType?cTypeID=@t.cTypeID" id="delete_@(t.cTypeID)" class="delete">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div id="editform" style="display: none;">
+    <form class="form_left" action="/Admin_Misc/EditContentType" method="post">
+        <label for="type">
+            Type:
+            <input type="text" id="type" name="type" value="" placeholder="Type Name" />
+        </label>
+        <label for="allowHTML">
+            HTML:
+            <input type="checkbox" id="allowHTML" name="allowHTML" value="true" />
+        </label>
+        <input type="hidden" id="cTypeID" value="" />
+    </form>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var typeTable = $('table').dataTable({ "bJQueryUI": true });
+
+        $('#addContentType').click(function (event) {
+            event.preventDefault();
+            $('#type').val('');
+            $('#type').removeAttr('disabled');
+            $('#allowHTML').attr('checked', false);
+
+            $("form.form_left").dialog({
+                autoOpen: false,
+                height: 300,
+                width: 620,
+                title: "Add Content Type",
+                modal: true,
+                buttons: {
+                    "Save": function () {
+                        var type = $('#type').val();
+                        var allowHTML = $('#allowHTML').is(':checked');
+                        var bValid = true;
+
+                        if ($.trim(type) == "") bValid = false;
+
+                        if (bValid) {
+                            $.post('/Admin_Misc/AddContentType', { 'type': type, 'allowHTML': allowHTML }, function (data) {
+                                // remove and re-add row to table
+                                var addId = typeTable.fnAddData([
+                                        data.cTypeID,
+                                        data.type,
+                                        (data.allowHTML) ? 'Yes' : 'No',
+                                        '<a href="/Admin_Misc/EditContentType?cTypeID=' + data.cTypeID + '" id="edit_' + data.cTypeID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteContentType?cTypeID=' + data.cTypeID + '" id="delete_' + data.cTypeID + '" class="delete">Delete</a>'
+                                    ]);
+
+                                var theNode = typeTable.fnSettings().aoData[addId[0]].nTr;
+                                theNode.setAttribute('id', 'typeRow\:' + data.cTypeID);
+                                var theCell = typeTable.fnSettings().aoData[addId[0]].nTr.cells[3];
+                                theCell.className = "center"
+
+                                showMessage('Type added.');
+                            }, "json");
+                            $(this).dialog("close");
+                        }
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function () { }
+            });
+            $("form.form_left").dialog("open");
+        });
+
+        $('.edit').live('click', function (event) {
+            event.preventDefault();
+            var idstr = $(this).attr('id').split('_')[1];
+            $.getJSON('/Admin_Misc/GetContentType', { 'cTypeID': idstr }, function (response) {
+                $('#cTypeID').val(response.cTypeID);
+                $('#type').val(response.type);
+                $('#type').attr('disabled', 'true');
+                if (response.allowHTML) {
+                    $('#allowHTML').attr('checked', true);
+                } else {
+                    $('#allowHTML').attr('checked', false);
+                };
+
+                $("form.form_left").dialog({
+                    autoOpen: false,
+                    height: 300,
+                    width: 620,
+                    title: "Edit Content Type",
+                    modal: true,
+                    buttons: {
+                        "Save": function () {
+                            var cTypeID = $('#cTypeID').val();
+                            var allowHTML = $('#allowHTML').is(':checked');
+                            var bValid = true;
+
+                            if ($.trim(type) == "") bValid = false;
+
+                            if (bValid) {
+                                $.post('/Admin_Misc/UpdateContentType', { 'cTypeID': cTypeID, 'allowHTML': allowHTML }, function (data) {
+                                    // remove and re-add row to table
+                                    typeTable.fnDeleteRow($('#typeRow\\:' + data.cTypeID).get()[0]);
+                                    var addId = typeTable.fnAddData([
+                                        data.cTypeID,
+                                        data.type,
+                                        (data.allowHTML) ? 'Yes' : 'No',
+                                        '<a href="/Admin_Misc/EditContentType?cTypeID=' + data.cTypeID + '" id="edit_' + data.cTypeID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteContentType?cTypeID=' + data.cTypeID + '" id="delete_' + data.cTypeID + '" class="delete">Delete</a>'
+                                    ]);
+
+                                    var theNode = typeTable.fnSettings().aoData[addId[0]].nTr;
+                                    theNode.setAttribute('id', 'typeRow\:' + data.cTypeID);
+                                    var theCell = typeTable.fnSettings().aoData[addId[0]].nTr.cells[3];
+                                    theCell.className = "center"
+
+                                    showMessage('Type updated.');
+                                }, "json");
+                                $(this).dialog("close");
+                            }
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    },
+                    close: function () { }
+                });
+                $("form.form_left").dialog("open");
+            });
+
+        });
+        $('.delete').live('click', function (event) {
+            event.preventDefault();
+            var idstr = $(this).attr('id').split('_')[1];
+            if (confirm("Are you sure you want to remove this content type?\r\nThis cannot be undone!")) {
+                $.getJSON('/Admin_Misc/DeleteContentType', { 'cTypeID': idstr }, function (response) {
+                    if ($.trim(response).length == 0) {
+                        typeTable.fnDeleteRow($('#typeRow\\:' + idstr).get()[0]);
+                        showMessage('Content Type has been removed.');
+                    } else {
+                        showMessage('' + response);
+                    }
+                });
+            }
+        });
+
+    });
+</script>

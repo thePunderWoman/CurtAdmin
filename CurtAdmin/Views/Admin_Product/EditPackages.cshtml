@@ -1,0 +1,147 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    List<CurtAdmin.PartPackage> packages = ViewBag.packages;
+    List<CurtAdmin.UnitOfMeasure> units = ViewBag.units;
+    CurtAdmin.UnitOfMeasure pounds = units.Find(delegate(CurtAdmin.UnitOfMeasure u) { return u.code == "LB"; });
+    CurtAdmin.UnitOfMeasure inches = units.Find(delegate(CurtAdmin.UnitOfMeasure u) { return u.code == "IN"; });
+    CurtAdmin.UnitOfMeasure each = units.Find(delegate(CurtAdmin.UnitOfMeasure u) { return u.code == "EA"; });
+    ViewBag.Title = "Edit Packages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    table {
+        width: 100%;
+    }
+    
+    table tbody tr td {
+        text-align: center;
+    }
+    
+    h2 {
+        float: left;
+    }
+    
+    #addPackage {
+        float: right;
+        clear: right;
+        cursor: pointer;
+    }
+    
+    .form_left {
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        min-width: 550px;
+        display: none;
+    }
+    
+    .form_left label input[type=text] {
+        margin-right: 20px;
+        width: 300px;
+    }
+    
+    .form_left select.unit {
+        float: right;
+        width: 100px;
+    }
+    
+    #buttons {
+        margin-top: 0px;
+    }
+    
+    #buttons input {
+        width: auto;
+    }
+    
+</style>
+@{ Html.RenderPartial("PartMenu"); }
+<div id="content_container">
+    <h2>Edit Packages for Part #@part.partID - @part.shortDesc</h2>
+    <img src="/Content/img/addPackage.png" alt="Add Package" id="addPackage" />
+    <hr style="border-bottom: 1px dotted #343434; clear: both" />
+    <div class="form_left">
+        <label for="weight">
+            Weight
+            <select name="weightUnit" id="weightUnit" class="unit">
+                @foreach (CurtAdmin.UnitOfMeasure unit in units) {
+                    <option value="@unit.ID" @((unit.ID == pounds.ID) ? "selected=selected" : "")>@unit.code (@unit.name)</option>
+                }
+            </select>
+            <input type="text" name="weight" id="weight" placeholder="0.00" />
+        </label>
+        <label for="height">
+            Height
+            <select name="heightUnit" id="heightUnit" class="unit">
+                @foreach (CurtAdmin.UnitOfMeasure unit in units) {
+                    <option value="@unit.ID" @((unit.ID == inches.ID) ? "selected=selected" : "")>@unit.code (@unit.name)</option>
+                }
+            </select>
+            <input type="text" name="height" id="height" placeholder="0.00" />
+        </label>
+        <label for="width">
+            Width
+            <select name="widthUnit" id="widthUnit" class="unit">
+                @foreach (CurtAdmin.UnitOfMeasure unit in units) {
+                    <option value="@unit.ID" @((unit.ID == inches.ID) ? "selected=selected" : "")>@unit.code (@unit.name)</option>
+                }
+            </select>
+            <input type="text" name="width" id="width" placeholder="0.00" />
+        </label>
+        <label for="length">
+            Length
+            <select name="lengthUnit" id="lengthUnit" class="unit">
+                @foreach (CurtAdmin.UnitOfMeasure unit in units) {
+                    <option value="@unit.ID" @((unit.ID == inches.ID) ? "selected=selected" : "")>@unit.code (@unit.name)</option>
+                }
+            </select>
+            <input type="text" name="length" id="length" placeholder="0.00" />
+        </label>
+        <label for="quantity">
+            Quantity
+            <select name="qtyUnit" id="qtyUnit" class="unit">
+                @foreach (CurtAdmin.UnitOfMeasure unit in units) {
+                    <option value="@unit.ID" @((unit.ID == each.ID) ? "selected=selected" : "")>@unit.code (@unit.name)</option>
+                }
+            </select>
+            <input type="text" name="quantity" id="quantity" value="1" />
+        </label>
+        <div id="buttons">
+            <input type="hidden" name="packageID" id="packageID" value="0" />
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear Package" />
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Weight</th>
+                <th>Height</th>
+                <th>Width</th>
+                <th>Length</th>
+                <th>Quantity</th>
+                <th>Package Unit</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.PartPackage pkg in packages) {
+                <tr>
+                    <td>@pkg.weight @pkg.weightUnit.code</td>
+                    <td>@pkg.height @pkg.dimensionUnit.code</td>
+                    <td>@pkg.width @pkg.dimensionUnit.code</td>
+                    <td>@pkg.length @pkg.dimensionUnit.code</td>
+                    <td>@pkg.quantity</td>
+                    <td>@pkg.packageUnit.code</td>
+                    <td>
+                        <a href="javascript:void(0)" id="package_@(pkg.ID)" class="edit" data-id="@pkg.ID">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" data-id="@pkg.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="hidden" name="partID" id="partID" value="@part.partID" />
+</div>
+<script src="../../Scripts/admin/Admin_Product/EditPackage.js" type="text/javascript"></script>

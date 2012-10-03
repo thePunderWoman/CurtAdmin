@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "AddLocation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.FullCountry> countries = ViewBag.countries;
+    CurtAdmin.Customer customer = ViewBag.customer;
+}
+
+<div id="content_container">
+    <h2>Add New Location for @customer.name</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p>@ViewBag.error</p>
+    }
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form_left">
+        <label for="name">
+            Location Name
+            <input type="text" name="name" id="name" placeholder="Enter the Name of the Location" required />
+        </label>
+
+        <label for="email">
+            E-Mail
+            <input type="email" name="email" id="email" placeholder="Enter the E-Mail Address" />
+        </label>
+
+        <label for="phone">
+            Phone
+            <input type="tel" name="phone" id="phone" placeholder="Enter the Phone Number" required />
+        </label>
+
+        <label for="fax">
+            Fax
+            <input type="tel" name="fax" id="fax" placeholder="Enter the Fax Number" />
+        </label>
+
+        <label for="address">
+            Address
+            <input type="text" name="address" id="address" placeholder="Enter the Street Address" required />
+        </label>
+
+        <label for="city">
+            City
+            <input type="text" name="city" id="city" placeholder="Enter the City" required />
+        </label>
+
+        <label for="state">
+            State / Province
+            <select name="state" id="state">
+                <option value="0">- Select State / Province -</option>
+                @foreach (CurtAdmin.Models.FullCountry country in countries) {
+                    <optgroup label="@country.name">
+                        @foreach (CurtAdmin.PartStates state in country.states) {
+                            <option value="@state.stateID">@(state.abbr + " - " + state.state1)</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </label>
+
+        <label for="postalCode">
+            Postal Code
+            <input type="text" name="postalCode" id="postalCode" placeholder="Enter the Postal Code" required />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>

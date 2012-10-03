@@ -1,0 +1,40 @@
+﻿@using CurtAdmin.Models;
+@{
+    ViewBag.Title = "Import Status";
+    ViewBag.navigation = "_MiscNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.ImportProcess status = ViewBag.status ?? new CurtAdmin.ImportProcess();
+}
+
+<div id="content_container">
+    <h2>Import Status</h2>
+    @if (status != null && status.ID > 0) {
+        if (status.endTime.Equals(null)) {
+            <p>Process currently importing images for @status.partCount parts.  Started at @String.Format("{0:M/d/yyyy} at {0:h:mm tt}", status.startTime).</p>
+            <p>Average Time Per Part: @Convert.ToDecimal(status.average / 1000.0) seconds</p>
+            <p>Estimated Time to Completion: @String.Format("{0:M/d/yyyy} at {0:h:mm:ss tt}",status.startTime.AddMilliseconds(status.average * status.partCount))</p>
+        } else {
+            <p>Process last Completed on @String.Format("{0:M/d/yyyy} at {0:h:mm:ss tt}", status.endTime).</p>
+            <p>Average Time Per Part: @Convert.ToDecimal(status.average / 1000.0) seconds</p>
+            <input type="button" id="startImport" value="Start Import" />
+        }
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).on('click', '#startImport', function (e) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to start the import process? This process could take hours to complete.")) {
+                $.post('/Import/StartAjax', function (response) {
+                    if (response == "Started") {
+                        showMessage("Started Import Process");
+                        $('#startImport').hide();
+                    } else {
+                        showMessage("Import Process was already running.");
+                    }
+                });
+            }
+        });
+    });
+</script>

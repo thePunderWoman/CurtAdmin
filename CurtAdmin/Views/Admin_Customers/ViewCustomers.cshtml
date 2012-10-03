@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Customer> customers = ViewBag.customers;
+}
+<style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addCustomer, #massUpload{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    
+    #map_container #map{
+        width: 100%;
+        height: 500px;
+        border: 1px solid #343434;
+        border-radus: 3px 3px 3px;
+        margin:auto;
+    }
+    
+    #map_container{
+        display:none;
+        margin: auto;
+        margin-top: 50px;
+    }
+</style>
+<div id="content_container">
+    <h2>Viewing @ViewBag.H2</h2>
+    <a href="/Admin_Customers/Add" title="Add Customer" id="addCustomer">
+        <img src="/Content/img/addCustomer.png" alt="Add Customer" />
+    </a>
+    <a href="/Admin_Customers/MassUpload" title="Mass Upload" id="massUpload">
+        <img src="/Content/img/mass_upload.png" alt="Mass Upload" />
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+
+    <!-- Explain what's here (for Chris) -->
+    <p>This page only displays the customer's main location. The branch locations can be accessed by clicking the 'Locations' link for a customer. If you would like to see a map of all the customer locations, <a href="#map_container" id="viewMap">Click Here</a>.</p>
+
+    <div id="loading_area">
+        <p>Loading Customers...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Customers..." />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>E-Mail</th>
+                <th>Tier</th>
+                <th>Dealer Type</th>
+                <th># of Locations</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Customer customer in customers) {
+                <tr>
+                    <td>@customer.customerID</td>
+                    <td>@customer.name</td>
+                    <td>@customer.phone</td>
+                    <td>@customer.email</td>
+                    <td>@customer.DealerTier.tier</td>
+                    <td>@customer.DealerType.type</td>
+                    <td>@customer.CustomerLocations.Count()</td>
+                    <td>
+                        <a href="/Admin_Customers/Locations/@customer.cust_id" class="locations">Locations</a> | 
+                        <a href="/Admin_Customers/Edit/@customer.cust_id" class="edit">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" id="@customer.cust_id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="map_container">
+        <div id="map"></div>
+    </div>
+</div>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+    var customerTable = "";
+    var map;
+    $(function () {
+        customerTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+
+        $('#viewMap').click(showMap);
+        $('.delete').live('click', function () {
+            var custID = $(this).attr('id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (custID > 0 && confirm('Are you sure you want to delete this customer?')) {
+                $.get('/Admin_Customers/Delete/' + custID, function (response) {
+                    if (response.length == 0) {
+                        customerTable.fnDeleteRow(table_row);
+                    } else {
+                        showMessage(response);
+                    }
+                });
+            }
+        });
+    });
+
+    function showMap(event) {
+        event.preventDefault();
+        $('#map_container').fadeIn();
+        var latlng = new google.maps.LatLng(40.3130432088809, -94.658203125);
+        var options = {
+            zoom: 4,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById('map'), options);
+        var infoWindows = new Array();
+        var markers = new Array();
+
+        $.getJSON('/Admin_Customers/GetCustomersJSON', function (geo_json) {
+            $.each(geo_json, function (i, customer) {
+                var latitude = customer.latitude;
+                var longitude = customer.longitude;
+                var name = customer.name;
+                var loc_latlng = new google.maps.LatLng(latitude, longitude);
+                var contentString = '<div id="content"><div id="siteNotice"></div><p><strong>' + name + '</strong><br>';
+                contentString += customer.address + '<br>' + customer.city + ', ' + ((customer.state == null) ? "" : customer.state.abbr) + ' ' + customer.postalCode + '<br>';
+                contentString += customer.phone + '</p></div>';
+                infoWindows[i] = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                markers[i] = new google.maps.Marker({
+                    position: loc_latlng,
+                    map: map,
+                    icon: customer.dealerType.mapicon,
+                    shadow: customer.dealerType.mapiconshadow,
+                    title: name
+                });
+                google.maps.event.addListener(markers[i], 'click', function () {
+                    infoWindows[i].open(map, markers[i]);
+                });
+            });
+        });
+    }
+</script>

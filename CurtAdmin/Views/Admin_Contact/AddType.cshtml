@@ -1,0 +1,48 @@
+﻿@model CurtAdmin.ContactType
+
+@{
+    ViewBag.Title = "Add a Contact Type";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string error = ViewBag.error;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Contact")">Contacts</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Receivers")">Receivers</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Contact/Types")">Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddType")" class="active">Add Type</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/AddReceiver")">Add Receiver</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Contact/Export")">Export</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Add a Contact Type</h2>
+
+    @if (error.Length != 0) {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    <form action="/Admin_Contact/AddType" Method="post" class="form_left">
+        <!-- Item Name -->
+        <label for="name">
+            Name
+            <input type="text" name="name" id="name" placeholder="Enter name..." value="" />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+    </form>
+</div>

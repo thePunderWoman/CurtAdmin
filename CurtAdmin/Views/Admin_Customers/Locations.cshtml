@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "Locations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Customer customer = ViewBag.customer;
+    List<CurtAdmin.CustomerLocation> locations = ViewBag.locations;
+}
+<style type="text/css">
+    table tbody tr td:nth-child(6){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addLocation, #populate {
+        float:right;
+    }
+    
+    #map_container #map{
+        width: 100%;
+        height: 500px;
+        border: 1px solid #343434;
+        border-radius: 3px 3px 3px;
+    }
+    
+    #map_container{
+        float:left;
+        margin: auto;
+        width: 100%;
+    }
+</style>
+<div id="content_container">
+    <h2>
+        Locations for 
+        <a href="/Admin_Customers/Edit/@customer.cust_id" title="Edit Customer">@customer.name</a>
+    </h2>
+    <a href="/Admin_Customers/AddLocation/@customer.cust_id" title="Add Location" id="addLocation">
+        <img src="/Content/img/addLocation.png" alt="Add Location" />
+    </a>
+    <a href="/Admin_Customers/PopulateLocations/@customer.cust_id" title="Populate Location" id="populate">
+        <img src="/Content/img/populate.png" alt="Populate Location" />
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+
+    <table>
+        <thead>
+            <tr>
+                <th>Location ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Phone</th>
+                <th>Lat/log</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.CustomerLocation location in locations) {
+                <tr>
+                    <td>@location.locationID</td>
+                    <td>@location.name</td>
+                    <td>@(location.city + ", " + CurtAdmin.Models.CustomerModel.GetState(location.stateID,"abbr"))</td>
+                    <td>@location.phone</td>
+                    <td>@location.latitude / @location.longitude</td>
+                    <td>
+                        <a href="/Admin_Customers/EditLocation/@location.locationID" title="Edit Location">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" id="@location.locationID">Delete</a>
+                        <input type="hidden" name="location_geo:@location.locationID" id="location_geo:@location.locationID" class="geo" value="@location.latitude:@location.longitude:@location.name" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="map_container">
+        <div id="map"></div>
+    </div>
+</div>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+    var map;
+    $(document).ready(function () {
+        var loc_table = $('table').dataTable({ "bJQueryUI": true });
+
+        var latlng = new google.maps.LatLng(40.3130432088809, -94.658203125);
+        var options = {
+            zoom: 4,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById('map'), options);
+        var infoWindows = new Array();
+        var markers = new Array();
+        var latlngbounds = new google.maps.LatLngBounds();
+
+        $.getJSON('/Admin_Customers/GetCustomerLocationsJSON/@customer.cust_id', function (geo_json) {
+            $.each(geo_json, function (i, customer) {
+                var latitude = customer.latitude;
+                var longitude = customer.longitude;
+                var name = customer.name;
+                var loc_latlng = new google.maps.LatLng(latitude, longitude);
+                latlngbounds.extend(loc_latlng);
+                var contentString = '<div id="content"><div id="siteNotice"></div><p><strong>' + name + '</strong><br>';
+                contentString += customer.address + '<br>' + customer.city + ', ' + ((customer.state == null) ? "" : customer.state.abbr) + ' ' + customer.postalCode + '<br>';
+                contentString += customer.phone + '</p></div>';
+                infoWindows[i] = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                markers[i] = new google.maps.Marker({
+                    position: loc_latlng,
+                    map: map,
+                    title: name,
+                    draggable: false,
+                    icon: customer.dealerType.mapicon,
+                    shadow: customer.dealerType.mapiconshadow,
+                    animation: google.maps.Animation.DROP
+                });
+                google.maps.event.addListener(markers[i], 'click', function () {
+                    infoWindows[i].open(map, markers[i]);
+                });
+                map.fitBounds(latlngbounds);
+            });
+        });
+
+
+        $('.delete').live('click', function () {
+            var locationID = $(this).attr('id');
+            var row = $(this).parent().parent().get()[0];
+            if (locationID > 0 && confirm('Are you sure you want to remove this location?')) {
+                $.get('/Admin_Customers/DeleteLocation/' + locationID, function (response) {
+                    if (response.length == 0) {
+                        loc_table.fnDeleteRow(row);
+                    } else {
+                        showMessage(response);
+                    }
+                });
+            }
+        });
+
+    });
+</script>

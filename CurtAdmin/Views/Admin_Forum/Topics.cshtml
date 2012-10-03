@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Forum / Message Topics";
+    ViewBag.navigation = "_ForumNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.FullGroup group = ViewBag.group;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + group.forumGroupID)">Add Topic</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2 id="index_title">Topics for "@group.name"</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Topic</th>
+                <th>Description</th>
+                <th>Open</th>
+                <th style="text-align: center;">Threads</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.FullTopic topic in group.topics) {
+                <tr>
+                    <td>@topic.name</td>
+                    <td>@topic.description</td>
+                    <td style="text-align: center;">@((topic.closed) ? "No" : "Yes")</td>
+                    <td style="text-align: center;">@topic.count</td>
+                    <td style="text-align: center;">
+                        <a href="/Admin_Forum/EditTopic/@topic.topicID" title="Edit">Edit</a> | 
+                        <a href="/Admin_Forum/Threads/@topic.topicID" title="Edit">View Threads</a>
+                        @if(topic.count == 0) { 
+                            <text>|</text> <a href="/Admin_Forum/DeleteTopic/@topic.topicID" title="Delete" class="deletetopic">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="/Scripts/admin/forum.js" type="text/javascript"></script>

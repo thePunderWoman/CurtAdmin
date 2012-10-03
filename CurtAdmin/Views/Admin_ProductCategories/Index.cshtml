@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.navigation = "_CategoryNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .dataTables_wrapper{
+        display: none;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addCat{
+        margin: 0px 10px 0px 0px;
+        float:right;
+        line-height: 63px;
+    }
+    
+    #addCat a{
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16pt;
+    }
+    
+    #addCat a img{
+        vertical-align: middle;
+    }
+</style>
+<div id="content_container">
+    <h2>Product Categories</h2>
+    <div id="addCat">
+        <a href="@Url.Content("~/Admin_ProductCategories/Add")"><img src="@Url.Content("~/Content/img/addCategory.png")" /></a>
+    </div>
+    <div style="clear:both"></div>
+    <div id="loading_area">
+        <p>Loading categories...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading categories..." />
+    </div>
+
+    <table style="display:none">
+        <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Category</th>
+                <th>Date Added</th>
+                <th>Parent</th>
+                <th># Parts</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.DetailedCategories cat in ViewBag.cats) {
+                <tr id="catRow:@cat.catID">
+                    <td>@cat.catID</td>
+                    <td>@cat.catTitle</td>
+                    <td>@cat.dateAdded</td>
+                    <td>@cat.parentCat</td>
+                    <td>@cat.partCount</td>
+                    <td class="center">
+                        <select class="action" id="@cat.catID">
+                            <option value="0">- Select Option -</option>
+                            <option value="items">View Parts</option>
+                            <option value="edit">Edit</option>
+                            <option value="content">Content</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+            <tr>
+                    <td></td>
+                    <td>Uncategorized Parts</td>
+                    <td></td>
+                    <td></td>
+                    <td>@ViewBag.unknown</td>
+                    <td class="center">
+                        <select class="action" id="unknown">
+                            <option value="0">- Select Option -</option>
+                            <option value="items">View Parts</option>
+                        </select>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var catTable = $('table').dataTable({ "bJQueryUI": true });
+        $('#loading_area').slideUp();
+        $('.dataTables_wrapper').fadeIn();
+        $('table').fadeIn();
+
+
+        $('.action').live('change', function () {
+            var catID = $(this).attr('id');
+            var action = $(this).val();
+
+            switch (action) {
+                case 'items':
+                    if (catID == 'unknown') {
+                        window.location.href = '/Admin_ProductCategories/CategoryItems?catID=0&unknown=unknown';
+                    } else {
+                        window.location.href = '/Admin_ProductCategories/CategoryItems?catID=' + catID;
+                    }
+                    break;
+
+                case 'edit':
+                    // Redirect to the edit page for categories
+                    window.location.href = '/Admin_ProductCategories/Edit?catID=' + catID;
+                    break;
+
+                case 'content':
+                    // Redirect to the edit page for categories
+                    window.location.href = '/Admin_ProductCategories/Content?catID=' + catID;
+                    break;
+
+                case 'delete':
+                    // Delete this category
+                    if (confirm("Are you sure you want to remove this category?\r\nThis cannot be undone!")) {
+                        $.getJSON('/Admin_ProductCategories/Delete', { 'catID': catID }, function (response) {
+                            if ($.trim(response).length == 0) {
+                                catTable.fnDeleteRow($('#catRow\\:' + catID).get()[0]);
+                                showMessage('Category has been removed.');
+                            } else {
+                                showMessage('' + response);
+                            }
+                        });
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            $(this).val(0);
+        });
+    });
+</script>

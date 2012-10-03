@@ -1,0 +1,657 @@
+/* 
+    Document   : admin
+    Created on : Jan 10, 2011, 10:01:11 AM
+    Author     : alex
+    Description: This stylesheet is used to style the public user portion of our application.
+*/
+
+/************ Global Styles ************/
+
+.center{ text-align: center; }
+.right{ text-align: right; }
+
+/********** End Global Styles **********/
+
+root { display: block; }
+
+img{
+    border:none;
+}
+
+body{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Ubuntu',arial,serif;
+}
+
+#header{
+    width: 100%;
+    min-width: 1020px;
+    border-bottom: 2px solid #2e2c2b;
+    position: fixed;
+    top: 0px;
+    height: 75px;
+    z-index: 10;
+    background: #343434;
+}
+
+#header #curtLogo{
+    height: 55px;
+    margin-top: 10px;
+}
+
+#header #logoLink{
+    text-decoration: none;
+    float:left;
+    padding-left: 10px;
+    height: 75px;
+}
+
+#header #logoLink span{
+    color: white;
+    line-height: 75px;
+    font-size: 16pt;
+    position: relative;
+    top: -7px;
+}
+
+#header #searchArea{
+    float:right;
+    margin-right: 40px;
+    margin-top: 5px;
+}
+
+#header #searchArea #userLinks
+{
+    height: 8px;
+    line-height: 8px;
+    padding: 0px 5px;
+    padding-right: 0px;
+    float:right;
+}
+
+#header #searchArea #userLinks a:first-child 
+{
+    border-left: 1px solid #a8a8a8; 
+    padding-left: 5px;
+}
+
+#header #searchArea #userLinks a
+{
+    color: whitesmoke;
+    font-size: 10px;
+    line-height: 14px;
+    vertical-align: top;
+    text-decoration: none;
+    padding-right: 5px;
+    border-right: 1px solid #a8a8a8;
+}
+
+#header #searchArea #userLinks a:hover{ text-decoration: underline; }
+
+#header #searchArea input[type=text]{
+    width: 250px;
+    height: 25px;
+    margin-top: 15px;
+    border-radius: 6px 6px 6px;
+    border: 2px solid #a8a8a8;
+    color: #a8a8a8;
+    padding: 5px;
+    padding-right: 30px;
+    line-height: 25px;
+    font-size: 20px;
+    background: #343434;
+}
+
+#header #searchArea input[type=submit]{
+    background: url('img/eyeglass.png');
+    position: relative;
+    left: -30px;
+    top: -5px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 0;
+}
+
+#sidebar{
+    float:left;
+    width: 20%;
+    position: fixed;
+    left: 0px;
+    top: 75px;
+    height: 100%;
+    background: #857f73;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#857f73), to(#6d6b5c));
+    background: -moz-linear-gradient(top, #857f73, #6d6b5c);
+    background: -o-gradient(linear, 0% 0%, 0% 100%, from(#857f73), to(#6d6b5c));
+    background: gradient(linear, 0% 0%, 0% 100%, from(#857f73), to(#6d6b5c));
+    /* For Internet Explorer 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#857f73, endColorstr=#6d6b5c);
+
+    /* For Internet Explorer 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#857f73, endColorstr=#6d6b5c)";
+
+    z-index: 9;
+    overflow: auto;
+}
+
+#sidebar_border
+{
+    width: 3px;
+    position: fixed;
+    float:left;
+    left: 20%;
+    top: 75px;
+    height: 100%;
+    background: #999;
+    z-index: 9;
+    cursor: pointer;
+}    
+
+#sidebar ul{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+#sidebar ul li{
+    height: 45px;
+    vertical-align: middle;
+}
+
+#sidebar ul li a:hover{
+    background: #343434;
+    color: white;
+    text-decoration: underline;
+}
+
+#sidebar ul li a{
+    color: #343434;
+    text-decoration: none;
+    line-height: 45px;
+    display: inline-block;
+    min-width: 90%;
+    height: 45px;
+    padding-left: 10%;
+}
+
+#sidebar ul li a span{
+    display: inline-block;
+    width: 25px;
+}
+
+#sidebar ul li a span img{
+    width: 20px;
+    vertical-align: middle;
+    padding-bottom: 8px;
+}
+
+#content{
+    float:left;
+    margin-top: 75px;
+    margin-left: 20%;
+    width: 80%;
+}
+
+#content #content_container
+{
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 20px;
+}
+
+#usersNav{
+    height: 50px;
+    background: #444;
+    padding-left: 20px;
+    border-bottom: 2px solid #343434;
+}
+
+#usersNav ul{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    height: 100%;
+    border-left: 2px solid #2e2c2b;
+}
+
+#usersNav ul li{
+    display: inline-block;
+    width: 110px;
+}
+
+#usersNav ul li a{
+    display: inline-block;
+    width: 110px;
+    height: 40px;
+    line-height: 50px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border-right: 2px solid #2c2e2b;
+    padding: 5px 0px;
+}
+
+#usersNav ul li a:hover{
+    cursor: pointer;
+    text-decoration: underline;
+    background: #3f3f3f;
+}
+
+#usersNav ul li a.active{
+    background: #3f3f3f;
+    text-decoration: underline;
+}
+
+.subNav{
+    height: 30px;
+    background: #494949;
+    padding-left: 40px;
+    border-bottom: 1.5px solid #444;
+}
+
+.subNav ul{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    height: 100%;
+    border-left: 1.5px solid #444;
+}
+
+.subNav ul li{
+    display: inline-block;
+    width: 110px;
+}
+
+.subNav ul li a{
+    display: inline-block;
+    width: 110px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border-right: 2px solid #444;
+    padding: 5px 0px;
+}
+
+.subNav ul li a:hover{
+    cursor: pointer;
+    text-decoration: underline;
+    background: #444;
+}
+
+.subNav ul li a.active{
+    background: #444;
+    text-decoration: underline;
+}
+
+.form{
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.form_left{
+    width: 60%;
+    float:left;
+}
+
+.form_right
+{
+    float:right;
+    width: 30%;
+    margin-right: 4%;
+    margin-left: 4%;
+}
+
+.form .moduleContainer{
+    background: #343434;
+    color: white;
+    border-radius: 8px 8px 8px;
+    -webkit-box-shadow: 5px 5px 5px #343434;
+    padding: 5px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.form .moduleContainer label{
+    margin: 0px 10px;
+}
+
+.form_left label{
+    display: block;
+    clear:right;
+    line-height: 35px;
+    height: 55px;
+    margin-bottom: 10px;
+}
+
+.form_left label .inputHelper{
+    display: block;
+    font-size: 9pt;
+    color: #343434;
+    float: right;
+    line-height: 12px;
+    clear:both;
+}
+
+.form_left label input,.form_left label select, .form_left label textarea {
+    float:right;
+    background: #e5e5e5;
+}
+
+.form_left label input:focus,.form_left label select:focus{
+    background: white;
+}
+
+
+.form_left input[type=submit]{
+    float:none;
+}
+
+.form_left label input[type=text],.form_left label input[type=email],.form_left label input[type=password],.form_left label select{
+    width: 400px;
+    height: 35px;
+    line-height: 30px;
+    padding: 2.5px;
+    border-radius: 3px 3px 3px;
+    border: 2px inset #ccc;
+}
+
+.form_left label textarea {
+    width: 400px;
+    height: 100px;
+    line-height: 14px;
+    padding: 2.5px;
+    border-radius: 3px 3px 3px;
+    border: 2px inset #ccc;
+    float:right;
+    color: #343434;
+}
+
+.form_left #buttons{
+    margin-top: 75px;
+}
+
+.form #buttons input{
+    float:right;
+    width: 50px;
+    height: 30px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+
+#message_box{
+    position: fixed;
+    top: 95%;
+    left: 78%;
+    width: 20%;
+    height: 5%;
+    background: #E44F31;
+    border: 1px solid #343434;
+    z-index: 50;
+    padding: 4px 4px;
+    display: none;
+}
+
+#message_box span{
+    line-height: 90%;
+    font-size: 10pt;
+    color: #343434;
+}
+
+.comment{
+    border: 1px solid #999;
+    width: 45%;
+    padding: 0px 5px 2px 5px;
+    margin-bottom: 10px;
+}
+
+.comment .name{
+    font-size: 8pt;
+    color:#343434;
+    float:left;
+}
+
+.comment .comment_reply{
+    font-size: 8pt;
+    color:#999;
+    float:right;
+    margin-right: 5px;
+}
+
+.comment .comment_text{
+    width: 100%;
+    border: 1px solid #999;
+}
+
+.comment .comment_text span{
+    margin-left: 15px;
+    font-size: 9pt;
+    color: #343434;
+}
+
+#newComment, .replyComment{
+    display: none;
+}
+
+.replyComment, .saveReply{
+    margin-left: 10%;
+}
+
+#newComment span, .replyComment span{
+    font-size: 8pt;
+    color: #999;
+    display:block;
+}
+
+/***** Twitter Display *******/
+
+#twitter_bird
+{
+    position: relative;
+    left: 28%;
+    z-index: 10;
+    width: 125px;
+}
+
+#tweet_box
+{
+    float: right;
+    position: relative;
+    top: -25px;
+    width: 39%;
+    padding: 10px;
+    background: #343434;
+    border: 1.5px outset #2E2C2B;
+    overflow: hidden;
+    max-height: 500px;
+    overflow-y: scroll;
+    max-width: 39%;
+    border-radius: 5px 5px 5px;
+    box-shadow: #E44F31 -10px 10px 10px;
+    margin-bottom: 25px;
+}
+
+#tweet_box .tweet
+{
+    width: 100%;
+    border-bottom: 2px outset #e44f31;
+    padding: 10px 0px;
+}
+
+#tweet_box .tweet .tweet_user img
+{
+    float:left;
+    max-width: 45px;
+}
+
+#tweet_box .tweet .tweet_user a
+{
+    color: #e44f31;
+    font-size: 7pt;
+}
+
+#tweet_box .tweet .tweet_text_container
+{
+    float:left;
+    width: 76%;
+    margin-left: 10%;
+}
+
+#tweet_box .tweet .tweet_text_container .tweet_text
+{
+    color: White;
+}
+
+#tweet_box .tweet .tweet_text_container .tweet_info
+{
+    color:#999;
+    font-size: 8pt;
+}
+
+#tweet_box .tweet .tweet_text_container .tweet_info a
+{
+    color: #e44f31;
+    text-decoration: none;
+}
+
+#tweet_box .tweet .tweet_text_container .tweet_info a:hover
+{
+    text-decoration: underline;
+}
+
+#footer_links
+{
+    margin: auto;
+    font-size: 8pt;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#footer_links span, #footer_links span a
+{
+    color: #343434;
+}
+
+#sub_cat_table{
+    width: 400px;
+    border:collapse;
+    margin-bottom: 15px;
+}
+
+#sub_cat_table thead tr{
+    background: none;
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
+}
+
+#sub_cat_table tr{
+    padding: 5px;
+}
+
+#sub_cat_table tbody tr td{
+    padding: 5px;
+}
+
+#sub_cat_table tbody tr:nth-child(even){
+    background: #343434;
+    color: White;
+}
+
+#sub_cat_table tbody tr:nth-child(even) td a{
+    color: White;
+}
+
+#sub_cat_table tbody tr:nth-child(odd) td a{
+    color: #343434;
+}
+
+#photobox {
+    float: right;
+    width: 408px;
+    position: relative;
+    top: -30px;
+}
+
+#photobox #photo-file img {
+    border: 1px solid #555;
+    padding: 2px;
+    max-height: 226px;
+    width: auto;
+}
+
+button#upload-photo, button#choose-photo {
+    padding: 3px 15px;
+    border: 2px bevel #333;
+    border-radius: 7px;
+    background-color: #d6bb6b;
+    color: #333;
+    cursor: pointer;
+}
+
+button#clear-photo {
+    padding: 3px 15px;
+    border: 2px bevel #333;
+    border-radius: 7px;
+    background-color: #e64d2d;
+    color: #000;
+    cursor: pointer;
+}
+
+button#upload-photo:hover , button#choose-photo:hover {
+    background-color: #bfa96e;
+}
+
+button#upload-photo:active , button#choose-photo:active {
+    background-color: #e5cb82;
+}
+
+#uploaded-photo-container {
+    display: block;
+    overflow: scroll;
+    height: 250px;
+}
+
+#uploaded-photo-container ul#uploaded-photos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#uploaded-photo-container ul#uploaded-photos li {
+    float: left;
+    padding: 5px;
+    clear: none;
+    height: 220px;
+    max-width: 200px;
+    text-align: center;
+    border: 1px solid transparent;
+    overflow: hidden;
+}
+
+#uploaded-photo-container ul#uploaded-photos li span {
+    display: block;
+    font-size: 11px;
+    text-align: center;
+}
+
+#uploaded-photo-container ul#uploaded-photos li img {
+    display: block;
+    height: 190px;
+    cursor: pointer;
+    width: auto;
+    margin: auto;
+}
+
+#uploaded-photo-container ul#uploaded-photos li:hover {
+    border: 1px solid #333;
+}
+
+#photo-dialog iframe {
+    border: none;
+}

@@ -1,0 +1,46 @@
+﻿@model CurtAdmin.Menu
+
+@{
+    ViewBag.Title = "Add a Menu";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Menu_SiteContent item = ViewBag.item;
+    string error = ViewBag.error;
+    string message = ViewBag.message;
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Content")">Manage Content</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Menus")">Manage Menus</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>Edit Menu Link</h2>
+
+    @if (error.Length != 0) {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    @if (message.Length != 0) {
+        <p style="font-weight: bold; color: green;">@message</p>
+    }
+    <form action="/Admin_Website/Link/Edit/@item.menuContentID" Method="post" class="form_left">
+        <!-- Item Name -->
+        <label for="link_name">
+            Title
+            <input type="text" name="link_name" id="link_name" placeholder="Enter the title of the link..." value="@((Request.QueryString["link_name"] != null && Request.QueryString["link_name"].Length > 0) ? Request.QueryString["link_name"] : item.menuTitle)" />
+        </label>
+
+        <label for="link_value">
+            Value
+            <input type="text" name="link_value" id="link_value" placeholder="Enter the value of the link..." value="@((Request.QueryString["link_value"] != null && Request.QueryString["link_value"].Length > 0) ? Request.QueryString["link_value"] : item.menuLink)" />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Reset" />
+        </div>
+    </form>
+</div>

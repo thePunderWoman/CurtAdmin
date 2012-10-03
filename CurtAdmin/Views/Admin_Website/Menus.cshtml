@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Menus";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Menu> menus = ViewBag.menus;
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/website_menus.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Content")">Manage Content</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/Admin_Website/Menus")" class="active">Manage Menus</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Admin_Website/Menu/Add")">Add Menu</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage Website Menus</h2>
+    <table style="width: 100% !important">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Display Name</th>
+                <th>Require Auth?</th>
+                <th>Primary</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Menu m in menus) {
+                string removestr = "<a href=\"/Admin_Website/SetPrimaryMenu/" + m.menuID + "\">Remove Primary</a>";
+                string setstr = "<a href=\"/Admin_Website/SetPrimaryMenu/" + m.menuID + "\">Set Primary</a>";
+                <tr id="menu:@m.menuID">
+                    <td>@m.menu_name</td>
+                    <td>@m.display_name</td>
+                    <td>@((m.requireAuthentication) ? "Yes" : "No")</td>
+                    <td>@if (m.isPrimary) {
+                            <text>Primary</text>
+                            @Html.Raw(removestr);
+                        } else {
+                            @Html.Raw(setstr);
+                        }
+                    </td>
+                    <td class="center">
+                        <select id="action:@m.menuID" class="menu_action">
+                            <option value="0">Select Action</option>
+                            <option value="manage">Manage Content</option>
+                            <option value="edit">Edit</option>
+                            <option value="delete">Remove</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

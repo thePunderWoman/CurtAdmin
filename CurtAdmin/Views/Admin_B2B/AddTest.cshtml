@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Add Test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    int catID = 0;
+    if(ViewBag.catID != null){
+        catID = ViewBag.catID;
+    }
+
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<div id="content_container">
+    <h2>Add New Test</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    <form action="/Admin_B2B/AddTest/@catID" method="post" class="form_left">
+        <label for="title">
+            Test Name
+            <input type="text" name="title" id="title" placeholder="Enter the Name of the Test" required />
+        </label>
+
+        <label for="text">
+            Short Description
+            <input type="text" name="text" id="text" placeholder="Enter a short description." required />
+        </label>
+
+        <label for="minPassPercent">
+            Minimum Pass Percentage
+            <input type="text" name="minPassPercent" id="minPassPercent" placeholder="Example: 80" required />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Add" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

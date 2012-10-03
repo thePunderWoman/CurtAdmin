@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Posts";
+    ViewBag.navigation = "_BlogNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.BlogCategory> categories = ViewBag.categories;
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Admin_BlogCategory/Add")">Add Category</a>
+    </li>
+</ul>
+
+<div id="content_container">
+
+    <h2>Blog Categories</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.BlogCategory category in categories) {
+                <tr>
+                    <td>@category.name</td>
+                    <td>
+                        <a href="/Admin_BlogCategory/Edit/@category.blogCategoryID" title="Edit">Edit</a> | 
+                        <a href="/Admin_BlogCategory/Delete/@category.blogCategoryID" title="Delete Category" data-id="@category.blogCategoryID" class="delete_category">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript" src="/Scripts/admin/blog.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var categoryTable = $('table').dataTable({ "bJQueryUI": true });
+
+        $('.delete_category').live('click', function () {
+            var category_id = $(this).attr('data-id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (category_id > 0 && confirm("Are you sure you want to remove this Category?")) {
+                $.getJSON('/Admin_BlogCategory/Delete/' + category_id, function (resp) {
+                    if (resp.error == undefined) {
+                        categoryTable.fnDeleteRow(table_row);
+                        showMessage('Category removed.');
+                    } else {
+                        showMessage(resp.error);
+                    }
+                });
+            }
+            return false;
+        });
+
+    });
+</script>

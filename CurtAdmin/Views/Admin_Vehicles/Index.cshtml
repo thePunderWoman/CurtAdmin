@@ -1,0 +1,157 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    #partTable_wrapper{
+        display:none;
+    }
+</style>
+<div id="pageNav">
+    <ul>
+        <li>
+            <a href="@Url.Content("~/Admin_Vehicles")" class="active">View Vehicles</a>
+        </li>
+        <li>
+            <a href="@Url.Content("~/Admin_Vehicles/Add")">Add New</a>
+        </li>
+    </ul>
+</div>
+<div id="content_container">
+
+<div id="vehicle_header">
+    <h2>Manage Vehicles</h2>
+
+    <form action="@Url.Content("~/Admin_Vehicles/FindVehicle")" method="post" class="form">
+        <label for="vehicleStr">
+            <input type="search" name="vehicleStr" id="vehicleStr" placeholder="Search for vehicle" />
+            <input type="submit" name="btnSearchVechile" id="btnSearchVehicle" value="" />
+        </label>
+    </form>
+    <div style="clear:both"></div>
+</div>
+
+
+
+<div id="loading_area">
+    <p>Loading vehicles...</p>
+    <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading vehicles..." />
+</div>
+
+<table id="partTable" style="width:100%;display:none">
+    <thead>
+        <tr>
+            <th>Product Code</th>
+            <th>Short Description</th>
+            <th>Date Added</th>
+            <th>Date Last Modified</th>
+            <th>Class</th>
+            <th>List Price</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<table id="vehicleTable" style="width:100%;display:none">
+    <thead>
+        <tr>
+            <th>Vehicle ID</th>
+            <th>Year</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Style</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CurtAdmin.Models.FullVehicle v in ViewBag.vehicles) {
+            <tr id="row_@(v.vehicleID)">
+                <td>@v.vehicleID</td>
+                <td>@v.year</td>
+                <td>@v.make</td>
+                <td>@v.model</td>
+                <td>@v.style</td>
+                <td>
+                    <select class="action" id="@v.vehicleID">
+                        <option value="0">- Select Action -</option>
+                        <option value="view_prod">View Products</option>
+                        <option value="edit">Edit</option>
+                        <option value="delete">Delete</option>
+                    </select>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+
+<script type="text/javascript">
+    var vehicleTable;
+    $(document).ready(function () {
+        vehicleTable = $('#vehicleTable').dataTable({
+            "bJQueryUI": true
+        });
+
+        var partTable = $('#partTable').dataTable({
+            "bJQueryUI": true
+        });
+        $('#loading_area').slideUp();
+        $(vehicleTable).fadeIn();
+
+
+        $('.action').live('change', function () {
+            var value = $(this).val();
+            var vehicleID = $(this).attr('id');
+            switch (value) {
+                case 'edit':
+                    window.location.href = '/Admin_Vehicles/Edit?vehicleID=' + vehicleID;
+                    break;
+
+                case 'view_prod':
+                    if (vehicleID.length > 0 && vehicleID > 0) {
+                        $.getJSON('/Admin_Vehicles/GetVehicleParts', { 'vehicleID': vehicleID }, function (data) {
+                            if (!data.error) {
+                                partTable.fnClearTable();
+                                $.each(data, function (i, part) {
+                                    partTable.fnAddData([
+                                      part.partID,
+                                      part.shortDesc,
+                                      part.dateAdded,
+                                      part.dateModified,
+                                      part.pClass,
+                                      part.listPrice
+                                    ]);
+                                });
+                                $('#partTable_wrapper').slideDown();
+                                $('#partTable').fadeIn();
+                                $('html,body').animate({ scrollTop: $('#vehicle_header').offset().top }, { duration: 'normal', easing: 'swing' });
+                            } else {
+                                showMessage('Error: ' + data.error);
+                            }
+                        });
+                    }
+                    break;
+
+                case 'delete':
+                    if (vehicleID > 0 && confirm('Are you sure you want to remove this vehicle?')) {
+                        $.getJSON('/Admin_Vehicles/DeleteVehicle', { 'vehicleID': vehicleID }, function (response) {
+                            if (response == null || response == "") { // Remove table row
+                                vehicleTable.fnDeleteRow($('#row_' + vehicleID).get()[0]);
+                                showMessage('Vehicle was removed.');
+                            } else { // Error
+                                showMessage(response);
+                            }
+                        });
+                    } else if (vehicleID == 0) {
+                        showMessage('Error: invalid vehicle.');
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            $(this).val(0);
+        });
+    });
+</script>
+

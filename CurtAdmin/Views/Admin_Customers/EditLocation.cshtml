@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Edit Location";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Models.FullCountry> countries = ViewBag.countries;
+    CurtAdmin.Customer customer = ViewBag.customer;
+    CurtAdmin.CustomerLocation location = ViewBag.location;
+}
+<style type="text/css">
+    #map_container #map{
+        width: 325px;
+        height: 325px;
+        border: 1px solid #343434;
+        border-radius: 3px 3px 3px;
+    }
+    
+    #map_container{
+        float:left;
+        margin-left: 15px;
+    }
+</style>
+<div id="content_container">
+    <h2>Edit Location for @customer.name</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p>@ViewBag.error</p>
+    }
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form_left">
+        <label for="name">
+            Location Name
+            <input type="text" name="name" id="name" placeholder="Enter the Name of the Location" required value="@location.name" />
+        </label>
+
+        <label for="email">
+            E-Mail
+            <input type="email" name="email" id="email" placeholder="Enter the E-Mail Address" value="@location.email" />
+        </label>
+
+        <label for="phone">
+            Phone
+            <input type="tel" name="phone" id="phone" placeholder="Enter the Phone Number" required value="@location.phone" />
+        </label>
+
+        <label for="fax">
+            Fax
+            <input type="tel" name="fax" id="fax" placeholder="Enter the Fax Number" value="@location.fax" />
+        </label>
+
+        <label for="address">
+            Address
+            <input type="text" name="address" id="address" placeholder="Enter the Street Address" required value="@location.address" />
+        </label>
+
+        <label for="city">
+            City
+            <input type="text" name="city" id="city" placeholder="Enter the City" required value="@location.city" />
+        </label>
+
+        <label for="state">
+            State / Province
+            <select name="state" id="state">
+                <option value="0">- Select State / Province -</option>
+                @foreach (CurtAdmin.Models.FullCountry country in countries) {
+                    <optgroup label="@country.name">
+                        @foreach (CurtAdmin.PartStates state in country.states) {
+                            <option value="@state.stateID" @((location.stateID == state.stateID) ? "selected=selected" : "")>@(state.abbr + " - " + state.state1)</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </label>
+
+        <label for="postalCode">
+            Postal Code
+            <input type="text" name="postalCode" id="postalCode" placeholder="Enter the Postal Code" required value="@location.postalCode" />
+        </label>
+
+        <label for="latitude">
+            Latitude
+            <input type="text" name="latitude" id="latitude" placeholder="Latitude" value="@location.latitude" />
+        </label>
+
+        <label for="longitude">
+            Longitude
+            <input type="text" name="longitude" id="longitude" placeholder="Longitude" value="@location.longitude" />
+        </label>
+
+        <div id="buttons">
+            <input type="hidden" name="locationID" id="locationID" value="@location.locationID" />
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+
+    <div id="map_container">
+        <div id="map"></div>
+    </div>
+
+</div>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+    var marker;
+    var map;
+    $(document).ready(function () {
+        var lat = $('#latitude').val();
+        var long = $('#longitude').val();
+        var latlng = new google.maps.LatLng(lat, long);
+        var options = {
+            zoom: 10,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById('map'), options);
+
+        marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            title: $('#name').val(),
+            draggable: false,
+            animation: google.maps.Animation.BOUNCE
+        });
+        google.maps.event.addListener(marker, 'click', toggleBounce);
+
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+
+    function toggleBounce() {
+        if (marker.getAnimation() != null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+
+</script>
