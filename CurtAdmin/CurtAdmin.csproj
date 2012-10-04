@@ -159,6 +159,7 @@
     <Compile Include="Controllers\AuthenticateController.cs" />
     <Compile Include="Controllers\B2BController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\ACESImportController.cs" />
     <Compile Include="Controllers\DocumentationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
@@ -230,6 +231,11 @@
       <DependentUpon>ProductLinq.dbml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VCDB\VCDB.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VCDB.dbml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -420,6 +426,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
+    <Content Include="Views\ACESImport\Index.cshtml" />
+    <Content Include="VCDB\VCDB.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>VCDB.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -649,6 +661,11 @@
     </None>
     <None Include="ProductLinq.dbml.layout">
       <DependentUpon>ProductLinq.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VCDB\VCDB.dbml.layout">
+      <DependentUpon>VCDB.dbml</DependentUpon>
     </None>
   </ItemGroup>
   <PropertyGroup>
