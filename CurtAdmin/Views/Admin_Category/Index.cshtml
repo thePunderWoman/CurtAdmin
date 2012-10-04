@@ -2,6 +2,7 @@
     ViewBag.Title = "CURT Documentation - View Categories";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CurtAdmin.category> categories = ViewBag.categories;
+    List<CurtAdmin.module> modules = ViewBag.modules;
 }
 <script type="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
 <div id="usersNav">
@@ -31,9 +32,8 @@
             <tbody>
                 @foreach (var cat in categories) {
                     CurtAdmin.module m =  new CurtAdmin.module();
-                    CurtAdmin.DocsLinqDataContext doc_db = new CurtAdmin.DocsLinqDataContext();
                     if (cat.moduleID != 0) {
-                        m = (from mods in doc_db.modules where mods.moduleID.Equals(cat.moduleID) select mods).FirstOrDefault<CurtAdmin.module>();
+                        m = (from mods in modules where mods.moduleID.Equals(cat.moduleID) select mods).FirstOrDefault<CurtAdmin.module>();
                     }
                     <tr id="cat:@cat.catID">
                         <td style="width:15%">@cat.catID</td>

@@ -381,6 +381,8 @@
     <Content Include="Scripts\admin\website_menus.js" />
     <Content Include="Scripts\fileiframe.js" />
     <Content Include="Scripts\fileuploader.js" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
+    <None Include="Properties\PublishProfiles\Live.pubxml" />
     <None Include="Scripts\jquery-1.4.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.4.js" />
     <Content Include="Scripts\jquery-1.4.4.min.js" />
