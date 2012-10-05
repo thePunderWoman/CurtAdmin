@@ -70,7 +70,6 @@ namespace CurtAdmin.Controllers
             return View();
         }
 
-
         public ActionResult ViewUsers()
         {
             return View();
@@ -87,20 +86,26 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddCert(string title, string text, int reqNum, string logo)
+        public ActionResult AddCert(string title, string text, int reqNum, string logo, string inactive)
         {
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
             ViewBag.error = "";
             if (title != "" && text != "" && reqNum.ToString().Length > 0 && logo != "")
             {
                 try
                 {
-                    B2B.addCert(title, text, reqNum, logo);
+                    B2B.addCert(title, text, reqNum, logo, inActive);
                     return RedirectToAction("Index");
                 }
                 catch (Exception e)
                 {
                     ViewBag.error = e.Message;
                 }
+            }
+            else
+            {
+                ViewBag.error = "Please fill out all the form fields.";
             }
             return View();
         }
@@ -113,21 +118,27 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddCat(int id, string title, string text, string logo)
+        public ActionResult AddCat(int id, string title, string text, string logo, string inactive)
         {
             ViewBag.error = "";
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
             int certID = id;
             if (title != "" && text != "" && certID.ToString().Length > 0 && logo != "")
             {
                 try
                 {
-                    B2B.addCat(certID, title, text, logo);
+                    B2B.addCat(certID, title, text, logo, inActive);
                     return RedirectToAction("ViewCats", new { id = certID });
                 }
                 catch (Exception e)
                 {
                     ViewBag.error = e.Message;
                 }
+            }
+            else
+            {
+                ViewBag.error = "Please fill out all the form fields.";
             }
             return View();
         }
@@ -141,23 +152,30 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddLesson(int id, string title, string text, string video, string pdf)
+        public ActionResult AddLesson(int id, string title, string text, string video, string pdf, string inactive)
         {
             ViewBag.error = "";
             int catID = id;
             ViewBag.catID = catID;
 
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
+
             if (title != "" && text != "" && catID.ToString().Length > 0 && video != "" && pdf != "")
             {
                 try
                 {
-                    B2B.addLesson(catID, title, text, video, pdf);
+                    B2B.addLesson(catID, title, text, video, pdf, inActive);
                     return RedirectToAction("ViewLessons", new { id = catID });
                 }
                 catch (Exception e)
                 {
                     ViewBag.error = e.Message;
                 }
+            }
+            else
+            {
+                ViewBag.error = "Please fill out all the form fields.";
             }
             return View();
         }
@@ -171,23 +189,30 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddTest(int id, string title, string text, double minPassPercent)
+        public ActionResult AddTest(int id, string title, string text, double minPassPercent, string inactive)
         {
             ViewBag.error = "";
             int catID = id;
             ViewBag.catID = catID;
 
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
+
             if (title != "" && text != "" && catID.ToString().Length > 0 && minPassPercent.ToString().Length > 0)
             {
                 try
                 {
-                    B2B.addTest(catID, title, text, minPassPercent);
+                    B2B.addTest(catID, title, text, minPassPercent, inActive);
                     return RedirectToAction("ViewTests", new { id = catID });
                 }
                 catch (Exception e)
                 {
                     ViewBag.error = e.Message;
                 }
+            }
+            else
+            {
+                ViewBag.error = "Please fill out all the form fields.";
             }
             return View();
         }
@@ -201,16 +226,20 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddQuestion(int id, string text)
+        public ActionResult AddQuestion(int id, string text, string inactive)
         {
             ViewBag.error = "";
             int testID = id;
             ViewBag.testID = testID;
+
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
+
             if (text != "" && testID.ToString().Length > 0)
             {
                 try
                 {
-                    B2B.addQuestion(testID,text);
+                    B2B.addQuestion(testID, text, inActive);
                     return RedirectToAction("ViewQuestions", new { id = testID });
                 }
                 catch (Exception e)
@@ -218,7 +247,10 @@ namespace CurtAdmin.Controllers
                     ViewBag.error = e.Message;
                 }
             }
-
+            else
+            {
+                ViewBag.error = "Please fill out all the form fields.";
+            }
 
             return View();
         }
@@ -232,25 +264,32 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddAnswer(int id, string text, string isCorrect)
+        public ActionResult AddAnswer(int id, string text, string isCorrect, string inactive)
         {
             ViewBag.error = "";
             int questionID = id;
             bool isCorrectAnswer = false;
             if (isCorrect == "on"){isCorrectAnswer = true;}else{isCorrectAnswer = false;}
 
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
+
             ViewBag.questionID = questionID;
             if (text != "" && questionID.ToString().Length > 0)
             {
                 try
                 {
-                    B2B.addAnswer(questionID, text, isCorrectAnswer);
+                    B2B.addAnswer(questionID, text, isCorrectAnswer, inActive);
                     return RedirectToAction("ViewAnswers", new { id = questionID });
                 }
                 catch (Exception e)
                 {
                     ViewBag.error = e.Message;
                 }
+            }
+            else
+            {
+                ViewBag.error = "Please fill out all the form fields.";
             }
             return View();
         }
@@ -348,11 +387,14 @@ namespace CurtAdmin.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditCert(int id, string title, string text, int reqNum, string logo)
+        public ActionResult EditCert(int id, string title, string text, int reqNum, string logo, string inactive)
         {
             ViewBag.error = "";
             if (id > 0)
             {
+                Boolean inActive = false;
+                inActive = (inactive == "on") ? true : false;
+
                 // retrieve the cert with the id
                 try
                 {
@@ -363,6 +405,7 @@ namespace CurtAdmin.Controllers
                         cert.text = text;
                         cert.requirementNum = reqNum;
                         cert.image_path = logo;
+                        cert.inactive = inActive;
                     db.SubmitChanges();
 
                     ViewBag.cert = cert;
@@ -380,11 +423,14 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult EditCat(int id, string title, string text, string logo)
+        public ActionResult EditCat(int id, string title, string text, string logo, string inactive)
         {
             ViewBag.error = "";
             if (id > 0)
             {
+                Boolean inActive = false;
+                inActive = (inactive == "on") ? true : false;
+
                 // retrieve the cat with the id
                 try
                 {
@@ -394,6 +440,7 @@ namespace CurtAdmin.Controllers
                     cat.title = title;
                     cat.text = text;
                     cat.image_path = logo;
+                    cat.inactive = inActive;
                     db.SubmitChanges();
 
                     ViewBag.cat = cat;
@@ -411,11 +458,14 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult EditLesson(int id, string title, string text, string video, string pdf)
+        public ActionResult EditLesson(int id, string title, string text, string video, string pdf, string inactive)
         {
             ViewBag.error = "";
             if (id > 0)
             {
+                Boolean inActive = false;
+                inActive = (inactive == "on") ? true : false;
+
                 // retrieve the lesson with the id
                 try
                 {
@@ -424,6 +474,7 @@ namespace CurtAdmin.Controllers
                     lesson = db.B2BLessons.Where(x => x.id == id).FirstOrDefault<B2BLesson>();
                     lesson.title = title;
                     lesson.Text = text;
+                    lesson.inactive = inActive;
                     db.SubmitChanges();
 
                     B2BVideo videoObj = new B2BVideo();
@@ -454,11 +505,14 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult EditTest(int id, string title, string text, double minPassPercent)
+        public ActionResult EditTest(int id, string title, string text, double minPassPercent, string inactive)
         {
             ViewBag.error = "";
             if (id > 0)
             {
+                Boolean inActive = false;
+                inActive = (inactive == "on") ? true : false;
+
                 // retrieve the test with the id
                 try
                 {
@@ -468,6 +522,7 @@ namespace CurtAdmin.Controllers
                     test.title = title;
                     test.text = text;
                     test.min_pass_percent = minPassPercent;
+                    test.inactive = inActive;
                     db.SubmitChanges();
 
                     ViewBag.test = test;
@@ -485,11 +540,14 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult EditQuestion(int id, string text)
+        public ActionResult EditQuestion(int id, string text, string inactive)
         {
             ViewBag.error = "";
             if (id > 0)
             {
+                Boolean inActive = false;
+                inActive = (inactive == "on") ? true : false;
+
                 // retrieve the question with the id
                 try
                 {
@@ -497,6 +555,7 @@ namespace CurtAdmin.Controllers
                     B2BQuestion question = new B2BQuestion();
                     question = db.B2BQuestions.Where(x => x.id == id).FirstOrDefault<B2BQuestion>();
                     question.text = text;
+                    question.inactive = inActive;
                     db.SubmitChanges();
 
                     ViewBag.question = question;
@@ -514,9 +573,12 @@ namespace CurtAdmin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult EditAnswer(int id, string text, string isCorrect)
+        public ActionResult EditAnswer(int id, string text, string isCorrect, string inactive)
         {
             ViewBag.error = "";
+
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
 
             bool isCorrectAnswer = false;
             if (isCorrect == "on") { isCorrectAnswer = true; } else { isCorrectAnswer = false; }
@@ -530,6 +592,7 @@ namespace CurtAdmin.Controllers
                     answer = db.B2BAnswers.Where(x => x.id == id).FirstOrDefault<B2BAnswer>();
                     answer.text = text;
                     answer.isCorrect = isCorrectAnswer;
+                    answer.inactive = inActive;
                     db.SubmitChanges();
 
                     ViewBag.answer = answer;

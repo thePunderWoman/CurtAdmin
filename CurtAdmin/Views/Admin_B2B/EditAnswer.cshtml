@@ -36,6 +36,7 @@
             Answer text
             <input type="text" name="text" id="text" value="@answer.text" />
         </label>
+
         <label for="isCorrect">
             Correct Answer
             @if (answer.isCorrect == true)
@@ -46,7 +47,18 @@
             {
                 <input type="checkbox" name="isCorrect" id="isCorrect"/>
             }
-            
+        </label>
+
+        <label for="inactive">
+            Inactive?
+            @if (answer.inactive == true)
+            {
+                <input type="checkbox" name="inactive" id="inactive" checked="checked"/>
+            }
+            else
+            {
+                <input type="checkbox" name="inactive" id="inactive"/>
+            }
         </label>
         <div id="buttons">
             <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />

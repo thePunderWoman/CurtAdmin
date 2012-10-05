@@ -67,6 +67,7 @@
                 <th>ID</th>
                 <th>Title</th>
                 <th>Description</th>
+                <th>Is inactive</th>
                 <th></th>
             </tr>
         </thead>
@@ -77,6 +78,7 @@
                     <td>@Lesson.id</td>
                     <td>@Lesson.title</td>
                     <td>@Lesson.Text</td>
+                    <td>@Lesson.inactive</td>
                     <td>
                         <a href="/Admin_B2B/EditLesson/@Lesson.id" class="edit">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" id="@Lesson.id">Delete</a>

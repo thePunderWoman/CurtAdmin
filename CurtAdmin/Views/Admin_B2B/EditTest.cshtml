@@ -50,6 +50,18 @@
             <input type="text" name="minPassPercent" id="minPassPercent" value="@test.min_pass_percent" required />
         </label>
 
+        <label for="inactive">
+            Inactive?
+            @if (test.inactive == true)
+            {
+                <input type="checkbox" name="inactive" id="inactive" checked="checked"/>
+            }
+            else
+            {
+                <input type="checkbox" name="inactive" id="inactive"/>
+            }
+        </label>
+
         <div id="buttons">
             <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
         </div>
