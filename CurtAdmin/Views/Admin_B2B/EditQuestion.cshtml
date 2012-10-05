@@ -39,6 +39,19 @@
             Question text
             <input type="text" name="text" id="text" value="@question.text" />
         </label>
+
+        <label for="inactive">
+            Inactive?
+            @if (question.inactive == true)
+            {
+                <input type="checkbox" name="inactive" id="inactive" checked="checked"/>
+            }
+            else
+            {
+                <input type="checkbox" name="inactive" id="inactive"/>
+            }
+        </label>
+
         <div id="buttons">
             <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
         </div>

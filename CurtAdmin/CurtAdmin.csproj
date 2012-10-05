@@ -225,6 +225,9 @@
     <Compile Include="Models\Video.cs" />
     <Compile Include="Models\VideoModel.cs" />
     <Compile Include="Models\ViewModels.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="ProductLinq.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -241,6 +244,37 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="bin\CurtAdmin.dll" />
+    <Content Include="bin\CurtAdmin.pdb" />
+    <Content Include="bin\EPPlus.dll" />
+    <Content Include="bin\EPPlus.xml" />
+    <Content Include="bin\ExcelGenerator.dll" />
+    <Content Include="bin\ExcelLibrary.dll" />
+    <Content Include="bin\Google.GData.Client.dll" />
+    <Content Include="bin\Google.GData.Extensions.dll" />
+    <Content Include="bin\Google.GData.YouTube.dll" />
+    <Content Include="bin\LinqKit.dll" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Newtonsoft.Json.xml" />
+    <Content Include="bin\System.Net.Http.Formatting.dll" />
+    <Content Include="bin\System.Net.Http.Formatting.xml" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Helpers.xml" />
+    <Content Include="bin\System.Web.Http.dll" />
+    <Content Include="bin\System.Web.Http.WebHost.dll" />
+    <Content Include="bin\System.Web.Http.WebHost.xml" />
+    <Content Include="bin\System.Web.Http.xml" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Mvc.xml" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.xml" />
     <Content Include="Content\admin.css" />
     <Content Include="Content\demo_table.css" />
     <Content Include="Content\demo_table_jui.css" />
@@ -389,6 +423,7 @@
     <Content Include="Scripts\fileuploader.js" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\Live.pubxml" />
+    <None Include="Properties\PublishProfiles\profile1.pubxml" />
     <None Include="Scripts\jquery-1.4.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.4.js" />
     <Content Include="Scripts\jquery-1.4.4.min.js" />

@@ -9,7 +9,7 @@ namespace CurtAdmin.Models.B2b
     {
         //////////////////////==  Create  ==////////////////////////////
 
-        public static void addCert(string title, string text, int reqNum, string image_path)
+        public static void addCert(string title, string text, int reqNum, string image_path, bool inActive)
         {
             try
             {
@@ -23,6 +23,8 @@ namespace CurtAdmin.Models.B2b
                 newCertificate.image_path = image_path;
                 newCertificate.date_added = DateTime.Now;
                 newCertificate.date_modified = DateTime.Now;
+                newCertificate.inactive = inActive;
+
 
                 db.B2BCertificates.InsertOnSubmit(newCertificate);
                 db.SubmitChanges();
@@ -33,7 +35,7 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not add certificate: " + e.Message);
             }
         }
-        public static void addCat(int certID, string title, string text, string image_path)
+        public static void addCat(int certID, string title, string text, string image_path, bool inActive)
         {
             try
             {
@@ -46,6 +48,7 @@ namespace CurtAdmin.Models.B2b
                 newCat.image_path = image_path;
                 newCat.date_added = DateTime.Now;
                 newCat.date_modified = DateTime.Now;
+                newCat.inactive = inActive;
                 db.B2BCategories.InsertOnSubmit(newCat);
                 db.SubmitChanges();
             }
@@ -54,7 +57,7 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not add category: " + e.Message);
             }
         }
-        public static void addLesson(int catID, string title, string text, string video, string pdf)
+        public static void addLesson(int catID, string title, string text, string video, string pdf, bool inActive)
         {
             try
             {
@@ -66,6 +69,7 @@ namespace CurtAdmin.Models.B2b
                 newLesson.Text = text;
                 newLesson.date_added = DateTime.Now;
                 newLesson.date_modified = DateTime.Now;
+                newLesson.inactive = inActive;
 
                 db.B2BLessons.InsertOnSubmit(newLesson);
                 db.SubmitChanges();
@@ -96,7 +100,7 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not add Lesson: " + e.Message);
             }
         }
-        public static void addTest(int catID, string title, string text, double min_pass_percentage)
+        public static void addTest(int catID, string title, string text, double min_pass_percentage, bool inActive)
         {
             try
             {
@@ -109,6 +113,7 @@ namespace CurtAdmin.Models.B2b
                 newTest.date_added = DateTime.Now;
                 newTest.date_modified = DateTime.Now;
                 newTest.isRandomOrder = false;
+                newTest.inactive = inActive;
 
                 db.B2BTests.InsertOnSubmit(newTest);
                 db.SubmitChanges();
@@ -118,7 +123,7 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not add test: " + e.Message);
             }
         }
-        public static void addQuestion(int testID,string text)
+        public static void addQuestion(int testID, string text, bool inActive)
         {
             try
             {
@@ -129,6 +134,7 @@ namespace CurtAdmin.Models.B2b
                 newQuestion.date_added = DateTime.Now;
                 newQuestion.date_modified = DateTime.Now;
                 newQuestion.sort = 1;
+                newQuestion.inactive = inActive;
                 db.B2BQuestions.InsertOnSubmit(newQuestion);
                 db.SubmitChanges();
             }
@@ -137,7 +143,7 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not add Question: " + e.Message);
             }
         }
-        public static void addAnswer(int questionID, string text, bool isCorrect)
+        public static void addAnswer(int questionID, string text, bool isCorrect, bool inActive)
         {
             try
             {
@@ -148,7 +154,7 @@ namespace CurtAdmin.Models.B2b
                 newAnswer.isCorrect = isCorrect;
                 newAnswer.date_added = DateTime.Now;
                 newAnswer.date_modified = DateTime.Now;
-
+                newAnswer.inactive = inActive;
                 db.B2BAnswers.InsertOnSubmit(newAnswer);
                 db.SubmitChanges();
             }

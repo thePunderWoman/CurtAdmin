@@ -63,6 +63,18 @@
             <div style="clear:both"></div>
         </label>
 
+        <label for="inactive">
+            Inactive?
+            @if (cert.inactive == true)
+            {
+                <input type="checkbox" name="inactive" id="inactive" checked="checked"/>
+            }
+            else
+            {
+                <input type="checkbox" name="inactive" id="inactive"/>
+            }
+        </label>
+
         <div id="buttons">
             <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
         </div>

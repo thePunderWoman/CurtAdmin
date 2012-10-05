@@ -65,6 +65,18 @@
             <input type="text" name="pdf" id="pdf" value="@pdf.file_path" required />
         </label>
 
+        <label for="inactive">
+            Inactive?
+            @if (lesson.inactive == true)
+            {
+                <input type="checkbox" name="inactive" id="inactive" checked="checked"/>
+            }
+            else
+            {
+                <input type="checkbox" name="inactive" id="inactive"/>
+            }
+        </label>
+
         <div id="buttons">
             <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
         </div>

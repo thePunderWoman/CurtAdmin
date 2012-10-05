@@ -459,6 +459,8 @@ namespace CurtAdmin
 		
 		private System.DateTime _date_modified;
 		
+		private bool _inactive;
+		
 		private EntitySet<B2BCategory> _Categories;
 		
 		private EntityRef<B2BCompletedTest> _CompletedTest;
@@ -481,6 +483,8 @@ namespace CurtAdmin
     partial void Ondate_addedChanged();
     partial void Ondate_modifiedChanging(System.DateTime value);
     partial void Ondate_modifiedChanged();
+    partial void OninactiveChanging(bool value);
+    partial void OninactiveChanged();
     #endregion
 		
 		public B2BCertificate()
@@ -634,6 +638,26 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_inactive")]
+		public bool inactive
+		{
+			get
+			{
+				return this._inactive;
+			}
+			set
+			{
+				if ((this._inactive != value))
+				{
+					this.OninactiveChanging(value);
+					this.SendPropertyChanging();
+					this._inactive = value;
+					this.SendPropertyChanged("inactive");
+					this.OninactiveChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BCertificate_B2BCategory", Storage="_Categories", ThisKey="id", OtherKey="certID")]
 		public EntitySet<B2BCategory> B2BCategories
 		{
@@ -734,6 +758,8 @@ namespace CurtAdmin
 		
 		private System.DateTime _date_modified;
 		
+		private bool _inactive;
+		
 		private EntitySet<B2BLesson> _Lessons;
 		
 		private EntitySet<B2BTest> _Tests;
@@ -758,6 +784,8 @@ namespace CurtAdmin
     partial void Ondate_addedChanged();
     partial void Ondate_modifiedChanging(System.DateTime value);
     partial void Ondate_modifiedChanged();
+    partial void OninactiveChanging(bool value);
+    partial void OninactiveChanged();
     #endregion
 		
 		public B2BCategory()
@@ -912,6 +940,26 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_inactive")]
+		public bool inactive
+		{
+			get
+			{
+				return this._inactive;
+			}
+			set
+			{
+				if ((this._inactive != value))
+				{
+					this.OninactiveChanging(value);
+					this.SendPropertyChanging();
+					this._inactive = value;
+					this.SendPropertyChanged("inactive");
+					this.OninactiveChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BCategory_B2BLesson", Storage="_Lessons", ThisKey="id", OtherKey="catID")]
 		public EntitySet<B2BLesson> B2BLessons
 		{
@@ -1035,6 +1083,8 @@ namespace CurtAdmin
 		
 		private System.DateTime _date_modified;
 		
+		private bool _inactive;
+		
 		private EntitySet<B2BResource> _Resources;
 		
 		private EntitySet<B2BVideo> _Videos;
@@ -1057,6 +1107,8 @@ namespace CurtAdmin
     partial void Ondate_addedChanged();
     partial void Ondate_modifiedChanging(System.DateTime value);
     partial void Ondate_modifiedChanged();
+    partial void OninactiveChanging(bool value);
+    partial void OninactiveChanged();
     #endregion
 		
 		public B2BLesson()
@@ -1191,6 +1243,26 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_inactive")]
+		public bool inactive
+		{
+			get
+			{
+				return this._inactive;
+			}
+			set
+			{
+				if ((this._inactive != value))
+				{
+					this.OninactiveChanging(value);
+					this.SendPropertyChanging();
+					this._inactive = value;
+					this.SendPropertyChanged("inactive");
+					this.OninactiveChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BResource", Storage="_Resources", ThisKey="id", OtherKey="lessonID")]
 		public EntitySet<B2BResource> B2BResources
 		{
@@ -1318,6 +1390,8 @@ namespace CurtAdmin
 		
 		private bool _isRandomOrder;
 		
+		private bool _inactive;
+		
 		private EntitySet<B2BQuestion> _Questions;
 		
 		private EntityRef<B2BCategory> _Category;
@@ -1344,6 +1418,8 @@ namespace CurtAdmin
     partial void Ondate_modifiedChanged();
     partial void OnisRandomOrderChanging(bool value);
     partial void OnisRandomOrderChanged();
+    partial void OninactiveChanging(bool value);
+    partial void OninactiveChanged();
     #endregion
 		
 		public B2BTest()
@@ -1522,6 +1598,26 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_inactive")]
+		public bool inactive
+		{
+			get
+			{
+				return this._inactive;
+			}
+			set
+			{
+				if ((this._inactive != value))
+				{
+					this.OninactiveChanging(value);
+					this.SendPropertyChanging();
+					this._inactive = value;
+					this.SendPropertyChanged("inactive");
+					this.OninactiveChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BTest_B2BQuestion", Storage="_Questions", ThisKey="id", OtherKey="testID")]
 		public EntitySet<B2BQuestion> B2BQuestions
 		{
@@ -1654,6 +1750,8 @@ namespace CurtAdmin
 		
 		private int _sort;
 		
+		private bool _inactive;
+		
 		private EntitySet<B2BAnswer> _Answers;
 		
 		private EntityRef<B2BTest> _Test;
@@ -1674,6 +1772,8 @@ namespace CurtAdmin
     partial void Ondate_modifiedChanged();
     partial void OnsortChanging(int value);
     partial void OnsortChanged();
+    partial void OninactiveChanging(bool value);
+    partial void OninactiveChanged();
     #endregion
 		
 		public B2BQuestion()
@@ -1807,6 +1907,26 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_inactive")]
+		public bool inactive
+		{
+			get
+			{
+				return this._inactive;
+			}
+			set
+			{
+				if ((this._inactive != value))
+				{
+					this.OninactiveChanging(value);
+					this.SendPropertyChanging();
+					this._inactive = value;
+					this.SendPropertyChanged("inactive");
+					this.OninactiveChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BQuestion_B2BAnswer", Storage="_Answers", ThisKey="id", OtherKey="questionID")]
 		public EntitySet<B2BAnswer> B2BAnswers
 		{
@@ -1905,6 +2025,8 @@ namespace CurtAdmin
 		
 		private System.DateTime _date_modified;
 		
+		private bool _inactive;
+		
 		private EntityRef<B2BTestResult> _TestResult;
 		
 		private EntityRef<B2BQuestion> _Question;
@@ -1925,6 +2047,8 @@ namespace CurtAdmin
     partial void Ondate_addedChanged();
     partial void Ondate_modifiedChanging(System.DateTime value);
     partial void Ondate_modifiedChanged();
+    partial void OninactiveChanging(bool value);
+    partial void OninactiveChanged();
     #endregion
 		
 		public B2BAnswer()
@@ -2058,6 +2182,26 @@ namespace CurtAdmin
 					this._date_modified = value;
 					this.SendPropertyChanged("date_modified");
 					this.Ondate_modifiedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_inactive")]
+		public bool inactive
+		{
+			get
+			{
+				return this._inactive;
+			}
+			set
+			{
+				if ((this._inactive != value))
+				{
+					this.OninactiveChanging(value);
+					this.SendPropertyChanging();
+					this._inactive = value;
+					this.SendPropertyChanged("inactive");
+					this.OninactiveChanged();
 				}
 			}
 		}
