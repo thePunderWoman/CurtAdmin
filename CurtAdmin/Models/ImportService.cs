@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.IO;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace CurtAdmin.Models {
     public class ImportService {
@@ -164,6 +165,9 @@ namespace CurtAdmin.Models {
                 db.SubmitChanges();
             } catch { };
             return "done";
+        }
+
+        public void importACES() {
         }
     }
 

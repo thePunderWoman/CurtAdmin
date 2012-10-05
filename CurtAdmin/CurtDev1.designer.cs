@@ -252,6 +252,51 @@ namespace CurtAdmin
     partial void InsertPartPackage(PartPackage instance);
     partial void UpdatePartPackage(PartPackage instance);
     partial void DeletePartPackage(PartPackage instance);
+    partial void Insertvcdb_Make(vcdb_Make instance);
+    partial void Updatevcdb_Make(vcdb_Make instance);
+    partial void Deletevcdb_Make(vcdb_Make instance);
+    partial void Insertvcdb_Model(vcdb_Model instance);
+    partial void Updatevcdb_Model(vcdb_Model instance);
+    partial void Deletevcdb_Model(vcdb_Model instance);
+    partial void Insertvcdb_Vehicle(vcdb_Vehicle instance);
+    partial void Updatevcdb_Vehicle(vcdb_Vehicle instance);
+    partial void Deletevcdb_Vehicle(vcdb_Vehicle instance);
+    partial void Insertvcdb_VehiclePart(vcdb_VehiclePart instance);
+    partial void Updatevcdb_VehiclePart(vcdb_VehiclePart instance);
+    partial void Deletevcdb_VehiclePart(vcdb_VehiclePart instance);
+    partial void Insertvcdb_Year(vcdb_Year instance);
+    partial void Updatevcdb_Year(vcdb_Year instance);
+    partial void Deletevcdb_Year(vcdb_Year instance);
+    partial void InsertSubmodel(Submodel instance);
+    partial void UpdateSubmodel(Submodel instance);
+    partial void DeleteSubmodel(Submodel instance);
+    partial void InsertVehicleType(VehicleType instance);
+    partial void UpdateVehicleType(VehicleType instance);
+    partial void DeleteVehicleType(VehicleType instance);
+    partial void InsertVehicleTypeGroup(VehicleTypeGroup instance);
+    partial void UpdateVehicleTypeGroup(VehicleTypeGroup instance);
+    partial void DeleteVehicleTypeGroup(VehicleTypeGroup instance);
+    partial void InsertBaseVehicle(BaseVehicle instance);
+    partial void UpdateBaseVehicle(BaseVehicle instance);
+    partial void DeleteBaseVehicle(BaseVehicle instance);
+    partial void InsertAcesType(AcesType instance);
+    partial void UpdateAcesType(AcesType instance);
+    partial void DeleteAcesType(AcesType instance);
+    partial void InsertConfigAttribute(ConfigAttribute instance);
+    partial void UpdateConfigAttribute(ConfigAttribute instance);
+    partial void DeleteConfigAttribute(ConfigAttribute instance);
+    partial void InsertConfigAttributeType(ConfigAttributeType instance);
+    partial void UpdateConfigAttributeType(ConfigAttributeType instance);
+    partial void DeleteConfigAttributeType(ConfigAttributeType instance);
+    partial void InsertNote(Note instance);
+    partial void UpdateNote(Note instance);
+    partial void DeleteNote(Note instance);
+    partial void InsertNoteField(NoteField instance);
+    partial void UpdateNoteField(NoteField instance);
+    partial void DeleteNoteField(NoteField instance);
+    partial void InsertVehicleConfig(VehicleConfig instance);
+    partial void UpdateVehicleConfig(VehicleConfig instance);
+    partial void DeleteVehicleConfig(VehicleConfig instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -881,6 +926,134 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<PartPackage>();
+			}
+		}
+		
+		public System.Data.Linq.Table<vcdb_Make> vcdb_Makes
+		{
+			get
+			{
+				return this.GetTable<vcdb_Make>();
+			}
+		}
+		
+		public System.Data.Linq.Table<vcdb_Model> vcdb_Models
+		{
+			get
+			{
+				return this.GetTable<vcdb_Model>();
+			}
+		}
+		
+		public System.Data.Linq.Table<vcdb_Vehicle> vcdb_Vehicles
+		{
+			get
+			{
+				return this.GetTable<vcdb_Vehicle>();
+			}
+		}
+		
+		public System.Data.Linq.Table<vcdb_VehiclePart> vcdb_VehicleParts
+		{
+			get
+			{
+				return this.GetTable<vcdb_VehiclePart>();
+			}
+		}
+		
+		public System.Data.Linq.Table<vcdb_Year> vcdb_Years
+		{
+			get
+			{
+				return this.GetTable<vcdb_Year>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Submodel> Submodels
+		{
+			get
+			{
+				return this.GetTable<Submodel>();
+			}
+		}
+		
+		public System.Data.Linq.Table<VehicleType> VehicleTypes
+		{
+			get
+			{
+				return this.GetTable<VehicleType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<VehicleTypeGroup> VehicleTypeGroups
+		{
+			get
+			{
+				return this.GetTable<VehicleTypeGroup>();
+			}
+		}
+		
+		public System.Data.Linq.Table<BaseVehicle> BaseVehicles
+		{
+			get
+			{
+				return this.GetTable<BaseVehicle>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AcesType> AcesTypes
+		{
+			get
+			{
+				return this.GetTable<AcesType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ConfigAttribute> ConfigAttributes
+		{
+			get
+			{
+				return this.GetTable<ConfigAttribute>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ConfigAttributeType> ConfigAttributeTypes
+		{
+			get
+			{
+				return this.GetTable<ConfigAttributeType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Note> Notes
+		{
+			get
+			{
+				return this.GetTable<Note>();
+			}
+		}
+		
+		public System.Data.Linq.Table<NoteField> NoteFields
+		{
+			get
+			{
+				return this.GetTable<NoteField>();
+			}
+		}
+		
+		public System.Data.Linq.Table<VehicleConfig> VehicleConfigs
+		{
+			get
+			{
+				return this.GetTable<VehicleConfig>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ACESImport> ACESImports
+		{
+			get
+			{
+				return this.GetTable<ACESImport>();
 			}
 		}
 		
@@ -9139,6 +9312,8 @@ namespace CurtAdmin
 		
 		private EntitySet<PartPackage> _PartPackages;
 		
+		private EntitySet<vcdb_VehiclePart> _vcdb_VehicleParts;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -9175,6 +9350,7 @@ namespace CurtAdmin
 			this._PartVideos = new EntitySet<PartVideo>(new Action<PartVideo>(this.attach_PartVideos), new Action<PartVideo>(this.detach_PartVideos));
 			this._ContentBridges = new EntitySet<ContentBridge>(new Action<ContentBridge>(this.attach_ContentBridges), new Action<ContentBridge>(this.detach_ContentBridges));
 			this._PartPackages = new EntitySet<PartPackage>(new Action<PartPackage>(this.attach_PartPackages), new Action<PartPackage>(this.detach_PartPackages));
+			this._vcdb_VehicleParts = new EntitySet<vcdb_VehiclePart>(new Action<vcdb_VehiclePart>(this.attach_vcdb_VehicleParts), new Action<vcdb_VehiclePart>(this.detach_vcdb_VehicleParts));
 			OnCreated();
 		}
 		
@@ -9488,6 +9664,19 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_vcdb_VehiclePart", Storage="_vcdb_VehicleParts", ThisKey="partID", OtherKey="PartNumber")]
+		public EntitySet<vcdb_VehiclePart> vcdb_VehicleParts
+		{
+			get
+			{
+				return this._vcdb_VehicleParts;
+			}
+			set
+			{
+				this._vcdb_VehicleParts.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -9623,6 +9812,18 @@ namespace CurtAdmin
 		}
 		
 		private void detach_PartPackages(PartPackage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Part = null;
+		}
+		
+		private void attach_vcdb_VehicleParts(vcdb_VehiclePart entity)
+		{
+			this.SendPropertyChanging();
+			entity.Part = this;
+		}
+		
+		private void detach_vcdb_VehicleParts(vcdb_VehiclePart entity)
 		{
 			this.SendPropertyChanging();
 			entity.Part = null;
@@ -17557,6 +17758,2885 @@ namespace CurtAdmin
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vcdb_Make")]
+	public partial class vcdb_Make : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.Nullable<int> _AAIAMakeID;
+		
+		private string _MakeName;
+		
+		private EntitySet<BaseVehicle> _BaseVehicles;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAAIAMakeIDChanging(System.Nullable<int> value);
+    partial void OnAAIAMakeIDChanged();
+    partial void OnMakeNameChanging(string value);
+    partial void OnMakeNameChanged();
+    #endregion
+		
+		public vcdb_Make()
+		{
+			this._BaseVehicles = new EntitySet<BaseVehicle>(new Action<BaseVehicle>(this.attach_BaseVehicles), new Action<BaseVehicle>(this.detach_BaseVehicles));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAMakeID", DbType="Int")]
+		public System.Nullable<int> AAIAMakeID
+		{
+			get
+			{
+				return this._AAIAMakeID;
+			}
+			set
+			{
+				if ((this._AAIAMakeID != value))
+				{
+					this.OnAAIAMakeIDChanging(value);
+					this.SendPropertyChanging();
+					this._AAIAMakeID = value;
+					this.SendPropertyChanged("AAIAMakeID");
+					this.OnAAIAMakeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MakeName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string MakeName
+		{
+			get
+			{
+				return this._MakeName;
+			}
+			set
+			{
+				if ((this._MakeName != value))
+				{
+					this.OnMakeNameChanging(value);
+					this.SendPropertyChanging();
+					this._MakeName = value;
+					this.SendPropertyChanged("MakeName");
+					this.OnMakeNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Make_BaseVehicle", Storage="_BaseVehicles", ThisKey="ID", OtherKey="MakeID")]
+		public EntitySet<BaseVehicle> BaseVehicles
+		{
+			get
+			{
+				return this._BaseVehicles;
+			}
+			set
+			{
+				this._BaseVehicles.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Make = this;
+		}
+		
+		private void detach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Make = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vcdb_Model")]
+	public partial class vcdb_Model : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.Nullable<int> _AAIAModelID;
+		
+		private string _ModelName;
+		
+		private int _VehicleTypeID;
+		
+		private EntitySet<BaseVehicle> _BaseVehicles;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAAIAModelIDChanging(System.Nullable<int> value);
+    partial void OnAAIAModelIDChanged();
+    partial void OnModelNameChanging(string value);
+    partial void OnModelNameChanged();
+    partial void OnVehicleTypeIDChanging(int value);
+    partial void OnVehicleTypeIDChanged();
+    #endregion
+		
+		public vcdb_Model()
+		{
+			this._BaseVehicles = new EntitySet<BaseVehicle>(new Action<BaseVehicle>(this.attach_BaseVehicles), new Action<BaseVehicle>(this.detach_BaseVehicles));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAModelID", DbType="Int")]
+		public System.Nullable<int> AAIAModelID
+		{
+			get
+			{
+				return this._AAIAModelID;
+			}
+			set
+			{
+				if ((this._AAIAModelID != value))
+				{
+					this.OnAAIAModelIDChanging(value);
+					this.SendPropertyChanging();
+					this._AAIAModelID = value;
+					this.SendPropertyChanged("AAIAModelID");
+					this.OnAAIAModelIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ModelName", DbType="VarChar(100)")]
+		public string ModelName
+		{
+			get
+			{
+				return this._ModelName;
+			}
+			set
+			{
+				if ((this._ModelName != value))
+				{
+					this.OnModelNameChanging(value);
+					this.SendPropertyChanging();
+					this._ModelName = value;
+					this.SendPropertyChanged("ModelName");
+					this.OnModelNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleTypeID", DbType="Int NOT NULL")]
+		public int VehicleTypeID
+		{
+			get
+			{
+				return this._VehicleTypeID;
+			}
+			set
+			{
+				if ((this._VehicleTypeID != value))
+				{
+					this.OnVehicleTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleTypeID = value;
+					this.SendPropertyChanged("VehicleTypeID");
+					this.OnVehicleTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Model_BaseVehicle", Storage="_BaseVehicles", ThisKey="ID", OtherKey="ModelID")]
+		public EntitySet<BaseVehicle> BaseVehicles
+		{
+			get
+			{
+				return this._BaseVehicles;
+			}
+			set
+			{
+				this._BaseVehicles.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Model = this;
+		}
+		
+		private void detach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Model = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vcdb_Vehicle")]
+	public partial class vcdb_Vehicle : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _BaseVehicleID;
+		
+		private System.Nullable<int> _SubModelID;
+		
+		private System.Nullable<int> _ConfigID;
+		
+		private EntitySet<vcdb_VehiclePart> _vcdb_VehicleParts;
+		
+		private EntityRef<Submodel> _Submodel;
+		
+		private EntityRef<BaseVehicle> _BaseVehicle;
+		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnBaseVehicleIDChanging(int value);
+    partial void OnBaseVehicleIDChanged();
+    partial void OnSubModelIDChanging(System.Nullable<int> value);
+    partial void OnSubModelIDChanged();
+    partial void OnConfigIDChanging(System.Nullable<int> value);
+    partial void OnConfigIDChanged();
+    #endregion
+		
+		public vcdb_Vehicle()
+		{
+			this._vcdb_VehicleParts = new EntitySet<vcdb_VehiclePart>(new Action<vcdb_VehiclePart>(this.attach_vcdb_VehicleParts), new Action<vcdb_VehiclePart>(this.detach_vcdb_VehicleParts));
+			this._Submodel = default(EntityRef<Submodel>);
+			this._BaseVehicle = default(EntityRef<BaseVehicle>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BaseVehicleID", DbType="Int NOT NULL")]
+		public int BaseVehicleID
+		{
+			get
+			{
+				return this._BaseVehicleID;
+			}
+			set
+			{
+				if ((this._BaseVehicleID != value))
+				{
+					if (this._BaseVehicle.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnBaseVehicleIDChanging(value);
+					this.SendPropertyChanging();
+					this._BaseVehicleID = value;
+					this.SendPropertyChanged("BaseVehicleID");
+					this.OnBaseVehicleIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SubModelID", DbType="Int")]
+		public System.Nullable<int> SubModelID
+		{
+			get
+			{
+				return this._SubModelID;
+			}
+			set
+			{
+				if ((this._SubModelID != value))
+				{
+					if (this._Submodel.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSubModelIDChanging(value);
+					this.SendPropertyChanging();
+					this._SubModelID = value;
+					this.SendPropertyChanged("SubModelID");
+					this.OnSubModelIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ConfigID", DbType="Int")]
+		public System.Nullable<int> ConfigID
+		{
+			get
+			{
+				return this._ConfigID;
+			}
+			set
+			{
+				if ((this._ConfigID != value))
+				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnConfigIDChanging(value);
+					this.SendPropertyChanging();
+					this._ConfigID = value;
+					this.SendPropertyChanged("ConfigID");
+					this.OnConfigIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Vehicle_vcdb_VehiclePart", Storage="_vcdb_VehicleParts", ThisKey="ID", OtherKey="VehicleID")]
+		public EntitySet<vcdb_VehiclePart> vcdb_VehicleParts
+		{
+			get
+			{
+				return this._vcdb_VehicleParts;
+			}
+			set
+			{
+				this._vcdb_VehicleParts.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Submodel_vcdb_Vehicle", Storage="_Submodel", ThisKey="SubModelID", OtherKey="ID", IsForeignKey=true)]
+		public Submodel Submodel
+		{
+			get
+			{
+				return this._Submodel.Entity;
+			}
+			set
+			{
+				Submodel previousValue = this._Submodel.Entity;
+				if (((previousValue != value) 
+							|| (this._Submodel.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Submodel.Entity = null;
+						previousValue.vcdb_Vehicles.Remove(this);
+					}
+					this._Submodel.Entity = value;
+					if ((value != null))
+					{
+						value.vcdb_Vehicles.Add(this);
+						this._SubModelID = value.ID;
+					}
+					else
+					{
+						this._SubModelID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Submodel");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_vcdb_Vehicle", Storage="_BaseVehicle", ThisKey="BaseVehicleID", OtherKey="ID", IsForeignKey=true)]
+		public BaseVehicle BaseVehicle
+		{
+			get
+			{
+				return this._BaseVehicle.Entity;
+			}
+			set
+			{
+				BaseVehicle previousValue = this._BaseVehicle.Entity;
+				if (((previousValue != value) 
+							|| (this._BaseVehicle.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BaseVehicle.Entity = null;
+						previousValue.vcdb_Vehicles.Remove(this);
+					}
+					this._BaseVehicle.Entity = value;
+					if ((value != null))
+					{
+						value.vcdb_Vehicles.Add(this);
+						this._BaseVehicleID = value.ID;
+					}
+					else
+					{
+						this._BaseVehicleID = default(int);
+					}
+					this.SendPropertyChanged("BaseVehicle");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_vcdb_Vehicle", Storage="_VehicleConfig", ThisKey="ConfigID", OtherKey="ID", IsForeignKey=true)]
+		public VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.vcdb_Vehicles.Remove(this);
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.vcdb_Vehicles.Add(this);
+						this._ConfigID = value.ID;
+					}
+					else
+					{
+						this._ConfigID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("VehicleConfig");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_vcdb_VehicleParts(vcdb_VehiclePart entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Vehicle = this;
+		}
+		
+		private void detach_vcdb_VehicleParts(vcdb_VehiclePart entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Vehicle = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vcdb_VehiclePart")]
+	public partial class vcdb_VehiclePart : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _VehicleID;
+		
+		private int _PartNumber;
+		
+		private EntitySet<Note> _Notes;
+		
+		private EntityRef<Part> _Part;
+		
+		private EntityRef<vcdb_Vehicle> _vcdb_Vehicle;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnVehicleIDChanging(int value);
+    partial void OnVehicleIDChanged();
+    partial void OnPartNumberChanging(int value);
+    partial void OnPartNumberChanged();
+    #endregion
+		
+		public vcdb_VehiclePart()
+		{
+			this._Notes = new EntitySet<Note>(new Action<Note>(this.attach_Notes), new Action<Note>(this.detach_Notes));
+			this._Part = default(EntityRef<Part>);
+			this._vcdb_Vehicle = default(EntityRef<vcdb_Vehicle>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleID", DbType="Int NOT NULL")]
+		public int VehicleID
+		{
+			get
+			{
+				return this._VehicleID;
+			}
+			set
+			{
+				if ((this._VehicleID != value))
+				{
+					if (this._vcdb_Vehicle.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnVehicleIDChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleID = value;
+					this.SendPropertyChanged("VehicleID");
+					this.OnVehicleIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartNumber", DbType="Int NOT NULL")]
+		public int PartNumber
+		{
+			get
+			{
+				return this._PartNumber;
+			}
+			set
+			{
+				if ((this._PartNumber != value))
+				{
+					if (this._Part.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPartNumberChanging(value);
+					this.SendPropertyChanging();
+					this._PartNumber = value;
+					this.SendPropertyChanged("PartNumber");
+					this.OnPartNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_VehiclePart_Note", Storage="_Notes", ThisKey="ID", OtherKey="vehiclePartID")]
+		public EntitySet<Note> Notes
+		{
+			get
+			{
+				return this._Notes;
+			}
+			set
+			{
+				this._Notes.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_vcdb_VehiclePart", Storage="_Part", ThisKey="PartNumber", OtherKey="partID", IsForeignKey=true)]
+		public Part Part
+		{
+			get
+			{
+				return this._Part.Entity;
+			}
+			set
+			{
+				Part previousValue = this._Part.Entity;
+				if (((previousValue != value) 
+							|| (this._Part.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Part.Entity = null;
+						previousValue.vcdb_VehicleParts.Remove(this);
+					}
+					this._Part.Entity = value;
+					if ((value != null))
+					{
+						value.vcdb_VehicleParts.Add(this);
+						this._PartNumber = value.partID;
+					}
+					else
+					{
+						this._PartNumber = default(int);
+					}
+					this.SendPropertyChanged("Part");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Vehicle_vcdb_VehiclePart", Storage="_vcdb_Vehicle", ThisKey="VehicleID", OtherKey="ID", IsForeignKey=true)]
+		public vcdb_Vehicle vcdb_Vehicle
+		{
+			get
+			{
+				return this._vcdb_Vehicle.Entity;
+			}
+			set
+			{
+				vcdb_Vehicle previousValue = this._vcdb_Vehicle.Entity;
+				if (((previousValue != value) 
+							|| (this._vcdb_Vehicle.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._vcdb_Vehicle.Entity = null;
+						previousValue.vcdb_VehicleParts.Remove(this);
+					}
+					this._vcdb_Vehicle.Entity = value;
+					if ((value != null))
+					{
+						value.vcdb_VehicleParts.Add(this);
+						this._VehicleID = value.ID;
+					}
+					else
+					{
+						this._VehicleID = default(int);
+					}
+					this.SendPropertyChanged("vcdb_Vehicle");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Notes(Note entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_VehiclePart = this;
+		}
+		
+		private void detach_Notes(Note entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_VehiclePart = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vcdb_Year")]
+	public partial class vcdb_Year : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _YearID;
+		
+		private EntitySet<BaseVehicle> _BaseVehicles;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnYearIDChanging(int value);
+    partial void OnYearIDChanged();
+    #endregion
+		
+		public vcdb_Year()
+		{
+			this._BaseVehicles = new EntitySet<BaseVehicle>(new Action<BaseVehicle>(this.attach_BaseVehicles), new Action<BaseVehicle>(this.detach_BaseVehicles));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int YearID
+		{
+			get
+			{
+				return this._YearID;
+			}
+			set
+			{
+				if ((this._YearID != value))
+				{
+					this.OnYearIDChanging(value);
+					this.SendPropertyChanging();
+					this._YearID = value;
+					this.SendPropertyChanged("YearID");
+					this.OnYearIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Year_BaseVehicle", Storage="_BaseVehicles", ThisKey="YearID", OtherKey="YearID")]
+		public EntitySet<BaseVehicle> BaseVehicles
+		{
+			get
+			{
+				return this._BaseVehicles;
+			}
+			set
+			{
+				this._BaseVehicles.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Year = this;
+		}
+		
+		private void detach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.vcdb_Year = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Submodel")]
+	public partial class Submodel : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.Nullable<int> _AAIASubmodelID;
+		
+		private string _SubmodelName;
+		
+		private EntitySet<vcdb_Vehicle> _vcdb_Vehicles;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAAIASubmodelIDChanging(System.Nullable<int> value);
+    partial void OnAAIASubmodelIDChanged();
+    partial void OnSubmodelNameChanging(string value);
+    partial void OnSubmodelNameChanged();
+    #endregion
+		
+		public Submodel()
+		{
+			this._vcdb_Vehicles = new EntitySet<vcdb_Vehicle>(new Action<vcdb_Vehicle>(this.attach_vcdb_Vehicles), new Action<vcdb_Vehicle>(this.detach_vcdb_Vehicles));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIASubmodelID", DbType="Int")]
+		public System.Nullable<int> AAIASubmodelID
+		{
+			get
+			{
+				return this._AAIASubmodelID;
+			}
+			set
+			{
+				if ((this._AAIASubmodelID != value))
+				{
+					this.OnAAIASubmodelIDChanging(value);
+					this.SendPropertyChanging();
+					this._AAIASubmodelID = value;
+					this.SendPropertyChanged("AAIASubmodelID");
+					this.OnAAIASubmodelIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SubmodelName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string SubmodelName
+		{
+			get
+			{
+				return this._SubmodelName;
+			}
+			set
+			{
+				if ((this._SubmodelName != value))
+				{
+					this.OnSubmodelNameChanging(value);
+					this.SendPropertyChanging();
+					this._SubmodelName = value;
+					this.SendPropertyChanged("SubmodelName");
+					this.OnSubmodelNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Submodel_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="SubModelID")]
+		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		{
+			get
+			{
+				return this._vcdb_Vehicles;
+			}
+			set
+			{
+				this._vcdb_Vehicles.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.Submodel = this;
+		}
+		
+		private void detach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.Submodel = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VehicleType")]
+	public partial class VehicleType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _VehicleTypeID;
+		
+		private string _VehicleTypeName;
+		
+		private System.Nullable<int> _VehicleTypeGroupID;
+		
+		private EntityRef<VehicleTypeGroup> _VehicleTypeGroup;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnVehicleTypeIDChanging(int value);
+    partial void OnVehicleTypeIDChanged();
+    partial void OnVehicleTypeNameChanging(string value);
+    partial void OnVehicleTypeNameChanged();
+    partial void OnVehicleTypeGroupIDChanging(System.Nullable<int> value);
+    partial void OnVehicleTypeGroupIDChanged();
+    #endregion
+		
+		public VehicleType()
+		{
+			this._VehicleTypeGroup = default(EntityRef<VehicleTypeGroup>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleTypeID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int VehicleTypeID
+		{
+			get
+			{
+				return this._VehicleTypeID;
+			}
+			set
+			{
+				if ((this._VehicleTypeID != value))
+				{
+					this.OnVehicleTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleTypeID = value;
+					this.SendPropertyChanged("VehicleTypeID");
+					this.OnVehicleTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleTypeName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string VehicleTypeName
+		{
+			get
+			{
+				return this._VehicleTypeName;
+			}
+			set
+			{
+				if ((this._VehicleTypeName != value))
+				{
+					this.OnVehicleTypeNameChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleTypeName = value;
+					this.SendPropertyChanged("VehicleTypeName");
+					this.OnVehicleTypeNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleTypeGroupID", DbType="Int")]
+		public System.Nullable<int> VehicleTypeGroupID
+		{
+			get
+			{
+				return this._VehicleTypeGroupID;
+			}
+			set
+			{
+				if ((this._VehicleTypeGroupID != value))
+				{
+					if (this._VehicleTypeGroup.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnVehicleTypeGroupIDChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleTypeGroupID = value;
+					this.SendPropertyChanged("VehicleTypeGroupID");
+					this.OnVehicleTypeGroupIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleTypeGroup_VehicleType", Storage="_VehicleTypeGroup", ThisKey="VehicleTypeGroupID", OtherKey="VehicleTypeGroupID", IsForeignKey=true)]
+		public VehicleTypeGroup VehicleTypeGroup
+		{
+			get
+			{
+				return this._VehicleTypeGroup.Entity;
+			}
+			set
+			{
+				VehicleTypeGroup previousValue = this._VehicleTypeGroup.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleTypeGroup.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleTypeGroup.Entity = null;
+						previousValue.VehicleTypes.Remove(this);
+					}
+					this._VehicleTypeGroup.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleTypes.Add(this);
+						this._VehicleTypeGroupID = value.VehicleTypeGroupID;
+					}
+					else
+					{
+						this._VehicleTypeGroupID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("VehicleTypeGroup");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VehicleTypeGroup")]
+	public partial class VehicleTypeGroup : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _VehicleTypeGroupID;
+		
+		private string _VehicleTypeGroupName;
+		
+		private EntitySet<VehicleType> _VehicleTypes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnVehicleTypeGroupIDChanging(int value);
+    partial void OnVehicleTypeGroupIDChanged();
+    partial void OnVehicleTypeGroupNameChanging(string value);
+    partial void OnVehicleTypeGroupNameChanged();
+    #endregion
+		
+		public VehicleTypeGroup()
+		{
+			this._VehicleTypes = new EntitySet<VehicleType>(new Action<VehicleType>(this.attach_VehicleTypes), new Action<VehicleType>(this.detach_VehicleTypes));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleTypeGroupID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int VehicleTypeGroupID
+		{
+			get
+			{
+				return this._VehicleTypeGroupID;
+			}
+			set
+			{
+				if ((this._VehicleTypeGroupID != value))
+				{
+					this.OnVehicleTypeGroupIDChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleTypeGroupID = value;
+					this.SendPropertyChanged("VehicleTypeGroupID");
+					this.OnVehicleTypeGroupIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleTypeGroupName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string VehicleTypeGroupName
+		{
+			get
+			{
+				return this._VehicleTypeGroupName;
+			}
+			set
+			{
+				if ((this._VehicleTypeGroupName != value))
+				{
+					this.OnVehicleTypeGroupNameChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleTypeGroupName = value;
+					this.SendPropertyChanged("VehicleTypeGroupName");
+					this.OnVehicleTypeGroupNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleTypeGroup_VehicleType", Storage="_VehicleTypes", ThisKey="VehicleTypeGroupID", OtherKey="VehicleTypeGroupID")]
+		public EntitySet<VehicleType> VehicleTypes
+		{
+			get
+			{
+				return this._VehicleTypes;
+			}
+			set
+			{
+				this._VehicleTypes.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_VehicleTypes(VehicleType entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleTypeGroup = this;
+		}
+		
+		private void detach_VehicleTypes(VehicleType entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleTypeGroup = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.BaseVehicle")]
+	public partial class BaseVehicle : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.Nullable<int> _AAIABaseVehicleID;
+		
+		private int _YearID;
+		
+		private int _MakeID;
+		
+		private int _ModelID;
+		
+		private EntitySet<vcdb_Vehicle> _vcdb_Vehicles;
+		
+		private EntityRef<vcdb_Make> _vcdb_Make;
+		
+		private EntityRef<vcdb_Model> _vcdb_Model;
+		
+		private EntityRef<vcdb_Year> _vcdb_Year;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAAIABaseVehicleIDChanging(System.Nullable<int> value);
+    partial void OnAAIABaseVehicleIDChanged();
+    partial void OnYearIDChanging(int value);
+    partial void OnYearIDChanged();
+    partial void OnMakeIDChanging(int value);
+    partial void OnMakeIDChanged();
+    partial void OnModelIDChanging(int value);
+    partial void OnModelIDChanged();
+    #endregion
+		
+		public BaseVehicle()
+		{
+			this._vcdb_Vehicles = new EntitySet<vcdb_Vehicle>(new Action<vcdb_Vehicle>(this.attach_vcdb_Vehicles), new Action<vcdb_Vehicle>(this.detach_vcdb_Vehicles));
+			this._vcdb_Make = default(EntityRef<vcdb_Make>);
+			this._vcdb_Model = default(EntityRef<vcdb_Model>);
+			this._vcdb_Year = default(EntityRef<vcdb_Year>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIABaseVehicleID", DbType="Int")]
+		public System.Nullable<int> AAIABaseVehicleID
+		{
+			get
+			{
+				return this._AAIABaseVehicleID;
+			}
+			set
+			{
+				if ((this._AAIABaseVehicleID != value))
+				{
+					this.OnAAIABaseVehicleIDChanging(value);
+					this.SendPropertyChanging();
+					this._AAIABaseVehicleID = value;
+					this.SendPropertyChanged("AAIABaseVehicleID");
+					this.OnAAIABaseVehicleIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearID", DbType="Int NOT NULL")]
+		public int YearID
+		{
+			get
+			{
+				return this._YearID;
+			}
+			set
+			{
+				if ((this._YearID != value))
+				{
+					if (this._vcdb_Year.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnYearIDChanging(value);
+					this.SendPropertyChanging();
+					this._YearID = value;
+					this.SendPropertyChanged("YearID");
+					this.OnYearIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MakeID", DbType="Int NOT NULL")]
+		public int MakeID
+		{
+			get
+			{
+				return this._MakeID;
+			}
+			set
+			{
+				if ((this._MakeID != value))
+				{
+					if (this._vcdb_Make.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMakeIDChanging(value);
+					this.SendPropertyChanging();
+					this._MakeID = value;
+					this.SendPropertyChanged("MakeID");
+					this.OnMakeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ModelID", DbType="Int NOT NULL")]
+		public int ModelID
+		{
+			get
+			{
+				return this._ModelID;
+			}
+			set
+			{
+				if ((this._ModelID != value))
+				{
+					if (this._vcdb_Model.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnModelIDChanging(value);
+					this.SendPropertyChanging();
+					this._ModelID = value;
+					this.SendPropertyChanged("ModelID");
+					this.OnModelIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="BaseVehicleID")]
+		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		{
+			get
+			{
+				return this._vcdb_Vehicles;
+			}
+			set
+			{
+				this._vcdb_Vehicles.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Make_BaseVehicle", Storage="_vcdb_Make", ThisKey="MakeID", OtherKey="ID", IsForeignKey=true)]
+		public vcdb_Make vcdb_Make
+		{
+			get
+			{
+				return this._vcdb_Make.Entity;
+			}
+			set
+			{
+				vcdb_Make previousValue = this._vcdb_Make.Entity;
+				if (((previousValue != value) 
+							|| (this._vcdb_Make.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._vcdb_Make.Entity = null;
+						previousValue.BaseVehicles.Remove(this);
+					}
+					this._vcdb_Make.Entity = value;
+					if ((value != null))
+					{
+						value.BaseVehicles.Add(this);
+						this._MakeID = value.ID;
+					}
+					else
+					{
+						this._MakeID = default(int);
+					}
+					this.SendPropertyChanged("vcdb_Make");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Model_BaseVehicle", Storage="_vcdb_Model", ThisKey="ModelID", OtherKey="ID", IsForeignKey=true)]
+		public vcdb_Model vcdb_Model
+		{
+			get
+			{
+				return this._vcdb_Model.Entity;
+			}
+			set
+			{
+				vcdb_Model previousValue = this._vcdb_Model.Entity;
+				if (((previousValue != value) 
+							|| (this._vcdb_Model.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._vcdb_Model.Entity = null;
+						previousValue.BaseVehicles.Remove(this);
+					}
+					this._vcdb_Model.Entity = value;
+					if ((value != null))
+					{
+						value.BaseVehicles.Add(this);
+						this._ModelID = value.ID;
+					}
+					else
+					{
+						this._ModelID = default(int);
+					}
+					this.SendPropertyChanged("vcdb_Model");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Year_BaseVehicle", Storage="_vcdb_Year", ThisKey="YearID", OtherKey="YearID", IsForeignKey=true)]
+		public vcdb_Year vcdb_Year
+		{
+			get
+			{
+				return this._vcdb_Year.Entity;
+			}
+			set
+			{
+				vcdb_Year previousValue = this._vcdb_Year.Entity;
+				if (((previousValue != value) 
+							|| (this._vcdb_Year.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._vcdb_Year.Entity = null;
+						previousValue.BaseVehicles.Remove(this);
+					}
+					this._vcdb_Year.Entity = value;
+					if ((value != null))
+					{
+						value.BaseVehicles.Add(this);
+						this._YearID = value.YearID;
+					}
+					else
+					{
+						this._YearID = default(int);
+					}
+					this.SendPropertyChanged("vcdb_Year");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.BaseVehicle = this;
+		}
+		
+		private void detach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.BaseVehicle = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AcesType")]
+	public partial class AcesType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _name;
+		
+		private EntitySet<ConfigAttributeType> _ConfigAttributeTypes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public AcesType()
+		{
+			this._ConfigAttributeTypes = new EntitySet<ConfigAttributeType>(new Action<ConfigAttributeType>(this.attach_ConfigAttributeTypes), new Action<ConfigAttributeType>(this.detach_ConfigAttributeTypes));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AcesType_ConfigAttributeType", Storage="_ConfigAttributeTypes", ThisKey="ID", OtherKey="AcesTypeID")]
+		public EntitySet<ConfigAttributeType> ConfigAttributeTypes
+		{
+			get
+			{
+				return this._ConfigAttributeTypes;
+			}
+			set
+			{
+				this._ConfigAttributeTypes.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ConfigAttributeTypes(ConfigAttributeType entity)
+		{
+			this.SendPropertyChanging();
+			entity.AcesType = this;
+		}
+		
+		private void detach_ConfigAttributeTypes(ConfigAttributeType entity)
+		{
+			this.SendPropertyChanging();
+			entity.AcesType = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ConfigAttribute")]
+	public partial class ConfigAttribute : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _ConfigAttributeTypeID;
+		
+		private int _parentID;
+		
+		private string _value;
+		
+		private EntityRef<ConfigAttributeType> _ConfigAttributeType;
+		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnConfigAttributeTypeIDChanging(int value);
+    partial void OnConfigAttributeTypeIDChanged();
+    partial void OnparentIDChanging(int value);
+    partial void OnparentIDChanged();
+    partial void OnvalueChanging(string value);
+    partial void OnvalueChanged();
+    #endregion
+		
+		public ConfigAttribute()
+		{
+			this._ConfigAttributeType = default(EntityRef<ConfigAttributeType>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ConfigAttributeTypeID", DbType="Int NOT NULL")]
+		public int ConfigAttributeTypeID
+		{
+			get
+			{
+				return this._ConfigAttributeTypeID;
+			}
+			set
+			{
+				if ((this._ConfigAttributeTypeID != value))
+				{
+					if (this._ConfigAttributeType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnConfigAttributeTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._ConfigAttributeTypeID = value;
+					this.SendPropertyChanged("ConfigAttributeTypeID");
+					this.OnConfigAttributeTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_parentID", DbType="Int NOT NULL")]
+		public int parentID
+		{
+			get
+			{
+				return this._parentID;
+			}
+			set
+			{
+				if ((this._parentID != value))
+				{
+					this.OnparentIDChanging(value);
+					this.SendPropertyChanging();
+					this._parentID = value;
+					this.SendPropertyChanged("parentID");
+					this.OnparentIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string value
+		{
+			get
+			{
+				return this._value;
+			}
+			set
+			{
+				if ((this._value != value))
+				{
+					this.OnvalueChanging(value);
+					this.SendPropertyChanging();
+					this._value = value;
+					this.SendPropertyChanged("value");
+					this.OnvalueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttributeType_ConfigAttribute", Storage="_ConfigAttributeType", ThisKey="ConfigAttributeTypeID", OtherKey="ID", IsForeignKey=true)]
+		public ConfigAttributeType ConfigAttributeType
+		{
+			get
+			{
+				return this._ConfigAttributeType.Entity;
+			}
+			set
+			{
+				ConfigAttributeType previousValue = this._ConfigAttributeType.Entity;
+				if (((previousValue != value) 
+							|| (this._ConfigAttributeType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ConfigAttributeType.Entity = null;
+						previousValue.ConfigAttributes.Remove(this);
+					}
+					this._ConfigAttributeType.Entity = value;
+					if ((value != null))
+					{
+						value.ConfigAttributes.Add(this);
+						this._ConfigAttributeTypeID = value.ID;
+					}
+					else
+					{
+						this._ConfigAttributeTypeID = default(int);
+					}
+					this.SendPropertyChanged("ConfigAttributeType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_ConfigAttribute", Storage="_VehicleConfig", ThisKey="ID", OtherKey="AttributeID", IsForeignKey=true)]
+		public VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.ConfigAttributes.Remove(this);
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.ConfigAttributes.Add(this);
+						this._ID = value.AttributeID;
+					}
+					else
+					{
+						this._ID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ConfigAttributeType")]
+	public partial class ConfigAttributeType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _name;
+		
+		private int _AcesTypeID;
+		
+		private int _sort;
+		
+		private EntitySet<ConfigAttribute> _ConfigAttributes;
+		
+		private EntityRef<AcesType> _AcesType;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void OnAcesTypeIDChanging(int value);
+    partial void OnAcesTypeIDChanged();
+    partial void OnsortChanging(int value);
+    partial void OnsortChanged();
+    #endregion
+		
+		public ConfigAttributeType()
+		{
+			this._ConfigAttributes = new EntitySet<ConfigAttribute>(new Action<ConfigAttribute>(this.attach_ConfigAttributes), new Action<ConfigAttribute>(this.detach_ConfigAttributes));
+			this._AcesType = default(EntityRef<AcesType>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AcesTypeID", DbType="Int NOT NULL")]
+		public int AcesTypeID
+		{
+			get
+			{
+				return this._AcesTypeID;
+			}
+			set
+			{
+				if ((this._AcesTypeID != value))
+				{
+					if (this._AcesType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAcesTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._AcesTypeID = value;
+					this.SendPropertyChanged("AcesTypeID");
+					this.OnAcesTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sort", DbType="Int NOT NULL")]
+		public int sort
+		{
+			get
+			{
+				return this._sort;
+			}
+			set
+			{
+				if ((this._sort != value))
+				{
+					this.OnsortChanging(value);
+					this.SendPropertyChanging();
+					this._sort = value;
+					this.SendPropertyChanged("sort");
+					this.OnsortChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttributeType_ConfigAttribute", Storage="_ConfigAttributes", ThisKey="ID", OtherKey="ConfigAttributeTypeID")]
+		public EntitySet<ConfigAttribute> ConfigAttributes
+		{
+			get
+			{
+				return this._ConfigAttributes;
+			}
+			set
+			{
+				this._ConfigAttributes.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AcesType_ConfigAttributeType", Storage="_AcesType", ThisKey="AcesTypeID", OtherKey="ID", IsForeignKey=true)]
+		public AcesType AcesType
+		{
+			get
+			{
+				return this._AcesType.Entity;
+			}
+			set
+			{
+				AcesType previousValue = this._AcesType.Entity;
+				if (((previousValue != value) 
+							|| (this._AcesType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AcesType.Entity = null;
+						previousValue.ConfigAttributeTypes.Remove(this);
+					}
+					this._AcesType.Entity = value;
+					if ((value != null))
+					{
+						value.ConfigAttributeTypes.Add(this);
+						this._AcesTypeID = value.ID;
+					}
+					else
+					{
+						this._AcesTypeID = default(int);
+					}
+					this.SendPropertyChanged("AcesType");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ConfigAttributes(ConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.ConfigAttributeType = this;
+		}
+		
+		private void detach_ConfigAttributes(ConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.ConfigAttributeType = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Note")]
+	public partial class Note : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _vehiclePartID;
+		
+		private int _fieldID;
+		
+		private string _value;
+		
+		private EntityRef<vcdb_VehiclePart> _vcdb_VehiclePart;
+		
+		private EntityRef<NoteField> _NoteField;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnvehiclePartIDChanging(int value);
+    partial void OnvehiclePartIDChanged();
+    partial void OnfieldIDChanging(int value);
+    partial void OnfieldIDChanged();
+    partial void OnvalueChanging(string value);
+    partial void OnvalueChanged();
+    #endregion
+		
+		public Note()
+		{
+			this._vcdb_VehiclePart = default(EntityRef<vcdb_VehiclePart>);
+			this._NoteField = default(EntityRef<NoteField>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_vehiclePartID", DbType="Int NOT NULL")]
+		public int vehiclePartID
+		{
+			get
+			{
+				return this._vehiclePartID;
+			}
+			set
+			{
+				if ((this._vehiclePartID != value))
+				{
+					if (this._vcdb_VehiclePart.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnvehiclePartIDChanging(value);
+					this.SendPropertyChanging();
+					this._vehiclePartID = value;
+					this.SendPropertyChanged("vehiclePartID");
+					this.OnvehiclePartIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fieldID", DbType="Int NOT NULL")]
+		public int fieldID
+		{
+			get
+			{
+				return this._fieldID;
+			}
+			set
+			{
+				if ((this._fieldID != value))
+				{
+					if (this._NoteField.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnfieldIDChanging(value);
+					this.SendPropertyChanging();
+					this._fieldID = value;
+					this.SendPropertyChanged("fieldID");
+					this.OnfieldIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string value
+		{
+			get
+			{
+				return this._value;
+			}
+			set
+			{
+				if ((this._value != value))
+				{
+					this.OnvalueChanging(value);
+					this.SendPropertyChanging();
+					this._value = value;
+					this.SendPropertyChanged("value");
+					this.OnvalueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_VehiclePart_Note", Storage="_vcdb_VehiclePart", ThisKey="vehiclePartID", OtherKey="ID", IsForeignKey=true)]
+		public vcdb_VehiclePart vcdb_VehiclePart
+		{
+			get
+			{
+				return this._vcdb_VehiclePart.Entity;
+			}
+			set
+			{
+				vcdb_VehiclePart previousValue = this._vcdb_VehiclePart.Entity;
+				if (((previousValue != value) 
+							|| (this._vcdb_VehiclePart.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._vcdb_VehiclePart.Entity = null;
+						previousValue.Notes.Remove(this);
+					}
+					this._vcdb_VehiclePart.Entity = value;
+					if ((value != null))
+					{
+						value.Notes.Add(this);
+						this._vehiclePartID = value.ID;
+					}
+					else
+					{
+						this._vehiclePartID = default(int);
+					}
+					this.SendPropertyChanged("vcdb_VehiclePart");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NoteField_Note", Storage="_NoteField", ThisKey="fieldID", OtherKey="ID", IsForeignKey=true)]
+		public NoteField NoteField
+		{
+			get
+			{
+				return this._NoteField.Entity;
+			}
+			set
+			{
+				NoteField previousValue = this._NoteField.Entity;
+				if (((previousValue != value) 
+							|| (this._NoteField.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._NoteField.Entity = null;
+						previousValue.Notes.Remove(this);
+					}
+					this._NoteField.Entity = value;
+					if ((value != null))
+					{
+						value.Notes.Add(this);
+						this._fieldID = value.ID;
+					}
+					else
+					{
+						this._fieldID = default(int);
+					}
+					this.SendPropertyChanged("NoteField");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.NoteField")]
+	public partial class NoteField : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _field;
+		
+		private EntitySet<Note> _Notes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnfieldChanging(string value);
+    partial void OnfieldChanged();
+    #endregion
+		
+		public NoteField()
+		{
+			this._Notes = new EntitySet<Note>(new Action<Note>(this.attach_Notes), new Action<Note>(this.detach_Notes));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_field", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string field
+		{
+			get
+			{
+				return this._field;
+			}
+			set
+			{
+				if ((this._field != value))
+				{
+					this.OnfieldChanging(value);
+					this.SendPropertyChanging();
+					this._field = value;
+					this.SendPropertyChanged("field");
+					this.OnfieldChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NoteField_Note", Storage="_Notes", ThisKey="ID", OtherKey="fieldID")]
+		public EntitySet<Note> Notes
+		{
+			get
+			{
+				return this._Notes;
+			}
+			set
+			{
+				this._Notes.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Notes(Note entity)
+		{
+			this.SendPropertyChanging();
+			entity.NoteField = this;
+		}
+		
+		private void detach_Notes(Note entity)
+		{
+			this.SendPropertyChanging();
+			entity.NoteField = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VehicleConfig")]
+	public partial class VehicleConfig : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _AAIAVehicleConfigID;
+		
+		private int _AttributeID;
+		
+		private EntitySet<vcdb_Vehicle> _vcdb_Vehicles;
+		
+		private EntitySet<ConfigAttribute> _ConfigAttributes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAAIAVehicleConfigIDChanging(int value);
+    partial void OnAAIAVehicleConfigIDChanged();
+    partial void OnAttributeIDChanging(int value);
+    partial void OnAttributeIDChanged();
+    #endregion
+		
+		public VehicleConfig()
+		{
+			this._vcdb_Vehicles = new EntitySet<vcdb_Vehicle>(new Action<vcdb_Vehicle>(this.attach_vcdb_Vehicles), new Action<vcdb_Vehicle>(this.detach_vcdb_Vehicles));
+			this._ConfigAttributes = new EntitySet<ConfigAttribute>(new Action<ConfigAttribute>(this.attach_ConfigAttributes), new Action<ConfigAttribute>(this.detach_ConfigAttributes));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAVehicleConfigID", DbType="Int NOT NULL")]
+		public int AAIAVehicleConfigID
+		{
+			get
+			{
+				return this._AAIAVehicleConfigID;
+			}
+			set
+			{
+				if ((this._AAIAVehicleConfigID != value))
+				{
+					this.OnAAIAVehicleConfigIDChanging(value);
+					this.SendPropertyChanging();
+					this._AAIAVehicleConfigID = value;
+					this.SendPropertyChanged("AAIAVehicleConfigID");
+					this.OnAAIAVehicleConfigIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AttributeID", DbType="Int NOT NULL")]
+		public int AttributeID
+		{
+			get
+			{
+				return this._AttributeID;
+			}
+			set
+			{
+				if ((this._AttributeID != value))
+				{
+					this.OnAttributeIDChanging(value);
+					this.SendPropertyChanging();
+					this._AttributeID = value;
+					this.SendPropertyChanged("AttributeID");
+					this.OnAttributeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="ConfigID")]
+		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		{
+			get
+			{
+				return this._vcdb_Vehicles;
+			}
+			set
+			{
+				this._vcdb_Vehicles.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_ConfigAttribute", Storage="_ConfigAttributes", ThisKey="AttributeID", OtherKey="ID")]
+		public EntitySet<ConfigAttribute> ConfigAttributes
+		{
+			get
+			{
+				return this._ConfigAttributes;
+			}
+			set
+			{
+				this._ConfigAttributes.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = this;
+		}
+		
+		private void detach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = null;
+		}
+		
+		private void attach_ConfigAttributes(ConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = this;
+		}
+		
+		private void detach_ConfigAttributes(ConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ACESImport")]
+	public partial class ACESImport
+	{
+		
+		private int _AAIAYearID;
+		
+		private string _AAIAMakeNm;
+		
+		private string _AAIAModelNm;
+		
+		private string _AAIASubmodelNm;
+		
+		private int _AAIAMakeID;
+		
+		private int _AAIAModelID;
+		
+		private System.Nullable<int> _AAIASubModelID;
+		
+		private int _AAIABaseVehicleID;
+		
+		private int _AAIAPartTypeID;
+		
+		private int _PartNumber;
+		
+		private System.Nullable<int> _AAIAAttributeID;
+		
+		private string _AAIAAttribFamilyNm;
+		
+		private string _AAIATableNm;
+		
+		public ACESImport()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAYearID", DbType="Int NOT NULL")]
+		public int AAIAYearID
+		{
+			get
+			{
+				return this._AAIAYearID;
+			}
+			set
+			{
+				if ((this._AAIAYearID != value))
+				{
+					this._AAIAYearID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAMakeNm", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string AAIAMakeNm
+		{
+			get
+			{
+				return this._AAIAMakeNm;
+			}
+			set
+			{
+				if ((this._AAIAMakeNm != value))
+				{
+					this._AAIAMakeNm = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAModelNm", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string AAIAModelNm
+		{
+			get
+			{
+				return this._AAIAModelNm;
+			}
+			set
+			{
+				if ((this._AAIAModelNm != value))
+				{
+					this._AAIAModelNm = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIASubmodelNm", DbType="VarChar(255)")]
+		public string AAIASubmodelNm
+		{
+			get
+			{
+				return this._AAIASubmodelNm;
+			}
+			set
+			{
+				if ((this._AAIASubmodelNm != value))
+				{
+					this._AAIASubmodelNm = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAMakeID", DbType="Int NOT NULL")]
+		public int AAIAMakeID
+		{
+			get
+			{
+				return this._AAIAMakeID;
+			}
+			set
+			{
+				if ((this._AAIAMakeID != value))
+				{
+					this._AAIAMakeID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAModelID", DbType="Int NOT NULL")]
+		public int AAIAModelID
+		{
+			get
+			{
+				return this._AAIAModelID;
+			}
+			set
+			{
+				if ((this._AAIAModelID != value))
+				{
+					this._AAIAModelID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIASubModelID", DbType="Int")]
+		public System.Nullable<int> AAIASubModelID
+		{
+			get
+			{
+				return this._AAIASubModelID;
+			}
+			set
+			{
+				if ((this._AAIASubModelID != value))
+				{
+					this._AAIASubModelID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIABaseVehicleID", DbType="Int NOT NULL")]
+		public int AAIABaseVehicleID
+		{
+			get
+			{
+				return this._AAIABaseVehicleID;
+			}
+			set
+			{
+				if ((this._AAIABaseVehicleID != value))
+				{
+					this._AAIABaseVehicleID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAPartTypeID", DbType="Int NOT NULL")]
+		public int AAIAPartTypeID
+		{
+			get
+			{
+				return this._AAIAPartTypeID;
+			}
+			set
+			{
+				if ((this._AAIAPartTypeID != value))
+				{
+					this._AAIAPartTypeID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartNumber", DbType="Int NOT NULL")]
+		public int PartNumber
+		{
+			get
+			{
+				return this._PartNumber;
+			}
+			set
+			{
+				if ((this._PartNumber != value))
+				{
+					this._PartNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAAttributeID", DbType="Int")]
+		public System.Nullable<int> AAIAAttributeID
+		{
+			get
+			{
+				return this._AAIAAttributeID;
+			}
+			set
+			{
+				if ((this._AAIAAttributeID != value))
+				{
+					this._AAIAAttributeID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAAttribFamilyNm", DbType="VarChar(255)")]
+		public string AAIAAttribFamilyNm
+		{
+			get
+			{
+				return this._AAIAAttribFamilyNm;
+			}
+			set
+			{
+				if ((this._AAIAAttribFamilyNm != value))
+				{
+					this._AAIAAttribFamilyNm = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIATableNm", DbType="VarChar(255)")]
+		public string AAIATableNm
+		{
+			get
+			{
+				return this._AAIATableNm;
+			}
+			set
+			{
+				if ((this._AAIATableNm != value))
+				{
+					this._AAIATableNm = value;
+				}
 			}
 		}
 	}
