@@ -1,0 +1,662 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="VCDB" Class="VCDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=VCDB;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="VCDBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Year" Member="Years">
+    <Type Name="Year">
+      <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Year_BaseVehicle" Member="BaseVehicles" ThisKey="YearID" OtherKey="YearID" Type="BaseVehicle" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Abbreviation" Member="Abbreviations">
+    <Type Name="Abbreviation">
+      <Column Name="Abbreviation" Member="Abbreviation1" Type="System.String" DbType="Char(3) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="LongDescription" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Aspiration" Member="Aspirations">
+    <Type Name="Aspiration">
+      <Column Name="AspirationID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="AspirationName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="Aspiration_EngineConfig" Member="EngineConfigs" ThisKey="AspirationID" OtherKey="AspirationID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Attachment" Member="Attachments">
+    <Type Name="Attachment">
+      <Column Name="AttachmentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AttachmentTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="AttachmentFileName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="AttachmentURL" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="AttachmentDescription" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Attachment_LanguageTranslationAttachment" Member="LanguageTranslationAttachments" ThisKey="AttachmentID" OtherKey="AttachmentID" Type="LanguageTranslationAttachment" />
+      <Association Name="AttachmentType_Attachment" Member="AttachmentType" ThisKey="AttachmentTypeID" OtherKey="AttachmentTypeID" Type="AttachmentType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AttachmentType" Member="AttachmentTypes">
+    <Type Name="AttachmentType">
+      <Column Name="AttachmentTypeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AttachmentTypeName" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Association Name="AttachmentType_Attachment" Member="Attachments" ThisKey="AttachmentTypeID" OtherKey="AttachmentTypeID" Type="Attachment" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BaseVehicle" Member="BaseVehicles">
+    <Type Name="BaseVehicle">
+      <Column Name="BaseVehicleID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ModelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="BaseVehicle_Vehicle" Member="Vehicles" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="Vehicle" />
+      <Association Name="Year_BaseVehicle" Member="Year" ThisKey="YearID" OtherKey="YearID" Type="Year" IsForeignKey="true" />
+      <Association Name="Make_BaseVehicle" Member="Make" ThisKey="MakeID" OtherKey="MakeID" Type="Make" IsForeignKey="true" />
+      <Association Name="Model_BaseVehicle" Member="Model" ThisKey="ModelID" OtherKey="ModelID" Type="Model" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BedConfig" Member="BedConfigs">
+    <Type Name="BedConfig">
+      <Column Name="BedConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BedLengthID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BedTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="BedLength_BedConfig" Member="BedLength" ThisKey="BedLengthID" OtherKey="BedLengthID" Type="BedLength" IsForeignKey="true" />
+      <Association Name="BedType_BedConfig" Member="BedType" ThisKey="BedTypeID" OtherKey="BedTypeID" Type="BedType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BedLength" Member="BedLengths">
+    <Type Name="BedLength">
+      <Column Name="BedLengthID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BedLength" Member="BedLength1" Type="System.String" DbType="Char(10) NOT NULL" CanBeNull="false" />
+      <Column Name="BedLengthMetric" Type="System.String" DbType="Char(10) NOT NULL" CanBeNull="false" />
+      <Association Name="BedLength_BedConfig" Member="BedConfigs" ThisKey="BedLengthID" OtherKey="BedLengthID" Type="BedConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BedType" Member="BedTypes">
+    <Type Name="BedType">
+      <Column Name="BedTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BedTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="BedType_BedConfig" Member="BedConfigs" ThisKey="BedTypeID" OtherKey="BedTypeID" Type="BedConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BodyNumDoors" Member="BodyNumDoors">
+    <Type Name="BodyNumDoor">
+      <Column Name="BodyNumDoorsID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BodyNumDoors" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Association Name="BodyNumDoor_BodyStyleConfig" Member="BodyStyleConfigs" ThisKey="BodyNumDoorsID" OtherKey="BodyNumDoorsID" Type="BodyStyleConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BodyStyleConfig" Member="BodyStyleConfigs">
+    <Type Name="BodyStyleConfig">
+      <Column Name="BodyStyleConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BodyNumDoorsID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BodyTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="BodyNumDoor_BodyStyleConfig" Member="BodyNumDoor" ThisKey="BodyNumDoorsID" OtherKey="BodyNumDoorsID" Type="BodyNumDoor" IsForeignKey="true" />
+      <Association Name="BodyType_BodyStyleConfig" Member="BodyType" ThisKey="BodyTypeID" OtherKey="BodyTypeID" Type="BodyType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BodyType" Member="BodyTypes">
+    <Type Name="BodyType">
+      <Column Name="BodyTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BodyTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="BodyType_BodyStyleConfig" Member="BodyStyleConfigs" ThisKey="BodyTypeID" OtherKey="BodyTypeID" Type="BodyStyleConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BrakeABS" Member="BrakeABs">
+    <Type Name="BrakeAB">
+      <Column Name="BrakeABSID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BrakeABSName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="BrakeAB_BrakeConfig" Member="BrakeConfigs" ThisKey="BrakeABSID" OtherKey="BrakeABSID" Type="BrakeConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BrakeConfig" Member="BrakeConfigs">
+    <Type Name="BrakeConfig">
+      <Column Name="BrakeConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FrontBrakeTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RearBrakeTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BrakeSystemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BrakeABSID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="BrakeAB_BrakeConfig" Member="BrakeAB" ThisKey="BrakeABSID" OtherKey="BrakeABSID" Type="BrakeAB" IsForeignKey="true" />
+      <Association Name="BrakeSystem_BrakeConfig" Member="BrakeSystem" ThisKey="BrakeSystemID" OtherKey="BrakeSystemID" Type="BrakeSystem" IsForeignKey="true" />
+      <Association Name="BrakeType_BrakeConfig" Member="BrakeType" ThisKey="FrontBrakeTypeID" OtherKey="BrakeTypeID" Type="BrakeType" IsForeignKey="true" />
+      <Association Name="BrakeType_BrakeConfig1" Member="BrakeType1" ThisKey="RearBrakeTypeID" OtherKey="BrakeTypeID" Type="BrakeType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BrakeSystem" Member="BrakeSystems">
+    <Type Name="BrakeSystem">
+      <Column Name="BrakeSystemID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BrakeSystemName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="BrakeSystem_BrakeConfig" Member="BrakeConfigs" ThisKey="BrakeSystemID" OtherKey="BrakeSystemID" Type="BrakeConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BrakeType" Member="BrakeTypes">
+    <Type Name="BrakeType">
+      <Column Name="BrakeTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BrakeTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="BrakeType_BrakeConfig" Member="BrakeConfigs" ThisKey="BrakeTypeID" OtherKey="FrontBrakeTypeID" Type="BrakeConfig" />
+      <Association Name="BrakeType_BrakeConfig1" Member="BrakeConfigs1" ThisKey="BrakeTypeID" OtherKey="RearBrakeTypeID" Type="BrakeConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CylinderHeadType" Member="CylinderHeadTypes">
+    <Type Name="CylinderHeadType">
+      <Column Name="CylinderHeadTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CylinderHeadTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="CylinderHeadType_EngineConfig" Member="EngineConfigs" ThisKey="CylinderHeadTypeID" OtherKey="CylinderHeadTypeID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DriveType" Member="DriveTypes">
+    <Type Name="DriveType">
+      <Column Name="DriveTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DriveTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ElecControlled" Member="ElecControlleds">
+    <Type Name="ElecControlled">
+      <Column Name="ElecControlledID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ElecControlled" Member="ElecControlled1" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Association Name="ElecControlled_Transmission" Member="Transmissions" ThisKey="ElecControlledID" OtherKey="TransmissionElecControlledID" Type="Transmission" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EngineBase" Member="EngineBases">
+    <Type Name="EngineBase">
+      <Column Name="EngineBaseID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Liter" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
+      <Column Name="CC" Type="System.String" DbType="Char(5) NOT NULL" CanBeNull="false" />
+      <Column Name="CID" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="Cylinders" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="BlockType" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="EngBoreIn" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
+      <Column Name="EngBoreMetric" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
+      <Column Name="EngStrokeIn" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
+      <Column Name="EngStrokeMetric" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
+      <Association Name="EngineBase_EngineConfig" Member="EngineConfigs" ThisKey="EngineBaseID" OtherKey="EngineBaseID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EngineConfig" Member="EngineConfigs">
+    <Type Name="EngineConfig">
+      <Column Name="EngineConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EngineDesignationID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EngineVINID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ValvesID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EngineBaseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FuelDeliveryConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="AspirationID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CylinderHeadTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FuelTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IgnitionSystemTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EngineMfrID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EngineVersionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PowerOutputID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Aspiration_EngineConfig" Member="Aspiration" ThisKey="AspirationID" OtherKey="AspirationID" Type="Aspiration" IsForeignKey="true" />
+      <Association Name="CylinderHeadType_EngineConfig" Member="CylinderHeadType" ThisKey="CylinderHeadTypeID" OtherKey="CylinderHeadTypeID" Type="CylinderHeadType" IsForeignKey="true" />
+      <Association Name="EngineBase_EngineConfig" Member="EngineBase" ThisKey="EngineBaseID" OtherKey="EngineBaseID" Type="EngineBase" IsForeignKey="true" />
+      <Association Name="EngineDesignation_EngineConfig" Member="EngineDesignation" ThisKey="EngineDesignationID" OtherKey="EngineDesignationID" Type="EngineDesignation" IsForeignKey="true" />
+      <Association Name="EngineVersion_EngineConfig" Member="EngineVersion" ThisKey="EngineVersionID" OtherKey="EngineVersionID" Type="EngineVersion" IsForeignKey="true" />
+      <Association Name="EngineVIN_EngineConfig" Member="EngineVIN" ThisKey="EngineVINID" OtherKey="EngineVINID" Type="EngineVIN" IsForeignKey="true" />
+      <Association Name="FuelDeliveryConfig_EngineConfig" Member="FuelDeliveryConfig" ThisKey="FuelDeliveryConfigID" OtherKey="FuelDeliveryConfigID" Type="FuelDeliveryConfig" IsForeignKey="true" />
+      <Association Name="FuelType_EngineConfig" Member="FuelType" ThisKey="FuelTypeID" OtherKey="FuelTypeID" Type="FuelType" IsForeignKey="true" />
+      <Association Name="IgnitionSystemType_EngineConfig" Member="IgnitionSystemType" ThisKey="IgnitionSystemTypeID" OtherKey="IgnitionSystemTypeID" Type="IgnitionSystemType" IsForeignKey="true" />
+      <Association Name="Mfr_EngineConfig" Member="Mfr" ThisKey="EngineMfrID" OtherKey="MfrID" Type="Mfr" IsForeignKey="true" />
+      <Association Name="Valve_EngineConfig" Member="Valve" ThisKey="ValvesID" OtherKey="ValvesID" Type="Valve" IsForeignKey="true" />
+      <Association Name="Valve_EngineConfig1" Member="Valve1" ThisKey="ValvesID" OtherKey="ValvesID" Type="Valve" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EngineDesignation" Member="EngineDesignations">
+    <Type Name="EngineDesignation">
+      <Column Name="EngineDesignationID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EngineDesignationName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="EngineDesignation_EngineConfig" Member="EngineConfigs" ThisKey="EngineDesignationID" OtherKey="EngineDesignationID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EngineLegacy" Member="EngineLegacies">
+    <Type Name="EngineLegacy">
+      <Column Name="EngineLegacyID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EngType" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Liter" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="CC" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="CID" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Fuel" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="FuelDel" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Asp" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="EngVIN" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="EngDesg" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EngineVersion" Member="EngineVersions">
+    <Type Name="EngineVersion">
+      <Column Name="EngineVersionID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EngineVersion" Member="EngineVersion1" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Association Name="EngineVersion_EngineConfig" Member="EngineConfigs" ThisKey="EngineVersionID" OtherKey="EngineVersionID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EngineVIN" Member="EngineVINs">
+    <Type Name="EngineVIN">
+      <Column Name="EngineVINID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EngineVINName" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+      <Association Name="EngineVIN_EngineConfig" Member="EngineConfigs" ThisKey="EngineVINID" OtherKey="EngineVINID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EnglishPhrase" Member="EnglishPhrases">
+    <Type Name="EnglishPhrase">
+      <Column Name="EnglishPhraseID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="EnglishPhrase" Member="EnglishPhrase1" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="EnglishPhrase_LanguageTranslation" Member="LanguageTranslations" ThisKey="EnglishPhraseID" OtherKey="EnglishPhraseID" Type="LanguageTranslation" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FuelDeliveryConfig" Member="FuelDeliveryConfigs">
+    <Type Name="FuelDeliveryConfig">
+      <Column Name="FuelDeliveryConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FuelDeliveryTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FuelDeliverySubTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FuelSystemControlTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FuelSystemDesignID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="FuelDeliveryConfig_EngineConfig" Member="EngineConfigs" ThisKey="FuelDeliveryConfigID" OtherKey="FuelDeliveryConfigID" Type="EngineConfig" />
+      <Association Name="FuelDeliverySubType_FuelDeliveryConfig" Member="FuelDeliverySubType" ThisKey="FuelDeliverySubTypeID" OtherKey="FuelDeliverySubTypeID" Type="FuelDeliverySubType" IsForeignKey="true" />
+      <Association Name="FuelDeliveryType_FuelDeliveryConfig" Member="FuelDeliveryType" ThisKey="FuelDeliveryTypeID" OtherKey="FuelDeliveryTypeID" Type="FuelDeliveryType" IsForeignKey="true" />
+      <Association Name="FuelSystemControlType_FuelDeliveryConfig" Member="FuelSystemControlType" ThisKey="FuelSystemControlTypeID" OtherKey="FuelSystemControlTypeID" Type="FuelSystemControlType" IsForeignKey="true" />
+      <Association Name="FuelSystemDesign_FuelDeliveryConfig" Member="FuelSystemDesign" ThisKey="FuelSystemDesignID" OtherKey="FuelSystemDesignID" Type="FuelSystemDesign" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FuelDeliverySubType" Member="FuelDeliverySubTypes">
+    <Type Name="FuelDeliverySubType">
+      <Column Name="FuelDeliverySubTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FuelDeliverySubTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="FuelDeliverySubType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelDeliverySubTypeID" OtherKey="FuelDeliverySubTypeID" Type="FuelDeliveryConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FuelDeliveryType" Member="FuelDeliveryTypes">
+    <Type Name="FuelDeliveryType">
+      <Column Name="FuelDeliveryTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FuelDeliveryTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="FuelDeliveryType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelDeliveryTypeID" OtherKey="FuelDeliveryTypeID" Type="FuelDeliveryConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FuelSystemControlType" Member="FuelSystemControlTypes">
+    <Type Name="FuelSystemControlType">
+      <Column Name="FuelSystemControlTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FuelSystemControlTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="FuelSystemControlType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelSystemControlTypeID" OtherKey="FuelSystemControlTypeID" Type="FuelDeliveryConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FuelSystemDesign" Member="FuelSystemDesigns">
+    <Type Name="FuelSystemDesign">
+      <Column Name="FuelSystemDesignID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FuelSystemDesignName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="FuelSystemDesign_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelSystemDesignID" OtherKey="FuelSystemDesignID" Type="FuelDeliveryConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FuelType" Member="FuelTypes">
+    <Type Name="FuelType">
+      <Column Name="FuelTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FuelTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="FuelType_EngineConfig" Member="EngineConfigs" ThisKey="FuelTypeID" OtherKey="FuelTypeID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.IgnitionSystemType" Member="IgnitionSystemTypes">
+    <Type Name="IgnitionSystemType">
+      <Column Name="IgnitionSystemTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IgnitionSystemTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="IgnitionSystemType_EngineConfig" Member="EngineConfigs" ThisKey="IgnitionSystemTypeID" OtherKey="IgnitionSystemTypeID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Language" Member="Languages">
+    <Type Name="Language">
+      <Column Name="LanguageID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LanguageName" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="DialectName" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="Language_LanguageTranslation" Member="LanguageTranslations" ThisKey="LanguageID" OtherKey="LanguageID" Type="LanguageTranslation" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LanguageTranslation" Member="LanguageTranslations">
+    <Type Name="LanguageTranslation">
+      <Column Name="LanguageTranslationID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="EnglishPhraseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LanguageID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Translation" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Association Name="LanguageTranslation_LanguageTranslationAttachment" Member="LanguageTranslationAttachments" ThisKey="LanguageTranslationID" OtherKey="LanguageTranslationID" Type="LanguageTranslationAttachment" />
+      <Association Name="EnglishPhrase_LanguageTranslation" Member="EnglishPhrase" ThisKey="EnglishPhraseID" OtherKey="EnglishPhraseID" Type="EnglishPhrase" IsForeignKey="true" />
+      <Association Name="Language_LanguageTranslation" Member="Language" ThisKey="LanguageID" OtherKey="LanguageID" Type="Language" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LanguageTranslationAttachment" Member="LanguageTranslationAttachments">
+    <Type Name="LanguageTranslationAttachment">
+      <Column Name="LanguageTranslationAttachmentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LanguageTranslationID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="AttachmentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Attachment_LanguageTranslationAttachment" Member="Attachment" ThisKey="AttachmentID" OtherKey="AttachmentID" Type="Attachment" IsForeignKey="true" />
+      <Association Name="LanguageTranslation_LanguageTranslationAttachment" Member="LanguageTranslation" ThisKey="LanguageTranslationID" OtherKey="LanguageTranslationID" Type="LanguageTranslation" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LegacyVehicle" Member="LegacyVehicles">
+    <Type Name="LegacyVehicle">
+      <Column Name="LegacyVehicleID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Year" Type="System.String" DbType="Char(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Make" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Model" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Submodel" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EngineLegacyID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="LegacyVehicle_VehEngCfgToLegacyVehicle" Member="VehEngCfgToLegacyVehicles" ThisKey="LegacyVehicleID" OtherKey="LegacyVehicleID" Type="VehEngCfgToLegacyVehicle" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Make" Member="Makes">
+    <Type Name="Make">
+      <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MakeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Make_BaseVehicle" Member="BaseVehicles" ThisKey="MakeID" OtherKey="MakeID" Type="BaseVehicle" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Mfr" Member="Mfrs">
+    <Type Name="Mfr">
+      <Column Name="MfrID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MfrName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="Mfr_EngineConfig" Member="EngineConfigs" ThisKey="MfrID" OtherKey="EngineMfrID" Type="EngineConfig" />
+      <Association Name="Mfr_Transmission" Member="Transmissions" ThisKey="MfrID" OtherKey="TransmissionMfrID" Type="Transmission" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MfrBodyCode" Member="MfrBodyCodes">
+    <Type Name="MfrBodyCode">
+      <Column Name="MfrBodyCodeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MfrBodyCodeName" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Model" Member="Models">
+    <Type Name="Model">
+      <Column Name="ModelID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ModelName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="VehicleTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Model_BaseVehicle" Member="BaseVehicles" ThisKey="ModelID" OtherKey="ModelID" Type="BaseVehicle" />
+      <Association Name="VehicleType_Model" Member="VehicleType" ThisKey="VehicleTypeID" OtherKey="VehicleTypeID" Type="VehicleType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PowerOutput" Member="PowerOutputs">
+    <Type Name="PowerOutput">
+      <Column Name="PowerOutputID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="HorsePower" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="KilowattPower" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PublicationStage" Member="PublicationStages">
+    <Type Name="PublicationStage">
+      <Column Name="PublicationStageID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PublicationStageName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="PublicationStage_Vehicle" Member="Vehicles" ThisKey="PublicationStageID" OtherKey="PublicationStageID" Type="Vehicle" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Region" Member="Regions">
+    <Type Name="Region">
+      <Column Name="RegionID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ParentID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RegionAbbr" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="RegionName" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Association Name="Region_Region" Member="Regions" ThisKey="RegionID" OtherKey="ParentID" Type="Region" />
+      <Association Name="Region_Vehicle" Member="Vehicles" ThisKey="RegionID" OtherKey="RegionID" Type="Vehicle" />
+      <Association Name="Region_Region" Member="Region1" ThisKey="ParentID" OtherKey="RegionID" Type="Region" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SpringType" Member="SpringTypes">
+    <Type Name="SpringType">
+      <Column Name="SpringTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SpringTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="SpringType_SpringTypeConfig" Member="SpringTypeConfigs" ThisKey="SpringTypeID" OtherKey="FrontSpringTypeID" Type="SpringTypeConfig" />
+      <Association Name="SpringType_SpringTypeConfig1" Member="SpringTypeConfigs1" ThisKey="SpringTypeID" OtherKey="RearSpringTypeID" Type="SpringTypeConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SpringTypeConfig" Member="SpringTypeConfigs">
+    <Type Name="SpringTypeConfig">
+      <Column Name="SpringTypeConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FrontSpringTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RearSpringTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="SpringType_SpringTypeConfig" Member="SpringType" ThisKey="FrontSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
+      <Association Name="SpringType_SpringTypeConfig1" Member="SpringType1" ThisKey="RearSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SteeringConfig" Member="SteeringConfigs">
+    <Type Name="SteeringConfig">
+      <Column Name="SteeringConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SteeringTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SteeringSystemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="SteeringSystem_SteeringConfig" Member="SteeringSystem" ThisKey="SteeringSystemID" OtherKey="SteeringSystemID" Type="SteeringSystem" IsForeignKey="true" />
+      <Association Name="SteeringType_SteeringConfig" Member="SteeringType" ThisKey="SteeringTypeID" OtherKey="SteeringTypeID" Type="SteeringType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SteeringSystem" Member="SteeringSystems">
+    <Type Name="SteeringSystem">
+      <Column Name="SteeringSystemID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SteeringSystemName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="SteeringSystem_SteeringConfig" Member="SteeringConfigs" ThisKey="SteeringSystemID" OtherKey="SteeringSystemID" Type="SteeringConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SteeringType" Member="SteeringTypes">
+    <Type Name="SteeringType">
+      <Column Name="SteeringTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SteeringTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="SteeringType_SteeringConfig" Member="SteeringConfigs" ThisKey="SteeringTypeID" OtherKey="SteeringTypeID" Type="SteeringConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Submodel" Member="Submodels">
+    <Type Name="Submodel">
+      <Column Name="SubmodelID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SubmodelName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Submodel_Vehicle" Member="Vehicles" ThisKey="SubmodelID" OtherKey="SubmodelID" Type="Vehicle" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Transmission" Member="Transmissions">
+    <Type Name="Transmission">
+      <Column Name="TransmissionID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TransmissionBaseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransmissionMfrCodeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransmissionElecControlledID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransmissionMfrID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Mfr_Transmission" Member="Mfr" ThisKey="TransmissionMfrID" OtherKey="MfrID" Type="Mfr" IsForeignKey="true" />
+      <Association Name="ElecControlled_Transmission" Member="ElecControlled" ThisKey="TransmissionElecControlledID" OtherKey="ElecControlledID" Type="ElecControlled" IsForeignKey="true" />
+      <Association Name="TransmissionBase_Transmission" Member="TransmissionBase" ThisKey="TransmissionBaseID" OtherKey="TransmissionBaseID" Type="TransmissionBase" IsForeignKey="true" />
+      <Association Name="TransmissionMfrCode_Transmission" Member="TransmissionMfrCode" ThisKey="TransmissionMfrCodeID" OtherKey="TransmissionMfrCodeID" Type="TransmissionMfrCode" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TransmissionBase" Member="TransmissionBases">
+    <Type Name="TransmissionBase">
+      <Column Name="TransmissionBaseID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TransmissionTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransmissionNumSpeedsID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransmissionControlTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="TransmissionBase_Transmission" Member="Transmissions" ThisKey="TransmissionBaseID" OtherKey="TransmissionBaseID" Type="Transmission" />
+      <Association Name="TransmissionControlType_TransmissionBase" Member="TransmissionControlType" ThisKey="TransmissionControlTypeID" OtherKey="TransmissionControlTypeID" Type="TransmissionControlType" IsForeignKey="true" />
+      <Association Name="TransmissionNumSpeed_TransmissionBase" Member="TransmissionNumSpeed" ThisKey="TransmissionNumSpeedsID" OtherKey="TransmissionNumSpeedsID" Type="TransmissionNumSpeed" IsForeignKey="true" />
+      <Association Name="TransmissionType_TransmissionBase" Member="TransmissionType" ThisKey="TransmissionTypeID" OtherKey="TransmissionTypeID" Type="TransmissionType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TransmissionControlType" Member="TransmissionControlTypes">
+    <Type Name="TransmissionControlType">
+      <Column Name="TransmissionControlTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TransmissionControlTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="TransmissionControlType_TransmissionBase" Member="TransmissionBases" ThisKey="TransmissionControlTypeID" OtherKey="TransmissionControlTypeID" Type="TransmissionBase" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TransmissionMfrCode" Member="TransmissionMfrCodes">
+    <Type Name="TransmissionMfrCode">
+      <Column Name="TransmissionMfrCodeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TransmissionMfrCode" Member="TransmissionMfrCode1" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="TransmissionMfrCode_Transmission" Member="Transmissions" ThisKey="TransmissionMfrCodeID" OtherKey="TransmissionMfrCodeID" Type="Transmission" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TransmissionNumSpeeds" Member="TransmissionNumSpeeds">
+    <Type Name="TransmissionNumSpeed">
+      <Column Name="TransmissionNumSpeedsID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TransmissionNumSpeeds" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Association Name="TransmissionNumSpeed_TransmissionBase" Member="TransmissionBases" ThisKey="TransmissionNumSpeedsID" OtherKey="TransmissionNumSpeedsID" Type="TransmissionBase" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TransmissionType" Member="TransmissionTypes">
+    <Type Name="TransmissionType">
+      <Column Name="TransmissionTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TransmissionTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="TransmissionType_TransmissionBase" Member="TransmissionBases" ThisKey="TransmissionTypeID" OtherKey="TransmissionTypeID" Type="TransmissionBase" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Valves" Member="Valves">
+    <Type Name="Valve">
+      <Column Name="ValvesID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ValvesPerEngine" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Association Name="Valve_EngineConfig" Member="EngineConfigs" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" />
+      <Association Name="Valve_EngineConfig1" Member="EngineConfigs1" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" />
+    </Type>
+  </Table>
+  <Table Name="dbo.vcdb_Make" Member="vcdb_Makes">
+    <Type Name="vcdb_Make">
+      <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MakeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.vcdbchanges" Member="vcdbchanges">
+    <Type Name="vcdbchange">
+      <Column Name="versiondate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Column Name="tablename" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="action" Type="System.Char" DbType="Char(1) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehEngCfgToLegacyVehicle" Member="VehEngCfgToLegacyVehicles">
+    <Type Name="VehEngCfgToLegacyVehicle">
+      <Column Name="VehEngCfgToLegacyVehicleID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleToEngineConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LegacyVehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="LegacyVehicle_VehEngCfgToLegacyVehicle" Member="LegacyVehicle" ThisKey="LegacyVehicleID" OtherKey="LegacyVehicleID" Type="LegacyVehicle" IsForeignKey="true" />
+      <Association Name="VehicleToEngineConfig_VehEngCfgToLegacyVehicle" Member="VehicleToEngineConfig" ThisKey="VehicleToEngineConfigID" OtherKey="VehicleToEngineConfigID" Type="VehicleToEngineConfig" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Vehicle" Member="Vehicles">
+    <Type Name="Vehicle">
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="BaseVehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SubmodelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RegionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+      <Column Name="PublicationStageID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PublicationStageSource" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="PublicationStageDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Association Name="BaseVehicle_Vehicle" Member="BaseVehicle" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="BaseVehicle" IsForeignKey="true" />
+      <Association Name="PublicationStage_Vehicle" Member="PublicationStage" ThisKey="PublicationStageID" OtherKey="PublicationStageID" Type="PublicationStage" IsForeignKey="true" />
+      <Association Name="Region_Vehicle" Member="Region" ThisKey="RegionID" OtherKey="RegionID" Type="Region" IsForeignKey="true" />
+      <Association Name="Submodel_Vehicle" Member="Submodel" ThisKey="SubmodelID" OtherKey="SubmodelID" Type="Submodel" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleConfig" Member="VehicleConfigs">
+    <Type Name="VehicleConfig">
+      <Column Name="VehicleConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BedConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BodyStyleConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BrakeConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DriveTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EngineConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MfrBodyCodeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SpringTypeConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SteeringConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransmissionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="WheelbaseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToBedConfig" Member="VehicleToBedConfigs">
+    <Type Name="VehicleToBedConfig">
+      <Column Name="VehicleToBedConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BedConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToBodyStyleConfig" Member="VehicleToBodyStyleConfigs">
+    <Type Name="VehicleToBodyStyleConfig">
+      <Column Name="VehicleToBodyStyleConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BodyStyleConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToBrakeConfig" Member="VehicleToBrakeConfigs">
+    <Type Name="VehicleToBrakeConfig">
+      <Column Name="VehicleToBrakeConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BrakeConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToDriveType" Member="VehicleToDriveTypes">
+    <Type Name="VehicleToDriveType">
+      <Column Name="VehicleToDriveTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DriveTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToEngineConfig" Member="VehicleToEngineConfigs">
+    <Type Name="VehicleToEngineConfig">
+      <Column Name="VehicleToEngineConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EngineConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+      <Association Name="VehicleToEngineConfig_VehEngCfgToLegacyVehicle" Member="VehEngCfgToLegacyVehicles" ThisKey="VehicleToEngineConfigID" OtherKey="VehicleToEngineConfigID" Type="VehEngCfgToLegacyVehicle" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToMfrBodyCode" Member="VehicleToMfrBodyCodes">
+    <Type Name="VehicleToMfrBodyCode">
+      <Column Name="VehicleToMfrBodyCodeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MfrBodyCodeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToSpringTypeConfig" Member="VehicleToSpringTypeConfigs">
+    <Type Name="VehicleToSpringTypeConfig">
+      <Column Name="VehicleToSpringTypeConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SpringTypeConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToSteeringConfig" Member="VehicleToSteeringConfigs">
+    <Type Name="VehicleToSteeringConfig">
+      <Column Name="VehicleToSteeringConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SteeringConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToTransmission" Member="VehicleToTransmissions">
+    <Type Name="VehicleToTransmission">
+      <Column Name="VehicleToTransmissionID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TransmissionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleToWheelbase" Member="VehicleToWheelbases">
+    <Type Name="VehicleToWheelbase">
+      <Column Name="VehicleToWheelbaseID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="WheelbaseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Source" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleType" Member="VehicleTypes">
+    <Type Name="VehicleType">
+      <Column Name="VehicleTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="VehicleTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="VehicleTypeGroupID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="VehicleType_Model" Member="Models" ThisKey="VehicleTypeID" OtherKey="VehicleTypeID" Type="Model" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleTypeGroup" Member="VehicleTypeGroups">
+    <Type Name="VehicleTypeGroup">
+      <Column Name="VehicleTypeGroupID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="VehicleTypeGroupName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Version" Member="Versions">
+    <Type Name="Version">
+      <Column Name="VersionDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.WheelBase" Member="WheelBases">
+    <Type Name="WheelBase">
+      <Column Name="WheelBaseID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="WheelBase" Member="WheelBase1" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="WheelBaseMetric" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>
