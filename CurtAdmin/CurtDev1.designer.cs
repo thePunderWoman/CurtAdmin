@@ -282,21 +282,24 @@ namespace CurtAdmin
     partial void InsertAcesType(AcesType instance);
     partial void UpdateAcesType(AcesType instance);
     partial void DeleteAcesType(AcesType instance);
-    partial void InsertConfigAttribute(ConfigAttribute instance);
-    partial void UpdateConfigAttribute(ConfigAttribute instance);
-    partial void DeleteConfigAttribute(ConfigAttribute instance);
-    partial void InsertConfigAttributeType(ConfigAttributeType instance);
-    partial void UpdateConfigAttributeType(ConfigAttributeType instance);
-    partial void DeleteConfigAttributeType(ConfigAttributeType instance);
     partial void InsertNote(Note instance);
     partial void UpdateNote(Note instance);
     partial void DeleteNote(Note instance);
     partial void InsertNoteField(NoteField instance);
     partial void UpdateNoteField(NoteField instance);
     partial void DeleteNoteField(NoteField instance);
+    partial void InsertConfigAttributeType(ConfigAttributeType instance);
+    partial void UpdateConfigAttributeType(ConfigAttributeType instance);
+    partial void DeleteConfigAttributeType(ConfigAttributeType instance);
+    partial void InsertConfigAttribute(ConfigAttribute instance);
+    partial void UpdateConfigAttribute(ConfigAttribute instance);
+    partial void DeleteConfigAttribute(ConfigAttribute instance);
     partial void InsertVehicleConfig(VehicleConfig instance);
     partial void UpdateVehicleConfig(VehicleConfig instance);
     partial void DeleteVehicleConfig(VehicleConfig instance);
+    partial void InsertVehicleConfigAttribute(VehicleConfigAttribute instance);
+    partial void UpdateVehicleConfigAttribute(VehicleConfigAttribute instance);
+    partial void DeleteVehicleConfigAttribute(VehicleConfigAttribute instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1009,22 +1012,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		public System.Data.Linq.Table<ConfigAttribute> ConfigAttributes
-		{
-			get
-			{
-				return this.GetTable<ConfigAttribute>();
-			}
-		}
-		
-		public System.Data.Linq.Table<ConfigAttributeType> ConfigAttributeTypes
-		{
-			get
-			{
-				return this.GetTable<ConfigAttributeType>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Note> Notes
 		{
 			get
@@ -1041,6 +1028,30 @@ namespace CurtAdmin
 			}
 		}
 		
+		public System.Data.Linq.Table<ACESImport> ACESImports
+		{
+			get
+			{
+				return this.GetTable<ACESImport>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ConfigAttributeType> ConfigAttributeTypes
+		{
+			get
+			{
+				return this.GetTable<ConfigAttributeType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ConfigAttribute> ConfigAttributes
+		{
+			get
+			{
+				return this.GetTable<ConfigAttribute>();
+			}
+		}
+		
 		public System.Data.Linq.Table<VehicleConfig> VehicleConfigs
 		{
 			get
@@ -1049,11 +1060,11 @@ namespace CurtAdmin
 			}
 		}
 		
-		public System.Data.Linq.Table<ACESImport> ACESImports
+		public System.Data.Linq.Table<VehicleConfigAttribute> VehicleConfigAttributes
 		{
 			get
 			{
-				return this.GetTable<ACESImport>();
+				return this.GetTable<VehicleConfigAttribute>();
 			}
 		}
 		
@@ -19483,425 +19494,6 @@ namespace CurtAdmin
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ConfigAttribute")]
-	public partial class ConfigAttribute : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private int _ConfigAttributeTypeID;
-		
-		private int _parentID;
-		
-		private string _value;
-		
-		private EntityRef<ConfigAttributeType> _ConfigAttributeType;
-		
-		private EntityRef<VehicleConfig> _VehicleConfig;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnConfigAttributeTypeIDChanging(int value);
-    partial void OnConfigAttributeTypeIDChanged();
-    partial void OnparentIDChanging(int value);
-    partial void OnparentIDChanged();
-    partial void OnvalueChanging(string value);
-    partial void OnvalueChanged();
-    #endregion
-		
-		public ConfigAttribute()
-		{
-			this._ConfigAttributeType = default(EntityRef<ConfigAttributeType>);
-			this._VehicleConfig = default(EntityRef<VehicleConfig>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					if (this._VehicleConfig.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ConfigAttributeTypeID", DbType="Int NOT NULL")]
-		public int ConfigAttributeTypeID
-		{
-			get
-			{
-				return this._ConfigAttributeTypeID;
-			}
-			set
-			{
-				if ((this._ConfigAttributeTypeID != value))
-				{
-					if (this._ConfigAttributeType.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnConfigAttributeTypeIDChanging(value);
-					this.SendPropertyChanging();
-					this._ConfigAttributeTypeID = value;
-					this.SendPropertyChanged("ConfigAttributeTypeID");
-					this.OnConfigAttributeTypeIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_parentID", DbType="Int NOT NULL")]
-		public int parentID
-		{
-			get
-			{
-				return this._parentID;
-			}
-			set
-			{
-				if ((this._parentID != value))
-				{
-					this.OnparentIDChanging(value);
-					this.SendPropertyChanging();
-					this._parentID = value;
-					this.SendPropertyChanged("parentID");
-					this.OnparentIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
-		public string value
-		{
-			get
-			{
-				return this._value;
-			}
-			set
-			{
-				if ((this._value != value))
-				{
-					this.OnvalueChanging(value);
-					this.SendPropertyChanging();
-					this._value = value;
-					this.SendPropertyChanged("value");
-					this.OnvalueChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttributeType_ConfigAttribute", Storage="_ConfigAttributeType", ThisKey="ConfigAttributeTypeID", OtherKey="ID", IsForeignKey=true)]
-		public ConfigAttributeType ConfigAttributeType
-		{
-			get
-			{
-				return this._ConfigAttributeType.Entity;
-			}
-			set
-			{
-				ConfigAttributeType previousValue = this._ConfigAttributeType.Entity;
-				if (((previousValue != value) 
-							|| (this._ConfigAttributeType.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._ConfigAttributeType.Entity = null;
-						previousValue.ConfigAttributes.Remove(this);
-					}
-					this._ConfigAttributeType.Entity = value;
-					if ((value != null))
-					{
-						value.ConfigAttributes.Add(this);
-						this._ConfigAttributeTypeID = value.ID;
-					}
-					else
-					{
-						this._ConfigAttributeTypeID = default(int);
-					}
-					this.SendPropertyChanged("ConfigAttributeType");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_ConfigAttribute", Storage="_VehicleConfig", ThisKey="ID", OtherKey="AttributeID", IsForeignKey=true)]
-		public VehicleConfig VehicleConfig
-		{
-			get
-			{
-				return this._VehicleConfig.Entity;
-			}
-			set
-			{
-				VehicleConfig previousValue = this._VehicleConfig.Entity;
-				if (((previousValue != value) 
-							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._VehicleConfig.Entity = null;
-						previousValue.ConfigAttributes.Remove(this);
-					}
-					this._VehicleConfig.Entity = value;
-					if ((value != null))
-					{
-						value.ConfigAttributes.Add(this);
-						this._ID = value.AttributeID;
-					}
-					else
-					{
-						this._ID = default(int);
-					}
-					this.SendPropertyChanged("VehicleConfig");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ConfigAttributeType")]
-	public partial class ConfigAttributeType : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private string _name;
-		
-		private int _AcesTypeID;
-		
-		private int _sort;
-		
-		private EntitySet<ConfigAttribute> _ConfigAttributes;
-		
-		private EntityRef<AcesType> _AcesType;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnnameChanging(string value);
-    partial void OnnameChanged();
-    partial void OnAcesTypeIDChanging(int value);
-    partial void OnAcesTypeIDChanged();
-    partial void OnsortChanging(int value);
-    partial void OnsortChanged();
-    #endregion
-		
-		public ConfigAttributeType()
-		{
-			this._ConfigAttributes = new EntitySet<ConfigAttribute>(new Action<ConfigAttribute>(this.attach_ConfigAttributes), new Action<ConfigAttribute>(this.detach_ConfigAttributes));
-			this._AcesType = default(EntityRef<AcesType>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string name
-		{
-			get
-			{
-				return this._name;
-			}
-			set
-			{
-				if ((this._name != value))
-				{
-					this.OnnameChanging(value);
-					this.SendPropertyChanging();
-					this._name = value;
-					this.SendPropertyChanged("name");
-					this.OnnameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AcesTypeID", DbType="Int NOT NULL")]
-		public int AcesTypeID
-		{
-			get
-			{
-				return this._AcesTypeID;
-			}
-			set
-			{
-				if ((this._AcesTypeID != value))
-				{
-					if (this._AcesType.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAcesTypeIDChanging(value);
-					this.SendPropertyChanging();
-					this._AcesTypeID = value;
-					this.SendPropertyChanged("AcesTypeID");
-					this.OnAcesTypeIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sort", DbType="Int NOT NULL")]
-		public int sort
-		{
-			get
-			{
-				return this._sort;
-			}
-			set
-			{
-				if ((this._sort != value))
-				{
-					this.OnsortChanging(value);
-					this.SendPropertyChanging();
-					this._sort = value;
-					this.SendPropertyChanged("sort");
-					this.OnsortChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttributeType_ConfigAttribute", Storage="_ConfigAttributes", ThisKey="ID", OtherKey="ConfigAttributeTypeID")]
-		public EntitySet<ConfigAttribute> ConfigAttributes
-		{
-			get
-			{
-				return this._ConfigAttributes;
-			}
-			set
-			{
-				this._ConfigAttributes.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AcesType_ConfigAttributeType", Storage="_AcesType", ThisKey="AcesTypeID", OtherKey="ID", IsForeignKey=true)]
-		public AcesType AcesType
-		{
-			get
-			{
-				return this._AcesType.Entity;
-			}
-			set
-			{
-				AcesType previousValue = this._AcesType.Entity;
-				if (((previousValue != value) 
-							|| (this._AcesType.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AcesType.Entity = null;
-						previousValue.ConfigAttributeTypes.Remove(this);
-					}
-					this._AcesType.Entity = value;
-					if ((value != null))
-					{
-						value.ConfigAttributeTypes.Add(this);
-						this._AcesTypeID = value.ID;
-					}
-					else
-					{
-						this._AcesTypeID = default(int);
-					}
-					this.SendPropertyChanged("AcesType");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_ConfigAttributes(ConfigAttribute entity)
-		{
-			this.SendPropertyChanging();
-			entity.ConfigAttributeType = this;
-		}
-		
-		private void detach_ConfigAttributes(ConfigAttribute entity)
-		{
-			this.SendPropertyChanging();
-			entity.ConfigAttributeType = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Note")]
 	public partial class Note : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -20232,175 +19824,11 @@ namespace CurtAdmin
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VehicleConfig")]
-	public partial class VehicleConfig : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private int _AAIAVehicleConfigID;
-		
-		private int _AttributeID;
-		
-		private EntitySet<vcdb_Vehicle> _vcdb_Vehicles;
-		
-		private EntitySet<ConfigAttribute> _ConfigAttributes;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnAAIAVehicleConfigIDChanging(int value);
-    partial void OnAAIAVehicleConfigIDChanged();
-    partial void OnAttributeIDChanging(int value);
-    partial void OnAttributeIDChanged();
-    #endregion
-		
-		public VehicleConfig()
-		{
-			this._vcdb_Vehicles = new EntitySet<vcdb_Vehicle>(new Action<vcdb_Vehicle>(this.attach_vcdb_Vehicles), new Action<vcdb_Vehicle>(this.detach_vcdb_Vehicles));
-			this._ConfigAttributes = new EntitySet<ConfigAttribute>(new Action<ConfigAttribute>(this.attach_ConfigAttributes), new Action<ConfigAttribute>(this.detach_ConfigAttributes));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAVehicleConfigID", DbType="Int NOT NULL")]
-		public int AAIAVehicleConfigID
-		{
-			get
-			{
-				return this._AAIAVehicleConfigID;
-			}
-			set
-			{
-				if ((this._AAIAVehicleConfigID != value))
-				{
-					this.OnAAIAVehicleConfigIDChanging(value);
-					this.SendPropertyChanging();
-					this._AAIAVehicleConfigID = value;
-					this.SendPropertyChanged("AAIAVehicleConfigID");
-					this.OnAAIAVehicleConfigIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AttributeID", DbType="Int NOT NULL")]
-		public int AttributeID
-		{
-			get
-			{
-				return this._AttributeID;
-			}
-			set
-			{
-				if ((this._AttributeID != value))
-				{
-					this.OnAttributeIDChanging(value);
-					this.SendPropertyChanging();
-					this._AttributeID = value;
-					this.SendPropertyChanged("AttributeID");
-					this.OnAttributeIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="ConfigID")]
-		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
-		{
-			get
-			{
-				return this._vcdb_Vehicles;
-			}
-			set
-			{
-				this._vcdb_Vehicles.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_ConfigAttribute", Storage="_ConfigAttributes", ThisKey="AttributeID", OtherKey="ID")]
-		public EntitySet<ConfigAttribute> ConfigAttributes
-		{
-			get
-			{
-				return this._ConfigAttributes;
-			}
-			set
-			{
-				this._ConfigAttributes.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_vcdb_Vehicles(vcdb_Vehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.VehicleConfig = this;
-		}
-		
-		private void detach_vcdb_Vehicles(vcdb_Vehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.VehicleConfig = null;
-		}
-		
-		private void attach_ConfigAttributes(ConfigAttribute entity)
-		{
-			this.SendPropertyChanging();
-			entity.VehicleConfig = this;
-		}
-		
-		private void detach_ConfigAttributes(ConfigAttribute entity)
-		{
-			this.SendPropertyChanging();
-			entity.VehicleConfig = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ACESImport")]
 	public partial class ACESImport
 	{
+		
+		private int _AAIAAPPID;
 		
 		private int _AAIAYearID;
 		
@@ -20432,6 +19860,22 @@ namespace CurtAdmin
 		{
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAAPPID", DbType="Int NOT NULL")]
+		public int AAIAAPPID
+		{
+			get
+			{
+				return this._AAIAAPPID;
+			}
+			set
+			{
+				if ((this._AAIAAPPID != value))
+				{
+					this._AAIAAPPID = value;
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAYearID", DbType="Int NOT NULL")]
 		public int AAIAYearID
 		{
@@ -20448,7 +19892,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAMakeNm", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAMakeNm", DbType="VarChar(255)")]
 		public string AAIAMakeNm
 		{
 			get
@@ -20464,7 +19908,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAModelNm", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAModelNm", DbType="VarChar(255)")]
 		public string AAIAModelNm
 		{
 			get
@@ -20637,6 +20081,770 @@ namespace CurtAdmin
 				{
 					this._AAIATableNm = value;
 				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ConfigAttributeType")]
+	public partial class ConfigAttributeType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _name;
+		
+		private System.Nullable<int> _AcesTypeID;
+		
+		private int _sort;
+		
+		private EntitySet<ConfigAttribute> _ConfigAttributes;
+		
+		private EntityRef<AcesType> _AcesType;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void OnAcesTypeIDChanging(System.Nullable<int> value);
+    partial void OnAcesTypeIDChanged();
+    partial void OnsortChanging(int value);
+    partial void OnsortChanged();
+    #endregion
+		
+		public ConfigAttributeType()
+		{
+			this._ConfigAttributes = new EntitySet<ConfigAttribute>(new Action<ConfigAttribute>(this.attach_ConfigAttributes), new Action<ConfigAttribute>(this.detach_ConfigAttributes));
+			this._AcesType = default(EntityRef<AcesType>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AcesTypeID", DbType="Int")]
+		public System.Nullable<int> AcesTypeID
+		{
+			get
+			{
+				return this._AcesTypeID;
+			}
+			set
+			{
+				if ((this._AcesTypeID != value))
+				{
+					if (this._AcesType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAcesTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._AcesTypeID = value;
+					this.SendPropertyChanged("AcesTypeID");
+					this.OnAcesTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sort", DbType="Int NOT NULL")]
+		public int sort
+		{
+			get
+			{
+				return this._sort;
+			}
+			set
+			{
+				if ((this._sort != value))
+				{
+					this.OnsortChanging(value);
+					this.SendPropertyChanging();
+					this._sort = value;
+					this.SendPropertyChanged("sort");
+					this.OnsortChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttributeType_ConfigAttribute", Storage="_ConfigAttributes", ThisKey="ID", OtherKey="ConfigAttributeTypeID")]
+		public EntitySet<ConfigAttribute> ConfigAttributes
+		{
+			get
+			{
+				return this._ConfigAttributes;
+			}
+			set
+			{
+				this._ConfigAttributes.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AcesType_ConfigAttributeType", Storage="_AcesType", ThisKey="AcesTypeID", OtherKey="ID", IsForeignKey=true)]
+		public AcesType AcesType
+		{
+			get
+			{
+				return this._AcesType.Entity;
+			}
+			set
+			{
+				AcesType previousValue = this._AcesType.Entity;
+				if (((previousValue != value) 
+							|| (this._AcesType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AcesType.Entity = null;
+						previousValue.ConfigAttributeTypes.Remove(this);
+					}
+					this._AcesType.Entity = value;
+					if ((value != null))
+					{
+						value.ConfigAttributeTypes.Add(this);
+						this._AcesTypeID = value.ID;
+					}
+					else
+					{
+						this._AcesTypeID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("AcesType");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ConfigAttributes(ConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.ConfigAttributeType = this;
+		}
+		
+		private void detach_ConfigAttributes(ConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.ConfigAttributeType = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ConfigAttribute")]
+	public partial class ConfigAttribute : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _ConfigAttributeTypeID;
+		
+		private int _parentID;
+		
+		private System.Nullable<int> _vcdbID;
+		
+		private string _value;
+		
+		private EntitySet<VehicleConfigAttribute> _VehicleConfigAttributes;
+		
+		private EntityRef<ConfigAttributeType> _ConfigAttributeType;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnConfigAttributeTypeIDChanging(int value);
+    partial void OnConfigAttributeTypeIDChanged();
+    partial void OnparentIDChanging(int value);
+    partial void OnparentIDChanged();
+    partial void OnvcdbIDChanging(System.Nullable<int> value);
+    partial void OnvcdbIDChanged();
+    partial void OnvalueChanging(string value);
+    partial void OnvalueChanged();
+    #endregion
+		
+		public ConfigAttribute()
+		{
+			this._VehicleConfigAttributes = new EntitySet<VehicleConfigAttribute>(new Action<VehicleConfigAttribute>(this.attach_VehicleConfigAttributes), new Action<VehicleConfigAttribute>(this.detach_VehicleConfigAttributes));
+			this._ConfigAttributeType = default(EntityRef<ConfigAttributeType>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ConfigAttributeTypeID", DbType="Int NOT NULL")]
+		public int ConfigAttributeTypeID
+		{
+			get
+			{
+				return this._ConfigAttributeTypeID;
+			}
+			set
+			{
+				if ((this._ConfigAttributeTypeID != value))
+				{
+					if (this._ConfigAttributeType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnConfigAttributeTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._ConfigAttributeTypeID = value;
+					this.SendPropertyChanged("ConfigAttributeTypeID");
+					this.OnConfigAttributeTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_parentID", DbType="Int NOT NULL")]
+		public int parentID
+		{
+			get
+			{
+				return this._parentID;
+			}
+			set
+			{
+				if ((this._parentID != value))
+				{
+					this.OnparentIDChanging(value);
+					this.SendPropertyChanging();
+					this._parentID = value;
+					this.SendPropertyChanged("parentID");
+					this.OnparentIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_vcdbID", DbType="Int")]
+		public System.Nullable<int> vcdbID
+		{
+			get
+			{
+				return this._vcdbID;
+			}
+			set
+			{
+				if ((this._vcdbID != value))
+				{
+					this.OnvcdbIDChanging(value);
+					this.SendPropertyChanging();
+					this._vcdbID = value;
+					this.SendPropertyChanged("vcdbID");
+					this.OnvcdbIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string value
+		{
+			get
+			{
+				return this._value;
+			}
+			set
+			{
+				if ((this._value != value))
+				{
+					this.OnvalueChanging(value);
+					this.SendPropertyChanging();
+					this._value = value;
+					this.SendPropertyChanged("value");
+					this.OnvalueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttribute_VehicleConfigAttribute", Storage="_VehicleConfigAttributes", ThisKey="ID", OtherKey="AttributeID")]
+		public EntitySet<VehicleConfigAttribute> VehicleConfigAttributes
+		{
+			get
+			{
+				return this._VehicleConfigAttributes;
+			}
+			set
+			{
+				this._VehicleConfigAttributes.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttributeType_ConfigAttribute", Storage="_ConfigAttributeType", ThisKey="ConfigAttributeTypeID", OtherKey="ID", IsForeignKey=true)]
+		public ConfigAttributeType ConfigAttributeType
+		{
+			get
+			{
+				return this._ConfigAttributeType.Entity;
+			}
+			set
+			{
+				ConfigAttributeType previousValue = this._ConfigAttributeType.Entity;
+				if (((previousValue != value) 
+							|| (this._ConfigAttributeType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ConfigAttributeType.Entity = null;
+						previousValue.ConfigAttributes.Remove(this);
+					}
+					this._ConfigAttributeType.Entity = value;
+					if ((value != null))
+					{
+						value.ConfigAttributes.Add(this);
+						this._ConfigAttributeTypeID = value.ID;
+					}
+					else
+					{
+						this._ConfigAttributeTypeID = default(int);
+					}
+					this.SendPropertyChanged("ConfigAttributeType");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_VehicleConfigAttributes(VehicleConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.ConfigAttribute = this;
+		}
+		
+		private void detach_VehicleConfigAttributes(VehicleConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.ConfigAttribute = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VehicleConfig")]
+	public partial class VehicleConfig : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.Nullable<int> _AAIAVehicleConfigID;
+		
+		private EntitySet<vcdb_Vehicle> _vcdb_Vehicles;
+		
+		private EntitySet<VehicleConfigAttribute> _VehicleConfigAttributes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAAIAVehicleConfigIDChanging(System.Nullable<int> value);
+    partial void OnAAIAVehicleConfigIDChanged();
+    #endregion
+		
+		public VehicleConfig()
+		{
+			this._vcdb_Vehicles = new EntitySet<vcdb_Vehicle>(new Action<vcdb_Vehicle>(this.attach_vcdb_Vehicles), new Action<vcdb_Vehicle>(this.detach_vcdb_Vehicles));
+			this._VehicleConfigAttributes = new EntitySet<VehicleConfigAttribute>(new Action<VehicleConfigAttribute>(this.attach_VehicleConfigAttributes), new Action<VehicleConfigAttribute>(this.detach_VehicleConfigAttributes));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAVehicleConfigID", DbType="Int")]
+		public System.Nullable<int> AAIAVehicleConfigID
+		{
+			get
+			{
+				return this._AAIAVehicleConfigID;
+			}
+			set
+			{
+				if ((this._AAIAVehicleConfigID != value))
+				{
+					this.OnAAIAVehicleConfigIDChanging(value);
+					this.SendPropertyChanging();
+					this._AAIAVehicleConfigID = value;
+					this.SendPropertyChanged("AAIAVehicleConfigID");
+					this.OnAAIAVehicleConfigIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="ConfigID")]
+		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		{
+			get
+			{
+				return this._vcdb_Vehicles;
+			}
+			set
+			{
+				this._vcdb_Vehicles.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_VehicleConfigAttribute", Storage="_VehicleConfigAttributes", ThisKey="ID", OtherKey="VehicleConfigID")]
+		public EntitySet<VehicleConfigAttribute> VehicleConfigAttributes
+		{
+			get
+			{
+				return this._VehicleConfigAttributes;
+			}
+			set
+			{
+				this._VehicleConfigAttributes.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = this;
+		}
+		
+		private void detach_vcdb_Vehicles(vcdb_Vehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = null;
+		}
+		
+		private void attach_VehicleConfigAttributes(VehicleConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = this;
+		}
+		
+		private void detach_VehicleConfigAttributes(VehicleConfigAttribute entity)
+		{
+			this.SendPropertyChanging();
+			entity.VehicleConfig = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VehicleConfigAttribute")]
+	public partial class VehicleConfigAttribute : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _AttributeID;
+		
+		private int _VehicleConfigID;
+		
+		private EntityRef<ConfigAttribute> _ConfigAttribute;
+		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAttributeIDChanging(int value);
+    partial void OnAttributeIDChanged();
+    partial void OnVehicleConfigIDChanging(int value);
+    partial void OnVehicleConfigIDChanged();
+    #endregion
+		
+		public VehicleConfigAttribute()
+		{
+			this._ConfigAttribute = default(EntityRef<ConfigAttribute>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AttributeID", DbType="Int NOT NULL")]
+		public int AttributeID
+		{
+			get
+			{
+				return this._AttributeID;
+			}
+			set
+			{
+				if ((this._AttributeID != value))
+				{
+					if (this._ConfigAttribute.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAttributeIDChanging(value);
+					this.SendPropertyChanging();
+					this._AttributeID = value;
+					this.SendPropertyChanged("AttributeID");
+					this.OnAttributeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VehicleConfigID", DbType="Int NOT NULL")]
+		public int VehicleConfigID
+		{
+			get
+			{
+				return this._VehicleConfigID;
+			}
+			set
+			{
+				if ((this._VehicleConfigID != value))
+				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnVehicleConfigIDChanging(value);
+					this.SendPropertyChanging();
+					this._VehicleConfigID = value;
+					this.SendPropertyChanged("VehicleConfigID");
+					this.OnVehicleConfigIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttribute_VehicleConfigAttribute", Storage="_ConfigAttribute", ThisKey="AttributeID", OtherKey="ID", IsForeignKey=true)]
+		public ConfigAttribute ConfigAttribute
+		{
+			get
+			{
+				return this._ConfigAttribute.Entity;
+			}
+			set
+			{
+				ConfigAttribute previousValue = this._ConfigAttribute.Entity;
+				if (((previousValue != value) 
+							|| (this._ConfigAttribute.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ConfigAttribute.Entity = null;
+						previousValue.VehicleConfigAttributes.Remove(this);
+					}
+					this._ConfigAttribute.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfigAttributes.Add(this);
+						this._AttributeID = value.ID;
+					}
+					else
+					{
+						this._AttributeID = default(int);
+					}
+					this.SendPropertyChanged("ConfigAttribute");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_VehicleConfigAttribute", Storage="_VehicleConfig", ThisKey="VehicleConfigID", OtherKey="ID", IsForeignKey=true)]
+		public VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.VehicleConfigAttributes.Remove(this);
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfigAttributes.Add(this);
+						this._VehicleConfigID = value.ID;
+					}
+					else
+					{
+						this._VehicleConfigID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}

@@ -918,26 +918,6 @@
       <Association Name="AcesType_ConfigAttributeType" Member="ConfigAttributeTypes" ThisKey="ID" OtherKey="AcesTypeID" Type="ConfigAttributeType" />
     </Type>
   </Table>
-  <Table Name="dbo.ConfigAttribute" Member="ConfigAttributes">
-    <Type Name="ConfigAttribute">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ConfigAttributeTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="parentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="value" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Association Name="ConfigAttributeType_ConfigAttribute" Member="ConfigAttributeType" ThisKey="ConfigAttributeTypeID" OtherKey="ID" Type="ConfigAttributeType" IsForeignKey="true" />
-      <Association Name="VehicleConfig_ConfigAttribute" Member="VehicleConfig" ThisKey="ID" OtherKey="AttributeID" Type="VehicleConfig" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.ConfigAttributeType" Member="ConfigAttributeTypes">
-    <Type Name="ConfigAttributeType">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="AcesTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="sort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="ConfigAttributeType_ConfigAttribute" Member="ConfigAttributes" ThisKey="ID" OtherKey="ConfigAttributeTypeID" Type="ConfigAttribute" />
-      <Association Name="AcesType_ConfigAttributeType" Member="AcesType" ThisKey="AcesTypeID" OtherKey="ID" Type="AcesType" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Note" Member="Notes">
     <Type Name="Note">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -955,20 +935,12 @@
       <Association Name="NoteField_Note" Member="Notes" ThisKey="ID" OtherKey="fieldID" Type="Note" />
     </Type>
   </Table>
-  <Table Name="dbo.VehicleConfig" Member="VehicleConfigs">
-    <Type Name="VehicleConfig">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="AAIAVehicleConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AttributeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="VehicleConfig_vcdb_Vehicle" Member="vcdb_Vehicles" ThisKey="ID" OtherKey="ConfigID" Type="vcdb_Vehicle" />
-      <Association Name="VehicleConfig_ConfigAttribute" Member="ConfigAttributes" ThisKey="AttributeID" OtherKey="ID" Type="ConfigAttribute" />
-    </Type>
-  </Table>
   <Table Name="dbo.ACESImport" Member="ACESImports">
     <Type Name="ACESImport">
+      <Column Name="AAIAAPPID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="AAIAYearID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AAIAMakeNm" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="AAIAModelNm" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="AAIAMakeNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="AAIAModelNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="AAIASubmodelNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="AAIAMakeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="AAIAModelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -979,6 +951,44 @@
       <Column Name="AAIAAttributeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="AAIAAttribFamilyNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="AAIATableNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ConfigAttributeType" Member="ConfigAttributeTypes">
+    <Type Name="ConfigAttributeType">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="AcesTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="sort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="ConfigAttributeType_ConfigAttribute" Member="ConfigAttributes" ThisKey="ID" OtherKey="ConfigAttributeTypeID" Type="ConfigAttribute" />
+      <Association Name="AcesType_ConfigAttributeType" Member="AcesType" ThisKey="AcesTypeID" OtherKey="ID" Type="AcesType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ConfigAttribute" Member="ConfigAttributes">
+    <Type Name="ConfigAttribute">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ConfigAttributeTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="parentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="vcdbID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="value" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="ConfigAttribute_VehicleConfigAttribute" Member="VehicleConfigAttributes" ThisKey="ID" OtherKey="AttributeID" Type="VehicleConfigAttribute" />
+      <Association Name="ConfigAttributeType_ConfigAttribute" Member="ConfigAttributeType" ThisKey="ConfigAttributeTypeID" OtherKey="ID" Type="ConfigAttributeType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleConfig" Member="VehicleConfigs">
+    <Type Name="VehicleConfig">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AAIAVehicleConfigID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="VehicleConfig_vcdb_Vehicle" Member="vcdb_Vehicles" ThisKey="ID" OtherKey="ConfigID" Type="vcdb_Vehicle" />
+      <Association Name="VehicleConfig_VehicleConfigAttribute" Member="VehicleConfigAttributes" ThisKey="ID" OtherKey="VehicleConfigID" Type="VehicleConfigAttribute" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VehicleConfigAttribute" Member="VehicleConfigAttributes">
+    <Type Name="VehicleConfigAttribute">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AttributeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="VehicleConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="ConfigAttribute_VehicleConfigAttribute" Member="ConfigAttribute" ThisKey="AttributeID" OtherKey="ID" Type="ConfigAttribute" IsForeignKey="true" />
+      <Association Name="VehicleConfig_VehicleConfigAttribute" Member="VehicleConfig" ThisKey="VehicleConfigID" OtherKey="ID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">
