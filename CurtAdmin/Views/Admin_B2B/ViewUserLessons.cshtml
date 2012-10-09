@@ -1,18 +1,19 @@
 ﻿@using CurtAdmin
 @using CurtAdmin.Models.B2b
 @{
-    ViewBag.Title = "View Users";
+    ViewBag.Title = "View User Lessons";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    List<CustomerUser> listOfUsers = new List<CustomerUser>();
 
     string msg = ViewBag.msg;
     if (msg == null)
     {
         msg = "";
     }
-
-    List<B2BFullUser> listOfB2BUsers = ViewBag.listOfB2BUsers ?? new List<B2BFullUser>();
+    B2BUser B2BUser = ViewBag.B2BUser ?? new B2BUser();
+    B2BFullUser B2BFullUser = ViewBag.B2BFullUser ?? new B2BFullUser();
+    List<B2BCompletedTest> Lessons = ViewBag.Lessons ?? new List<B2BCompletedTest>();
+    B2BCertificate cert = ViewBag.cert ?? new B2BCertificate();
+    
 }
     <style type="text/css">
     table tbody tr td:nth-child(7){
@@ -36,55 +37,33 @@
         margin-left:15px;  
     }
 </style>
-<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > View Users</div>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B/ViewUsers">View Users</a> > <a href="/Admin_B2B/ViewUser/@B2BFullUser.B2BUserID">View User Completed Certificates</a> > View User Completed Lessons</div>
 <div id="content_container">
-    <h2>Viewing B2B Users</h2>
+    <h2>Viewing B2B @(cert.title) Lessons for: @B2BFullUser.name </h2>
     <hr style="border-bottom:1px dotted #343434;clear:both" />
     <!-- Explain what's here (for Chris) -->
-    <p>This page is for viewing all of the B2B users and their B2B completion.</p>
-
+    <p>This page is for viewing all of the lessons under the @cert.title certificate</p>
+    <hr />
+    <h3>Completed Lessons for @cert.title</h3>
     <div id="loading_area">
-        <p>Loading Users...</p>
-        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Users" />
+        <p>Loading Completed Lessons...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Completed Lessons" />
     </div>
-    <table style="display: none;">
+    <table id="completedLessons" style="display: none;">
         <thead>
             <tr>
-                <th>B2B User ID</th>
-                <th>Customer ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Joined Date</th>
-                <th>B2B User Type</th>
-                <th># of certs completed</th>
-                <th># of tests completed</th>
-                <th></th>
+                <th>Lesson title</th>
+                <th>Date completed</th>
+                <th>Score</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (B2BFullUser user in listOfB2BUsers)
+            @foreach (B2BCompletedTest compLesson in B2BUser.B2BCompletedTests)
             {
                 <tr>
-                    <td>@user.B2BUserID</td>
-                    <td>@user.customerID</td>
-                    <td>@user.name</td>
-                    <td>@user.email</td>
-                    <td>@user.join_date</td>
-                    @if (user.isCustomerUser)
-                    {
-                        <td>Customer User</td>
-                    }
-                    else
-                    {
-                        <td><a href="/Admin_Customers/Edit/@user.customerID" class="locations">Customer</a></td>
-                    }
-                    <td>@user.numCertsCompleted</td>
-                    <td>@user.numLessonsCompleted</td>
-                    <td>
-                        <a href="/Admin_B2B/ViewUser/@user.B2BUserID" class="locations">View B2B Info</a>
-
-                        
-                    </td>
+                    <td>@(compLesson.B2BTests.FirstOrDefault<B2BTest>().B2BCategory.title)</td>
+                    <td>@compLesson.date_completed</td>
+                    <td>@compLesson.score</td>
                 </tr>
             }
         </tbody>

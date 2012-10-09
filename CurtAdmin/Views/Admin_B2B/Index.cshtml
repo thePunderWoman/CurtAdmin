@@ -2,11 +2,6 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    List<CurtAdmin.B2BCertificate> listOfCerts = new List<CurtAdmin.B2BCertificate>();
-    if(ViewBag.listOfCerts != null){
-        listOfCerts = ViewBag.listOfCerts;
-    }
-
     string msg = ViewBag.msg;
     if (msg == null)
     {
@@ -35,67 +30,19 @@
         margin-left:15px;  
     }
 </style>
-<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B">Certificates</a></div>
+
 <div id="content_container">
-    <h2>Viewing B2B Certificates</h2>
-    <a href="/Admin_B2B/AddCert" title="Add Certificate" id="addCert" class="button">
-        Add Certificate
-    </a>
+    <h2>B2B University Management</h2>
     <hr style="border-bottom:1px dotted #343434;clear:both" />
     <!-- Explain what's here (for Chris) -->
-    <p>This page is for viewing all of the certificates and to modify them accordingly.</p>
+    <p>This page is for managing B2B University</p>
 
-    <div id="loading_area">
-        <p>Loading Certificates...</p>
-        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Certificates" />
-    </div>
-    <table style="display: none;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Required # to obtain.</th>
-                <th>Is nactive</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (CurtAdmin.B2BCertificate cert in listOfCerts) {
-                <tr>
-                    <td>@cert.id</td>
-                    <td>@cert.title</td>
-                    <td>@cert.requirementNum</td>
-                    <td>@cert.inactive</td>
-                    <td>
-                        <a href="/Admin_B2B/ViewCats/@cert.id" class="locations">Categories</a> | 
-                        <a href="/Admin_B2B/EditCert/@cert.id" class="edit">Edit</a> | 
-                        <a href="javascript:void(0)" class="delete" id="@cert.id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-<script type="text/javascript">
-    var certTable = "";
-    $(function () {
-        certTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
-        $('#loading_area').hide();
-        $('table').fadeIn('fast');
-        $('.delete').live('click', function () {
-            var certID = $(this).attr('id');
-            var table_row = $(this).parent().parent().get()[0];
-            if (certID > 0 && confirm('Are you sure you want to delete this certificate?')) {
-                $.get('/Admin_B2B/DeleteCert/' + certID, function (response) {
-                    if (response.length == 0) {
-                        certTable.fnDeleteRow(table_row);
-                    }else {
-                        showMessage(response);
-                    }
-                }, "html");
-            }
-        });
-    });
-</script>
+    Menu Options:
+    <ul>
+        <li><a href="/Admin_B2B/ViewCerts">Manage Certificates</a></li>
+        <li><a href="/Admin_B2B/ViewUsers">Manage B2B Users</a></li>
+    </ul>
+
+
 
 

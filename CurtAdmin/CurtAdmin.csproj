@@ -467,6 +467,9 @@
       <LastGenOutput>VCDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Admin_B2B\ViewUser.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewUserLessons.cshtml" />
+    <Content Include="Views\Admin_B2B\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -533,7 +536,7 @@
     <Content Include="Views\Admin_B2B\EditLesson.cshtml" />
     <Content Include="Views\Admin_B2B\EditQuestion.cshtml" />
     <Content Include="Views\Admin_B2B\EditTest.cshtml" />
-    <Content Include="Views\Admin_B2B\Index.cshtml" />
+    <Content Include="Views\Admin_B2B\ViewCerts.cshtml" />
     <Content Include="Views\Admin_B2B\ViewAnswers.cshtml" />
     <Content Include="Views\Admin_B2B\ViewCats.cshtml" />
     <Content Include="Views\Admin_B2B\ViewLessons.cshtml" />

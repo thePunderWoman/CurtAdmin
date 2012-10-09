@@ -60,6 +60,12 @@ namespace CurtAdmin
     partial void InsertB2BTestResult(B2BTestResult instance);
     partial void UpdateB2BTestResult(B2BTestResult instance);
     partial void DeleteB2BTestResult(B2BTestResult instance);
+    partial void InsertB2BUser(B2BUser instance);
+    partial void UpdateB2BUser(B2BUser instance);
+    partial void DeleteB2BUser(B2BUser instance);
+    partial void InsertB2BCompletedCert(B2BCompletedCert instance);
+    partial void UpdateB2BCompletedCert(B2BCompletedCert instance);
+    partial void DeleteB2BCompletedCert(B2BCompletedCert instance);
     #endregion
 		
 		public B2BDataContext() : 
@@ -171,6 +177,22 @@ namespace CurtAdmin
 				return this.GetTable<B2BTestResult>();
 			}
 		}
+		
+		public System.Data.Linq.Table<B2BUser> B2BUsers
+		{
+			get
+			{
+				return this.GetTable<B2BUser>();
+			}
+		}
+		
+		public System.Data.Linq.Table<B2BCompletedCert> B2BCompletedCerts
+		{
+			get
+			{
+				return this.GetTable<B2BCompletedCert>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CompletedTests")]
@@ -197,6 +219,8 @@ namespace CurtAdmin
 		
 		private EntitySet<B2BTestResult> _TestResults;
 		
+		private EntityRef<B2BUser> _B2BUser;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -220,6 +244,7 @@ namespace CurtAdmin
 			this._Certificates = new EntitySet<B2BCertificate>(new Action<B2BCertificate>(this.attach_Certificates), new Action<B2BCertificate>(this.detach_Certificates));
 			this._Tests = new EntitySet<B2BTest>(new Action<B2BTest>(this.attach_Tests), new Action<B2BTest>(this.detach_Tests));
 			this._TestResults = new EntitySet<B2BTestResult>(new Action<B2BTestResult>(this.attach_TestResults), new Action<B2BTestResult>(this.detach_TestResults));
+			this._B2BUser = default(EntityRef<B2BUser>);
 			OnCreated();
 		}
 		
@@ -254,6 +279,10 @@ namespace CurtAdmin
 			{
 				if ((this._custID != value))
 				{
+					if (this._B2BUser.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OncustIDChanging(value);
 					this.SendPropertyChanging();
 					this._custID = value;
@@ -382,6 +411,40 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BUser_B2BCompletedTest", Storage="_B2BUser", ThisKey="custID", OtherKey="custID", IsForeignKey=true)]
+		public B2BUser B2BUser
+		{
+			get
+			{
+				return this._B2BUser.Entity;
+			}
+			set
+			{
+				B2BUser previousValue = this._B2BUser.Entity;
+				if (((previousValue != value) 
+							|| (this._B2BUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._B2BUser.Entity = null;
+						previousValue.B2BCompletedTests.Remove(this);
+					}
+					this._B2BUser.Entity = value;
+					if ((value != null))
+					{
+						value.B2BCompletedTests.Add(this);
+						this._custID = value.custID;
+					}
+					else
+					{
+						this._custID = default(string);
+					}
+					this.SendPropertyChanged("B2BUser");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -465,6 +528,8 @@ namespace CurtAdmin
 		
 		private EntityRef<B2BCompletedTest> _CompletedTest;
 		
+		private EntityRef<B2BCompletedCert> _B2BCompletedCert;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -491,6 +556,7 @@ namespace CurtAdmin
 		{
 			this._Categories = new EntitySet<B2BCategory>(new Action<B2BCategory>(this.attach_Categories), new Action<B2BCategory>(this.detach_Categories));
 			this._CompletedTest = default(EntityRef<B2BCompletedTest>);
+			this._B2BCompletedCert = default(EntityRef<B2BCompletedCert>);
 			OnCreated();
 		}
 		
@@ -505,7 +571,7 @@ namespace CurtAdmin
 			{
 				if ((this._id != value))
 				{
-					if (this._CompletedTest.HasLoadedOrAssignedValue)
+					if ((this._CompletedTest.HasLoadedOrAssignedValue || this._B2BCompletedCert.HasLoadedOrAssignedValue))
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -701,6 +767,40 @@ namespace CurtAdmin
 						this._id = default(int);
 					}
 					this.SendPropertyChanged("B2BCompletedTest");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BCompletedCert_B2BCertificate", Storage="_B2BCompletedCert", ThisKey="id", OtherKey="certID", IsForeignKey=true)]
+		public B2BCompletedCert B2BCompletedCert
+		{
+			get
+			{
+				return this._B2BCompletedCert.Entity;
+			}
+			set
+			{
+				B2BCompletedCert previousValue = this._B2BCompletedCert.Entity;
+				if (((previousValue != value) 
+							|| (this._B2BCompletedCert.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._B2BCompletedCert.Entity = null;
+						previousValue.B2BCertificates.Remove(this);
+					}
+					this._B2BCompletedCert.Entity = value;
+					if ((value != null))
+					{
+						value.B2BCertificates.Add(this);
+						this._id = value.certID;
+					}
+					else
+					{
+						this._id = default(int);
+					}
+					this.SendPropertyChanged("B2BCompletedCert");
 				}
 			}
 		}
@@ -2965,6 +3065,471 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.B2BTestResult = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.B2BUser")]
+	public partial class B2BUser : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _custID;
+		
+		private int _numLessonsCompleted;
+		
+		private int _numCertsCompleted;
+		
+		private System.DateTime _join_date;
+		
+		private EntitySet<B2BCompletedTest> _B2BCompletedTests;
+		
+		private EntitySet<B2BCompletedCert> _B2BCompletedCerts;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OncustIDChanging(string value);
+    partial void OncustIDChanged();
+    partial void OnnumLessonsCompletedChanging(int value);
+    partial void OnnumLessonsCompletedChanged();
+    partial void OnnumCertsCompletedChanging(int value);
+    partial void OnnumCertsCompletedChanged();
+    partial void Onjoin_dateChanging(System.DateTime value);
+    partial void Onjoin_dateChanged();
+    #endregion
+		
+		public B2BUser()
+		{
+			this._B2BCompletedTests = new EntitySet<B2BCompletedTest>(new Action<B2BCompletedTest>(this.attach_B2BCompletedTests), new Action<B2BCompletedTest>(this.detach_B2BCompletedTests));
+			this._B2BCompletedCerts = new EntitySet<B2BCompletedCert>(new Action<B2BCompletedCert>(this.attach_B2BCompletedCerts), new Action<B2BCompletedCert>(this.detach_B2BCompletedCerts));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_custID", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string custID
+		{
+			get
+			{
+				return this._custID;
+			}
+			set
+			{
+				if ((this._custID != value))
+				{
+					this.OncustIDChanging(value);
+					this.SendPropertyChanging();
+					this._custID = value;
+					this.SendPropertyChanged("custID");
+					this.OncustIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_numLessonsCompleted", DbType="Int NOT NULL")]
+		public int numLessonsCompleted
+		{
+			get
+			{
+				return this._numLessonsCompleted;
+			}
+			set
+			{
+				if ((this._numLessonsCompleted != value))
+				{
+					this.OnnumLessonsCompletedChanging(value);
+					this.SendPropertyChanging();
+					this._numLessonsCompleted = value;
+					this.SendPropertyChanged("numLessonsCompleted");
+					this.OnnumLessonsCompletedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_numCertsCompleted", DbType="Int NOT NULL")]
+		public int numCertsCompleted
+		{
+			get
+			{
+				return this._numCertsCompleted;
+			}
+			set
+			{
+				if ((this._numCertsCompleted != value))
+				{
+					this.OnnumCertsCompletedChanging(value);
+					this.SendPropertyChanging();
+					this._numCertsCompleted = value;
+					this.SendPropertyChanged("numCertsCompleted");
+					this.OnnumCertsCompletedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_join_date", DbType="DateTime NOT NULL")]
+		public System.DateTime join_date
+		{
+			get
+			{
+				return this._join_date;
+			}
+			set
+			{
+				if ((this._join_date != value))
+				{
+					this.Onjoin_dateChanging(value);
+					this.SendPropertyChanging();
+					this._join_date = value;
+					this.SendPropertyChanged("join_date");
+					this.Onjoin_dateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BUser_B2BCompletedTest", Storage="_B2BCompletedTests", ThisKey="custID", OtherKey="custID")]
+		public EntitySet<B2BCompletedTest> B2BCompletedTests
+		{
+			get
+			{
+				return this._B2BCompletedTests;
+			}
+			set
+			{
+				this._B2BCompletedTests.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BUser_B2BCompletedCert", Storage="_B2BCompletedCerts", ThisKey="custID", OtherKey="custID")]
+		public EntitySet<B2BCompletedCert> B2BCompletedCerts
+		{
+			get
+			{
+				return this._B2BCompletedCerts;
+			}
+			set
+			{
+				this._B2BCompletedCerts.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_B2BCompletedTests(B2BCompletedTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BUser = this;
+		}
+		
+		private void detach_B2BCompletedTests(B2BCompletedTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BUser = null;
+		}
+		
+		private void attach_B2BCompletedCerts(B2BCompletedCert entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BUser = this;
+		}
+		
+		private void detach_B2BCompletedCerts(B2BCompletedCert entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BUser = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CompletedCerts")]
+	public partial class B2BCompletedCert : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _custID;
+		
+		private int _certID;
+		
+		private System.DateTime _date_completed;
+		
+		private bool _hasPlaque;
+		
+		private bool _sentPlaqueEmail;
+		
+		private EntitySet<B2BCertificate> _B2BCertificates;
+		
+		private EntityRef<B2BUser> _B2BUser;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OncustIDChanging(string value);
+    partial void OncustIDChanged();
+    partial void OncertIDChanging(int value);
+    partial void OncertIDChanged();
+    partial void Ondate_completedChanging(System.DateTime value);
+    partial void Ondate_completedChanged();
+    partial void OnhasPlaqueChanging(bool value);
+    partial void OnhasPlaqueChanged();
+    partial void OnsentPlaqueEmailChanging(bool value);
+    partial void OnsentPlaqueEmailChanged();
+    #endregion
+		
+		public B2BCompletedCert()
+		{
+			this._B2BCertificates = new EntitySet<B2BCertificate>(new Action<B2BCertificate>(this.attach_B2BCertificates), new Action<B2BCertificate>(this.detach_B2BCertificates));
+			this._B2BUser = default(EntityRef<B2BUser>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_custID", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string custID
+		{
+			get
+			{
+				return this._custID;
+			}
+			set
+			{
+				if ((this._custID != value))
+				{
+					if (this._B2BUser.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OncustIDChanging(value);
+					this.SendPropertyChanging();
+					this._custID = value;
+					this.SendPropertyChanged("custID");
+					this.OncustIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_certID", DbType="Int NOT NULL")]
+		public int certID
+		{
+			get
+			{
+				return this._certID;
+			}
+			set
+			{
+				if ((this._certID != value))
+				{
+					this.OncertIDChanging(value);
+					this.SendPropertyChanging();
+					this._certID = value;
+					this.SendPropertyChanged("certID");
+					this.OncertIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_date_completed", DbType="DateTime NOT NULL")]
+		public System.DateTime date_completed
+		{
+			get
+			{
+				return this._date_completed;
+			}
+			set
+			{
+				if ((this._date_completed != value))
+				{
+					this.Ondate_completedChanging(value);
+					this.SendPropertyChanging();
+					this._date_completed = value;
+					this.SendPropertyChanged("date_completed");
+					this.Ondate_completedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_hasPlaque", DbType="Bit NOT NULL")]
+		public bool hasPlaque
+		{
+			get
+			{
+				return this._hasPlaque;
+			}
+			set
+			{
+				if ((this._hasPlaque != value))
+				{
+					this.OnhasPlaqueChanging(value);
+					this.SendPropertyChanging();
+					this._hasPlaque = value;
+					this.SendPropertyChanged("hasPlaque");
+					this.OnhasPlaqueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sentPlaqueEmail", DbType="Bit NOT NULL")]
+		public bool sentPlaqueEmail
+		{
+			get
+			{
+				return this._sentPlaqueEmail;
+			}
+			set
+			{
+				if ((this._sentPlaqueEmail != value))
+				{
+					this.OnsentPlaqueEmailChanging(value);
+					this.SendPropertyChanging();
+					this._sentPlaqueEmail = value;
+					this.SendPropertyChanged("sentPlaqueEmail");
+					this.OnsentPlaqueEmailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BCompletedCert_B2BCertificate", Storage="_B2BCertificates", ThisKey="certID", OtherKey="id")]
+		public EntitySet<B2BCertificate> B2BCertificates
+		{
+			get
+			{
+				return this._B2BCertificates;
+			}
+			set
+			{
+				this._B2BCertificates.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BUser_B2BCompletedCert", Storage="_B2BUser", ThisKey="custID", OtherKey="custID", IsForeignKey=true)]
+		public B2BUser B2BUser
+		{
+			get
+			{
+				return this._B2BUser.Entity;
+			}
+			set
+			{
+				B2BUser previousValue = this._B2BUser.Entity;
+				if (((previousValue != value) 
+							|| (this._B2BUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._B2BUser.Entity = null;
+						previousValue.B2BCompletedCerts.Remove(this);
+					}
+					this._B2BUser.Entity = value;
+					if ((value != null))
+					{
+						value.B2BCompletedCerts.Add(this);
+						this._custID = value.custID;
+					}
+					else
+					{
+						this._custID = default(string);
+					}
+					this.SendPropertyChanged("B2BUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_B2BCertificates(B2BCertificate entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BCompletedCert = this;
+		}
+		
+		private void detach_B2BCertificates(B2BCertificate entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BCompletedCert = null;
 		}
 	}
 }

@@ -13,6 +13,7 @@
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
 <div id="content_container">
     <h2>Add New Lesson</h2>
 
@@ -26,8 +27,8 @@
         </label>
 
         <label for="text">
-            Short Description
-            <input type="text" name="text" id="text" placeholder="Enter a short description." required />
+            Additional Information
+            <textarea name="text" class="text" rows="10" cols="50" id="text" placeholder="Enter the Additional Information Content"></textarea>
         </label>
 
         <label for="video">
@@ -65,5 +66,22 @@
             }
         });
     });
+
+    $(document).ready(function () {
+
+        CKEDITOR.replace('text', {
+            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
+            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageWindowWidth: '640',
+            filebrowserImageWindowHeight: '480'
+        });
+
+        $('#btnSubmitPublish').click(function () {
+            $('#publish').val("true");
+            $('#saveform').submit();
+        });
+
+    });
+
 </script>
 <div id="file-dialog"></div>

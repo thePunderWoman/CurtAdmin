@@ -11,6 +11,7 @@
       <Association Name="B2BCompletedTest_B2BCertificate" Member="B2BCertificates" Storage="_Certificates" ThisKey="certID" OtherKey="id" Type="B2BCertificate" />
       <Association Name="B2BCompletedTest_B2BTest" Member="B2BTests" Storage="_Tests" ThisKey="testID" OtherKey="id" Type="B2BTest" />
       <Association Name="B2BCompletedTest_B2BTestResult" Member="B2BTestResults" Storage="_TestResults" ThisKey="testID" OtherKey="id" Type="B2BTestResult" />
+      <Association Name="B2BUser_B2BCompletedTest" Member="B2BUser" ThisKey="custID" OtherKey="custID" Type="B2BUser" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Certificates" Member="B2BCertificates">
@@ -22,9 +23,10 @@
       <Column Name="image_path" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Member="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
       <Association Name="B2BCertificate_B2BCategory" Member="B2BCategories" Storage="_Categories" ThisKey="id" OtherKey="certID" Type="B2BCategory" />
       <Association Name="B2BCompletedTest_B2BCertificate" Member="B2BCompletedTest" Storage="_CompletedTest" ThisKey="id" OtherKey="certID" Type="B2BCompletedTest" IsForeignKey="true" />
+      <Association Name="B2BCompletedCert_B2BCertificate" Member="B2BCompletedCert" ThisKey="id" OtherKey="certID" Type="B2BCompletedCert" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Categories" Member="B2BCategories">
@@ -36,7 +38,7 @@
       <Column Name="image_path" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Member="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
       <Association Name="B2BCategory_B2BLesson" Member="B2BLessons" Storage="_Lessons" ThisKey="id" OtherKey="catID" Type="B2BLesson" />
       <Association Name="B2BCategory_B2BTest" Member="B2BTests" Storage="_Tests" ThisKey="id" OtherKey="catID" Type="B2BTest" />
       <Association Name="B2BCertificate_B2BCategory" Member="B2BCertificate" Storage="_Certificate" ThisKey="certID" OtherKey="id" Type="B2BCertificate" IsForeignKey="true" />
@@ -50,7 +52,7 @@
       <Column Name="Text" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Member="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
       <Association Name="B2BLesson_B2BResource" Member="B2BResources" Storage="_Resources" ThisKey="id" OtherKey="lessonID" Type="B2BResource" />
       <Association Name="B2BLesson_B2BVideo" Member="B2BVideos" Storage="_Videos" ThisKey="id" OtherKey="lessonID" Type="B2BVideo" />
       <Association Name="B2BCategory_B2BLesson" Member="B2BCategory" Storage="_Category" ThisKey="catID" OtherKey="id" Type="B2BCategory" IsForeignKey="true" />
@@ -66,7 +68,7 @@
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="isRandomOrder" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Member="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
       <Association Name="B2BTest_B2BQuestion" Member="B2BQuestions" Storage="_Questions" ThisKey="id" OtherKey="testID" Type="B2BQuestion" />
       <Association Name="B2BCategory_B2BTest" Member="B2BCategory" Storage="_Category" ThisKey="catID" OtherKey="id" Type="B2BCategory" IsForeignKey="true" />
       <Association Name="B2BCompletedTest_B2BTest" Member="B2BCompletedTest" Storage="_CompletedTest" ThisKey="id" OtherKey="testID" Type="B2BCompletedTest" IsForeignKey="true" />
@@ -80,7 +82,7 @@
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="sort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Member="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
       <Association Name="B2BQuestion_B2BAnswer" Member="B2BAnswers" Storage="_Answers" ThisKey="id" OtherKey="questionID" Type="B2BAnswer" />
       <Association Name="B2BTest_B2BQuestion" Member="B2BTest" Storage="_Test" ThisKey="testID" OtherKey="id" Type="B2BTest" IsForeignKey="true" />
     </Type>
@@ -93,7 +95,7 @@
       <Column Name="isCorrect" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Member="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
       <Association Name="B2BTestResult_B2BAnswer" Member="B2BTestResult" Storage="_TestResult" ThisKey="id" OtherKey="chosenAnswerID" Type="B2BTestResult" IsForeignKey="true" />
       <Association Name="B2BQuestion_B2BAnswer" Member="B2BQuestion" Storage="_Question" ThisKey="questionID" OtherKey="id" Type="B2BQuestion" IsForeignKey="true" />
     </Type>
@@ -129,6 +131,29 @@
       <Column Name="custID" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
       <Association Name="B2BTestResult_B2BAnswer" Member="B2BAnswers" Storage="_Answers" ThisKey="chosenAnswerID" OtherKey="id" Type="B2BAnswer" />
       <Association Name="B2BCompletedTest_B2BTestResult" Member="B2BCompletedTest" Storage="_CompletedTest" ThisKey="id" OtherKey="testID" Type="B2BCompletedTest" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.B2BUser" Member="B2BUsers">
+    <Type Name="B2BUser">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="custID" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="numLessonsCompleted" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="numCertsCompleted" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="join_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="B2BUser_B2BCompletedTest" Member="B2BCompletedTests" ThisKey="custID" OtherKey="custID" Type="B2BCompletedTest" />
+      <Association Name="B2BUser_B2BCompletedCert" Member="B2BCompletedCerts" ThisKey="custID" OtherKey="custID" Type="B2BCompletedCert" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CompletedCerts" Member="B2BCompletedCerts">
+    <Type Name="B2BCompletedCert">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="custID" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="certID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="date_completed" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="hasPlaque" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="sentPlaqueEmail" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="B2BCompletedCert_B2BCertificate" Member="B2BCertificates" ThisKey="certID" OtherKey="id" Type="B2BCertificate" />
+      <Association Name="B2BUser_B2BCompletedCert" Member="B2BUser" ThisKey="custID" OtherKey="custID" Type="B2BUser" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

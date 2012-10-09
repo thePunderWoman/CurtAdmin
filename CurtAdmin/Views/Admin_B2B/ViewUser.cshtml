@@ -1,0 +1,124 @@
+﻿@using CurtAdmin
+@using CurtAdmin.Models.B2b
+@{
+    ViewBag.Title = "View User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string msg = ViewBag.msg;
+    if (msg == null)
+    {
+        msg = "";
+    }
+    B2BUser B2BUser = ViewBag.B2BUser ?? new B2BUser();
+    B2BFullUser B2BFullUser = ViewBag.B2BFullUser ?? new B2BFullUser();
+}
+<style type="text/css">
+    table tbody tr td:nth-child(7)
+    {
+        text-align: center;
+    }
+
+    h2
+    {
+        float: left;
+    }
+
+    #addCert, #massUpload
+    {
+        float: right;
+    }
+
+    #massUpload
+    {
+        margin-top: 30px;
+    }
+
+    #breadcrumbs
+    {
+        padding: 5px;
+        margin-left: 15px;
+    }
+</style>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B/ViewUsers">View Users</a> > View User Completed Certificates</div>
+<div id="content_container">
+    <h2>Viewing B2B User Info for: @B2BFullUser.name </h2>
+    <hr style="border-bottom: 1px dotted #343434; clear: both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the B2B users and their B2B completion.</p>
+    <hr />
+    <h3>Completed Certificates</h3>
+    <div id="loading_area">
+        <p>Loading Completed Certificates...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Completed Certificates" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>Certificate title</th>
+                <th>Date completed</th>
+                <th>Has plaque</th>
+                <th>Plaque details updated</th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (B2BCompletedCert compCert in B2BUser.B2BCompletedCerts)
+            {
+                <tr>
+                    <td>@(compCert.B2BCertificates.FirstOrDefault<B2BCertificate>().title)</td>
+                    <td>@compCert.date_completed</td>
+                    <td class="center">
+                        <input type="checkbox" name="hasPlaque" title="@B2BUser.custID" id="hasPlaque:@compCert.certID" class="hasPlaque" value="1" @((compCert.hasPlaque) ? "checked" : "") />
+
+                    </td>
+                    @if (compCert.sentPlaqueEmail)
+                    {
+                        <td class="center">Yes</td>
+                    }
+                    else
+                    {
+                        <td class="center">No</td>
+                    }
+                    <td>
+                        <a href="/Admin_B2B/ViewUserLessons/@B2BUser.id?certID=@compCert.id" class="locations">View Completed Lessons</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        $('table').dataTable({
+            "bJQueryUI": true,
+            "bDeferRender": true
+        });
+
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+
+        $('.hasPlaque').live('click', function () {
+            
+            var certID = $(this).attr('id').split(':')[1];
+            var custID = $(this).attr('title');
+            set_hasPlaque(certID, custID);
+        });
+
+    });
+
+    function set_hasPlaque(certID, custID) {
+        
+        var path = "/Admin_B2B/SetPlaqueStatus/" + certID + "?custID=" + custID;
+        $.get(path, function (response) {
+            if (response.length == 0) {
+                
+            } else {
+                showMessage(response);
+            }
+        }, "html");
+    }
+</script>
+
+

@@ -33,7 +33,8 @@
 </style>
 <script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
-<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@lesson.B2BCategory.certID">View Categories</a> > <a href="/Admin_B2B/ViewLessons/@lesson.catID">View Lessons</a> > Edit Lesson</div>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B/ViewCerts">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@lesson.B2BCategory.certID">View Categories</a> > <a href="/Admin_B2B/ViewLessons/@lesson.catID">View Lessons</a> > Edit Lesson</div>
 <div id="content_container">
     <h2>Edit Lesson: @lesson.title</h2>
 
@@ -51,8 +52,8 @@
         </label>
 
         <label for="text">
-            Short Description
-            <input type="text" name="text" id="text" value="@lesson.Text" />
+            Additional Information
+            <textarea name="text" class="text" rows="10" cols="50" id="text" placeholder="Enter the Additional Information Content">@lesson.Text</textarea>
         </label>
 
         <label for="video">
@@ -95,6 +96,22 @@
                 return false;
             }
         });
+    });
+
+    $(document).ready(function () {
+
+        CKEDITOR.replace('text', {
+            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
+            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageWindowWidth: '640',
+            filebrowserImageWindowHeight: '480'
+        });
+
+        $('#btnSubmitPublish').click(function () {
+            $('#publish').val("true");
+            $('#saveform').submit();
+        });
+
     });
 </script>
 <div id="file-dialog"></div>

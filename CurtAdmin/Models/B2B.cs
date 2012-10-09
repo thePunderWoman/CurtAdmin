@@ -224,7 +224,33 @@ namespace CurtAdmin.Models.B2b
             {
                 throw new Exception("could not load tests: " + e.Message);
             }
-        }      
+        }
+        public static List<B2BFullUser> getB2BUsers()
+        {
+            try
+            {
+                List<B2BUser> listOfB2BUsers = new List<B2BUser>();
+                B2BDataContext db = new B2BDataContext();
+
+                listOfB2BUsers = db.B2BUsers.ToList<B2BUser>();
+
+                List<B2BFullUser> listOfFullUsers = new List<B2BFullUser>();
+
+
+                foreach (B2BUser user in listOfB2BUsers)
+                {
+                    listOfFullUsers.Add(B2BFullUser.castToFullUser(user)); // add the generated full user to the list of Full Users
+                }// end foreach b2b user
+
+                return listOfFullUsers;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not load B2B Users: " + e.Message);
+            }
+
+        }
+
         // get individual objects
         public static B2BAnswer getAnswer(int answerID)
         {
@@ -314,6 +340,36 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not load certificate: " + e.Message);
             }
 
+        }
+        public static B2BFullUser getB2BFullUser(int b2bUserID)
+        {
+            try
+            {
+                // get b2b user with the id being passed in
+                B2BDataContext db = new B2BDataContext();
+                B2BUser b2bUser = db.B2BUsers.Where(x => x.id == b2bUserID).Select(x => x).FirstOrDefault<B2BUser>();
+                // cast b2b user to full user and return it
+                return B2BFullUser.castToFullUser(b2bUser);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could get get B2B user: " + e.Message);
+            }
+
+        }
+        public static B2BUser getB2BUser(int b2bUserID)
+        {
+            try
+            {
+                // get b2b user with the id being passed in
+                B2BDataContext db = new B2BDataContext();
+                B2BUser b2bUser = db.B2BUsers.Where(x => x.id == b2bUserID).Select(x => x).FirstOrDefault<B2BUser>();
+                return b2bUser;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not load B2B User Info: " + e.Message);
+            }
         }
 
 
@@ -414,14 +470,41 @@ namespace CurtAdmin.Models.B2b
             }  
         }
 
+        ///////////////////== AJAX == ////////////////////////////////////
+        public static string SetPlaqueStatus(int certID, string custID)
+        {
+            try
+            {
+                B2BDataContext db = new B2BDataContext();
+                B2BCompletedCert compCert = new B2BCompletedCert();
+
+                compCert = db.B2BCompletedCerts.Where(x => x.certID == certID && x.custID == custID).FirstOrDefault<B2BCompletedCert>();
+                if (compCert.hasPlaque == false)
+                {
+                    compCert.hasPlaque = true;
+                }
+                else
+                {
+                    compCert.hasPlaque = false;
+                }
+                db.SubmitChanges();
+                
+                return "";
+            }
+            catch (Exception e)
+            {
+                return "Error setting plaque status";
+            }
+
+        }
 
         //////////////////////==  B2B User Interaction ==/////////////////
-        public static CustomerUser getCustomerUser(Guid customerUserID)
+        public static CustomerUser getCustomerUser(string customerUserID)
         {
             try
             {
                 CurtDevDataContext db = new CurtDevDataContext();
-                CustomerUser customerUser = db.CustomerUsers.Where(x => x.id == customerUserID).Select(x => x).FirstOrDefault<CustomerUser>();
+                CustomerUser customerUser = db.CustomerUsers.Where(x => x.id.ToString() == customerUserID.ToString()).Select(x => x).FirstOrDefault<CustomerUser>();
                 return customerUser;
             }
             catch (Exception e)
@@ -429,12 +512,12 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not get the customer user: " + e.Message);
             }
         }
-        public static Customer getCustomer(Guid customerUserID)
+        public static Customer getCustomer(string customerUserID)
         {
             try
             {
                 CurtDevDataContext db = new CurtDevDataContext();
-                Customer customer = db.Customers.Where(x => x.APIKey == customerUserID).Select(x => x).FirstOrDefault<Customer>();
+                Customer customer = db.Customers.Where(x => x.APIKey.ToString() == customerUserID.ToString()).Select(x => x).FirstOrDefault<Customer>();
                 return customer;
             }
             catch (Exception e)
@@ -442,38 +525,67 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not get the customer: " + e.Message);
             }
         }
-        public static Boolean isCustomerUser(Customer customer = null, CustomerUser customerUser = null)
+        public static bool isCustomerUser(string custID)
         {
-            // WIP
-            return false;
-        }
-        public static B2BUser castToB2BUser(int customerID, string name, string email, bool isCustomerUser, int testCompleted)
-        {
-            try
+            B2BDataContext dbB2B = new B2BDataContext();
+            CurtDevDataContext db = new CurtDevDataContext();
+
+            CustomerUser customerUserCheck = db.CustomerUsers.Where(x => x.id.ToString() == custID.ToString()).Select(x => x).FirstOrDefault<CustomerUser>();
+            if (customerUserCheck == null)
             {
-                B2BUser user = new B2BUser();
-                user.customerID = customerID;
-                user.name = name;
-                user.email = email;
-                user.isCustomerUser = isCustomerUser;
-                user.testsCompleted = testCompleted;
-                return user;
+                // the b2bUser is a customer
+                return false;
             }
-            catch (Exception e)
+            else
             {
-                throw new Exception("Could not cast to B2B user: " + e.Message);
+                // the b2bUser is a customer User
+                return true;
             }
-        }
+        } // end isCustomerUser
 
     } // end class B2B
 
-    public class B2BUser // WIP
+    public class B2BFullUser
     {
+        public int B2BUserID { get; set; }
+        public string custID { get; set; }
         public int customerID { get; set; }
         public string name { get; set; }
         public string email { get; set; }
         public bool isCustomerUser { get; set; }
-        public int testsCompleted { get; set; }
+        public int numLessonsCompleted { get; set; }
+        public int numCertsCompleted { get; set; }
+        public DateTime join_date { get; set; }
 
-    } // end of class B2BUser
+
+        public static B2BFullUser castToFullUser(B2BUser user)
+        {
+
+            B2BFullUser fullUser = new B2BFullUser();
+
+            fullUser.isCustomerUser = B2B.isCustomerUser(user.custID);
+            fullUser.B2BUserID = user.id;
+            fullUser.custID = user.custID;
+            fullUser.join_date = user.join_date;
+            fullUser.numCertsCompleted = user.numCertsCompleted;
+            fullUser.numLessonsCompleted = user.numLessonsCompleted;
+            if(fullUser.isCustomerUser){
+                CustomerUser customerUser = B2B.getCustomerUser(user.custID);
+                fullUser.email = customerUser.email;
+                fullUser.name = customerUser.name;
+                fullUser.customerID = Convert.ToInt16(customerUser.customerID);
+            }else{
+                Customer customer = B2B.getCustomer(user.custID);
+                fullUser.email = customer.email;
+                fullUser.name = customer.name;
+                fullUser.customerID = Convert.ToInt16(customer.cust_id);
+            }
+            return fullUser;
+
+        } // end of castToFullUser
+
+
+    }
+
+
 }// end namespace
