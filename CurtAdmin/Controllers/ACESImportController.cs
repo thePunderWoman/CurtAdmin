@@ -67,12 +67,12 @@ namespace CurtAdmin.Controllers
                             List<vcdb_VehiclePart> rps = db2.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(rv.ID)).ToList<vcdb_VehiclePart>();
                             removableparts.AddRange(rps);
                         }
-                        if (removableparts.Count > 0) {
+                        try {
                             db2.vcdb_VehicleParts.DeleteAllOnSubmit(removableparts);
                             db2.SubmitChanges();
-                        }
-                        db2.vcdb_Vehicles.DeleteAllOnSubmit(removablevehicles);
-                        db2.SubmitChanges();
+                            db2.vcdb_Vehicles.DeleteAllOnSubmit(removablevehicles);
+                            db2.SubmitChanges();
+                        } catch { }
 
                         try {
                             // check for vpart relationship existence
@@ -214,12 +214,12 @@ namespace CurtAdmin.Controllers
                             List<vcdb_VehiclePart> rps = db2.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(rv.ID)).ToList<vcdb_VehiclePart>();
                             removableparts.AddRange(rps);
                         }
-                        if (removableparts.Count > 0) {
+                        try {
                             db2.vcdb_VehicleParts.DeleteAllOnSubmit(removableparts);
                             db2.SubmitChanges();
-                        }
-                        db2.vcdb_Vehicles.DeleteAllOnSubmit(removablevehicles);
-                        db2.SubmitChanges();
+                            db2.vcdb_Vehicles.DeleteAllOnSubmit(removablevehicles);
+                            db2.SubmitChanges();
+                        } catch { }
 
                         // now that we have the vehicle, add the part relationship
 
