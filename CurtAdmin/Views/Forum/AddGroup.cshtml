@@ -6,7 +6,7 @@
 
 <ul id="subNav">
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+        <a href="@Url.Content("~/Forum/AddGroup")">Add Group</a>
     </li>
     <li class="clear"></li>
 </ul>
@@ -16,7 +16,7 @@
     @if (ViewBag.error.Length > 0) {
         <p>@ViewBag.error</p>
     }
-    <form action="/Admin_Forum/SaveGroup" method="post" class="form_left">
+    <form action="/Forum/SaveGroup" method="post" class="form_left">
         <label for="name">
             Group Name
             <input type="text" name="name" id="name" placeholder="Enter the Name of the Group" required value="@ViewBag.name" />

@@ -7,10 +7,10 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 <ul id="subNav">
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+        <a href="@Url.Content("~/Forum/AddGroup")">Add Group</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + group.forumGroupID)">Add Topic</a>
+        <a href="@Url.Content("~/Forum/AddTopic/" + group.forumGroupID)">Add Topic</a>
     </li>
     <li class="clear"></li>
 </ul>
@@ -34,10 +34,10 @@
                     <td style="text-align: center;">@((topic.closed) ? "No" : "Yes")</td>
                     <td style="text-align: center;">@topic.count</td>
                     <td style="text-align: center;">
-                        <a href="/Admin_Forum/EditTopic/@topic.topicID" title="Edit">Edit</a> | 
-                        <a href="/Admin_Forum/Threads/@topic.topicID" title="Edit">View Threads</a>
+                        <a href="/Forum/EditTopic/@topic.topicID" title="Edit">Edit</a> | 
+                        <a href="/Forum/Threads/@topic.topicID" title="Edit">View Threads</a>
                         @if(topic.count == 0) { 
-                            <text>|</text> <a href="/Admin_Forum/DeleteTopic/@topic.topicID" title="Delete" class="deletetopic">Delete</a>
+                            <text>|</text> <a href="/Forum/DeleteTopic/@topic.topicID" title="Delete" class="deletetopic">Delete</a>
                         }
                     </td>
                 </tr>

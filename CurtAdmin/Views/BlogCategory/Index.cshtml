@@ -6,7 +6,7 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_BlogCategory/Add")">Add Category</a>
+        <a href="@Url.Content("~/BlogCategory/Add")">Add Category</a>
     </li>
 </ul>
 
@@ -25,8 +25,8 @@
                 <tr>
                     <td>@category.name</td>
                     <td>
-                        <a href="/Admin_BlogCategory/Edit/@category.blogCategoryID" title="Edit">Edit</a> | 
-                        <a href="/Admin_BlogCategory/Delete/@category.blogCategoryID" title="Delete Category" data-id="@category.blogCategoryID" class="delete_category">Delete</a>
+                        <a href="/BlogCategory/Edit/@category.blogCategoryID" title="Edit">Edit</a> | 
+                        <a href="/BlogCategory/Delete/@category.blogCategoryID" title="Delete Category" data-id="@category.blogCategoryID" class="delete_category">Delete</a>
                     </td>
                 </tr>
             }
@@ -44,7 +44,7 @@
             var category_id = $(this).attr('data-id');
             var table_row = $(this).parent().parent().get()[0];
             if (category_id > 0 && confirm("Are you sure you want to remove this Category?")) {
-                $.getJSON('/Admin_BlogCategory/Delete/' + category_id, function (resp) {
+                $.getJSON('/BlogCategory/Delete/' + category_id, function (resp) {
                     if (resp.error == undefined) {
                         categoryTable.fnDeleteRow(table_row);
                         showMessage('Category removed.');

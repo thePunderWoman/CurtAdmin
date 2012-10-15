@@ -7,13 +7,13 @@
 
 <ul id="subNav">
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+        <a href="@Url.Content("~/Forum/AddGroup")">Add Group</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + topic.TopicGroupID)">Add Topic</a>
+        <a href="@Url.Content("~/Forum/AddTopic/" + topic.TopicGroupID)">Add Topic</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddPost/" + topic.topicID)">Start Thread</a>
+        <a href="@Url.Content("~/Forum/AddPost/" + topic.topicID)">Start Thread</a>
     </li>
     <li class="clear"></li>
 </ul>
@@ -23,7 +23,7 @@
     @if (ViewBag.error.Length > 0) {
         <p>@ViewBag.error</p>
     }
-    <form action="/Admin_Forum/AddPost/@topic.topicID" method="post" class="form_left">
+    <form action="/Forum/AddPost/@topic.topicID" method="post" class="form_left">
         <label for="title">
             Title
             <input type="text" name="titlestr" id="titlestr" placeholder="Enter the Title of the post" required value="@ViewBag.titlestr" />

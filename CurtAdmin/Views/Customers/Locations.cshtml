@@ -33,12 +33,12 @@
 <div id="content_container">
     <h2>
         Locations for 
-        <a href="/Admin_Customers/Edit/@customer.cust_id" title="Edit Customer">@customer.name</a>
+        <a href="/Customers/Edit/@customer.cust_id" title="Edit Customer">@customer.name</a>
     </h2>
-    <a href="/Admin_Customers/AddLocation/@customer.cust_id" title="Add Location" id="addLocation">
+    <a href="/Customers/AddLocation/@customer.cust_id" title="Add Location" id="addLocation">
         <img src="/Content/img/addLocation.png" alt="Add Location" />
     </a>
-    <a href="/Admin_Customers/PopulateLocations/@customer.cust_id" title="Populate Location" id="populate">
+    <a href="/Customers/PopulateLocations/@customer.cust_id" title="Populate Location" id="populate">
         <img src="/Content/img/populate.png" alt="Populate Location" />
     </a>
     <hr style="border-bottom:1px dotted #343434;clear:both" />
@@ -63,7 +63,7 @@
                     <td>@location.phone</td>
                     <td>@location.latitude / @location.longitude</td>
                     <td>
-                        <a href="/Admin_Customers/EditLocation/@location.locationID" title="Edit Location">Edit</a> | 
+                        <a href="/Customers/EditLocation/@location.locationID" title="Edit Location">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" id="@location.locationID">Delete</a>
                         <input type="hidden" name="location_geo:@location.locationID" id="location_geo:@location.locationID" class="geo" value="@location.latitude:@location.longitude:@location.name" />
                     </td>
@@ -92,7 +92,7 @@
         var markers = new Array();
         var latlngbounds = new google.maps.LatLngBounds();
 
-        $.getJSON('/Admin_Customers/GetCustomerLocationsJSON/@customer.cust_id', function (geo_json) {
+        $.getJSON('/Customers/GetCustomerLocationsJSON/@customer.cust_id', function (geo_json) {
             $.each(geo_json, function (i, customer) {
                 var latitude = customer.latitude;
                 var longitude = customer.longitude;
@@ -127,7 +127,7 @@
             var locationID = $(this).attr('id');
             var row = $(this).parent().parent().get()[0];
             if (locationID > 0 && confirm('Are you sure you want to remove this location?')) {
-                $.get('/Admin_Customers/DeleteLocation/' + locationID, function (response) {
+                $.get('/Customers/DeleteLocation/' + locationID, function (response) {
                     if (response.length == 0) {
                         loc_table.fnDeleteRow(row);
                     } else {

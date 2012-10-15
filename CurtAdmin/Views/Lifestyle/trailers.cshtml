@@ -6,7 +6,7 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Lifestyle/AddTrailer")">Add Trailer</a>
+        <a href="@Url.Content("~/Lifestyle/AddTrailer")">Add Trailer</a>
     </li>
 </ul>
 <div id="content_container">
@@ -73,13 +73,13 @@
             switch (action) {
                 case 'edit':
                     // Redirect to the edit page for trailers
-                    window.location.href = '/Admin_Lifestyle/EditTrailer/' + trailerID;
+                    window.location.href = '/Lifestyle/EditTrailer/' + trailerID;
                     break;
 
                 case 'delete':
                     // Delete this category
                     if (confirm("Are you sure you want to remove this trailer?\r\nThis cannot be undone!")) {
-                        $.getJSON('/Admin_Lifestyle/DeleteTrailer', { 'id': trailerID }, function (response) {
+                        $.getJSON('/Lifestyle/DeleteTrailer', { 'id': trailerID }, function (response) {
                             if ($.trim(response).length == 0) {
                                 trailerTable.fnDeleteRow($('#trailerRow\\:' + trailerID).get()[0]);
                                 showMessage('Trailer has been removed.');

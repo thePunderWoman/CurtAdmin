@@ -11,10 +11,10 @@
             <a href="@HttpContext.Current.Request.Url.AbsoluteUri" class="active">View Items</a>
         </li>
         <li>
-            <a href="@Url.Content("~/Admin_Items/Add")">Add New</a>
+            <a href="@Url.Content("~/Items/Add")">Add New</a>
         </li>
         <!--li>
-            <a href="@Url.Content("~/Admin_Items/ViewDocs")">View Documents</a>
+            <a href="@Url.Content("~/Items/ViewDocs")">View Documents</a>
         </li-->
     </ul>
 </div>
@@ -65,11 +65,11 @@
             var itemID = $(this).attr('id').split(':')[1];
             switch (action) {
                 case 'edit':
-                    window.location.href = '/Admin_Items/Edit?item_id=' + itemID;
+                    window.location.href = '/Items/Edit?item_id=' + itemID;
                     break;
                 case 'delete':
                     if (confirm('Are you sure you want to remove this item?')) {
-                        $.get('/Admin_Items/RemoveItem?item_id=' + itemID, function (response) {
+                        $.get('/Items/RemoveItem?item_id=' + itemID, function (response) {
                             if (response == '') {
                                 table.fnDeleteRow($('#item\\:' + itemID).get()[0]);
                                 showMessage('Item was removed.');

@@ -26,7 +26,7 @@
 <div id="content_container">
     <h2>Viewing All Parts ( @ViewBag.parts.Count )</h2>
     <div id="addPart">
-        <a href="@Url.Content("~/Admin_Products/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
+        <a href="@Url.Content("~/Products/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
     </div>
     <div style="clear:both"></div>
     <div id="loading_area">
@@ -76,12 +76,12 @@
             switch (action) {
 
                 case 'edit':
-                    window.location.href = '/Admin_Product/Edit?partID=' + partID;
+                    window.location.href = '/Product/Edit?partID=' + partID;
                     break;
 
                 case 'delete':
                     if (partID > 0 && confirm("Are you sure you want to remove this part?\r\nThis cannot be undone!")) {
-                        $.get('/Admin_Product/DeletePart', { 'partID': partID }, function (response) {
+                        $.get('/Product/DeletePart', { 'partID': partID }, function (response) {
                             if (response.length == 0) {
                                 partTable.fnDeleteRow($('#part\\:' + partID).get()[0]);
                                 showMessage("Part #" + partID + " has been removed.");

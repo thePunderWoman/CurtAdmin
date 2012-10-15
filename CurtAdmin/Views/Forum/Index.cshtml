@@ -7,7 +7,7 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 <ul id="subNav">
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+        <a href="@Url.Content("~/Forum/AddGroup")">Add Group</a>
     </li>
     <li class="clear"></li>
 </ul>
@@ -29,10 +29,10 @@
                     <td>@group.description</td>
                     <td style="text-align: center;">@group.topics.Count</td>
                     <td style="text-align: center;">
-                        <a href="/Admin_Forum/EditGroup/@group.forumGroupID" title="Edit">Edit</a> | 
-                        <a href="/Admin_Forum/Topics/@group.forumGroupID" title="Edit">Topics</a>
+                        <a href="/Forum/EditGroup/@group.forumGroupID" title="Edit">Edit</a> | 
+                        <a href="/Forum/Topics/@group.forumGroupID" title="Edit">Topics</a>
                         @if(group.topics.Count == 0) { 
-                            <text>|</text> <a href="/Admin_Forum/DeleteGroup/@group.forumGroupID" title="Delete" class="delete">Delete</a>
+                            <text>|</text> <a href="/Forum/DeleteGroup/@group.forumGroupID" title="Delete" class="delete">Delete</a>
                         }
                     </td>
                 </tr>

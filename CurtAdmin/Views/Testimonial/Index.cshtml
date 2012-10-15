@@ -23,10 +23,10 @@
 </style>
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Testimonial/")" class="active">Unapproved Testimonials</a>
+        <a href="@Url.Content("~/Testimonial/")" class="active">Unapproved Testimonials</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_Testimonial/Approved")">Approved Testimonials</a>
+        <a href="@Url.Content("~/Testimonial/Approved")">Approved Testimonials</a>
     </li>
 </ul>
 
@@ -59,7 +59,7 @@
                         <input type="checkbox" name="approved" id="approved:@testimonial.testimonialID" class="isApproved" value="true" @((testimonial.approved) ? "checked='checked'" : "") />
                     </td>
                     <td>
-                        <a href="/Admin_Testiminial/Remove" id="@testimonial.testimonialID" class="remove">Delete</a>
+                        <a href="/Testiminial/Remove" id="@testimonial.testimonialID" class="remove">Delete</a>
                     </td>
                 </tr>
             }

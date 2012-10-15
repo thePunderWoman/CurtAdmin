@@ -8,7 +8,7 @@
 
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_BlogCategory/Add")">Add Category</a>
+        <a href="@Url.Content("~/BlogCategory/Add")">Add Category</a>
     </li>
 </ul>
 
@@ -18,7 +18,7 @@
     {
         <p>@errors</p>
     }
-    <form method="post" action="/Admin_BlogCategory/Save/@category.blogCategoryID" class="form_left">
+    <form method="post" action="/BlogCategory/Save/@category.blogCategoryID" class="form_left">
         <label for="name">
             Name
             <input type="text" name="name" id="name" placeholder="Enter the Category Name" value="@((ViewBag.name != null && ViewBag.name.Length > 0) ? ViewBag.name : @category.name)" />

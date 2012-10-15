@@ -10,10 +10,10 @@
 <div id="pageNav">
     <ul>
         <li>
-            <a href="@Url.Content("~/Admin_Vehicles")" class="active">View Vehicles</a>
+            <a href="@Url.Content("~/Vehicles")" class="active">View Vehicles</a>
         </li>
         <li>
-            <a href="@Url.Content("~/Admin_Vehicles/Add")">Add New</a>
+            <a href="@Url.Content("~/Vehicles/Add")">Add New</a>
         </li>
     </ul>
 </div>
@@ -22,7 +22,7 @@
 <div id="vehicle_header">
     <h2>Manage Vehicles</h2>
 
-    <form action="@Url.Content("~/Admin_Vehicles/FindVehicle")" method="post" class="form">
+    <form action="@Url.Content("~/Vehicles/FindVehicle")" method="post" class="form">
         <label for="vehicleStr">
             <input type="search" name="vehicleStr" id="vehicleStr" placeholder="Search for vehicle" />
             <input type="submit" name="btnSearchVechile" id="btnSearchVehicle" value="" />
@@ -104,12 +104,12 @@
             var vehicleID = $(this).attr('id');
             switch (value) {
                 case 'edit':
-                    window.location.href = '/Admin_Vehicles/Edit?vehicleID=' + vehicleID;
+                    window.location.href = '/Vehicles/Edit?vehicleID=' + vehicleID;
                     break;
 
                 case 'view_prod':
                     if (vehicleID.length > 0 && vehicleID > 0) {
-                        $.getJSON('/Admin_Vehicles/GetVehicleParts', { 'vehicleID': vehicleID }, function (data) {
+                        $.getJSON('/Vehicles/GetVehicleParts', { 'vehicleID': vehicleID }, function (data) {
                             if (!data.error) {
                                 partTable.fnClearTable();
                                 $.each(data, function (i, part) {
@@ -134,7 +134,7 @@
 
                 case 'delete':
                     if (vehicleID > 0 && confirm('Are you sure you want to remove this vehicle?')) {
-                        $.getJSON('/Admin_Vehicles/DeleteVehicle', { 'vehicleID': vehicleID }, function (response) {
+                        $.getJSON('/Vehicles/DeleteVehicle', { 'vehicleID': vehicleID }, function (response) {
                             if (response == null || response == "") { // Remove table row
                                 vehicleTable.fnDeleteRow($('#row_' + vehicleID).get()[0]);
                                 showMessage('Vehicle was removed.');

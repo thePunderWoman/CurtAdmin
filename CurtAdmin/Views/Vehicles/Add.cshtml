@@ -35,10 +35,10 @@
 <div id="pageNav">
     <ul>
         <li>
-            <a href="@Url.Content("~/Admin_Vehicles")">View Vehicles</a>
+            <a href="@Url.Content("~/Vehicles")">View Vehicles</a>
         </li>
         <li>
-            <a href="@Url.Content("~/Admin_Vehicles/Add")" class="active">Add New</a>
+            <a href="@Url.Content("~/Vehicles/Add")" class="active">Add New</a>
         </li>
     </ul>
 </div>
@@ -46,7 +46,7 @@
     <div id="vehicle_header">
         <h2>Add New Vehicle</h2>
 
-        <form action="@Url.Content("~/Admin_Vehicles/FindVehicle")" method="post" class="form">
+        <form action="@Url.Content("~/Vehicles/FindVehicle")" method="post" class="form">
             <label for="vehicleStr">
                 <input type="search" name="vehicleStr" id="vehicleStr" placeholder="Search for vehicle" />
                 <input type="submit" name="btnSearchVechile" id="btnSearchVehicle" value="" />

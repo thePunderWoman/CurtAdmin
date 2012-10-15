@@ -17,7 +17,7 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Misc/AddVideoType")" id="addVideoType">Add</a>
+        <a href="@Url.Content("~/Misc/AddVideoType")" id="addVideoType">Add</a>
     </li>
 </ul>
 <div id="content_container">
@@ -40,8 +40,8 @@
                     <td>@t.name</td>
                     <td>@((String.IsNullOrEmpty(t.icon)) ? Html.Raw("No Image") : Html.Raw("<img src='" + t.icon + "' alt='icon' />"))</td>
                     <td class="center">
-                        <a href="/Admin_Misc/EditVideoType?vTypeID=@t.vTypeID" id="edit_@(t.vTypeID)" class="edit">Edit</a> |
-                        <a href="/Admin_Misc/DeleteVideoType?vTypeID=@t.vTypeID" id="delete_@(t.vTypeID)" class="delete">Delete</a>
+                        <a href="/Misc/EditVideoType?vTypeID=@t.vTypeID" id="edit_@(t.vTypeID)" class="edit">Edit</a> |
+                        <a href="/Misc/DeleteVideoType?vTypeID=@t.vTypeID" id="delete_@(t.vTypeID)" class="delete">Delete</a>
                     </td>
                 </tr>
             }
@@ -49,7 +49,7 @@
     </table>
 </div>
 <div id="editform" style="display: none;">
-    <form class="form_left" action="/Admin_Misc/EditVideoType" method="post">
+    <form class="form_left" action="/Misc/EditVideoType" method="post">
         <label for="name">
             Type:
             <input type="text" id="name" name="name" value="" placeholder="Type Name" />
@@ -95,13 +95,13 @@
                         if ($.trim(name) == "") bValid = false;
 
                         if (bValid) {
-                            $.post('/Admin_Misc/AddVideoType', { 'name': name, 'icon': icon }, function (data) {
+                            $.post('/Misc/AddVideoType', { 'name': name, 'icon': icon }, function (data) {
                                 // remove and re-add row to table
                                 var addId = typeTable.fnAddData([
                                         data.vTypeID,
                                         data.name,
                                         (data.icon != "undefined" && data.icon != "" && data.icon != null) ? '<img src="' + data.icon + '" alt="icon" />' : 'No Image',
-                                        '<a href="/Admin_Misc/EditVideoType?vTypeID=' + data.vTypeID + '" id="edit_' + data.vTypeID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteVideoType?vTypeID=' + data.vTypeID + '" id="delete_' + data.vTypeID + '" class="delete">Delete</a>'
+                                        '<a href="/Misc/EditVideoType?vTypeID=' + data.vTypeID + '" id="edit_' + data.vTypeID + '" class="edit">Edit</a> | <a href="/Misc/DeleteVideoType?vTypeID=' + data.vTypeID + '" id="delete_' + data.vTypeID + '" class="delete">Delete</a>'
                                     ]);
 
                                 var theNode = typeTable.fnSettings().aoData[addId[0]].nTr;
@@ -126,7 +126,7 @@
         $('.edit').live('click', function (event) {
             event.preventDefault();
             var idstr = $(this).attr('id').split('_')[1];
-            $.getJSON('/Admin_Misc/GetVideoType', { 'vTypeID': idstr }, function (response) {
+            $.getJSON('/Misc/GetVideoType', { 'vTypeID': idstr }, function (response) {
                 $('#vTypeID').val(response.vTypeID);
                 $('#name').val(response.name);
                 $('#name').attr('disabled', 'true');
@@ -150,14 +150,14 @@
                             var bValid = true;
 
                             if (bValid) {
-                                $.post('/Admin_Misc/UpdateVideoType', { 'vTypeID': vTypeID, 'icon': icon }, function (data) {
+                                $.post('/Misc/UpdateVideoType', { 'vTypeID': vTypeID, 'icon': icon }, function (data) {
                                     // remove and re-add row to table
                                     typeTable.fnDeleteRow($('#typeRow\\:' + data.vTypeID).get()[0]);
                                     var addId = typeTable.fnAddData([
                                         data.vTypeID,
                                         data.name,
                                         (data.icon != "undefined" && data.icon != "" && data.icon != null) ? '<img src="' + data.icon + '" alt="icon" />' : 'No Image',
-                                        '<a href="/Admin_Misc/EditVideoType?vTypeID=' + data.vTypeID + '" id="edit_' + data.vTypeID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteVideoType?vTypeID=' + data.vTypeID + '" id="delete_' + data.vTypeID + '" class="delete">Delete</a>'
+                                        '<a href="/Misc/EditVideoType?vTypeID=' + data.vTypeID + '" id="edit_' + data.vTypeID + '" class="edit">Edit</a> | <a href="/Misc/DeleteVideoType?vTypeID=' + data.vTypeID + '" id="delete_' + data.vTypeID + '" class="delete">Delete</a>'
                                     ]);
 
                                     var theNode = typeTable.fnSettings().aoData[addId[0]].nTr;
@@ -184,7 +184,7 @@
             event.preventDefault();
             var idstr = $(this).attr('id').split('_')[1];
             if (confirm("Are you sure you want to remove this video type?\r\nThis cannot be undone!")) {
-                $.getJSON('/Admin_Misc/DeleteVideoType', { 'vTypeID': idstr }, function (response) {
+                $.getJSON('/Misc/DeleteVideoType', { 'vTypeID': idstr }, function (response) {
                     if ($.trim(response).length == 0) {
                         typeTable.fnDeleteRow($('#typeRow\\:' + idstr).get()[0]);
                         showMessage('Video Type has been removed.');
