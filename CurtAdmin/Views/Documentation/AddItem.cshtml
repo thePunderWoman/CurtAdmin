@@ -1,21 +1,15 @@
 ﻿@{
-    ViewBag.Title = "CURT Documentation - Add New Item";
+    ViewBag.Title = "Add New Documentation Item";
+    ViewBag.navigation = "_DocumentationNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div id="usersNav">
-    <ul>
-        <li>
-            <a href="@Url.Content("~/Items")">View Items</a>
-        </li>
-        <li>
-            <a href="@Url.Content("~/Items/Add")" class="active">Add New</a>
-        </li>
-        <!--li>
-            <a href="@Url.Content("~/Items/ViewDocs")">View Documents</a>
-        </li-->
-    </ul>
-</div>
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Documentation/AddItem")" class="active">Add New</a>
+    </li>
+    <li class="clear"></li>
+</ul>
 <div id="content_container">
     <h2>Adding New Item</h2>
 
@@ -113,7 +107,7 @@
                         <input type="button" id="addCategory" name="addCategory" value="Add"  style="margin-top: 3px" />
                         <select name="catID" id="catID">
                             <option value="0">Select Category</option>
-                            @foreach (CurtAdmin.category cat in ViewBag.categories) {
+                            @foreach (CurtAdmin.docCategory cat in ViewBag.categories) {
                                 <option value="@cat.catID">@cat.catName</option>
                             }
                         </select>

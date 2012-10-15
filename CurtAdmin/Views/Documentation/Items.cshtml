@@ -1,26 +1,21 @@
 ﻿@{
-    ViewBag.Title = "CURT Documentation - Viewing Items";
+    ViewBag.Title = "Viewing Documentation Items";
+    ViewBag.navigation = "_DocumentationNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CurtAdmin.docItem> items = new List<CurtAdmin.docItem>();
     if(ViewBag.items != null){ items = ViewBag.items; }
     CurtAdmin.DocsLinqDataContext doc_db = new CurtAdmin.DocsLinqDataContext();
+    CurtAdmin.docCategory cat = ViewBag.cat ?? new CurtAdmin.docCategory();
 }
-<div id="usersNav">
-    <ul>
-        <li>
-            <a href="@HttpContext.Current.Request.Url.AbsoluteUri" class="active">View Items</a>
-        </li>
-        <li>
-            <a href="@Url.Content("~/Items/Add")">Add New</a>
-        </li>
-        <!--li>
-            <a href="@Url.Content("~/Items/ViewDocs")">View Documents</a>
-        </li-->
-    </ul>
-</div>
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Documentation/AddItem")">Add New</a>
+    </li>
+    <li class="clear"></li>
+</ul>
 <div id="content_container">
 
-    <h2>Viewing All Items(@items.Count)</h2>
+    <h2>Viewing @((cat.catID == 0) ? "All" : cat.catName ) Items (@items.Count)</h2>
 
     <div style="width: 90%;margin:auto">
         <table style="width: 100%">
@@ -65,11 +60,11 @@
             var itemID = $(this).attr('id').split(':')[1];
             switch (action) {
                 case 'edit':
-                    window.location.href = '/Items/Edit?item_id=' + itemID;
+                    window.location.href = '/Documentation/EditItem?item_id=' + itemID;
                     break;
                 case 'delete':
                     if (confirm('Are you sure you want to remove this item?')) {
-                        $.get('/Items/RemoveItem?item_id=' + itemID, function (response) {
+                        $.get('/Documentation/RemoveItem?item_id=' + itemID, function (response) {
                             if (response == '') {
                                 table.fnDeleteRow($('#item\\:' + itemID).get()[0]);
                                 showMessage('Item was removed.');

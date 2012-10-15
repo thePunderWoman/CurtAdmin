@@ -1,17 +1,14 @@
 ﻿@{
     ViewBag.Title = "CURT Documentation - Add Category";
+    ViewBag.navigation = "_DocumentationNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div id="usersNav">
-    <ul>
-        <li>
-            <a href="@Url.Content("~/Category")" title="View All Categories">View Categories</a>
-        </li>
-        <li>
-            <a href="@Url.Content("~/Category/Add")" class="active" title="Add New Category">Add New</a>
-        </li>
-    </ul>
-</div>
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Documentation/AddCategory")" class="active" title="Add New Category">Add New</a>
+    </li>
+    <li class="clear"></li>
+</ul>
 <div id="content_container">
     <h2>Add New Category</h2>
 
@@ -40,19 +37,8 @@
                 Parent Category
                 <select name="parentID" id="parentID">
                     <option value="0">Select Parent Category</option>
-                    @foreach (CurtAdmin.category cat in ViewBag.categories) {
+                    @foreach (CurtAdmin.docCategory cat in ViewBag.categories) {
                         <option value="@cat.catID" @((cat.catID == ViewBag.parentID)?"selected='selected'":"")>@cat.catName</option>
-                    }
-                </select>
-            </label>
-
-            <!-- Module Grouping -->
-            <label for="moduleID">
-                Module
-                <select name="moduleID" id="moduleID">
-                    <option value="0">Select Module</option>
-                    @foreach (CurtAdmin.module module in ViewBag.user_modules) {
-                        <option value="@module.moduleID" @((module.moduleID == ViewBag.moduleID)?"selected='selected'":"")>@module.module1</option>
                     }
                 </select>
             </label>
@@ -78,8 +64,7 @@
         <div class="form_right">
             <p>1. Enter then name of your new category. This field is required</p>
             <p>2. If you would like this to be a sub-category, choose it's parent.</p>
-            <p>3. Select the module that you would like this category to be tied into.</p>
-            <p>4. Enter any comments you may have about this category i.e. category description.</p>
+            <p>3. Enter any comments you may have about this category i.e. category description.</p>
         </div>
         <div style="clear:both"></div>
     

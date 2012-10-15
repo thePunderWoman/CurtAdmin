@@ -7,7 +7,7 @@ using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers
 {
-    public class AccountController : UserBaseController
+    public class AccountController : BaseController
     {
         //
         // GET: /Users/

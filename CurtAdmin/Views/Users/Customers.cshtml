@@ -40,10 +40,10 @@
 <div id="usersNav">
     <ul>
         <li>
-            <a href="@Url.Content("~/Users")" class="active">View Internal Users</a>
+            <a href="@Url.Content("~/Users")">View Internal Users</a>
         </li>
         <li>
-            <a href="@Url.Content("~/Users/Customers")">View Customer Users</a>
+            <a href="@Url.Content("~/Users/Customers")" class="active">View Customer Users</a>
         </li>
         <li>
             <a href="@Url.Content("~/Users/Add")">Add New</a>
@@ -52,35 +52,33 @@
 </div>
 
 <div id="content_container">
-    <h2>All Users (@ViewBag.users.Count)</h2>
+    <h2>All Registered Customer Users (@ViewBag.users.Count)</h2>
 
     <div style="width: 90%;margin:auto">
         <table style="width: 100% !important">
             <thead>
                 <tr>
-                    <th>Username</th>
                     <th>Name</th>
                     <th>E-Mail</th>
+                    <th>Customer #</th>
                     <th>Date Added</th>
                     <th>Is Active?</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (CurtAdmin.user u in ViewBag.users) {
-                    <tr id="user:@u.userID">
-                        <td>@u.username</td>
-                        <td>@u.fname @u.lname</td>
+                @foreach (CurtAdmin.CustomerUser u in ViewBag.users) {
+                    <tr id="user:@u.id">
+                        <td>@u.name</td>
                         <td>@u.email</td>
-                        <td>@u.dateAdded</td>
+                        <td>@u.customerID</td>
+                        <td>@u.date_added.ToShortDateString()</td>
                         <td class="center">
-                            <input type="checkbox" name="isActive" id="isActive:@u.userID" class="isActive" value="1" @((u.isActive == 1)?"checked":"") />
+                            <input type="checkbox" name="isActive" id="isActive:@u.id" class="isActive" value="1" @((u.active) ? "checked" : "") />
                         </td>
                         <td class="center">
-                            <select id="action:@u.userID" class="user_action">
+                            <select id="action:@u.id" class="user_action">
                                 <option value="0">Select Action</option>
-                                <option value="view">View</option>
-                                <option value="edit">Edit</option>
                                 <option value="delete">Remove</option>
                             </select>
                         </td>
@@ -89,29 +87,5 @@
             </tbody>
         </table>
     </div>
-
-    <div id="user_container">
-        <div id="user_name">
-            <h4></h4>
-        </div>
-        <div id="user_info">
-            <div style="float:left;width:45%;margin-left: 4%">
-                <span>Username:</span>
-                <span id="username"></span>
-                <span>E-Mail:</span>
-                <span id="email"></span>
-                <span>Website:</span>
-                <span id="website"></span>
-            </div>
-            <div style="float:left;width: 45%;margin-right:4%">
-                <span>Phone:</span>
-                <span id="phone"></span>
-                <span>Fax:</span>
-                <span id="fax"></span>
-            </div>
-            <div style="clear:both"></div>
-        </div>
-    </div>
-
 </div>
-<script type="text/javascript" src="@Url.Content("~/Scripts/admin/users_home.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/custusers_home.js")"></script>

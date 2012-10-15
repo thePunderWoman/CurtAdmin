@@ -133,7 +133,6 @@
     <Compile Include="Controllers\BlogCategoryController.cs" />
     <Compile Include="Controllers\BlogCommentsController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
-    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
@@ -141,7 +140,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\FileExtController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
-    <Compile Include="Controllers\ItemsController.cs" />
+    <Compile Include="Controllers\DocumentationController.cs" />
     <Compile Include="Controllers\LifestyleController.cs" />
     <Compile Include="Controllers\MiscController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
@@ -157,11 +156,9 @@
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\AuthenticateController.cs" />
     <Compile Include="Controllers\ACESImportController.cs" />
-    <Compile Include="Controllers\DocumentationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\TestingController.cs" />
-    <Compile Include="Controllers\UserBaseController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\_404Controller.cs" />
     <Compile Include="CurtDev1.designer.cs">
@@ -470,6 +467,7 @@
     <Content Include="Views\B2B\Index.cshtml" />
     <Content Include="Views\B2B\AddVideo.cshtml" />
     <Content Include="Views\B2B\ViewVideos.cshtml" />
+    <Content Include="Views\Shared\Navigation\_DocumentationNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -553,9 +551,9 @@
     <Content Include="Views\Blog\Add.cshtml" />
     <Content Include="Views\Blog\Edit.cshtml" />
     <Content Include="Views\Blog\Index.cshtml" />
-    <Content Include="Views\Category\Add.cshtml" />
-    <Content Include="Views\Category\Edit.cshtml" />
-    <Content Include="Views\Category\Index.cshtml" />
+    <Content Include="Views\Documentation\AddCategory.cshtml" />
+    <Content Include="Views\Documentation\EditCategory.cshtml" />
+    <Content Include="Views\Documentation\Index.cshtml" />
     <Content Include="Views\Contact\AddReceiver.cshtml" />
     <Content Include="Views\Contact\AddType.cshtml" />
     <Content Include="Views\Contact\EditReceiver.cshtml" />
@@ -597,9 +595,9 @@
     <Content Include="Views\Forum\Thread.cshtml" />
     <Content Include="Views\Forum\Threads.cshtml" />
     <Content Include="Views\Forum\Topics.cshtml" />
-    <Content Include="Views\Items\Add.cshtml" />
-    <Content Include="Views\Items\Edit.cshtml" />
-    <Content Include="Views\Items\Index.cshtml" />
+    <Content Include="Views\Documentation\AddItem.cshtml" />
+    <Content Include="Views\Documentation\EditItem.cshtml" />
+    <Content Include="Views\Documentation\Items.cshtml" />
     <Content Include="Views\Lifestyle\Add.cshtml" />
     <Content Include="Views\Lifestyle\AddTrailer.cshtml" />
     <Content Include="Views\Lifestyle\Content.cshtml" />
@@ -660,9 +658,6 @@
     <Content Include="Views\Authenticate\Index.cshtml" />
     <Content Include="Views\Authenticate\Signup.cshtml" />
     <Content Include="Views\Authenticate\userFound.cshtml" />
-    <Content Include="Views\Documentation\Category.cshtml" />
-    <Content Include="Views\Documentation\Index.cshtml" />
-    <Content Include="Views\Documentation\Item.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Import\Import.cshtml" />
     <Content Include="Views\Import\Start.cshtml" />

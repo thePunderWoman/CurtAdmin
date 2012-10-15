@@ -56,18 +56,12 @@ namespace CurtAdmin.Controllers
                 return View();
             } else {
                 // User login successful: assign Session data and redirect.
-                Session["auth_level"]   = login_user.isAdmin + "";
                 Session["userID"]       = login_user.userID;
                 Session["username"]     = login_user.username;
                 Session["superUser"]    = login_user.superUser;
                 Session["name"]         = login_user.fname + " " + login_user.lname;
 
                 if (rememberMe == "1") {
-                    HttpCookie authLevel = new HttpCookie("auth_level");
-                    authLevel.Value = login_user.isAdmin + "";
-                    authLevel.Expires = DateTime.Now.AddDays(30);
-                    Response.Cookies.Add(authLevel);
-
                     HttpCookie userID = new HttpCookie("userID");
                     userID.Value = login_user.userID + "";
                     userID.Expires = DateTime.Now.AddDays(30);
@@ -89,12 +83,10 @@ namespace CurtAdmin.Controllers
                     Response.Cookies.Add(name);
                 }
 
-                if (login_user.isAdmin == 1 && redirectUrl == "") { // Redirect to admin section
-                    HttpContext.Response.Redirect("~/Admin");
-                } else if(login_user.isAdmin == 0 && redirectUrl == "") { // Redirect to user home
-                    HttpContext.Response.Redirect("http://labs.curtmfg.com");
-                } else if (login_user.isAdmin == 1 || login_user.isAdmin == 0 && redirectUrl != "") {
-                    HttpContext.Response.Redirect(redirectUrl);
+                if (redirectUrl == "") { // Redirect to admin section
+                    return RedirectToAction("Index","home");
+                } else {
+                    Response.Redirect(redirectUrl);
                 }
             }
             ViewBag.Message = "There was error while logging you in, my bad!";

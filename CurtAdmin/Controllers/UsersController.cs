@@ -59,13 +59,8 @@ namespace CurtAdmin.Controllers
             ViewBag.modules = modules;
 
             // Get all the admin modules
-            List<module> admin_modules = Users.GetAllModules("admin");
-            ViewBag.admin_modules = admin_modules;
-
-            // Get all the user modules
-            List<module> user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
-            ViewBag.selected_modules = new List<string>();
+            List<module> allmodules = Users.GetAllModules();
+            ViewBag.allmodules = allmodules;
 
             return View();
         }
@@ -93,12 +88,6 @@ namespace CurtAdmin.Controllers
             string comments = Request.Form["comments"].Trim();
             string biography = Request.Form["biography"].Trim();
             string photo = Request.Form["photo"].Trim();
-
-            // Determine if the user is designated as Admin or User
-            int isAdmin = 0;
-            if (Request.Form["isAdmin"] != null) {
-                isAdmin = Convert.ToInt32(Request.Form["isAdmin"].Trim());
-            }
 
             // Determine if the user is marked as active
             int isActive = 0;
@@ -156,7 +145,6 @@ namespace CurtAdmin.Controllers
                     website = website,
                     phone = phone.Replace("-", ""),
                     fax = fax.Replace("-", ""),
-                    isAdmin = isAdmin,
                     isActive = isActive,
                     comments = comments,
                     dateAdded = DateTime.Now,
@@ -215,7 +203,6 @@ namespace CurtAdmin.Controllers
                 ViewBag.website = website;
                 ViewBag.phone = phone.Replace("-", "");
                 ViewBag.fax = fax.Replace("-", "");
-                ViewBag.isAdmin = isAdmin;
                 ViewBag.isActive = isActive;
                 ViewBag.superUser = superUser;
                 ViewBag.comments = comments;
@@ -231,13 +218,8 @@ namespace CurtAdmin.Controllers
             ViewBag.modules = modules;
 
             // Get all the admin modules
-            List<module> admin_modules = Users.GetAllModules("admin");
-            ViewBag.admin_modules = admin_modules;
-
-            // Get all the user modules
-            List<module> user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
-
+            List<module> allmodules = Users.GetAllModules();
+            ViewBag.allmodules = allmodules;
 
             List<user> users = Users.GetAllUsers();
             ViewBag.users = users;
@@ -271,14 +253,10 @@ namespace CurtAdmin.Controllers
             List<module> modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
             ViewBag.modules = modules;
 
-            // Get all the admin modules
-            List<module> admin_modules = Users.GetAllModules("admin");
-            ViewBag.admin_modules = admin_modules;
+            // Get all the modules
+            List<module> allmodules = Users.GetAllModules();
+            ViewBag.allmodules = allmodules;
 
-            // Get all the user modules
-            List<module> user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
-            
             return View();
         }
 
@@ -315,11 +293,6 @@ namespace CurtAdmin.Controllers
             string biography = Request.Form["biography"].Trim();
             string photo = Request.Form["photo"].Trim();
             
-            int isAdmin = 0;
-            if (Request.Form["isAdmin"] != null) {
-                isAdmin = Convert.ToInt32(Request.Form["isAdmin"].Trim());
-            }
-
             int isActive = 0;
             if (Request.Form["isActive"] != null) {
                 isActive = Convert.ToInt32(Request.Form["isActive"].Trim());
@@ -359,7 +332,6 @@ namespace CurtAdmin.Controllers
                 u.website = website;
                 u.phone = phone.Replace("-", "");
                 u.fax = fax.Replace("-", "");
-                u.isAdmin = isAdmin;
                 u.isActive = isActive;
                 u.comments = comments;
                 u.superUser = superUser;
@@ -427,13 +399,9 @@ namespace CurtAdmin.Controllers
             List<module> modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
             ViewBag.modules = modules;
 
-            // Get all the admin modules
-            List<module> admin_modules = Users.GetAllModules("admin");
-            ViewBag.admin_modules = admin_modules;
-
-            // Get all the user modules
-            List<module> user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
+            // Get all the modules
+            List<module> allmodules = Users.GetAllModules();
+            ViewBag.allmodules = allmodules;
 
             return View();
         }

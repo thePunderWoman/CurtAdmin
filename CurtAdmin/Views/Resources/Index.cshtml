@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .dataTables_wrapper{
+        width: 90%;
+        margin:auto;
+    }
+</style>
+
+<h2>Available Resources</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Resource Name</th>
+            <th>Resource Path</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CurtAdmin.resource_listing listing in ViewBag.listings) {
+            <tr>
+                <td>@listing.resource_name</td>
+                <td>@listing.resource_url</td>
+                <td>@listing.username</td>
+                <td>@listing.password</td>
+                <td>@listing.comments</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('table').dataTable({
+            "bJQueryUI":true
+        });
+    });
+</script>

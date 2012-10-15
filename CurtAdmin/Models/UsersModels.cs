@@ -23,20 +23,13 @@ namespace CurtAdmin.Models {
         /// Get all users in the database
         /// </summary>
         /// <returns>List of users</returns>
-        public static List<user> GetAllUsers(int isAdmin = -1) {
+        public static List<user> GetAllUsers() {
             DocsLinqDataContext doc_db = new DocsLinqDataContext();
             List<user> users = new List<user>();
 
-            if (isAdmin == -1) {
-                users = (from u in doc_db.users
-                         orderby u.lname
-                         select u).ToList<user>();
-            } else {
-                users = (from u in doc_db.users
-                         where u.isAdmin.Equals(isAdmin)
-                         orderby u.lname
-                         select u).ToList<user>();
-            }
+            users = (from u in doc_db.users
+                        orderby u.lname
+                        select u).ToList<user>();
 
             return users;
         }
@@ -46,23 +39,14 @@ namespace CurtAdmin.Models {
         /// </summary>
         /// <param name="moduleType">string value containing either 'user' or 'admin'</param>
         /// <returns>List of modules</returns>
-        public static List<module> GetAllModules(string moduleType) {
+        public static List<module> GetAllModules() {
             DocsLinqDataContext doc_db = new DocsLinqDataContext();
             List<module> modules = new List<module>();
 
-            if (moduleType.Trim().Length == 0) { // Get all the modules
+            modules = (from m in doc_db.modules
+                        orderby m.module1
+                        select m).ToList<module>();
 
-                modules = (from m in doc_db.modules
-                           orderby m.module1
-                           select m).ToList<module>();
-
-            } else { // Get the modules of a specific type
-
-                modules = (from m in doc_db.modules
-                           where m.module_type.Equals(moduleType)
-                           orderby m.module1
-                           select m).ToList<module>();
-            }
             return modules;
         }
 

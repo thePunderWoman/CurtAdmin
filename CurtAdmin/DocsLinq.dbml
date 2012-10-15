@@ -42,15 +42,14 @@
       <Column Name="abbr" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
-  <Table Name="dbo.categories" Member="categories">
-    <Type Name="category">
+  <Table Name="dbo.categories" Member="docCategories">
+    <Type Name="docCategory">
       <Column Name="catID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="parentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="catName" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="comments" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="moduleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="category_module" Member="modules" ThisKey="moduleID" OtherKey="moduleID" Type="module" />
-      <Association Name="cat_item_category" Member="cat_item" ThisKey="catID" OtherKey="catID" Type="cat_item" IsForeignKey="true" />
+      <Association Name="docCategory_cat_item" Member="cat_items" ThisKey="catID" OtherKey="catID" Type="cat_item" />
     </Type>
   </Table>
   <Table Name="dbo.docItems" Member="docItems">
@@ -74,8 +73,8 @@
       <Column Name="catID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="itemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="cat_items_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Association Name="cat_item_category" Member="categories" ThisKey="catID" OtherKey="catID" Type="category" />
       <Association Name="cat_item_docItem" Member="docItems" ThisKey="itemID" OtherKey="itemID" Type="docItem" />
+      <Association Name="docCategory_cat_item" Member="docCategory" ThisKey="catID" OtherKey="catID" Type="docCategory" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.itemComments" Member="itemComments">
@@ -97,7 +96,6 @@
       <Column Name="module_type" Type="System.String" DbType="VarChar(25) NOT NULL" CanBeNull="false" />
       <Column Name="img_path" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Association Name="module_user_module" Member="user_modules" ThisKey="moduleID" OtherKey="moduleID" Type="user_module" />
-      <Association Name="category_module" Member="category" ThisKey="moduleID" OtherKey="moduleID" Type="category" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.resource_listings" Member="resource_listings">

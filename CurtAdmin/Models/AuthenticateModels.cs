@@ -17,26 +17,6 @@ namespace CurtAdmin.Models {
     public class AuthenticateUser{
 
         /// <summary>
-        /// Check if the user is authenticated to at least the level that is passed.
-        /// </summary>
-        /// <param name="required_level">Authentication level for user to meet.</param>
-        /// <param name="auth_level">User's authentication level.</param>
-        /// <returns>True if authenticated ::: False if authentication failed.</returns>
-        public static Boolean checkAuth(int required_level, string auth_level){
-            int users_level = -1;
-            if (auth_level.Trim().Length > 0) {
-                users_level = Convert.ToInt32(auth_level);
-            } else {
-                return false;
-            }
-
-            if (users_level >= required_level) {
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
         /// Generates a new password for a given user and e-mails them the new credentials.
         /// </summary>
         /// <param name="u">User object</param>
