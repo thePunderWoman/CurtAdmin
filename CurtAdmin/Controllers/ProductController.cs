@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_ProductController : AdminBaseController
+    public class ProductController : BaseController
     {
         //
         // GET: /Product/
@@ -84,7 +84,7 @@ namespace CurtAdmin.Controllers
                     db.indexPart(new_part.partID);
 
                     if (btnContinue != "") { // Redirect to add more part information
-                        return RedirectToAction("edit", "Admin_Product", new { partID = new_part.partID }); 
+                        return RedirectToAction("edit", new { partID = new_part.partID }); 
                     } else { // Redirect to product index page
                         return RedirectToAction("index");
                     }

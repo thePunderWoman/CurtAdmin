@@ -35,7 +35,7 @@ showForm = (function (packageID, weight, height, width, length, qty, packageUnit
 });
 
 savePackage = (function (packageID, partID, weight, height, width, length, qty, weightUnit, heightUnit, widthUnit, lengthUnit, qtyUnit) {
-    $.getJSON('/Admin_Product/SavePackage', { 'packageID': packageID, 'partID': partID, 'weight': weight, 'height': height, 'width': width, 'length': length, 'qty': qty, 'weightUnit': weightUnit, 'heightUnit': heightUnit, 'widthUnit': widthUnit, 'lengthUnit': lengthUnit, 'qtyUnit': qtyUnit }, function (response) {
+    $.getJSON('/Product/SavePackage', { 'packageID': packageID, 'partID': partID, 'weight': weight, 'height': height, 'width': width, 'length': length, 'qty': qty, 'weightUnit': weightUnit, 'heightUnit': heightUnit, 'widthUnit': widthUnit, 'lengthUnit': lengthUnit, 'qtyUnit': qtyUnit }, function (response) {
         if (response.error == null) { // Success
             packageTable.fnAddData([
                     response.weight + " " + response.weightUnit.code,
@@ -68,7 +68,7 @@ $(function () {
     $(document).on('click', '#btnReset', function () {
         var packageID = $('#packageID').val();
         if (packageID != 0) {
-            $.getJSON('/Admin_Product/GetPackage', { 'packageID': packageID }, function (response) {
+            $.getJSON('/Product/GetPackage', { 'packageID': packageID }, function (response) {
                 if (response.error == null) { // Success
                     packageTable.fnAddData([
                     response.weight + " " + response.weightUnit.code,
@@ -106,7 +106,7 @@ $(function () {
     $(document).on('click', '.edit', function () {
         var row = $(this);
         var packageID = $(this).data('id');
-        $.getJSON('/Admin_Product/GetPackage', { 'packageID': packageID }, function (response) {
+        $.getJSON('/Product/GetPackage', { 'packageID': packageID }, function (response) {
             var weight = response.weight;
             var height = response.height;
             var width = response.width;
@@ -124,7 +124,7 @@ $(function () {
         var packageID = $(this).data('id');
         var table_row = $(this).parent().parent().get()[0];
         if (packageID > 0 && confirm('Are you sure you want to remove this package?')) {
-            $.get('/Admin_Product/DeletePackage', { 'packageID': packageID }, function (response) {
+            $.get('/Product/DeletePackage', { 'packageID': packageID }, function (response) {
                 if (response.length == 0) {
                     packageTable.fnDeleteRow(table_row);
                 } else {

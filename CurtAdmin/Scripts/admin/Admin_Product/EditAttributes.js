@@ -30,7 +30,7 @@ updateRow = (function (idstr, data) {
 
 updateAttributeSort = (function () {
     var x = $('table tbody').sortable("serialize");
-    $.post("/Admin_Product/updateAttributeSort?" + x);
+    $.post("/Product/updateAttributeSort?" + x);
 });
 
 $(function () {
@@ -65,7 +65,7 @@ $(function () {
         var clicked_link = $(this);
         var attrID = $(this).attr('id');
         if (attrID > 0 && confirm('Are you sure you want to remove this attribute?')) {
-            $.get('/Admin_Product/DeleteAttribute', { 'attrID': attrID }, function (response) {
+            $.get('/Product/DeleteAttribute', { 'attrID': attrID }, function (response) {
                 $('#attr_' + attrID).fadeOut('fast', function () { $('#attr_' + attrID).remove(); });
                 showMessage(response);
             });
@@ -81,7 +81,7 @@ $(function () {
         partID = $('#partID').val();
         if (partID > 0 && field.length > 0 && value.length > 0) {
             var attrID = $('#attrID').val();
-            $.getJSON('/Admin_Product/SaveAttribute', { 'attrID': attrID, 'partID': partID, 'field': field, 'value': value }, function (response) {
+            $.getJSON('/Product/SaveAttribute', { 'attrID': attrID, 'partID': partID, 'field': field, 'value': value }, function (response) {
                 if (response.error == null) {
                     if (attrID == 0) {
                         addRow(response);

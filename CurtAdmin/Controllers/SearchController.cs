@@ -15,7 +15,7 @@ using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_SearchController : AdminBaseController
+    public class SearchController : BaseController
     {
         /// <summary>
         /// This is just a generic index function for this controller. We won't be using it.

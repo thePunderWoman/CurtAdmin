@@ -10,7 +10,7 @@ using System.Net;
 using System.Text;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_FileExtController : AdminBaseController {
+    public class FileExtController : BaseController {
 
         public ActionResult Index() {
             ViewBag.extensions = FileExtModel.GetAll();
@@ -44,7 +44,7 @@ namespace CurtAdmin.Controllers {
 
                     db.FileTypes.InsertOnSubmit(new_type);
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_FileExt/Types");
+                    return RedirectToAction("Types");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -76,7 +76,7 @@ namespace CurtAdmin.Controllers {
                     mod_type.fileType1 = fileType;
                     db.SubmitChanges();
 
-                    Response.Redirect("/Admin_FileExt/Types");
+                    return RedirectToAction("Types");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -119,7 +119,7 @@ namespace CurtAdmin.Controllers {
                     db.FileExts.InsertOnSubmit(new_ext);
                     db.SubmitChanges();
 
-                    Response.Redirect("/Admin_FileExt");
+                    return RedirectToAction("Index");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -158,7 +158,7 @@ namespace CurtAdmin.Controllers {
 
                     db.SubmitChanges();
 
-                    Response.Redirect("/Admin_FileExt");
+                    return RedirectToAction("Index");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -173,18 +173,18 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
-        public void DeleteExtension(int id = 0) {
+        public ActionResult DeleteExtension(int id = 0) {
             try {
                 FileExtModel.Delete(id);
             } catch {}
-            Response.Redirect("/Admin_FileExt");
+            return RedirectToAction("Index");
         }
 
-        public void DeleteType(int id = 0) {
+        public ActionResult DeleteType(int id = 0) {
             try {
                 bool success = FileTypeModel.Delete(id);
             } catch { }
-            Response.Redirect("/Admin_FileExt/Types");
+            return RedirectToAction("Types");
         }
     }
 }

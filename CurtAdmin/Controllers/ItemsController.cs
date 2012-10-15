@@ -18,7 +18,7 @@ namespace CurtAdmin.Controllers
     /// <summary>
     /// Documentation Items Controller
     /// </summary>
-    public class Admin_ItemsController : AdminBaseController
+    public class ItemsController : BaseController
     {
         protected override void OnActionExecuted(ActionExecutedContext filterContext) {
             base.OnActionExecuted(filterContext);
@@ -157,7 +157,7 @@ namespace CurtAdmin.Controllers
 
                     try { // Commit cat_items and redirect
                         doc_db.SubmitChanges();
-                        HttpContext.Response.Redirect("~/Admin_Items");
+                        HttpContext.Response.Redirect("~/Items");
                     } catch (Exception e) {
                         error_messages.Add(e.Message);
                     }
@@ -333,7 +333,7 @@ namespace CurtAdmin.Controllers
                     }
                     
 
-                    HttpContext.Response.Redirect("~/Admin_Items");
+                    HttpContext.Response.Redirect("~/Items");
                 } catch (Exception e) {
                     error_messages.Add(e.Message);
                 }

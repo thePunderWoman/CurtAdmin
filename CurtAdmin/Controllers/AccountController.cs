@@ -7,10 +7,10 @@ using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_AccountController : AdminBaseController
+    public class AccountController : BaseController
     {
         //
-        // GET: /Admin_Account/
+        // GET: /Account/
 
         public List<int> super_users = new List<int> { 1, 7, 23 };
 
@@ -20,7 +20,7 @@ namespace CurtAdmin.Controllers
             List<resource_listing> listings = new List<resource_listing>();
 
             if (super_users.Contains(userID)) {
-                Response.Redirect("~/Admin_Account/FullList");
+                Response.Redirect("~/Account/FullList");
             } else {
                 DocsLinqDataContext db = new DocsLinqDataContext();
 
@@ -44,7 +44,7 @@ namespace CurtAdmin.Controllers
         public ActionResult FullList() {
             int userID = Convert.ToInt32(Session["userID"]);
             if (!super_users.Contains(userID)) {
-                Response.Redirect("~/Admin_Account");
+                Response.Redirect("~/Account");
             }
             DocsLinqDataContext db = new DocsLinqDataContext();
 

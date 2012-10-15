@@ -7,7 +7,7 @@ using CurtAdmin.Models;
 using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_VideoController : AdminBaseController {
+    public class VideoController : BaseController {
         //
         // GET: /Video/
 

@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_MiscController : AdminBaseController
+    public class MiscController : BaseController
     {
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext) {

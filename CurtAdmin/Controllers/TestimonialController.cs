@@ -8,10 +8,10 @@ using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_TestimonialController : AdminBaseController
+    public class TestimonialController : BaseController
     {
         //
-        // GET: /Admin_Review/
+        // GET: /Testimonial/
 
         public ActionResult Index()
         {

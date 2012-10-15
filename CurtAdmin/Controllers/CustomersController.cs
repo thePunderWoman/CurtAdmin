@@ -10,9 +10,9 @@ using System.Text;
 using OfficeOpenXml;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_CustomersController : AdminBaseController {
+    public class CustomersController : BaseController {
         //
-        // GET: /Admin_Customers/
+        // GET: /Customers/
 
         public ActionResult Index(string msg = "") {
             List<SalesRepresentative> salesreps = SalesRepModel.GetAll();
@@ -149,7 +149,7 @@ namespace CurtAdmin.Controllers {
 
                     db.Customers.InsertOnSubmit(new_cust);
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Customers/Add");
+                    return RedirectToAction("Add");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -259,7 +259,7 @@ namespace CurtAdmin.Controllers {
                     }
 
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Customers");
+                    return RedirectToAction("Index");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -363,7 +363,7 @@ namespace CurtAdmin.Controllers {
 
                     db.CustomerLocations.InsertOnSubmit(new_location);
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Customers/Locations/" + id);
+                    return RedirectToAction("Locations", new { id = id });
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -443,7 +443,7 @@ namespace CurtAdmin.Controllers {
                     updated_loc.stateID = stateID;
 
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Customers/Locations/" + updated_loc.cust_id);
+                    return RedirectToAction("Locations", new { id = updated_loc.cust_id });
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -648,12 +648,12 @@ namespace CurtAdmin.Controllers {
 
                 }
                 if (errors.Count == 0) {
-                    return RedirectToAction("Index", "Admin_Customers", new { msg = "Customer Import Successful" });
+                    return RedirectToAction("Index", new { msg = "Customer Import Successful" });
                 } else {
-                    return RedirectToAction("MassUpload", "Admin_Customers", new { msg = "There were some errors", errors = errors });
+                    return RedirectToAction("MassUpload", new { msg = "There were some errors", errors = errors });
                 }
             } catch (Exception e) {
-                return RedirectToAction("MassUpload", "Admin_Customers", new { msg = e.Message });
+                return RedirectToAction("MassUpload", new { msg = e.Message });
             }
         }
 

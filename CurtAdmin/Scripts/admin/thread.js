@@ -6,14 +6,14 @@
     $('.approve').click(function () {
         var linkobj = $(this)
         var id = $(linkobj).data("id");
-        $.post('/Admin_Forum/Approve', { 'id': id }, function (data) {
+        $.post('/Forum/Approve', { 'id': id }, function (data) {
             $(linkobj).html(data);
         }, 'text');
     });
 
     $('.edit').click(function () {
         var id = $(this).data("id");
-        $.getJSON('/Admin_Forum/GetPost', { 'postid': id }, function (data) {
+        $.getJSON('/Forum/GetPost', { 'postid': id }, function (data) {
             $('#postID').val(data.postID);
             $('#parentid').val(0);
             $('#edit').val(true);
@@ -29,7 +29,7 @@
     $('.delete').click(function () {
         var id = $(this).data("id");
         if (confirm("Are you sure you want to remove this post?")) {
-            $.post('/Admin_Forum/DeletePost', { 'id': id }, function (data) {
+            $.post('/Forum/DeletePost', { 'id': id }, function (data) {
                 if (data == "") {
                     $('#post_' + id).fadeOut('fast', function () { $('#post_' + id).remove(); });
                 } else {
@@ -42,7 +42,7 @@
     $('.flag').click(function () {
         var id = $(this).data("id");
         if (confirm("Are you sure you want to mark this post as spam?")) {
-            $.post('/Admin_Forum/FlagPost', { 'id': id }, function (data) {
+            $.post('/Forum/FlagPost', { 'id': id }, function (data) {
                 if (data == "") {
                     $('#post_' + id).fadeOut('fast', function () { $('#post_' + id).remove(); });
                 } else {
@@ -56,7 +56,7 @@
         var id = $(this).data("id");
         var reason = prompt("Enter the reason for blocking this IP", "Spam");
         if (reason != null) {
-            $.post('/Admin_Forum/BlockIP', { 'id': id, 'reason': reason }, function (data) {
+            $.post('/Forum/BlockIP', { 'id': id, 'reason': reason }, function (data) {
                 if (data == "") {
                     $('#post_' + id).fadeOut('fast', function () { $('#post_' + id).remove(); });
                 } else {
@@ -87,7 +87,7 @@ function openForm(title) {
             "Submit": function () {
                 var sticky = ($('#sticky').is(':checked')) ? true : false;
                 console.log(sticky);
-                $.getJSON('/Admin_Forum/SavePost', { 'threadid': $('#threadID').val(), 'postid': $('#postID').val(), 'edit': $('#edit').val(), 'parentid': $('#parentID').val(), 'title': $('#titlestr').val(), 'post': $('#post').val(), 'sticky': sticky }, function (data) {
+                $.getJSON('/Forum/SavePost', { 'threadid': $('#threadID').val(), 'postid': $('#postID').val(), 'edit': $('#edit').val(), 'parentid': $('#parentID').val(), 'title': $('#titlestr').val(), 'post': $('#post').val(), 'sticky': sticky }, function (data) {
                     addPost(data.postID, $('#postID').val(), $('#edit').val())
                     clearForm();
                     $('#postform').dialog("close");
@@ -118,7 +118,7 @@ function addPost(postid, targetid, deleteObj) {
     if (deleteObj == undefined) {
         deleteObj = false;
     }
-    $.getJSON('/Admin_Forum/GetPost', { 'postid': postid }, function (data) {
+    $.getJSON('/Forum/GetPost', { 'postid': postid }, function (data) {
         var email = data.email;
         var name = (data.name != "") ? data.name : "Anonymous";
         var post = '<div class="forumpost" id="post_' + data.postID + '">' +
@@ -130,11 +130,11 @@ function addPost(postid, targetid, deleteObj) {
                     '<div class="postbox">' +
                     '<p class="title">' + data.title + '</p>' +
                     '<div class="controls">' +
-                        '<a href="/Admin_Forum/Approve/' + data.postID + '" data-id="' + data.postID + '" class="approve">' + ((data.approved) ? "Unapprove" : "Approve") + '</a> |' +
-                        '<a href="/Admin_Forum/EditPost/' + data.postID + '" data-id="' + data.postID + '" class="edit">Edit</a> | ' +
-                        '<a href="/Admin_Forum/FlagPost/' + data.postID + '" data-id="' + data.postID + '" class="flag">Spam</a> | ' +
-                        '<a href="/Admin_Forum/BlockIP/' + data.postID + '" data-id="' + data.postID + '" class="block">Block IP</a> | ' +
-                        '<a href="/Admin_Forum/DeletePost/' + data.postID + '" data-id="' + data.postID + '" class="delete">Delete</a></div>' +
+                        '<a href="/Forum/Approve/' + data.postID + '" data-id="' + data.postID + '" class="approve">' + ((data.approved) ? "Unapprove" : "Approve") + '</a> |' +
+                        '<a href="/Forum/EditPost/' + data.postID + '" data-id="' + data.postID + '" class="edit">Edit</a> | ' +
+                        '<a href="/Forum/FlagPost/' + data.postID + '" data-id="' + data.postID + '" class="flag">Spam</a> | ' +
+                        '<a href="/Forum/BlockIP/' + data.postID + '" data-id="' + data.postID + '" class="block">Block IP</a> | ' +
+                        '<a href="/Forum/DeletePost/' + data.postID + '" data-id="' + data.postID + '" class="delete">Delete</a></div>' +
                     '<p>' + data.post + '</p></div><div class="clear"></div></div>';
         if (data.sticky) {
             $('#posts').children(':first').before(post);

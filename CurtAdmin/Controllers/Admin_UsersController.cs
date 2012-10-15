@@ -8,7 +8,7 @@ using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_UsersController : AdminBaseController
+    public class Admin_UsersController : BaseController
     {
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)

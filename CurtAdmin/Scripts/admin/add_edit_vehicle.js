@@ -13,7 +13,7 @@ $(function () {
         $('#editYear').fadeIn();
         if (yearID > 0) {
             $('#delYear').show();
-            $.getJSON('/Admin_Vehicles/GetMakes', { 'yearID': yearID }, function (makes) {
+            $.getJSON('/Vehicles/GetMakes', { 'yearID': yearID }, function (makes) {
                 if (makes.length > 0) {
                     $('#make').html('<option value="0">- Select Make -</option>');
                     $('#model').html('<option value="0">- Select Model -</option>');
@@ -43,7 +43,7 @@ $(function () {
         $('#editYear').fadeIn();
         $('#editModel').fadeOut();
         $('#editStyle').fadeOut();
-        $.getJSON('/Admin_Vehicles/GetModels', { 'yearID': yearID, 'makeID': makeID }, function (models) {
+        $.getJSON('/Vehicles/GetModels', { 'yearID': yearID, 'makeID': makeID }, function (models) {
             if (models.length > 0) {
                 $('#model').html('<option value="0">- Select Model -</option>');
                 $('#style').html('<option value="0">- Select Style -</option>');
@@ -68,7 +68,7 @@ $(function () {
         $('#delModel').fadeIn();
         $('#editModel').fadeIn();
         $('#editStyle').fadeOut();
-        $.getJSON('/Admin_Vehicles/GetStyles', { 'yearID': yearID, 'makeID': makeID, 'modelID': modelID }, function (styles) {
+        $.getJSON('/Vehicles/GetStyles', { 'yearID': yearID, 'makeID': makeID, 'modelID': modelID }, function (styles) {
             if (styles.length > 0) {
                 $('#style').html('<option value="0">- Select Style -</option>');
             }
@@ -173,7 +173,7 @@ $(function () {
         var yearID = $('#year').val();
 
         if (yearID > 0 && confirm("Are you sure you want to remove this year? \r\n\r\nThis will remove any vehicles that are listed under this year!")) {
-            $.getJSON('/Admin_Vehicles/DeleteYear', { 'yearID': yearID }, function (response) {
+            $.getJSON('/Vehicles/DeleteYear', { 'yearID': yearID }, function (response) {
                 response = $.trim(response);
                 if (response.length > 0) {
                     showMessage(response);
@@ -200,7 +200,7 @@ $(function () {
         var makeID = $('#make').val();
         var make = $('#make option[value="' + makeID + '"]').text();
         if (makeID > 0 && confirm("Are you sure you want to remove " + make + "? \r\n\r\nThis will remove any vehicles that are listed under this make!")) {
-            $.getJSON('/Admin_Vehicles/DeleteMake', { 'makeID': makeID }, function (response) {
+            $.getJSON('/Vehicles/DeleteMake', { 'makeID': makeID }, function (response) {
                 response = $.trim(response);
                 if (response.length > 0) {
                     showMessage(response);
@@ -226,7 +226,7 @@ $(function () {
         var modelID = $('#model').val();
         var model = $('#model option[value="' + modelID + '"]').text();
         if (makeID > 0 && confirm("Are you sure you want to remove " + model + "? \r\n\r\nThis will remove any vehicles that are listed under this model!")) {
-            $.getJSON('/Admin_Vehicles/DeleteModel', { 'modelID': modelID }, function (response) {
+            $.getJSON('/Vehicles/DeleteModel', { 'modelID': modelID }, function (response) {
                 response = $.trim(response);
                 if (response.length > 0) {
                     showMessage(response);
@@ -249,7 +249,7 @@ $(function () {
         var styleID = $('#style').val();
         var style = $('#style option[value="' + styleID + '"]').text();
         if (styleID > 0 && confirm("Are you sure you want to remove " + style + "? \r\n\r\nThis will remove any vehicles that are listed under this style!")) {
-            $.getJSON('/Admin_Vehicles/DeleteStyle', { 'styleID': styleID }, function (response) {
+            $.getJSON('/Vehicles/DeleteStyle', { 'styleID': styleID }, function (response) {
                 response = $.trim(response);
                 if (response.length > 0) {
                     showMessage(response);
@@ -271,7 +271,7 @@ $(function () {
 function saveNewYear(action,f,d,m) {
     var year = m.newYear;
     if (year.length > 0 && year > 0) {
-        $.getJSON('/Admin_Vehicles/AddYear', { 'year': year }, function (response) {
+        $.getJSON('/Vehicles/AddYear', { 'year': year }, function (response) {
             var yearID = response.yearID;
             if (yearID) {
                 var new_year = document.createElement('option');
@@ -296,7 +296,7 @@ function saveNewMake(action, f, d, m) {
     var make = m.newMake;
     var yearID = $('#year').val();
     if (make.length > 0 && yearID > 0) {
-        $.getJSON('/Admin_Vehicles/AddMake', { 'make': encodeURI(make), 'yearID': yearID }, function (response) {
+        $.getJSON('/Vehicles/AddMake', { 'make': encodeURI(make), 'yearID': yearID }, function (response) {
             var makeID = response.makeID;
             if (makeID) {
                 var new_make = document.createElement('option');
@@ -323,7 +323,7 @@ function saveNewModel(action, f, d, m) {
     var makeID = $('#make').val();
     var yearID = $('#year').val();
     if (model.length > 0 && makeID > 0 && yearID > 0) {
-        $.getJSON('/Admin_Vehicles/AddModel', { 'model': encodeURI(model),'makeID':makeID }, function (response) {
+        $.getJSON('/Vehicles/AddModel', { 'model': encodeURI(model),'makeID':makeID }, function (response) {
             var modelID = response.modelID;
             if (modelID) {
                 var new_model = document.createElement('option');
@@ -351,7 +351,7 @@ function saveNewStyle(action, f, d, m) {
     var style = m.newStyle;
     var modelID = $('#model').val();
     if (style.length > 0 && modelID > 0) {
-        $.getJSON('/Admin_Vehicles/AddStyle', { 'style': encodeURI(style), 'modelID': modelID }, function (response) {
+        $.getJSON('/Vehicles/AddStyle', { 'style': encodeURI(style), 'modelID': modelID }, function (response) {
             console.log(response);
             var styleID = response.styleID;
             if (styleID) {
@@ -378,7 +378,7 @@ function updateYear(action,f,d,m) {
     var year = m.updateYear;
     var yearID = m.yearID;
     if (year.length > 3) {
-        $.getJSON('/Admin_Vehicles/EditYear', { 'year': year, 'yearID': yearID }, function (response) {
+        $.getJSON('/Vehicles/EditYear', { 'year': year, 'yearID': yearID }, function (response) {
             var yearID = response.yearID;
             if (yearID) {
                 $('#year option[value="' + yearID + '"]').text(response.year1);
@@ -396,7 +396,7 @@ function updateMake(action, f, d, m) {
     var make = m.updateMake;
     var makeID = m.makeID;
     if (make.length > 0) {
-        $.getJSON('/Admin_Vehicles/EditMake', { 'make': make, 'makeID': makeID }, function (response) {
+        $.getJSON('/Vehicles/EditMake', { 'make': make, 'makeID': makeID }, function (response) {
             var makeID = response.makeID;
             if (makeID) {
                 $('#make option[value="' + makeID + '"]').text(response.make1);
@@ -414,7 +414,7 @@ function updateModel(action, f, d, m) {
     var model = m.updateModel;
     var modelID = m.modelID;
     if (model.length > 0) {
-        $.getJSON('/Admin_Vehicles/EditModel', { 'model': model, 'modelID': modelID }, function (response) {
+        $.getJSON('/Vehicles/EditModel', { 'model': model, 'modelID': modelID }, function (response) {
             var modelID = response.modelID;
             if (modelID) {
                 $('#model option[value="' + modelID + '"]').text(response.model1);
@@ -432,7 +432,7 @@ function updateStyle(action, f, d, m) {
     var style = m.updateStyle;
     var styleID = m.styleID;
     if (style.length > 0) {
-        $.getJSON('/Admin_Vehicles/EditStyle', { 'style': style, 'styleID': styleID }, function (response) {
+        $.getJSON('/Vehicles/EditStyle', { 'style': style, 'styleID': styleID }, function (response) {
             var styleID = response.styleID;
             if (styleID) {
                 $('#style option[value="' + styleID + '"]').text(response.style1);

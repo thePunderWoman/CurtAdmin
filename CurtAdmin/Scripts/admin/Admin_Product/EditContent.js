@@ -25,7 +25,7 @@ $(function () {
     $(document).on('click','.edit', function () {
         var contentID = $(this).attr('id');
         var clicked_link = $(this);
-        $.getJSON('/Admin_Product/GetFullContent', { 'contentID': contentID }, function (response) {
+        $.getJSON('/Product/GetFullContent', { 'contentID': contentID }, function (response) {
             if (response.error == null) {
                 contentTable.fnDeleteRow($(clicked_link).parent().parent().get()[0]);
                 showContentForm(response.contentID, response.content_type_id, response.content);
@@ -38,12 +38,12 @@ $(function () {
     $(document).on('change','#contentType', function (event) {
         var cTypeID = $(this).val();
         if (cTypeID != '') {
-            $.getJSON('/Admin_Misc/GetContentType', { 'cTypeID': cTypeID }, function (data) {
+            $.getJSON('/Misc/GetContentType', { 'cTypeID': cTypeID }, function (data) {
                 var content = $('#content').val();
                 if (data.allowHTML) {
                     CKEDITOR.replace('content', {
-                        filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-                        filebrowserImageBrowseUrl: '/Admin_File/CKIndex'
+                        filebrowserImageUploadUrl: '/File/CKUpload',
+                        filebrowserImageBrowseUrl: '/File/CKIndex'
                     });
                 } else {
                     if (CKEDITOR.instances.content != undefined) CKEDITOR.instances.content.destroy();
@@ -58,7 +58,7 @@ $(function () {
         var partID = $('#partID').val();
         var contentID = $(this).attr('id');
         if (contentID > 0 && confirm('Are you sure you want to remove this content?')) {
-            $.get('/Admin_Product/DeleteContent', { 'partID': partID, 'contentID': contentID }, function (response) {
+            $.get('/Product/DeleteContent', { 'partID': partID, 'contentID': contentID }, function (response) {
                 if (response == "") {
                     contentTable.fnDeleteRow($(clicked_link).parent().parent().get()[0]);
                     showMessage("Content removed.");
@@ -100,7 +100,7 @@ $(function () {
         var partID = $('#partID').val();
         if (partID > 0 && content.length > 0 && contentType > 0) {
             var contentID = $('#contentID').val();
-            $.getJSON("/Admin_Product/SaveContent", { 'contentID': contentID, 'partID': partID, 'content': content, 'contentType': contentType }, function (response) {
+            $.getJSON("/Product/SaveContent", { 'contentID': contentID, 'partID': partID, 'content': content, 'contentType': contentType }, function (response) {
                 if (response.error == null) {
                     var addId = contentTable.fnAddData([
                                     response.content_type,

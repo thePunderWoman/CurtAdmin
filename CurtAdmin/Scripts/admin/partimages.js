@@ -8,7 +8,7 @@
         event.preventDefault();
         $(this).hide();
         var partid = $('#partID').val();
-        $.post("/Admin_Product/ImportImages", { 'partid': partid }, function (response) {
+        $.post("/Product/ImportImages", { 'partid': partid }, function (response) {
             location.reload(true);
         }, "text");
 
@@ -17,7 +17,7 @@
         event.preventDefault();
         if (confirm("Are you sure you want to remove this image?")) {
             var idstr = $(this).attr('id').split('_')[1];
-            $.post("/Admin_Product/DeleteImage", { imageid: idstr }, function (response) {
+            $.post("/Product/DeleteImage", { imageid: idstr }, function (response) {
                 if (response != "error") {
                     $("#partimage_" + idstr).fadeOut('fast', function () { $(this).remove(); });
                 }
@@ -47,7 +47,7 @@
         if ($.trim(file) != "") {
             var size = $('#size').val();
             var partid = $('#partID').val();
-            $.post("/Admin_Product/AddImage", { size: size, partid: partid, file: file }, function (response) {
+            $.post("/Product/AddImage", { size: size, partid: partid, file: file }, function (response) {
                 if (response != "error") {
                     var data = $.parseJSON(response);
                     $('#size_' + size).append('<li class="partimage" id="partimage_' + data.imageID + '"><img src="' + data.path + '" alt="image-' + data.sort + '" /><span class="imagedetail">Dimensions: ' + data.width + ' x ' + data.height + '<br/><a href="#" class="deleteimage" id="deleteimage_' + data.imageID + '">Delete</a></span><span class="clear"></span></li>');
@@ -61,5 +61,5 @@
 function updateSort() {
     var t = $('ul.imagesizes li a.active').attr('href');
     var x = $('ul.imagesize' + t).sortable("serialize");
-    $.post("/Admin_Product/updateSort?" + x);
+    $.post("/Product/updateSort?" + x);
 }

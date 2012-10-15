@@ -12,7 +12,7 @@ $(function () {
     $('#tableContainer').fadeIn();
     $('#addvehicle').hide();
 
-    /*$.getJSON('/Admin_Product/getAllVehicles', function (data) {
+    /*$.getJSON('/Product/getAllVehicles', function (data) {
     $.each(data, function (i, obj) {
     $('#allVehiclesBody').append('<tr id="allVehicle:' + obj.vehicleID + '"><td>' + obj.vehicleID + '</td><td>' + obj.year + '</td><td>' + obj.make + '</td><td>' + obj.model + '</td><td>' + obj.style + '</td><td><a href="javascript:void(0)" class="add" id="' + obj.vehicleID + '">Add</a></td></tr>');
     });
@@ -33,7 +33,7 @@ $(function () {
         var styleID = $('#select_style').val();
         var partID = $('#partID').val();
         if (yearID > 0 && makeID > 0 && modelID > 0 && styleID > 0 && partID > 0) {
-            $.getJSON('/Admin_Product/GetAllPartOptions', { 'partID': partID }, function (data) {
+            $.getJSON('/Product/GetAllPartOptions', { 'partID': partID }, function (data) {
                 var partstr = "";
                 if (data.length == 1) {
                     partstr = " #" + data[0];
@@ -54,7 +54,7 @@ $(function () {
                 if (confirm('Are you sure you want to add ' + $("#select_year option[value='" + yearID + "']").text() + ' ' + $("#select_make option[value='" + makeID + "']").text() + ' ' + $("#select_model option[value='" + modelID + "']").text() + ' ' + $("#select_style option[value='" + styleID + "']").text() + ' vehicle to part' + partstr + '?')) {
                     var editing = $('#edit').val();
 
-                    $.getJSON('/Admin_Product/AddVehicleByFilter', { 'partID': partID, 'yearID': yearID, 'makeID': makeID, 'modelID': modelID, 'styleID': styleID }, function (response) {
+                    $.getJSON('/Product/AddVehicleByFilter', { 'partID': partID, 'yearID': yearID, 'makeID': makeID, 'modelID': modelID, 'styleID': styleID }, function (response) {
                         if (response.error == null && response.vehicleID > 0) {
                             //allTable.fnDeleteRow($('#allVehicle\\:' + vehicleID).get()[0]);
                             var addId = relatedTable.fnAddData([
@@ -89,7 +89,7 @@ $(function () {
     $('.carryover').live('click', function () {
         var vehicleID = $(this).attr('id');
         var partID = $('#partID').val();
-        $.getJSON('/Admin_Product/GetCarryOverData', { 'vehicleID': vehicleID, 'partID': partID }, function (data) {
+        $.getJSON('/Product/GetCarryOverData', { 'vehicleID': vehicleID, 'partID': partID }, function (data) {
             var partstr = "";
             if (data.partids.length == 1) {
                 partstr = " #" + data.partids[0];
@@ -107,7 +107,7 @@ $(function () {
                 });
             }
             if (confirm("This will carry part" + partstr + " over to the following vehicle:\n\n" + (data.year + 1) + " " + data.make + " " + data.model + " " + data.style + "\n\n Are you sure you want to do this?")) {
-                $.post('/Admin_Product/CarryOverPart', { 'vehicleID': vehicleID, 'partID': partID }, function (response) {
+                $.post('/Product/CarryOverPart', { 'vehicleID': vehicleID, 'partID': partID }, function (response) {
                     if (response.error == null && response.vehicleID > 0) {
                         var addId = relatedTable.fnAddData([
                             response.vehicleID,
@@ -138,7 +138,7 @@ $(function () {
         var partID = $('#partID').val();
         var clicked_link = $(this);
         if (vehicleID > 0 && partID > 0 && confirm('Are you sure you want to remove the relationship to Vehicle #' + vehicleID + '?')) {
-            $.get('/Admin_Product/DeleteVehicle', { 'vehicleID': vehicleID, 'partID': partID }, function (response) {
+            $.get('/Product/DeleteVehicle', { 'vehicleID': vehicleID, 'partID': partID }, function (response) {
                 if (response.length == 0) {
                     relatedTable.fnDeleteRow($(clicked_link).parent().parent().get()[0]);
                     showMessage("Vehicle removed from part.");
@@ -152,7 +152,7 @@ $(function () {
     $('.editattr').live('click', function (event) {
         event.preventDefault();
         var attrID = $(this).attr('id').split('_')[1];
-        $.getJSON('/Admin_Product/GetVehiclePartAttribute', { 'vpAttrID': attrID }, function (response) {
+        $.getJSON('/Product/GetVehiclePartAttribute', { 'vpAttrID': attrID }, function (response) {
             $('#field').val(response.field);
             $('#value').val(response.value);
             $("form.form_left").dialog({
@@ -172,7 +172,7 @@ $(function () {
                         if ($.trim(val) == "") bValid = false;
 
                         if (bValid) {
-                            $.post('/Admin_Product/UpdateVehiclePartAttribute', { vpAttrID: vpAttrID, field: field, value: val }, function (data) {
+                            $.post('/Product/UpdateVehiclePartAttribute', { vpAttrID: vpAttrID, field: field, value: val }, function (data) {
                                 // remove and re-add row to table
                                 var removeme = $('#attribute_' + data.vpAttrID);
                                 $(removeme).before(addRow(data.vpAttrID, data.field, data.value));
@@ -197,7 +197,7 @@ $(function () {
     $('.removeattr').live('click', function () {
         var idstr = $(this).attr('id').split('_')[1];
         if (confirm('Are you sure you want to remove the Information relating to this Part and Vehicle?')) {
-            $.get('/Admin_Product/DeleteVehiclePartAttribute', { 'vpAttrID': idstr }, function (response) {
+            $.get('/Product/DeleteVehiclePartAttribute', { 'vpAttrID': idstr }, function (response) {
                 if (response.length == 0) {
                     $('#attribute_' + idstr).remove();
                     showMessage("Vehicle Part Attribute removed.");
@@ -230,7 +230,7 @@ $(function () {
                     if ($.trim(val) == "") bValid = false;
 
                     if (bValid) {
-                        $.post('/Admin_Product/AddVehiclePartAttribute', { vPartID: vPartID, field: field, value: val }, function (data) {
+                        $.post('/Product/AddVehiclePartAttribute', { vPartID: vPartID, field: field, value: val }, function (data) {
                             // remove and re-add row to table
                             $('#attributeTable tbody').append(addRow(data.vpAttrID, data.field, data.value));
                             $('#attributeTable tbody').sortable("destroy");
@@ -268,7 +268,7 @@ $(function () {
         $('#addvehicle').hide();
 
         if (yearID > 0) {
-            $.getJSON('/Admin_Vehicles/GetMakes', { 'yearID': yearID }, loadMake);
+            $.getJSON('/Vehicles/GetMakes', { 'yearID': yearID }, loadMake);
         }
     });
 
@@ -283,7 +283,7 @@ $(function () {
         $('#select_style').attr('disabled', 'disabled');
         $('#addvehicle').hide();
         if (yearID > 0 && makeID > 0) {
-            $.getJSON('/Admin_Product/GetModels', { 'yearID': yearID, 'makeID': makeID }, loadModel);
+            $.getJSON('/Product/GetModels', { 'yearID': yearID, 'makeID': makeID }, loadModel);
         }
     });
 
@@ -296,7 +296,7 @@ $(function () {
         $('#addvehicle').hide();
         $('#select_style').html('<option value="">- Select Style -</option>');
         if (yearID > 0 && makeID > 0 && modelID > 0) {
-            $.getJSON('/Admin_Product/GetStyles', { 'yearID': yearID, 'makeID': makeID, 'modelID': modelID }, loadStyle);
+            $.getJSON('/Product/GetStyles', { 'yearID': yearID, 'makeID': makeID, 'modelID': modelID }, loadStyle);
         }
     });
 
@@ -320,7 +320,7 @@ function editVehicle(vehicleID) {
     var tds = $('#relatedVehicle_' + vehicleID).find('td');
     var header = 'Editing ' + $(tds[1]).text() + ' ' + $(tds[2]).text() + ' ' + $(tds[3]).text() + ' ' + $(tds[4]).text();
     if (vehicleID > 0 && partID > 0) {
-        $.getJSON('/Admin_Product/GetVehiclePart', { 'vehicleID': vehicleID, 'partID': partID }, function (response) {
+        $.getJSON('/Product/GetVehiclePart', { 'vehicleID': vehicleID, 'partID': partID }, function (response) {
             if (response.error == null) {
                 $('#vehicleID').val(response.vehicleID);
                 $('#vPartID').val(response.vPartID);
@@ -367,5 +367,5 @@ function loadStyle(styles) {
 
 function updateAttributeSort() {
     var x = $('table tbody').sortable("serialize");
-    $.post("/Admin_Product/updateVehicleAttributeSort?" + x);
+    $.post("/Product/updateVehicleAttributeSort?" + x);
 }

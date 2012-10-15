@@ -92,7 +92,7 @@ namespace CurtAdmin.Controllers
                 if (login_user.isAdmin == 1 && redirectUrl == "") { // Redirect to admin section
                     HttpContext.Response.Redirect("~/Admin");
                 } else if(login_user.isAdmin == 0 && redirectUrl == "") { // Redirect to user home
-                    HttpContext.Response.Redirect("~/Home");
+                    HttpContext.Response.Redirect("http://labs.curtmfg.com");
                 } else if (login_user.isAdmin == 1 || login_user.isAdmin == 0 && redirectUrl != "") {
                     HttpContext.Response.Redirect(redirectUrl);
                 }

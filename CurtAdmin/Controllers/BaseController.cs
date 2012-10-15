@@ -7,7 +7,7 @@ using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers
 {
-    public class AdminBaseController : Controller
+    public class BaseController : Controller
     {
         protected override void Initialize(System.Web.Routing.RequestContext requestContext) {
             base.Initialize(requestContext);

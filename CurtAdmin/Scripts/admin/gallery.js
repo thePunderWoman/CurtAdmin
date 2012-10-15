@@ -5,12 +5,12 @@
     $("#addgalleryform").submit(function (event) {
         event.preventDefault();
         var title = $('#galleryname').val();
-        $.post('/Admin_File/AddGalleryAjax', { name: title, parentid: $('#parentid').val() }, function (response) {
+        $.post('/File/AddGalleryAjax', { name: title, parentid: $('#parentid').val() }, function (response) {
             try {
                 $('#galleryname').val('');
                 var file_count = $('li.lifile').length;
                 var gal_count = $('li.ligallery').length;
-                var html = '<li id="gallery_' + response.fileGalleryID + '"><a class="gallery" href="/Admin_File/' + $('#location').val() + '/' + response.fileGalleryID + '"><span class="folder contextmenu"></span><span class="galleryname"><strong>' + response.name + '</strong> 0 subfolders; 0 files</span></a><ul class="menu"><li><a class="renamegallery" href="/Admin_File/RenameGallery/' + response.fileGalleryID + '" id="renamegallery_' + response.fileGalleryID + '">Rename</a></li><li><a class="deletegallery" href="/Admin_File/DeleteGallery/' + response.fileGalleryID + '" id="delgallery_' + response.fileGalleryID + '">Delete</a></li></ul></li>';
+                var html = '<li id="gallery_' + response.fileGalleryID + '"><a class="gallery" href="/File/' + $('#location').val() + '/' + response.fileGalleryID + '"><span class="folder contextmenu"></span><span class="galleryname"><strong>' + response.name + '</strong> 0 subfolders; 0 files</span></a><ul class="menu"><li><a class="renamegallery" href="/File/RenameGallery/' + response.fileGalleryID + '" id="renamegallery_' + response.fileGalleryID + '">Rename</a></li><li><a class="deletegallery" href="/File/DeleteGallery/' + response.fileGalleryID + '" id="delgallery_' + response.fileGalleryID + '">Delete</a></li></ul></li>';
                 if (file_count > 0) {
                     $('li.lifile:first').before(html);
                 } else if (gal_count > 0) {
@@ -30,7 +30,7 @@
         event.preventDefault();
         var idstr = $(this).attr('id').split("_")[1];
         if (confirm("Are you sure you want to delete this folder, all its files and subfolders? This cannot be undone.")) {
-            $.post("/Admin_File/DeleteGalleryAjax?id=" + idstr, function (data) {
+            $.post("/File/DeleteGalleryAjax?id=" + idstr, function (data) {
                 if (data == "true") {
                     $('#gallery_' + idstr).remove();
                 }
@@ -42,7 +42,7 @@
         event.preventDefault();
         var idstr = $(this).attr('id').split("_")[1];
         if (confirm("Are you sure you want to delete this file? This cannot be undone.")) {
-            $.post("/Admin_File/DeleteFileAjax?id=" + idstr, function (data) {
+            $.post("/File/DeleteFileAjax?id=" + idstr, function (data) {
                 if (data == "true") {
                     $('#file_' + idstr).remove();
                 }
@@ -53,7 +53,7 @@
     $(".refreshfile").live("click", function (event) {
         event.preventDefault();
         var idstr = $(this).attr('id').split("_")[1];
-        $.getJSON("/Admin_File/RefreshFileAjax?fileid=" + idstr, function (data) {
+        $.getJSON("/File/RefreshFileAjax?fileid=" + idstr, function (data) {
             var namespan = $('#file_' + idstr).find('span.filename');
             $(namespan).empty();
             var newinfo = '<strong>' + data.name + '</strong> path: <a href="' + data.path + '">link</a><br />';
@@ -102,7 +102,7 @@
                     if ($.trim(name) == "") bValid = false;
 
                     if (bValid) {
-                        $.post('/Admin_File/RenameAjax', { name: name, galleryid: galleryid, fileid: fileid }, function (data) {
+                        $.post('/File/RenameAjax', { name: name, galleryid: galleryid, fileid: fileid }, function (data) {
                             $('#fileid').val(0);
                             $('#galleryid').val(0);
                             $('#newname').val('');
@@ -148,7 +148,7 @@
                     if ($.trim(name) == "") bValid = false;
 
                     if (bValid) {
-                        $.post('/Admin_File/RenameAjax', { name: name, galleryid: galleryid, fileid: fileid }, function (data) {
+                        $.post('/File/RenameAjax', { name: name, galleryid: galleryid, fileid: fileid }, function (data) {
                             $('#fileid').val(0);
                             $('#galleryid').val(0);
                             $('#newname').val('');
@@ -245,7 +245,7 @@ function uploadFile(file) {
             var gal_count = $('li.ligallery').length;
 
             var html = '<li class="lifile" id="file_' + file.fileID + '"><span class="filebox"><img src="' + path + '" alt="' + file.name + '" class="' + classstr + ' contextmenu" /></span><span class="filename"><strong>' + file.name + '</strong> path: <a href="' + file.path + '" alt="direct link">link</a><br />' + ((type.toLowerCase() == 'image') ? 'dimensions: ' + file.height + ' x ' + file.width : 'type: ' + file.extension.fileExt1) + '<br />' + file.created + '<br />' + getFileSize(file.size) + '</span>';
-            html += '<ul class="menu"><li><a class="renamefile" href="/Admin_File/RenameFile/' + file.fileID + '" id="renamefile_' + file.fileID + '">Rename</a></li><li><a class="deletefile" href="/Admin_File/DeleteFile/' + file.fileID + '" id="delfile_' + file.fileID + '">Delete</a></li></ul></li>';
+            html += '<ul class="menu"><li><a class="renamefile" href="/File/RenameFile/' + file.fileID + '" id="renamefile_' + file.fileID + '">Rename</a></li><li><a class="deletefile" href="/File/DeleteFile/' + file.fileID + '" id="delfile_' + file.fileID + '">Delete</a></li></ul></li>';
             if (file_count > 0) {
                 $('li.lifile:first').before(html);
             } else if (gal_count > 0) {
@@ -261,7 +261,7 @@ function uploadFile(file) {
     }, false);
 
     var preserve = $('#preserve').is(':checked');
-    xhr.open("post", "/Admin_File/AddFile", true);
+    xhr.open("post", "/File/AddFile", true);
 
     // Set appropriate headers
     xhr.setRequestHeader("Content-Type", "multipart/form-data");
@@ -286,7 +286,7 @@ function sortGallery(event) {
         $("#sortgallery a.active").attr('class', '');
         $(this).addClass('active').addClass("ascending");
         var galleryid = $(this).data("galleryid");
-        $.getJSON('/Admin_File/GetGalleryImagesJSON', { id: galleryid }, function (data) {
+        $.getJSON('/File/GetGalleryImagesJSON', { id: galleryid }, function (data) {
             var sortArray = new Array();
             var sortarray = new Array();
             $(data).each(function (i, obj) {

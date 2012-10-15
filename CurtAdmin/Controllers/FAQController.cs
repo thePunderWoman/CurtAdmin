@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_FAQController : AdminBaseController {
+    public class FAQController : BaseController {
 
         public ActionResult Index() {
 
@@ -30,7 +30,7 @@ namespace CurtAdmin.Controllers {
             ViewBag.err = err;
 
             if (id == 0) {
-                return RedirectToAction("Index", "Admin_FAQ");
+                return RedirectToAction("Index");
             }
 
             // Get the faq
@@ -59,12 +59,12 @@ namespace CurtAdmin.Controllers {
                 }
                 db.SubmitChanges();
 
-                return RedirectToAction("Index", "Admin_FAQ");
+                return RedirectToAction("Index");
             } catch (Exception e) {
                 if (id == 0) {
-                    return RedirectToAction("Add", "Admin_FAQ", new { err = e.Message, q = question, a = answer });
+                    return RedirectToAction("Add", new { err = e.Message, q = question, a = answer });
                 } else {
-                    return RedirectToAction("Edit", "Admin_FAQ", new { id = id, err = e.Message, q = question, a = answer });
+                    return RedirectToAction("Edit", new { id = id, err = e.Message, q = question, a = answer });
                 }
             }
         }

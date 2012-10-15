@@ -19,7 +19,7 @@ showForm = (function (price_type, price, priceID) {
 });
 
 savePrice = (function (price_type, price, priceID) {
-    $.getJSON('/Admin_Product/SavePrice', { 'partID': partID, 'priceID': priceID, 'price': price, 'price_type': price_type }, function (response) {
+    $.getJSON('/Product/SavePrice', { 'partID': partID, 'priceID': priceID, 'price': price, 'price_type': price_type }, function (response) {
         if (response.error == null) { // Success
             var exists = $('#price_' + response.priceID);
             if (exists.length > 0) {
@@ -88,7 +88,7 @@ $(function () {
         var priceID = $(this).data('id');
         var table_row = $(this).parent().parent().get()[0];
         if (priceID > 0 && confirm('Are you sure you want to remove this price record?')) {
-            $.get('/Admin_Product/DeletePrice', { 'priceID': priceID }, function (response) {
+            $.get('/Product/DeletePrice', { 'priceID': priceID }, function (response) {
                 if (response.length == 0) {
                     priceTable.fnDeleteRow(table_row);
                 } else {

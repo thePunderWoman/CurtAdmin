@@ -13,7 +13,7 @@ using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_CategoryController : AdminBaseController
+    public class CategoryController : BaseController
     {
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext) {
@@ -106,7 +106,7 @@ namespace CurtAdmin.Controllers
 
                 try { // Attempt to save the category
                     doc_db.SubmitChanges();
-                    HttpContext.Response.Redirect("~/Admin_Category");
+                    HttpContext.Response.Redirect("~/Category");
                 } catch (Exception e) {
                     error_messages.Add(e.Message);
                 }
@@ -210,7 +210,7 @@ namespace CurtAdmin.Controllers
 
                 try {
                     doc_db.SubmitChanges();
-                    HttpContext.Response.Redirect("~/Admin_Category");
+                    HttpContext.Response.Redirect("~/Category");
                 } catch (Exception e) {
                     error_messages.Add(e.Message);
                 }

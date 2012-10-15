@@ -10,7 +10,7 @@
         switch (action) {
             case 'delete':
                 if (confirm('Are you sure you want to remove this user?')) {
-                    $.get('/Admin_Users/RemoveCustomerUser', { 'userID': user_id }, function (data) {
+                    $.get('/Users/RemoveCustomerUser', { 'userID': user_id }, function (data) {
                         deleteUser(data, user_id);
                     });
                 }
@@ -35,7 +35,7 @@
 * @param userID: Primary Key for user
 */
 function set_isActive(userID) {
-    $.get('/Admin_Users/SetCustomerUserStatus',{'userID':userID},function(response){
+    $.get('/Users/SetCustomerUserStatus',{'userID':userID},function(response){
         if (response != '') {
             showMessage(response);
         }else{

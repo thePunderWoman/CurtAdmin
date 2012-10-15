@@ -8,10 +8,10 @@ using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_WebsiteController : AdminBaseController
+    public class WebsiteController : BaseController
     {
         //
-        // GET: /Admin_Website/
+        // GET: /Website/
 
         public ActionResult Index(int id = 0)
         {
@@ -39,9 +39,9 @@ namespace CurtAdmin.Controllers
             return View();
         }
 
-        public void SetPrimaryMenu(int id = 0) {
+        public ActionResult SetPrimaryMenu(int id = 0) {
             MenuModel.SetPrimary(id);
-            Response.Redirect("/Admin_Website/Menus");
+            return RedirectToAction("Menus");
         }
 
         public ActionResult AddMenu() {
@@ -74,7 +74,7 @@ namespace CurtAdmin.Controllers
 
                     db.Menus.InsertOnSubmit(new_menu);
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Website/Menus");
+                    return RedirectToAction("Menus");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -156,7 +156,7 @@ namespace CurtAdmin.Controllers
 
                     db.Menu_SiteContents.InsertOnSubmit(new_item);
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Website/Content/Menu/" + id);
+                    return RedirectToRoute("ContentMenu", new { id = id });
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -208,9 +208,9 @@ namespace CurtAdmin.Controllers
             return View();
         }
         
-        public void SetPrimaryContent(int id = 0, int menuid = 0) {
+        public ActionResult SetPrimaryContent(int id = 0, int menuid = 0) {
             SiteContentModel.SetPrimary(id);
-            Response.Redirect("/Admin_Website/Content/Menu/" + menuid);
+            return RedirectToRoute("ContentMenu", new { id = menuid });
         }
 
         [ValidateInput(false)]
@@ -267,7 +267,7 @@ namespace CurtAdmin.Controllers
                     db.SiteContentRevisions.InsertOnSubmit(revision);
                     db.SubmitChanges();
 
-                    Response.Redirect("/Admin_Website/Content/Menu/" + id);
+                    return RedirectToRoute("ContentMenu", new { id = id });
                 } catch (Exception e) {
                     error = e.Message;
                 }
@@ -330,10 +330,10 @@ namespace CurtAdmin.Controllers
             return View();
         }
 
-        public void RemoveContent(int id = 0) {
+        public ActionResult RemoveContent(int id = 0) {
             // Remove content page from menu
             int menu = MenuModel.RemoveContent(id);
-            Response.Redirect("/Admin_Website/Content/Menu/" + menu);
+            return RedirectToRoute("ContentMenu", new { id = menu });
         }
 
         public string RemoveContentAjax(int id = 0) {

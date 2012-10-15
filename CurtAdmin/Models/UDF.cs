@@ -14,20 +14,20 @@ namespace CurtAdmin.Models {
             level++;
             List<menuItem> menuitems = menu.getChildren(parentid);
             foreach (menuItem menuitem in menuitems) {
-                editlink = "<a href=\"/Admin_Website/Link/Edit/" + menuitem.menuContentID + "\"><img src=\"/Content/img/pencil.png\" alt=\"Edit Link\" title=\"Edit Link\" /></a>";
+                editlink = "<a href=\"/Website/Link/Edit/" + menuitem.menuContentID + "\"><img src=\"/Content/img/pencil.png\" alt=\"Edit Link\" title=\"Edit Link\" /></a>";
                 primarylink = "";
                 if (menuitem.hasContent() && menuitem.content.isPrimary) {
-                    primarylink = "<a href=\"/Admin_Website/SetPrimaryContent/" + menuitem.contentID + "/" + menu.menuID + "\"><img src=\"/Content/img/check.png\" alt=\"Primary Page\" title=\"Primary Page\" /></a> ";
+                    primarylink = "<a href=\"/Website/SetPrimaryContent/" + menuitem.contentID + "/" + menu.menuID + "\"><img src=\"/Content/img/check.png\" alt=\"Primary Page\" title=\"Primary Page\" /></a> ";
                 } else if (menuitem.hasContent()) {
-                    primarylink = "<a href=\"/Admin_Website/SetPrimaryContent/" + menuitem.contentID + "/" + menu.menuID + "\"><img src=\"/Content/img/makeprimary.png\" alt=\"Make This Page the Primary Page\" title=\"Make This Page the Primary Page\" /></a> ";
-                    editlink = "<a href=\"/Admin_Website/Content/Edit/" + menuitem.contentID + "\"><img src=\"/Content/img/pencil.png\" alt=\"Edit Page\" title=\"Edit Page\" /></a>";
+                    primarylink = "<a href=\"/Website/SetPrimaryContent/" + menuitem.contentID + "/" + menu.menuID + "\"><img src=\"/Content/img/makeprimary.png\" alt=\"Make This Page the Primary Page\" title=\"Make This Page the Primary Page\" /></a> ";
+                    editlink = "<a href=\"/Website/Content/Edit/" + menuitem.contentID + "\"><img src=\"/Content/img/pencil.png\" alt=\"Edit Page\" title=\"Edit Page\" /></a>";
                 };
                 pagecontent += "<li id=\"item_" + menuitem.menuContentID + "\" class=\"level_" + level + (((menuitem.hasContent() && menuitem.content.published) || (!menuitem.hasContent())) ? " published" : "") + "\">" +
                     "<span class=\"handle\">↕</span> <span class=\"title\">" + ((menuitem.hasContent()) ? menuitem.content.page_title : (menuitem.menuTitle + " (link)")) + "</span>" +
                     "<span class=\"controls\">" +
                         primarylink +
                         editlink +
-                        " <a href=\"/Admin_Website/RemoveContent/" + menuitem.menuContentID + "\" class=\"remove\" id=\"remove_" + menuitem.menuContentID + "\"><img src=\"/Content/img/delete.png\" alt=\"Remove Page From Menu\" title=\"Remove Page From Menu\" /></a>" +
+                        " <a href=\"/Website/RemoveContent/" + menuitem.menuContentID + "\" class=\"remove\" id=\"remove_" + menuitem.menuContentID + "\"><img src=\"/Content/img/delete.png\" alt=\"Remove Page From Menu\" title=\"Remove Page From Menu\" /></a>" +
                     "</span>" +
                     "<span id=\"meta_" + menuitem.menuContentID + "\">" +
                         "<input type=\"hidden\" id=\"parent_" + menuitem.menuContentID + "\" value=\"" + ((menuitem.parentID == null) ? 0 : menuitem.parentID) + "\" />" +

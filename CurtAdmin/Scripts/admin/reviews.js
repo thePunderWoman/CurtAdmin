@@ -19,7 +19,7 @@ $(function () {
     $('.isApproved').live('click', function () {
         var reviewID = $(this).attr('id').split(':')[1];
         if (reviewID > 0) {
-            $.getJSON('/Admin_Reviews/Approve', { 'id': reviewID }, function (response) {
+            $.getJSON('/Reviews/Approve', { 'id': reviewID }, function (response) {
                 if (response.error == null) {
                     if (response == 1) {
                         showMessage("Review Approved.");
@@ -40,7 +40,7 @@ $(function () {
         switch (action) {
             case 'view':
                 if (reviewID > 0) {
-                    $.getJSON('/Admin_Reviews/Get', { 'id': reviewID }, function (response) {
+                    $.getJSON('/Reviews/Get', { 'id': reviewID }, function (response) {
                         if (response.reviewID != null) {
                             $('#viewName').html('<strong>Name:</strong> ' + response.name);
                             $('#viewEmail').html('<strong>Email:</strong> ' + response.email);
@@ -57,7 +57,7 @@ $(function () {
                                 modal: true,
                                 buttons: {
                                     "Approve": function () {
-                                        $.getJSON('/Admin_Reviews/Approve', { 'id': response.reviewID }, function (approveresponse) {
+                                        $.getJSON('/Reviews/Approve', { 'id': response.reviewID }, function (approveresponse) {
                                             if (approveresponse.error == null) {
                                                 if (approveresponse == 1) {
                                                     showMessage("Review Approved.");
@@ -92,7 +92,7 @@ $(function () {
                 if (reviewID > 0 && confirm('Are you sure you want to remove this review?')) {
                     var delete_review = 0;
                     var partID = $('#partID').val();
-                    $.get('/Admin_Reviews/Remove', { 'id': reviewID }, function (response) {
+                    $.get('/Reviews/Remove', { 'id': reviewID }, function (response) {
                         if (response == "success") {
                             reviewTable.fnDeleteRow($('#' + reviewID).parent().parent().get()[0]);
                             showMessage('Review removed.');

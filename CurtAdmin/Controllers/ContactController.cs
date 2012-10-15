@@ -10,7 +10,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_ContactController : AdminBaseController {
+    public class ContactController : BaseController {
         //
         // GET: /Contact/
 
@@ -77,7 +77,7 @@ namespace CurtAdmin.Controllers {
                         }
                     }
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Contact/Receivers");
+                    return RedirectToAction("Receivers");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -136,7 +136,7 @@ namespace CurtAdmin.Controllers {
                     }
 
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Contact/Receivers");
+                    return RedirectToAction("Receivers");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -173,7 +173,7 @@ namespace CurtAdmin.Controllers {
 
                     db.ContactTypes.InsertOnSubmit(new_type);
                     db.SubmitChanges();
-                    Response.Redirect("/Admin_Contact/Types");
+                    return RedirectToAction("Types");
                 }
             } catch (Exception e) {
                 error = e.Message;
@@ -185,22 +185,18 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
-        public void DeleteReceiver(int id = 0) {
+        public ActionResult DeleteReceiver(int id = 0) {
             try {
                 ContactModel.DeleteReceiver(id);
-                Response.Redirect("/Admin_Contact/Receivers");
-            } catch {
-                Response.Redirect("/Admin_Contact/Receivers");
-            }
+            } catch { }
+            return RedirectToAction("Receivers");
         }
 
-        public void DeleteType(int id = 0) {
+        public ActionResult DeleteType(int id = 0) {
             try {
                 ContactModel.DeleteType(id);
-                Response.Redirect("/Admin_Contact/Types");
-            } catch {
-                Response.Redirect("/Admin_Contact/Types");
-            }
+            } catch {}
+            return RedirectToAction("Types");
         }
 
         public void Export() {

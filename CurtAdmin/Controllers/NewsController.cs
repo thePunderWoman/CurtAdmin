@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_NewsController : AdminBaseController {
+    public class NewsController : BaseController {
 
         public ActionResult Index() {
 
@@ -36,7 +36,7 @@ namespace CurtAdmin.Controllers {
             ViewBag.err = err;
 
             if (id == 0) {
-                return RedirectToAction("Index", "Admin_News");
+                return RedirectToAction("Index");
             }
 
             // Get the news Item
@@ -74,12 +74,12 @@ namespace CurtAdmin.Controllers {
                 }
                 db.SubmitChanges();
 
-                return RedirectToAction("Index", "Admin_News");
+                return RedirectToAction("Index");
             } catch (Exception e) {
                 if (id == 0) {
-                    return RedirectToAction("Add", "Admin_News", new { err = e.Message, t = title, l = lead, c = content, s = publishStart, e = publishEnd });
+                    return RedirectToAction("Add", new { err = e.Message, t = title, l = lead, c = content, s = publishStart, e = publishEnd });
                 } else {
-                    return RedirectToAction("Edit", "Admin_News", new { id = id, err = e.Message, t = title, l = lead, c = content, s = publishStart, e = publishEnd });
+                    return RedirectToAction("Edit", new { id = id, err = e.Message, t = title, l = lead, c = content, s = publishStart, e = publishEnd });
                 }
             }
         }

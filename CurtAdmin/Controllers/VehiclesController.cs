@@ -14,7 +14,7 @@ using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_VehiclesController : AdminBaseController
+    public class VehiclesController : BaseController
     {
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext) {
@@ -140,7 +140,7 @@ namespace CurtAdmin.Controllers
                         };
                         db.Vehicles.InsertOnSubmit(new_vehicle);
                         db.SubmitChanges();
-                        HttpContext.Response.Redirect("~/Admin_Vehicles");
+                        return RedirectToAction("Index");
                     } else {
                         error_messages.Add("We already have this vehicle in the database.");
                     }
@@ -266,7 +266,7 @@ namespace CurtAdmin.Controllers
                     vehicle.modelID = model;
                     vehicle.styleID = style;
                     db.SubmitChanges();
-                    HttpContext.Response.Redirect("~/Admin_Vehicles");
+                    return RedirectToAction("Index");
                 } catch (Exception e) {
                     error_messages.Add(e.Message);
                 }

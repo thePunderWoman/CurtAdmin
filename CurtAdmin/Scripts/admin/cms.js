@@ -35,10 +35,10 @@ $(document).ready(function () {
     $("a.delete").live('click', function (event) {
         event.preventDefault();
         var idstr = $(this).attr('id').split('_')[1];
-        $.getJSON("/Admin_Website/checkContent/" + idstr, function (data) {
+        $.getJSON("/Website/checkContent/" + idstr, function (data) {
             if (data.length == 0) {
                 if (confirm("Are you sure you want to delete this content page?")) {
-                    $.post("/Admin_Website/DeleteContent/" + idstr, function (data) {
+                    $.post("/Website/DeleteContent/" + idstr, function (data) {
                         if (data == "success") {
                             $('#page_' + idstr).fadeOut('fast', function () {
                                 $('#page_' + idstr).remove();
@@ -90,16 +90,16 @@ function bindStuff() {
             var obj = ui.draggable;
             contentid = obj.attr('id').split('_')[1];
             menuid = $('#menuid').val();
-            $.post("/Admin_Website/AddContentToMenu?menuid=" + menuid + "&contentid=" + contentid, function (data) {
+            $.post("/Website/AddContentToMenu?menuid=" + menuid + "&contentid=" + contentid, function (data) {
                 var response = $.parseJSON(data);
                 var published = "";
                 if (response.published == true) published = " published";
                 var liobj = "<li style=\"display:none;\" id=\"item_" + response.menuContentID + "\" class=\"level_1" + published + "\">" +
                     "<span class=\"handle\">↕</span> <span class=\"title\">" + response.pagetitle + "</span>" +
                     "<span class=\"controls\">" +
-                        "<a href=\"/Admin_Website/SetPrimaryContent/" + response.contentID + "/" + menuid + "\"><img src=\"/Content/img/makeprimary.png\" alt=\"Make This Page the Primary Page\" title=\"Make This Page the Primary Page\" /></a> " +
-                        "<a href=\"/Admin_Website/Content/Edit/" + response.contentID + "\"><img src=\"/Content/img/pencil.png\" alt=\"Edit Page\" title=\"Edit Page\" /></a> " +
-                        " <a href=\"/Admin_Website/RemoveContent/" + response.menuContentID + "\" class=\"remove\" id=\"remove_" + response.menuContentID + "\"><img src=\"/Content/img/delete.png\" alt=\"Remove Page From Menu\" title=\"Remove Page From Menu\" /></a>" +
+                        "<a href=\"/Website/SetPrimaryContent/" + response.contentID + "/" + menuid + "\"><img src=\"/Content/img/makeprimary.png\" alt=\"Make This Page the Primary Page\" title=\"Make This Page the Primary Page\" /></a> " +
+                        "<a href=\"/Website/Content/Edit/" + response.contentID + "\"><img src=\"/Content/img/pencil.png\" alt=\"Edit Page\" title=\"Edit Page\" /></a> " +
+                        " <a href=\"/Website/RemoveContent/" + response.menuContentID + "\" class=\"remove\" id=\"remove_" + response.menuContentID + "\"><img src=\"/Content/img/delete.png\" alt=\"Remove Page From Menu\" title=\"Remove Page From Menu\" /></a>" +
                     "</span>" +
                     "<span id=\"meta_" + response.menuContentID + "\">" +
                         "<input type=\"hidden\" id=\"parent_" + response.menuContentID + "\" value=\"" + ((response.parentID == null) ? 0 : response.parentID) + "\" />" +
@@ -566,7 +566,7 @@ function saveItems() {
         datastring += "page[]=" + idstr + "-" + $("#parent_" + idstr).val() + "-" + $("#sort_" + idstr).val()
     });
 
-    $.post("/Admin_Website/MenuSort/" + $('#menuid').val() + datastring)
+    $.post("/Website/MenuSort/" + $('#menuid').val() + datastring)
 }
 
 function removeItem(obj) {
@@ -590,7 +590,7 @@ function removeItem(obj) {
         $('#children_' + parent).val(newchildren)
     }
     // update sort for all items on this level
-    $.post("/Admin_Website/RemoveContentAjax/" + idstr)
+    $.post("/Website/RemoveContentAjax/" + idstr)
     $(item).fadeOut('fast', function () {
         $(item).remove();
         sort();

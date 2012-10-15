@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_BlogCommentsController : AdminBaseController
+    public class BlogCommentsController : BaseController
     {
         //
         // GET: /Post/
@@ -54,7 +54,7 @@ namespace CurtAdmin.Controllers
                 
             }
             catch {}
-            Response.Redirect("/Admin_Blog#tab=comments"); 
+            Response.Redirect("/Blog#tab=comments"); 
         }
 
         public string ApproveAjax(int id = 0) {

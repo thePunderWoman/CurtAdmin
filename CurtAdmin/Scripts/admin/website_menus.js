@@ -10,14 +10,14 @@
         var table_row = $(this).parent().parent().get()[0];
         switch (action) {
             case 'manage':
-                window.location.href = "/Admin_Website/Content/Menu/" + menu_id;
+                window.location.href = "/Website/Content/Menu/" + menu_id;
                 break;
             case 'edit':
-                window.location.href = "/Admin_Website/EditMenu/" + menu_id;
+                window.location.href = "/Website/EditMenu/" + menu_id;
                 break;
             case 'delete':
                 if (confirm('Are you sure you want to remove this menu?')) {
-                    $.post('/Admin_Website/RemoveMenu', { 'menuID': menu_id }, function (data) {
+                    $.post('/Website/RemoveMenu', { 'menuID': menu_id }, function (data) {
                         menutable.fnDeleteRow(table_row);
                     });
                 }
@@ -42,7 +42,7 @@
 * @param userID: Primary Key for user
 */
 function set_isActive(userID) {
-    $.get('/Admin_Users/SetUserStatus',{'userID':userID},function(response){
+    $.get('/Users/SetUserStatus',{'userID':userID},function(response){
         if (response != '') {
             showMessage(response);
         }else{

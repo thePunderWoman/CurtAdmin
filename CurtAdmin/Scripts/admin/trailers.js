@@ -18,13 +18,13 @@
         switch (action) {
             case 'edit':
                 // Redirect to the edit page for trailers
-                window.location.href = '/Admin_Lifestyle/EditTrailer/' + trailerID;
+                window.location.href = '/Lifestyle/EditTrailer/' + trailerID;
                 break;
 
             case 'delete':
                 // Delete this category
                 if (confirm("Are you sure you want to remove this trailer from this lifestyle?")) {
-                    $.getJSON('/Admin_Lifestyle/RemoveTrailerFromLifestyle', { 'trailerid': trailerID, 'catID': catID }, function (response) {
+                    $.getJSON('/Lifestyle/RemoveTrailerFromLifestyle', { 'trailerid': trailerID, 'catID': catID }, function (response) {
                         if ($.trim(response).length == 0) {
                             trailerTable.fnDeleteRow($('#trailerRow\\:' + trailerID).get()[0]);
                             showMessage('Trailer has been removed.');
@@ -44,7 +44,7 @@
     $('#AddTrailer').click(function (event) {
         event.preventDefault();
         var catID = $('#categoryID').val();
-        $.getJSON('/Admin_Lifestyle/GetTrailersJSON', { 'catID': catID }, function (data) {
+        $.getJSON('/Lifestyle/GetTrailersJSON', { 'catID': catID }, function (data) {
             $('#trailerselect').empty();
             if (data.length > 0) {
                 $(data).each(function (i, obj) {
@@ -67,7 +67,7 @@
                             if(trailervals != "") trailervals += ","
                             trailervals += $(this).val();
                         });
-                        $.getJSON('/Admin_Lifestyle/AddTrailersToLifestyle', { 'trailers': trailervals, 'catID': catID }, function (response) {
+                        $.getJSON('/Lifestyle/AddTrailersToLifestyle', { 'trailers': trailervals, 'catID': catID }, function (response) {
                             // Add to list
                             $(response).each(function (i, obj) {
                                 trailerTable.fnAddData([

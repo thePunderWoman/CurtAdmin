@@ -10,7 +10,7 @@ using System.Net;
 using System.Text;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_LifestyleController : AdminBaseController {
+    public class LifestyleController : BaseController {
 
         public ActionResult Index() {
             List<DetailedCategories> cats = ProductCat.GetLifestyles();
@@ -42,7 +42,7 @@ namespace CurtAdmin.Controllers {
 
             // Make sure we didn't catch any errors
             if (error_messages.Count == 0 && cat.catID > 0) {
-                HttpContext.Response.Redirect("~/Admin_Lifestyle");
+                return RedirectToAction("Index");
             } else {
                 ViewBag.catTitle = catTitle;
                 ViewBag.parentID = parentID;
@@ -86,7 +86,7 @@ namespace CurtAdmin.Controllers {
             }
 
             if (error_messages.Count == 0) {
-                HttpContext.Response.Redirect("~/Admin_Lifestyle");
+                return RedirectToAction("Index");
             }
             ViewBag.error_messages = error_messages;
             // Get this category

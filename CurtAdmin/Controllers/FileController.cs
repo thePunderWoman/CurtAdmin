@@ -10,7 +10,7 @@ using System.Net;
 using System.Text;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_FileController : AdminBaseController {
+    public class FileController : BaseController {
 
         public ActionResult Index() {
             List<Gallery> galleries = FileGalleryModel.GetAll();
@@ -288,7 +288,7 @@ namespace CurtAdmin.Controllers {
             try {
                 parentid = FileGalleryModel.Delete(GetServerPath(), id);
             } catch { };
-            return RedirectToAction("Gallery", "Admin_File", new { id = parentid });
+            return RedirectToAction("Gallery", new { id = parentid });
 
         }
         

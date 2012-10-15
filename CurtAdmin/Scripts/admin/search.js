@@ -62,24 +62,24 @@ function executeSearch() {
     if ($.trim(searchParam) != "") {
         var currentRequest = searchQueue.length + 1;
         searchQueue.push(currentRequest);
-        $.getJSON('/Admin_Search/Search', { 'search_term': searchParam }, function (data) {
+        $.getJSON('/Search/Search', { 'search_term': searchParam }, function (data) {
             if (resultbox_hoverstate == false && searchQueue[searchQueue.length - 1] == currentRequest) {
                 var html = '';
                 $.each(data, function (i, item) {
                     switch (item.type) {
                         case 'user':
                             html += '<li>';
-                            html += '<a class="resultLink" href="/Admin_Users/Edit?user_id=' + item.id + '">' + item.term + '</a>';
+                            html += '<a class="resultLink" href="/Users/Edit?user_id=' + item.id + '">' + item.term + '</a>';
                             html += '</li>';
                             break;
                         case 'category':
                             html += '<li>';
-                            html += '<a class="resultLink" href="/Admin_Category/Edit?cat_id=' + item.id + '">' + item.term + '</a>';
+                            html += '<a class="resultLink" href="/Category/Edit?cat_id=' + item.id + '">' + item.term + '</a>';
                             html += '<li>';
                             break;
                         case 'part':
                             html += '<li>';
-                            html += '<a class="resultLink" href="/Admin_Product/Edit?partID=' + item.id + '">Edit Part #' + item.term + '</a>';
+                            html += '<a class="resultLink" href="/Product/Edit?partID=' + item.id + '">Edit Part #' + item.term + '</a>';
                             html += '</li>';
                             break;
                         default:

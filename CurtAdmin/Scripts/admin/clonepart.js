@@ -37,7 +37,7 @@ function clonePart(event) {
                 } else {
                     $(this).dialog("close");
                     $("#clone-dialog").empty();
-                    $.getJSON('/Admin_Product/Clone', { 'partID': partID, 'newPartID': newPartID, 'upc': newUPC, 'categories': categories, 'relatedParts': related, 'attributes': attributes, 'content': content, 'vehicles': vehicles, 'prices': prices }, showMessages);
+                    $.getJSON('/Product/Clone', { 'partID': partID, 'newPartID': newPartID, 'upc': newUPC, 'categories': categories, 'relatedParts': related, 'attributes': attributes, 'content': content, 'vehicles': vehicles, 'prices': prices }, showMessages);
                 }
             },
             Cancel: function () {

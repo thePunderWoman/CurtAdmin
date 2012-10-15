@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 using System.Net.Mail;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_ForumController : AdminBaseController {
+    public class ForumController : BaseController {
 
         /* Start Group Methods */
         public ActionResult Index() {
@@ -448,12 +448,12 @@ namespace CurtAdmin.Controllers {
                     htmlBody = "<div style='margin-top: 15px;font-family: Arial;font-size: 10pt;'>";
                     htmlBody += "<h4>Hi There!</h4>";
                     htmlBody += "<p>Someone replied to your post on the CURT Manufacturing forum. Visit the following link to see the reply:</p>";
-                    htmlBody += "<p style='margin:2px 0px'><a href='http://beta.curtmfg.com/Forum/Discussion/" + threadid + "/" + UDF.GenerateSlug(t.firstPost.title) + "'>" + t.firstPost.title + "</a></p>";
+                    htmlBody += "<p style='margin:2px 0px'><a href='http://www.curtmfg.com/Forum/Discussion/" + threadid + "/" + UDF.GenerateSlug(t.firstPost.title) + "'>" + t.firstPost.title + "</a></p>";
                     htmlBody += "______________________________________________________________________";
                     htmlBody += "<br /><span style='color:#999'>Thank you,</span>";
                     htmlBody += "<br /><br /><br />";
                     htmlBody += "<span style='line-height:75px;color:#999'>CURT Manufacturing Forums</span>";
-                    htmlBody += "<p style='font-size: 11px;'>To unsubscribe from future notifications, click the unsubscribe link. <a href='http://beta.curtmfg.com/Forum/Unsubscribe/" + threadid + "?email=" + email + "'>Unsubscribe</a></p>";
+                    htmlBody += "<p style='font-size: 11px;'>To unsubscribe from future notifications, click the unsubscribe link. <a href='http://www.curtmfg.com/Forum/Unsubscribe/" + threadid + "?email=" + email + "'>Unsubscribe</a></p>";
                     htmlBody += "</div>";
 
                     mail.Body = htmlBody;

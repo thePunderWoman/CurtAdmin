@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CurtAdmin.Controllers {
-    public class Admin_EditorController : AdminBaseController {
+    public class EditorController : BaseController {
         //
         // GET: /Editor/
 

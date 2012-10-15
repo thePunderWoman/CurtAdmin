@@ -27,7 +27,7 @@
         if (resourceID == 0) { // Add new
             if (name.length > 0) {
                 if (confirm("Are you sure you want to save this resource?")) {
-                    $.post("/Admin_Account/Add", { "name": name, "url": url, "username": username, "password": pass, "comments": comments }, function (response) {
+                    $.post("/Account/Add", { "name": name, "url": url, "username": username, "password": pass, "comments": comments }, function (response) {
                         if (response.error == null) {
                             table.fnAddData([
                                     response.resource_name,
@@ -50,7 +50,7 @@
             if (name.length > 0) {
                 if (confirm("Are you sure you want to save this resource?")) {
                     table.fnDeleteRow($('#' + resourceID).parent().parent().get()[0]);
-                    $.post("/Admin_Account/Update", { "resourceID": resourceID, "name": name, "url": url, "username": username, "password": pass, "comments": comments }, function (response) {
+                    $.post("/Account/Update", { "resourceID": resourceID, "name": name, "url": url, "username": username, "password": pass, "comments": comments }, function (response) {
                         if (response.error == null) {
                             table.fnAddData([
                                     response.resource_name,
@@ -88,7 +88,7 @@
             case 'users':
                 clearForm();
                 // Get the users that can view this resource
-                $.getJSON('/Admin_Account/GetResourceUsers', { 'resourceID': resourceID }, function (users) {
+                $.getJSON('/Account/GetResourceUsers', { 'resourceID': resourceID }, function (users) {
                     $.each(users, function (i, user) {
                         user_table.fnAddData([
                                 user.user,
@@ -103,7 +103,7 @@
                 break;
             case 'delete':
                 if (confirm("Are you sure you want to remove this resource?")) {
-                    $.post("/Admin_Account/Remove", { "resourceID": resourceID }, function (response) {
+                    $.post("/Account/Remove", { "resourceID": resourceID }, function (response) {
                         if (response.length == 0) { // Remove table row
                             table.fnDeleteRow($('#' + resourceID).parent().parent().get()[0]);
                             clearUserForm();
@@ -122,7 +122,7 @@
     $('#btnAddUser').live('click', function () {
         var resourceID = $('#user_resourceID').val();
         var userID = $('#newUser').val();
-        $.post('/Admin_Account/AddUserToResource', { 'resourceID': resourceID, 'userID': userID }, function (response) {
+        $.post('/Account/AddUserToResource', { 'resourceID': resourceID, 'userID': userID }, function (response) {
             if (response.error == null) {
                 user_table.fnAddData([
                     response.user,
@@ -146,7 +146,7 @@
         var userID = $(this).attr('id');
         var table_row = $(this).closest('tr').get()[0];
         if (resourceID > 0 && userID > 0) {
-            $.post('/Admin_Account/RemoveUserFromResource', { 'resourceID': resourceID, 'userID': userID }, function (response) {
+            $.post('/Account/RemoveUserFromResource', { 'resourceID': resourceID, 'userID': userID }, function (response) {
                 if (response == null) {
                     user_table.fnDeleteRow(table_row);
                 } else {

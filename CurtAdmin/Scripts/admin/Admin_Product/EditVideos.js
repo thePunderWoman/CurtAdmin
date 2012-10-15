@@ -11,7 +11,7 @@ $(document).ready(function () {
         event.preventDefault();
         var vidID = $(this).data("id");
         videoTable.fnDeleteRow($(this).parent().parent().get()[0]);
-        $.getJSON("/Admin_Product/GetPartVideo", { 'pVideoID': vidID }, function (data) {
+        $.getJSON("/Product/GetPartVideo", { 'pVideoID': vidID }, function (data) {
             clearFormValues();
             showVideoForm(data.pVideoID, data.vTypeID, data.video, data.isPrimary);
         });
@@ -22,7 +22,7 @@ $(document).ready(function () {
         var vidID = $(this).data('id');
         var removelink = $(this);
         if (confirm('Are you sure you want to remove this video?')) {
-            $.post('/Admin_Product/DeleteVideo', { 'videoID': vidID }, function (response) {
+            $.post('/Product/DeleteVideo', { 'videoID': vidID }, function (response) {
                 if (response == "success") {
                     videoTable.fnDeleteRow($(removelink).parent().parent().get()[0]);
                     showMessage("Video Removed Successfully");
@@ -36,7 +36,7 @@ $(document).ready(function () {
     $(document).on('click', '#btnReset', function () {
         var vidID = Number($('#pVideoID').val());
         if (vidID > 0) {
-            $.getJSON("/Admin_Product/GetPartVideo", { 'pVideoID': vidID }, function (response) {
+            $.getJSON("/Product/GetPartVideo", { 'pVideoID': vidID }, function (response) {
                 videoTable.fnAddData([
                             response.videoType.name,
                             '<iframe data-video="' + response.video + '" width="177" height="140" src="http://www.youtube.com/embed/' + response.video + '" frameborder="0" allowfullscreen></iframe>',
@@ -59,7 +59,7 @@ $(document).ready(function () {
             showMessage("You must enter a video ID and select a video Type.");
             return;
         }
-        $.post("/Admin_Product/SaveVideo", { 'partID': partID, 'pVideoID': vidID, 'video': video, 'videoType': type, 'isPrimary': isPrimary }, function (response) {
+        $.post("/Product/SaveVideo", { 'partID': partID, 'pVideoID': vidID, 'video': video, 'videoType': type, 'isPrimary': isPrimary }, function (response) {
             if (response.error == null) { // Success 0FLQ4rACE-0
                 videoTable.fnAddData([
                         response.videoType.name,

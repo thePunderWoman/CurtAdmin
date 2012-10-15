@@ -11,7 +11,7 @@
         var part = $(this).attr('title').substr(4, $(this).attr('title').length);
         if (partID > 0 && relatedID > 0 && confirm('Are you sure you want to make ' + part + ' a related part?')) {
             // execute AJAX
-            $.getJSON('/Admin_Product/AddRelated', { 'partID': partID, 'relatedID': relatedID }, function (response) {
+            $.getJSON('/Product/AddRelated', { 'partID': partID, 'relatedID': relatedID }, function (response) {
                 if (response.error == null) {
                     // Add row to table
                     relatedTable.fnAddData([
@@ -35,7 +35,7 @@
         var partID = $('#partID').val();
         var part = $(this).attr('title').substr(7, $(this).attr('title').length);
         if (partID > 0 && relatedID > 0 && confirm('Are you sure you want to remove the relationship to ' + part + '?')) {
-            $.getJSON('/Admin_Product/DeleteRelated', { 'partID': partID, 'relatedID': relatedID }, function (response) {
+            $.getJSON('/Product/DeleteRelated', { 'partID': partID, 'relatedID': relatedID }, function (response) {
                 if (response.error == null) {
                     // Add row to table
                     allTable.fnAddData([

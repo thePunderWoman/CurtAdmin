@@ -3,7 +3,7 @@
     $('a.addVideo').click(function (event) {
         event.preventDefault();
         var idstr = $(this).attr('id').split(':')[1];
-        $.getJSON("/Admin_Video/AddVideo", { 'ytID': idstr }, function (data) {
+        $.getJSON("/Video/AddVideo", { 'ytID': idstr }, function (data) {
             $("#liveVideos").sortable("destroy");
             $('#liveVideos').append('<li class="sortableVideo" id="video_' + data.videoID + '"><img src="' + data.thumb + '" alt="' + data.videoTitle + '" /><span class="videotitle">' + data.videoTitle + '</span><br /><a class="deleteVideo" href="#" id="delete_' + data.videoID + '">Remove</a><span class="clear"></span></li>');
             createSortable();
@@ -13,7 +13,7 @@
         event.preventDefault();
         if (confirm("Are you sure you want to remove this video?")) {
             var idstr = $(this).attr('id').split('_')[1];
-            $.post("/Admin_Video/Delete", { "id": idstr }, function (data) {
+            $.post("/Video/Delete", { "id": idstr }, function (data) {
                 if (data == "success") {
                     $('#video_' + idstr).remove();
                 }
@@ -24,7 +24,7 @@
 
 function updateSort() {
     var x = $('#liveVideos').sortable("serialize");
-    $.post("/Admin_Video/updateSort?" + x);
+    $.post("/Video/updateSort?" + x);
 }
 
 function createSortable() {

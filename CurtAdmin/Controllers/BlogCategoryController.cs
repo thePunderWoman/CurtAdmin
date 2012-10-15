@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class Admin_BlogCategoryController : AdminBaseController
+    public class BlogCategoryController : BaseController
     {
         //
         // GET: /Author/
@@ -33,7 +33,7 @@ namespace CurtAdmin.Controllers
 
             if (category == null)
             {
-                return RedirectToAction("Index", "Admin_BlogCategory");
+                return RedirectToAction("Index");
             }
             return View();
         }
@@ -61,17 +61,17 @@ namespace CurtAdmin.Controllers
                 }
                 db.SubmitChanges();
 
-                return RedirectToAction("Index", "Admin_BlogCategory");
+                return RedirectToAction("Index");
             }
             catch (Exception e)
             {
                 if (id == 0)
                 {
-                    return RedirectToAction("Add", "Admin_BlogCategory", new { err = e.Message, name = name });
+                    return RedirectToAction("Add", new { err = e.Message, name = name });
                 }
                 else
                 {
-                    return RedirectToAction("Edit", "Admin_BlogCategory", new { id = id, err = e.Message, name = name });
+                    return RedirectToAction("Edit", new { id = id, err = e.Message, name = name });
                 }
             }
         }

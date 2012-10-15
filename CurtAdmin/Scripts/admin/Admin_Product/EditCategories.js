@@ -6,7 +6,7 @@
         var catID = $('#catID').val();
         var cat = $('#catID option[value="' + catID + '"]').text();
         var partID = $('#partID').val();
-        $.get('/Admin_Product/AddCategory', { 'catID': catID, 'partID': partID }, function (response) {
+        $.get('/Product/AddCategory', { 'catID': catID, 'partID': partID }, function (response) {
             if (response == "") {
                 partCatTable.fnAddData([
                         cat,
@@ -28,7 +28,7 @@
         var partID = $('#partID').val();
         var tableRow = $(this).parent().parent().get()[0];
         if (partID > 0 && catID > 0 && confirm("Are you sure you want to remove " + part + " from " + cat + "?")) {
-            $.get('/Admin_Product/DeleteCategory', { 'catID': catID, 'partID': partID }, function (response) {
+            $.get('/Product/DeleteCategory', { 'catID': catID, 'partID': partID }, function (response) {
                 if ($.trim(response) == "") {
                     partCatTable.fnDeleteRow(tableRow);
                     showMessage("Category removed.");

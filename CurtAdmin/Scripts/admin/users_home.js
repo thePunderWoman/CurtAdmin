@@ -17,14 +17,14 @@
         var user_id = $(this).attr('id').split(':')[1];
         switch (action) {
             case 'view':
-                $.get('/Admin_Users/GetUser', { 'user_id': user_id }, quickView, 'json');
+                $.get('/Users/GetUser', { 'user_id': user_id }, quickView, 'json');
                 break;
             case 'edit':
-                window.location.href = "/Admin_Users/Edit?user_id=" + user_id;
+                window.location.href = "/Users/Edit?user_id=" + user_id;
                 break;
             case 'delete':
                 if (confirm('Are you sure you want to remove this user?')) {
-                    $.get('/Admin_Users/RemoveUser', { 'userID': user_id }, function (data) {
+                    $.get('/Users/RemoveUser', { 'userID': user_id }, function (data) {
                         deleteUser(data, user_id);
                     });
                 }
@@ -49,7 +49,7 @@
 * @param userID: Primary Key for user
 */
 function set_isActive(userID) {
-    $.get('/Admin_Users/SetUserStatus',{'userID':userID},function(response){
+    $.get('/Users/SetUserStatus',{'userID':userID},function(response){
         if (response != '') {
             showMessage(response);
         }else{

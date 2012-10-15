@@ -18,7 +18,7 @@ $(function () {
     $('.isApproved').live('click', function () {
         var testimonialID = $(this).attr('id').split(':')[1];
         if (testimonialID > 0) {
-            $.getJSON('/Admin_Testimonial/Approve', { 'id': testimonialID }, function (response) {
+            $.getJSON('/Testimonial/Approve', { 'id': testimonialID }, function (response) {
                 if (response.error == null) {
                     if (response == 1) {
                         showMessage("Testimonial Approved.");
@@ -39,7 +39,7 @@ $(function () {
         var testimonialID = $(this).attr('id');
         if (testimonialID > 0 && confirm('Are you sure you want to remove this testimonial?')) {
             var delete_testimonial = 0;
-            $.get('/Admin_Testimonial/Remove', { 'id': testimonialID }, function (response) {
+            $.get('/Testimonial/Remove', { 'id': testimonialID }, function (response) {
                 if (response == "success") {
                     testimonialTable.fnDeleteRow($('#' + testimonialID).parent().parent().get()[0]);
                     showMessage('Testimonial removed.');
