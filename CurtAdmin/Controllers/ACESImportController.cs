@@ -8,7 +8,7 @@ using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers
 {
-    public class ACESImportController : AdminBaseController
+    public class ACESImportController : BaseController
     {
 
         public ActionResult Index(int vcount = 0) {
