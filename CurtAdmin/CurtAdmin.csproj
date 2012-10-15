@@ -128,7 +128,7 @@
   <ItemGroup>
     <Compile Include="ActiveResults\ExcelResult.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\B2BController.cs" />
     <Compile Include="Controllers\BlogCategoryController.cs" />
     <Compile Include="Controllers\BlogCommentsController.cs" />
@@ -150,7 +150,7 @@
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TestimonialController.cs" />
-    <Compile Include="Controllers\Admin_UsersController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VehiclesController.cs" />
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Controllers\WebsiteController.cs" />
@@ -162,7 +162,7 @@
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\TestingController.cs" />
     <Compile Include="Controllers\UserBaseController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\_404Controller.cs" />
     <Compile Include="CurtDev1.designer.cs">
       <AutoGen>True</AutoGen>
@@ -520,8 +520,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Account\FullList.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Resources\FullList.cshtml" />
+    <Content Include="Views\Resources\Index.cshtml" />
     <Content Include="Views\B2B\AddAnswer.cshtml" />
     <Content Include="Views\B2B\AddCat.cshtml" />
     <Content Include="Views\B2B\AddCert.cshtml" />
@@ -637,10 +637,10 @@
     <Content Include="Views\Reviews\Index.cshtml" />
     <Content Include="Views\Testimonial\Approved.cshtml" />
     <Content Include="Views\Testimonial\Index.cshtml" />
-    <Content Include="Views\Admin_Users\Add.cshtml" />
-    <Content Include="Views\Admin_Users\Customers.cshtml" />
-    <Content Include="Views\Admin_Users\Edit.cshtml" />
-    <Content Include="Views\Admin_Users\Index.cshtml" />
+    <Content Include="Views\Users\Add.cshtml" />
+    <Content Include="Views\Users\Customers.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Vehicles\Add.cshtml" />
     <Content Include="Views\Vehicles\Edit.cshtml" />
     <Content Include="Views\Vehicles\Index.cshtml" />
@@ -683,7 +683,7 @@
     <Content Include="Views\Shared\_SideBar.cshtml" />
     <Content Include="Views\Shared\_UploadForm.cshtml" />
     <Content Include="Views\Testing\Index.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\_404\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>

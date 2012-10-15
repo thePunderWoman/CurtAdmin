@@ -1,7 +1,7 @@
 ﻿<div id="searchArea">
     @if (Session["userID"] != null && Convert.ToInt32(Session["userID"]) > 0) {
         <span id="userLinks">
-            <a href="@Url.Content("~/Users")" title="Account Information">Account Info</a>
+            <a href="@Url.Content("~/Account")" title="Account Information">Account Info</a>
             <a href="@Url.Content("~/Authenticate/Logout")" title="Logout">Logout</a>
         </span>
                 

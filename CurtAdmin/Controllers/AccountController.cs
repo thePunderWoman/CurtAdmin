@@ -3,202 +3,112 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
+using CurtAdmin.Models;
 
 namespace CurtAdmin.Controllers
 {
-    public class AccountController : BaseController
+    public class AccountController : UserBaseController
     {
         //
-        // GET: /Account/
+        // GET: /Users/
 
-        public List<int> super_users = new List<int> { 1, 7, 23 };
+        public ActionResult Index() {
 
-        public ActionResult Index()
-        {
+            DocsLinqDataContext doc_db = new DocsLinqDataContext();
             int userID = Convert.ToInt32(Session["userID"]);
-            List<resource_listing> listings = new List<resource_listing>();
 
-            if (super_users.Contains(userID)) {
-                Response.Redirect("~/Account/FullList");
-            } else {
-                DocsLinqDataContext db = new DocsLinqDataContext();
+            user u = new user();
+            u = (from users in doc_db.users
+                 where users.userID.Equals(userID)
+                 select users).FirstOrDefault<user>();
+            ViewBag.u = u;
 
-                // Get the listings avaialble for this user.
-                
-                listings = (from r in db.resource_listings
-                            join ru in db.resource_users on r.resourceID equals ru.resourceID
-                            where ru.userID.Equals(userID)
-                            select r).Distinct().OrderBy(x => x.resource_name).ToList<resource_listing>();
-            }
-            ViewBag.listings = listings;
-            ViewBag.userID = userID;
-            ViewBag.supers = super_users;
+            // Get the states
+            List<State> states = new List<State>();
+            states = (from s in doc_db.States
+                     orderby s.abbr
+                     select s).ToList<State>();
+            ViewBag.states = states;
+
+            // Get the user's available modules
+            List<module> modules = new List<module>();
+            modules = Users.GetUserModules(userID);
+            ViewBag.Modules = modules;
+
             return View();
         }
 
-        /// <summary>
-        /// Edit page for all super users.
-        /// </summary>
-        /// <returns>View</returns>
-        public ActionResult FullList() {
-            int userID = Convert.ToInt32(Session["userID"]);
-            if (!super_users.Contains(userID)) {
-                Response.Redirect("~/Account");
-            }
-            DocsLinqDataContext db = new DocsLinqDataContext();
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Index(string username) {
 
-            List<resource_listing> listings = new List<resource_listing>();
-            listings = (from r in db.resource_listings
-                        select r).Distinct().OrderBy(x => x.resource_name).ToList<resource_listing>();
+            DocsLinqDataContext doc_db  = new DocsLinqDataContext();
+            int userID                  = Convert.ToInt32(Session["userID"]);
+            string password1            = Request.Form["password1"].Trim();
+            string password2            = Request.Form["password2"].Trim();
+            string email                = Request.Form["email"].Trim();
+            string fname                = Request.Form["fname"].Trim();
+            string lname                = Request.Form["lname"].Trim();
+            string website              = Request.Form["website"].Trim();
+            string phone                = Request.Form["phone"].Trim().Replace("-","");
+            string fax                  = Request.Form["fax"].Trim().Replace("-", "");
+            string address              = Request.Form["address"].Trim();
+            string city                 = Request.Form["city"].Trim();
+            string biography            = Request.Form["biography"].Trim();
+            string photo                = Request.Form["photo"].Trim();
+            int stateID                 = Convert.ToInt32(Request.Form["stateID"].Trim());
 
-            List<user> users = new List<user>();
-            users = (from u in db.users
-                        select u).OrderBy(x => x.lname).ToList<user>();
+            // Initiate error messages
+            List<string> error_messages = new List<string>();
 
+            if (password1.Length == 0) { error_messages.Add("Password must be at least 8 characters."); }
+            if (password1 != password2) { error_messages.Add("Passwords must match."); }
+            if (email.Length < 5) { error_messages.Add("E-mail is required."); }
 
-            ViewBag.listings = listings;
-            ViewBag.users = users;
-            return View();
-        }
+            // Get the users information
+            user u = new user();
+            u = (from users in doc_db.users
+                 where users.userID.Equals(userID)
+                 select users).FirstOrDefault<user>();
 
-        public string Add(string name = "", string url = "", string username = "", string password = "", string comments = "") {
-            string response = "";
-            try {
-                DocsLinqDataContext db = new DocsLinqDataContext();
-                resource_listing listing = new resource_listing {
-                    resource_name = name,
-                    resource_url = url,
-                    username = username,
-                    password = password,
-                    comments = comments
-                };
-                db.resource_listings.InsertOnSubmit(listing);
-                db.SubmitChanges();
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                response = js.Serialize(listing);
-            }catch(Exception e){
-                response = "{\"error\":\""+ e.Message + "\"]";
-            }
-            return response;
-        }
+            if (error_messages.Count == 0) { // Save the user's information
 
-        public string Update(int resourceID = 0, string name = "", string url = "", string username = "", string password = "", string comments = "") {
-            string response = "";
-            try {
-                DocsLinqDataContext db = new DocsLinqDataContext();
-                resource_listing listing = (from r in db.resource_listings
-                                            where r.resourceID.Equals(resourceID)
-                                            select r).FirstOrDefault<resource_listing>();
-                listing.resource_name = name;
-                listing.resource_url = url;
-                listing.username = username;
-                listing.password = password;
-                listing.comments = comments;
+                u.password  = password1;
+                u.email     = email;
+                u.fname     = fname;
+                u.lname     = lname;
+                u.website   = website;
+                u.phone     = phone;
+                u.fax       = fax;
+                u.address   = address;
+                u.city      = city;
+                u.stateID   = stateID;
+                u.biography = biography;
+                u.photo     = photo;
 
-                db.SubmitChanges();
-
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                response = js.Serialize(listing);
-            } catch (Exception e) {
-                response = "{\"error\":\"" + e.Message + "\"]";
-            }
-            return response;
-        }
-
-        public string Remove(int resourceID = 0) {
-            string response = "";
-            try {
-                DocsLinqDataContext db = new DocsLinqDataContext();
-                resource_listing listing = (from r in db.resource_listings
-                                            where r.resourceID.Equals(resourceID)
-                                            select r).FirstOrDefault<resource_listing>();
-                db.resource_listings.DeleteOnSubmit(listing);
-                db.SubmitChanges();
-            } catch (Exception e) {
-                response = e.Message;
-            }
-            return response;
-        }
-
-        public string GetResourceUsers(int resourceID = 0) {
-            string response = "";
-            try {
-                DocsLinqDataContext db = new DocsLinqDataContext();
-                List<resource_slim_user> users = new List<resource_slim_user>();
-                users = (from u in db.users
-                         join ru in db.resource_users on u.userID equals ru.userID
-                         where ru.resourceID.Equals(resourceID)
-                         select new resource_slim_user { 
-                            user = u.fname + " " + u.lname,
-                            username = u.username,
-                            userID = u.userID
-                         }).Distinct().OrderBy(x => x.user).ToList<resource_slim_user>();
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                response = js.Serialize(users);
-            } catch (Exception e) {
-
-            }
-            return response;
-        }
-
-        public string AddUserToResource(int resourceID = 0, int userID = 0) {
-            string response = "";
-            try {
-                DocsLinqDataContext db = new DocsLinqDataContext();
-
-                // Make sure this record doesn't already exist.
-                int existing = (from ru in db.resource_users
-                                where ru.resourceID.Equals(resourceID) && ru.userID.Equals(userID)
-                                select ru).Count();
-                if (existing > 0) {
-                    return "{\"error\":\"This record exists.\"]";
+                try { // Attempt to update the users information
+                    doc_db.SubmitChanges();
+                } catch (Exception e) {
+                    error_messages.Add(e.Message);
                 }
-
-                // Create new record
-                resource_user new_ru = new resource_user {
-                    resourceID = resourceID,
-                    userID = userID
-                };
-                db.resource_users.InsertOnSubmit(new_ru);
-                db.SubmitChanges();
-
-                resource_slim_user user = (from u in db.users
-                                           join r in db.resource_users on u.userID equals r.userID
-                                           where r.resource_user_key.Equals(new_ru.resource_user_key)
-                                           select new resource_slim_user{
-                                               user = u.fname + " " + u.lname,
-                                               username = u.username,
-                                               userID = u.userID
-                                           }).FirstOrDefault<resource_slim_user>();
-
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                response = js.Serialize(user);
-            } catch (Exception e) {
-                response = "{\"error\":\"" + e.Message + "\"]";
             }
-            return response;       
+
+            // Get the states
+            List<State> states = new List<State>();
+            states = (from s in doc_db.States
+                      orderby s.abbr
+                      select s).ToList<State>();
+            ViewBag.states = states;
+
+            // Get the user's available modules
+            List<module> modules = new List<module>();
+            modules = Users.GetUserModules(userID);
+            ViewBag.Modules = modules;
+            
+            ViewBag.u = u;
+            ViewBag.error_messages = error_messages;
+
+            return View();
         }
 
-        public string RemoveUserFromResource(int resourceID = 0, int userID = 0) {
-            string response = "";
-            try {
-                DocsLinqDataContext db = new DocsLinqDataContext();
-                resource_user ru = (from r in db.resource_users
-                                    where r.resourceID.Equals(resourceID) && r.userID.Equals(userID)
-                                    select r).FirstOrDefault<resource_user>();
-                db.resource_users.DeleteOnSubmit(ru);
-                db.SubmitChanges();
-            } catch (Exception e) {
-                response = e.Message;
-            }
-            return response;
-        }
-    }
-
-    public class resource_slim_user {
-        public string user { get; set; }
-        public string username { get; set; }
-        public int userID { get; set; }
     }
 }
