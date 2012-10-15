@@ -20,7 +20,7 @@
     @if (ViewBag.error.Length > 0) {
         <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
     }
-    <form action="/Admin_B2B/AddLesson/@catID" method="post" class="form_left">
+    <form action="/B2B/AddLesson/@catID" method="post" class="form_left">
         <label for="title">
             Lesson Name
             <input type="text" name="title" id="title" placeholder="Enter the Name of the Lesson" required />
@@ -70,8 +70,8 @@
     $(document).ready(function () {
 
         CKEDITOR.replace('text', {
-            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageUploadUrl: '/File/CKUpload',
+            filebrowserImageBrowseUrl: '/File/CKIndex',
             filebrowserImageWindowWidth: '640',
             filebrowserImageWindowHeight: '480'
         });

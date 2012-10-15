@@ -19,7 +19,7 @@
     @if (ViewBag.error.Length > 0) {
         <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
     }
-    <form action="/Admin_B2B/AddAnswer/@questionID" method="post" class="form_left">
+    <form action="/B2B/AddAnswer/@questionID" method="post" class="form_left">
         <label for="text">
             Answer Text
             <input type="text" name="text" id="text" placeholder="Enter the answer" required />

@@ -20,7 +20,7 @@
 </style>
 <script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
-<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B/ViewCerts">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@answer.B2BQuestion.B2BTest.B2BCategory.certID">View Categories</a> > <a href="/Admin_B2B/ViewTests/@answer.B2BQuestion.B2BTest.catID">View Tests</a> > <a href="/Admin_B2B/ViewQuestions/@answer.B2BQuestion.testID">View Questions</a> > <a href="/Admin_B2B/ViewAnswers/@answer.questionID">View Answers</a> > Edit Answer</div>
+<div id="breadcrumbs"><a href="/B2B">B2B</a> > <a href="/B2B/ViewCerts">View Certificates</a> > <a href="/B2B/ViewCats/@answer.B2BQuestion.B2BTest.B2BCategory.certID">View Categories</a> > <a href="/B2B/ViewTests/@answer.B2BQuestion.B2BTest.catID">View Tests</a> > <a href="/B2B/ViewQuestions/@answer.B2BQuestion.testID">View Questions</a> > <a href="/B2B/ViewAnswers/@answer.questionID">View Answers</a> > Edit Answer</div>
 <div id="content_container">
     <h2>Edit Answer ID# @answer.id</h2>
 
@@ -31,7 +31,7 @@
     {
         <p style="font-weight: bold; color: Green;">@ViewBag.msg</p>
     }
-    <form action="/Admin_B2B/EditAnswer/@answer.id" method="post" class="form_left">
+    <form action="/B2B/EditAnswer/@answer.id" method="post" class="form_left">
         <label for="text">
             Answer text
             <input type="text" name="text" id="text" value="@answer.text" />
