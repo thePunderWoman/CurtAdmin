@@ -51,12 +51,12 @@
     <footer id="pagination">
         @if (page > 1 && pagecount > 1) {
             //Previous page link
-            <a id="prevpage" rel="prev" href="/Admin_Video?page=@(page - 1)">&lt; Prev</a>
+            <a id="prevpage" rel="prev" href="/Video?page=@(page - 1)">&lt; Prev</a>
         }
         <span id="pagecount">Page @page of @pagecount</span>
         @if (pagecount > 1 && page != pagecount) {
             //Next page link
-            <a id="nextpage" rel="next" href="/Admin_Video?page=@(page + 1)">Next &gt;</a>
+            <a id="nextpage" rel="next" href="/Video?page=@(page + 1)">Next &gt;</a>
         }
     </footer>
 </div>

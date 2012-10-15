@@ -31,7 +31,7 @@
 <div id="content_container">
     <h2>Product Categories</h2>
     <div id="addCat">
-        <a href="@Url.Content("~/Admin_ProductCategories/Add")"><img src="@Url.Content("~/Content/img/addCategory.png")" /></a>
+        <a href="@Url.Content("~/ProductCategories/Add")"><img src="@Url.Content("~/Content/img/addCategory.png")" /></a>
     </div>
     <div style="clear:both"></div>
     <div id="loading_area">
@@ -101,26 +101,26 @@
             switch (action) {
                 case 'items':
                     if (catID == 'unknown') {
-                        window.location.href = '/Admin_ProductCategories/CategoryItems?catID=0&unknown=unknown';
+                        window.location.href = '/ProductCategories/CategoryItems?catID=0&unknown=unknown';
                     } else {
-                        window.location.href = '/Admin_ProductCategories/CategoryItems?catID=' + catID;
+                        window.location.href = '/ProductCategories/CategoryItems?catID=' + catID;
                     }
                     break;
 
                 case 'edit':
                     // Redirect to the edit page for categories
-                    window.location.href = '/Admin_ProductCategories/Edit?catID=' + catID;
+                    window.location.href = '/ProductCategories/Edit?catID=' + catID;
                     break;
 
                 case 'content':
                     // Redirect to the edit page for categories
-                    window.location.href = '/Admin_ProductCategories/Content?catID=' + catID;
+                    window.location.href = '/ProductCategories/Content?catID=' + catID;
                     break;
 
                 case 'delete':
                     // Delete this category
                     if (confirm("Are you sure you want to remove this category?\r\nThis cannot be undone!")) {
-                        $.getJSON('/Admin_ProductCategories/Delete', { 'catID': catID }, function (response) {
+                        $.getJSON('/ProductCategories/Delete', { 'catID': catID }, function (response) {
                             if ($.trim(response).length == 0) {
                                 catTable.fnDeleteRow($('#catRow\\:' + catID).get()[0]);
                                 showMessage('Category has been removed.');

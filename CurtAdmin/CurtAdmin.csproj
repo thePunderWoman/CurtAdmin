@@ -379,15 +379,15 @@
     </Content>
     <Content Include="Global.asax" />
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditAttributes.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditCategories.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditContent.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditPackage.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditPricing.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditRelated.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditReviews.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditVehicles.js" />
-    <Content Include="Scripts\admin\Admin_Product\EditVideos.js" />
+    <Content Include="Scripts\admin\Product\EditAttributes.js" />
+    <Content Include="Scripts\admin\Product\EditCategories.js" />
+    <Content Include="Scripts\admin\Product\EditContent.js" />
+    <Content Include="Scripts\admin\Product\EditPackage.js" />
+    <Content Include="Scripts\admin\Product\EditPricing.js" />
+    <Content Include="Scripts\admin\Product\EditRelated.js" />
+    <Content Include="Scripts\admin\Product\EditReviews.js" />
+    <Content Include="Scripts\admin\Product\EditVehicles.js" />
+    <Content Include="Scripts\admin\Product\EditVideos.js" />
     <Content Include="Scripts\admin\blog.js" />
     <Content Include="Scripts\admin\clonepart.js" />
     <Content Include="Scripts\admin\cms.js" />

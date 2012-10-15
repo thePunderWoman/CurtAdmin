@@ -8,16 +8,16 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Forum/Threads/" + thread.topicID)">Threads</a>
+        <a href="@Url.Content("~/Forum/Threads/" + thread.topicID)">Threads</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+        <a href="@Url.Content("~/Forum/AddGroup")">Add Group</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + groupid)">Add Topic</a>
+        <a href="@Url.Content("~/Forum/AddTopic/" + groupid)">Add Topic</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddPost/" + thread.topicID)">Start Thread</a>
+        <a href="@Url.Content("~/Forum/AddPost/" + thread.topicID)">Start Thread</a>
     </li>
     <li class="clear"></li>
 </ul>
@@ -38,11 +38,11 @@
                 <div class="postbox">
                     <p class="title">@post.title</p>
                     <div class="controls">
-                        <a href="/Admin_Forum/Approve/@post.postID" data-id="@post.postID" class="approve">@((post.approved) ? "Unapprove" : "Approve")</a> |
-                        <a href="/Admin_Forum/EditPost/@post.postID" data-id="@post.postID" class="edit">Edit</a> | 
-                        <a href="/Admin_Forum/FlagPost/@post.postID" data-id="@post.postID" class="flag">Spam</a> | 
-                        <a href="/Admin_Forum/BlockIP/@post.postID" data-id="@post.postID" class="block">Block IP</a> | 
-                        <a href="/Admin_Forum/DeletePost/@post.postID" data-id="@post.postID" class="delete">Delete</a></div>
+                        <a href="/Forum/Approve/@post.postID" data-id="@post.postID" class="approve">@((post.approved) ? "Unapprove" : "Approve")</a> |
+                        <a href="/Forum/EditPost/@post.postID" data-id="@post.postID" class="edit">Edit</a> | 
+                        <a href="/Forum/FlagPost/@post.postID" data-id="@post.postID" class="flag">Spam</a> | 
+                        <a href="/Forum/BlockIP/@post.postID" data-id="@post.postID" class="block">Block IP</a> | 
+                        <a href="/Forum/DeletePost/@post.postID" data-id="@post.postID" class="delete">Delete</a></div>
                     <p>@post.post</p>
                 </div>
                 <div class="clear"></div>

@@ -8,16 +8,16 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_FileExt")" class="active">Extensions</a>
+        <a href="@Url.Content("~/FileExt")" class="active">Extensions</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_FileExt/Types")">Types</a>
+        <a href="@Url.Content("~/FileExt/Types")">Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_FileExt/AddType")">Add Type</a>
+        <a href="@Url.Content("~/FileExt/AddType")">Add Type</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_FileExt/AddExtension")">Add Extension</a>
+        <a href="@Url.Content("~/FileExt/AddExtension")">Add Extension</a>
     </li>
 </ul>
 <div id="content_container">
@@ -26,7 +26,7 @@
     @if (error.Length != 0) {
         <p style="font-weight: bold; color: Red;">@error</p>
     }
-    <form action="/Admin_FileExt/AddType" Method="post" class="form_left">
+    <form action="/FileExt/AddType" Method="post" class="form_left">
         <!-- Item Name -->
         <label for="fileType">
             Name

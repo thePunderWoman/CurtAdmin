@@ -25,9 +25,9 @@
                     <td>@comment.createdDate.ToString()</td>
                     <td>@((comment.approved == true) ? "Yes" : "No")</td>
                     <td>
-                        <a href="/Admin_BlogComments/ViewComment/@comment.commentID" title="View">View</a> | 
-                        <a href="/Admin_BlogComments/Approve/@comment.commentID" title="Approve">Approve</a> | 
-                        <a href="/Admin_BlogComments/Delete/@comment.commentID" title="Delete" data-id="@comment.commentID" class="delete_comment">Delete</a>
+                        <a href="/BlogComments/ViewComment/@comment.commentID" title="View">View</a> | 
+                        <a href="/BlogComments/Approve/@comment.commentID" title="Approve">Approve</a> | 
+                        <a href="/BlogComments/Delete/@comment.commentID" title="Delete" data-id="@comment.commentID" class="delete_comment">Delete</a>
                     </td>
                 </tr>
             }
@@ -55,7 +55,7 @@
             var comment_id = $(this).attr('data-id');
             var table_row = $(this).parent().parent().get()[0];
             if (comment_id > 0 && confirm("Are you sure you want to remove this Comment?")) {
-                $.getJSON('/Admin_BlogComments/Delete/' + comment_id, function (resp) {
+                $.getJSON('/BlogComments/Delete/' + comment_id, function (resp) {
                     if (resp.error == undefined) {
                         commentTable.fnDeleteRow(table_row);
                         showMessage('Comment removed.');

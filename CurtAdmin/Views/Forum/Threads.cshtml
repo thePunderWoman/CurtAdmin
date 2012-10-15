@@ -7,16 +7,16 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Forum/Topics/" + topic.TopicGroupID)">Topics</a>
+        <a href="@Url.Content("~/Forum/Topics/" + topic.TopicGroupID)">Topics</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddGroup")">Add Group</a>
+        <a href="@Url.Content("~/Forum/AddGroup")">Add Group</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddTopic/" + topic.TopicGroupID)">Add Topic</a>
+        <a href="@Url.Content("~/Forum/AddTopic/" + topic.TopicGroupID)">Add Topic</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Forum/AddPost/" + topic.topicID)">Start Thread</a>
+        <a href="@Url.Content("~/Forum/AddPost/" + topic.topicID)">Start Thread</a>
     </li>
     <li class="clear"></li>
 </ul>
@@ -40,8 +40,8 @@
                     <td style="text-align: center;">@String.Format("{0:M/dd/yyyy} at {0:h:mm tt}", thread.latestPost.createdDate)</td>
                     <td style="text-align: center;">@((!thread.closed) ? "Yes" : "No")</td>
                     <td style="text-align: center;">
-                        <a href="/Admin_Forum/Thread/@thread.threadID" title="Posts">Posts</a> |
-                        <a href="/Admin_Forum/DeleteThread/@thread.threadID" title="Delete" class="deletethread">Delete</a>
+                        <a href="/Forum/Thread/@thread.threadID" title="Posts">Posts</a> |
+                        <a href="/Forum/DeleteThread/@thread.threadID" title="Delete" class="deletethread">Delete</a>
                     </td>
                 </tr>
             }

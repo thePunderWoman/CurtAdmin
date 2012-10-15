@@ -8,7 +8,7 @@
 
 <div id="content_container">
 
-    <h2>Comments for Blog Post: @post.post_title <a href="/Admin_Blog/" class="backButton">Back to Posts</a></h2>
+    <h2>Comments for Blog Post: @post.post_title <a href="/Blog/" class="backButton">Back to Posts</a></h2>
     <hr />
 
     <p>Posted On @String.Format("{0:MMM d, yyyy} at {0:h:mm tt}", post.publishedDate)</p>
@@ -37,11 +37,11 @@
                     <td>@comment.createdDate.ToString()</td>
                     <td>@((comment.approved == true) ? "Yes" : "No")</td>
                     <td>
-                        <a href="/Admin_BlogComments/ViewComment/@comment.commentID" class="viewcomment" data-id="@comment.commentID" title="View">View</a> | 
+                        <a href="/BlogComments/ViewComment/@comment.commentID" class="viewcomment" data-id="@comment.commentID" title="View">View</a> | 
                         @if (!(comment.approved)) {
-                            <a href="/Admin_BlogComments/Approve/@comment.commentID" class="approvecomment" data-id="@comment.commentID" title="Approve">Approve</a> <text>|</text>
+                            <a href="/BlogComments/Approve/@comment.commentID" class="approvecomment" data-id="@comment.commentID" title="Approve">Approve</a> <text>|</text>
                         }
-                        <a href="/Admin_BlogComments/Delete/@comment.commentID" title="Delete" data-id="@comment.commentID" class="delete_comment">Delete</a>
+                        <a href="/BlogComments/Delete/@comment.commentID" title="Delete" data-id="@comment.commentID" class="delete_comment">Delete</a>
                     </td>
                 </tr>
             }
@@ -74,7 +74,7 @@
             var comment_id = $(this).attr('data-id');
             var table_row = $(this).parent().parent().get()[0];
             if (comment_id > 0 && confirm("Are you sure you want to remove this Comment?")) {
-                $.getJSON('/Admin_BlogComments/Delete/' + comment_id, function (resp) {
+                $.getJSON('/BlogComments/Delete/' + comment_id, function (resp) {
                     if (resp.error == undefined) {
                         commentTable.fnDeleteRow(table_row);
                         showMessage('Comment removed.');
@@ -91,7 +91,7 @@
             var table_row = $(this).parent().parent().get()[0];
             var comment_id = $(this).attr('data-id');
             if (comment_id > 0) {
-                $.getJSON('/Admin_BlogComments/CommentJSON/' + comment_id, function (resp) {
+                $.getJSON('/BlogComments/CommentJSON/' + comment_id, function (resp) {
                     if (resp.error == undefined) {
                         $('#comment_box_text').html(resp.comment_text);
                         $('#comment_dialog').dialog({
@@ -101,7 +101,7 @@
                             buttons: {
                                 "Approve": function () {
                                     var dialog = $(this);
-                                    $.getJSON('/Admin_BlogComments/ApproveAjax/' + comment_id, function (resp) {
+                                    $.getJSON('/BlogComments/ApproveAjax/' + comment_id, function (resp) {
                                         if (resp.error == undefined) {
                                             commentTable.fnDeleteRow(table_row);
                                             commentTable.fnAddData([
@@ -110,7 +110,7 @@
                                             resp.email,
                                             resp.createdDate,
                                             resp.approved,
-                                            '<a href="/Admin_BlogComments/Index/' + resp.commentID + '" class="viewcomment" data-id="' + resp.commentID + '" title="View">View</a> | <a href="/Admin/Comments/Delete/' + resp.commentID + '" title="Delete" data-id="' + resp.commentID + '" class="delete_comment">Delete</a>'
+                                            '<a href="/BlogComments/Index/' + resp.commentID + '" class="viewcomment" data-id="' + resp.commentID + '" title="View">View</a> | <a href="/Admin/Comments/Delete/' + resp.commentID + '" title="Delete" data-id="' + resp.commentID + '" class="delete_comment">Delete</a>'
                                             ]);
                                             showMessage('Comment approved.');
                                             $('#comment_box_text').empty();
@@ -123,7 +123,7 @@
                                 "Delete": function () {
                                     var dialog = $(this);
                                     if (comment_id > 0 && confirm("Are you sure you want to remove this Comment?")) {
-                                        $.getJSON('/Admin_BlogComments/Delete/' + comment_id, function (resp) {
+                                        $.getJSON('/BlogComments/Delete/' + comment_id, function (resp) {
                                             if (resp.error == undefined) {
                                                 commentTable.fnDeleteRow(table_row);
                                                 showMessage('Comment removed.');
@@ -156,7 +156,7 @@
             var comment_id = $(this).attr('data-id');
             var table_row = $(this).parent().parent().get()[0];
             if (comment_id > 0 && confirm("Are you sure you want to approve this Comment?")) {
-                $.getJSON('/Admin_BlogComments/ApproveAjax/' + comment_id, function (resp) {
+                $.getJSON('/BlogComments/ApproveAjax/' + comment_id, function (resp) {
                     if (resp.error == undefined) {
                         commentTable.fnDeleteRow(table_row);
                         commentTable.fnAddData([
@@ -165,7 +165,7 @@
                         resp.email,
                         resp.createdDate,
                         resp.approved,
-                        '<a href="/Admin_BlogComments/Index/' + resp.commentID + '" class="viewcomment" data-id="' + resp.commentID + '" title="View">View</a> | <a href="/Admin/Comments/Delete/' + resp.commentID + '" title="Delete" data-id="' + resp.commentID + '" class="delete_comment">Delete</a>'
+                        '<a href="/BlogComments/Index/' + resp.commentID + '" class="viewcomment" data-id="' + resp.commentID + '" title="View">View</a> | <a href="/Admin/Comments/Delete/' + resp.commentID + '" title="Delete" data-id="' + resp.commentID + '" class="delete_comment">Delete</a>'
                         ]);
                         showMessage('Comment approved.');
                     } else {

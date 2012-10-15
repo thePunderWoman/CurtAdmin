@@ -6,7 +6,7 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Blog/Add")">Add Post</a>
+        <a href="@Url.Content("~/Blog/Add")">Add Post</a>
     </li>
 </ul>
 
@@ -38,10 +38,10 @@
                         {
                             <a href="http://beta.curtmfg.com/Blog/Post/@(String.Format("{0:M-dd-yyyy}", post.publishedDate))/@(Server.UrlEncode(post.slug))" title="View">View</a> <text>|</text>
                         }
-                        <a href="/Admin_Blog/Edit/@post.blogPostID" title="Edit">Edit</a> | 
-                        <a href="/Admin_Blog/Delete/@post.blogPostID" title="Delete" class="delete_post">Delete</a>
+                        <a href="/Blog/Edit/@post.blogPostID" title="Edit">Edit</a> | 
+                        <a href="/Blog/Delete/@post.blogPostID" title="Delete" class="delete_post">Delete</a>
                         @if (post.comments.Count() > 0 || post.mod_comments.Count() > 0) {
-                            <text>|</text> <a href="/Admin_BlogComments/PostComments/@post.blogPostID" title="Moderate Comments">Comments</a>
+                            <text>|</text> <a href="/BlogComments/PostComments/@post.blogPostID" title="Moderate Comments">Comments</a>
                         }
                     </td>
                 </tr>

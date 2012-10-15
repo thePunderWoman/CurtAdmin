@@ -6,14 +6,14 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_FAQ/Add")">Add Question/Answer</a>
+        <a href="@Url.Content("~/FAQ/Add")">Add Question/Answer</a>
     </li>
 </ul>
 <div id="content_container">
     <h2>Edit @faq.question</h2>
 
     <p id="err">@ViewBag.err</p>
-    <form class="form_left" id="add_form" method="post" action="/Admin_FAQ/Save/@faq.faqID">
+    <form class="form_left" id="add_form" method="post" action="/FAQ/Save/@faq.faqID">
         <label for="question">
             Question
             <textarea cols="100" rows="5" id="question" name="question" placeholder="Enter the question here...">@((ViewBag.q.Length == 0)?faq.question:ViewBag.f)</textarea>
@@ -25,7 +25,7 @@
         </label>
 
         <div id="buttons">
-            <a href="/Admin_FAQ/" title="Cancel" id="btnCancel" class="cancel">Cancel</a>
+            <a href="/FAQ/" title="Cancel" id="btnCancel" class="cancel">Cancel</a>
             <input type="submit" id="btnSave" name="btnSave" value="Save" />
         </div>
     </form>

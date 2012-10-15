@@ -31,7 +31,7 @@
 <div id="content_container">
     <h2>Products for @ViewBag.cat.catTitle ( @ViewBag.partCount )</h2>
     <div id="addPart">
-        <a href="@Url.Content("~/Admin_Product/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
+        <a href="@Url.Content("~/Product/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
     </div>
     <div style="clear:both"></div>
 
@@ -90,13 +90,13 @@
             switch (action) {
 
                 case 'edit':
-                    window.location.href = '/Admin_Product/Edit?partID=' + partID;
+                    window.location.href = '/Product/Edit?partID=' + partID;
                     break;
                     
                 case 'delete':
                     // Delete this category
                     if (confirm("Are you sure you want to remove this category?\r\nThis cannot be undone!")) {
-                        $.get('/Admin_Product/DeletePart', { 'partID': partID }, function (response) {
+                        $.get('/Product/DeletePart', { 'partID': partID }, function (response) {
                             if (response == '') {
                                 partTable.fnDeleteRow($('#part\\:' + partID).get()[0]);
                                 showMessage("Part #" + partID + " has been removed.");

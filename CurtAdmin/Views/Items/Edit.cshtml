@@ -8,13 +8,13 @@
 <div id="usersNav">
     <ul>
         <li>
-            <a href="@Url.Content("~/Admin_Items")">View Items</a>
+            <a href="@Url.Content("~/Items")">View Items</a>
         </li>
         <li>
-            <a href="@Url.Content("~/Admin_Items/Add")">Add New</a>
+            <a href="@Url.Content("~/Items/Add")">Add New</a>
         </li>
         <!--li>
-            <a href="@Url.Content("~/Admin_Items/ViewDocs")">View Documents</a>
+            <a href="@Url.Content("~/Items/ViewDocs")">View Documents</a>
         </li-->
     </ul>
 </div>
@@ -263,7 +263,7 @@
                 // Make sure the category we're trying to add isn't already in the table
                 var existing = $(table).find('#' + catID).get()[0];
                 if (existing == undefined) {
-                    $.get('/Admin_Items/AddItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
+                    $.get('/Items/AddItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
                         if (response == "") {
                             var newCat_input = '<input type="hidden" name="cat" id="newCat:' + catID + '" value="' + catID + '" />';
                             $(this).after(newCat_input);
@@ -296,7 +296,7 @@
             if (confirm('Are you sure you want to remove this category from the item?')) {
                 var catID = $(this).attr('id');
                 var itemID = $('#itemID').val();
-                $.get('/Admin_Items/DeleteItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
+                $.get('/Items/DeleteItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
                     if (response == '') {
                         catTable.fnDeleteRow($('#cat\\:' + catID).get()[0]);
                         showMessage("Cateogry removed");
@@ -324,7 +324,7 @@
             var docID = $(this).attr('id');
             var clicked_link = $(this);
             if (docID > 0 && confirm('Are you sure you want to remove this document?')) {
-                $.get('/Admin_Items/DeleteDocument', { 'docID': docID }, function (response) {
+                $.get('/Items/DeleteDocument', { 'docID': docID }, function (response) {
                     if (response == "") {
                         documentTable.fnDeleteRow($(clicked_link).parent().parent().get()[0]);
                         showMessage("Document removed");

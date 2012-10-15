@@ -11,7 +11,7 @@
             <a href="@HttpContext.Current.Request.Url.AbsoluteUri" class="active">View Categories</a>
         </li>
         <li>
-            <a href="@Url.Content("~/Admin_Category/Add")">Add New</a>
+            <a href="@Url.Content("~/Category/Add")">Add New</a>
         </li>
     </ul>
 </div>
@@ -69,14 +69,14 @@
             var catID = $(this).attr('id').split(':')[1];
             switch (action) {
                 case 'viewItems':
-                    window.location.href = '/Admin_Items/ViewCatItems?catID=' + catID;
+                    window.location.href = '/Items/ViewCatItems?catID=' + catID;
                     break;
                 case 'edit':
-                    window.location.href = '/Admin_Category/Edit?cat_id=' + catID;
+                    window.location.href = '/Category/Edit?cat_id=' + catID;
                     break;
                 case 'delete':
                     if (confirm('Are you sure you want to remove this category?')) {
-                        $.get('/Admin_Category/RemoveCategory?cat_id=' + catID, function (response) {
+                        $.get('/Category/RemoveCategory?cat_id=' + catID, function (response) {
                             if (response == '') {
                                 $('#cat\\:' + catID).remove();
                                 showMessage('Category was removed.');

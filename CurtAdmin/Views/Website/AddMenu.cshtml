@@ -8,13 +8,13 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Website/Content")">Manage Content</a>
+        <a href="@Url.Content("~/Website/Content")">Manage Content</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_Website/Menus")">Manage Menus</a>
+        <a href="@Url.Content("~/Website/Menus")">Manage Menus</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Website/Menu/Add")" class="active">Add Menu</a>
+        <a href="@Url.Content("~/Website/Menu/Add")" class="active">Add Menu</a>
     </li>
 </ul>
 
@@ -24,7 +24,7 @@
     @if (error.Length != 0) {
         <p style="font-weight: bold; color: Red;">@error</p>
     }
-    <form action="/Admin_Website/Menu/Add" Method="post" class="form_left">
+    <form action="/Website/Menu/Add" Method="post" class="form_left">
         <!-- Item Name -->
         <label for="menu_name">
             Name

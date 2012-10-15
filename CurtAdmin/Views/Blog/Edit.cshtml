@@ -22,7 +22,7 @@
 
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Blog/Add")">Add Post</a>
+        <a href="@Url.Content("~/Blog/Add")">Add Post</a>
     </li>
 </ul>
 
@@ -33,7 +33,7 @@
         <p>@errors</p>
     }
 
-    <form method="post" id="saveform" action="/Admin_Blog/Save/@post.blogPostID" class="form_left">
+    <form method="post" id="saveform" action="/Blog/Save/@post.blogPostID" class="form_left">
         <label for="title">
             Title
             <input type="text" name="title" id="title" placeholder="Enter the title of the post" value="@((ViewBag.title != null && ViewBag.title.Length > 0)?ViewBag.title:post.post_title)" />
@@ -87,7 +87,7 @@
         }
 
         <div class="buttons">
-            <a href="/Admin_Blog/" title="Cancel" class="cancel">Cancel</a>
+            <a href="/Blog/" title="Cancel" class="cancel">Cancel</a>
             @if (post.publishedDate == null)
             {
                 <input type="button" id="btnSubmitPublish" name="btnSubmitPublish" value="Save & Publish" />
@@ -101,8 +101,8 @@
     $(document).ready(function () {
 
         CKEDITOR.replace('content', {
-            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageUploadUrl: '/File/CKUpload',
+            filebrowserImageBrowseUrl: '/File/CKIndex',
             filebrowserImageWindowWidth: '640',
             filebrowserImageWindowHeight: '480'
         });

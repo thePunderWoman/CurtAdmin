@@ -36,10 +36,10 @@
 </style>
 <div id="content_container">
     <h2>Viewing @ViewBag.H2</h2>
-    <a href="/Admin_Customers/Add" title="Add Customer" id="addCustomer">
+    <a href="/Customers/Add" title="Add Customer" id="addCustomer">
         <img src="/Content/img/addCustomer.png" alt="Add Customer" />
     </a>
-    <a href="/Admin_Customers/MassUpload" title="Mass Upload" id="massUpload">
+    <a href="/Customers/MassUpload" title="Mass Upload" id="massUpload">
         <img src="/Content/img/mass_upload.png" alt="Mass Upload" />
     </a>
     <hr style="border-bottom:1px dotted #343434;clear:both" />
@@ -75,8 +75,8 @@
                     <td>@customer.DealerType.type</td>
                     <td>@customer.CustomerLocations.Count()</td>
                     <td>
-                        <a href="/Admin_Customers/Locations/@customer.cust_id" class="locations">Locations</a> | 
-                        <a href="/Admin_Customers/Edit/@customer.cust_id" class="edit">Edit</a> | 
+                        <a href="/Customers/Locations/@customer.cust_id" class="locations">Locations</a> | 
+                        <a href="/Customers/Edit/@customer.cust_id" class="edit">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" id="@customer.cust_id">Delete</a>
                     </td>
                 </tr>
@@ -101,7 +101,7 @@
             var custID = $(this).attr('id');
             var table_row = $(this).parent().parent().get()[0];
             if (custID > 0 && confirm('Are you sure you want to delete this customer?')) {
-                $.get('/Admin_Customers/Delete/' + custID, function (response) {
+                $.get('/Customers/Delete/' + custID, function (response) {
                     if (response.length == 0) {
                         customerTable.fnDeleteRow(table_row);
                     } else {
@@ -125,7 +125,7 @@
         var infoWindows = new Array();
         var markers = new Array();
 
-        $.getJSON('/Admin_Customers/GetCustomersJSON', function (geo_json) {
+        $.getJSON('/Customers/GetCustomersJSON', function (geo_json) {
             $.each(geo_json, function (i, customer) {
                 var latitude = customer.latitude;
                 var longitude = customer.longitude;

@@ -10,10 +10,10 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Website/Content")">Manage Content</a>
+        <a href="@Url.Content("~/Website/Content")">Manage Content</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_Website/Menus")">Manage Menus</a>
+        <a href="@Url.Content("~/Website/Menus")">Manage Menus</a>
     </li>
 </ul>
 
@@ -26,7 +26,7 @@
     @if (message.Length != 0) {
         <p style="font-weight: bold; color: green;">@message</p>
     }
-    <form action="/Admin_Website/Link/Edit/@item.menuContentID" Method="post" class="form_left">
+    <form action="/Website/Link/Edit/@item.menuContentID" Method="post" class="form_left">
         <!-- Item Name -->
         <label for="link_name">
             Title

@@ -7,7 +7,7 @@
 
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_News/Add")" class="active">Add News</a>
+        <a href="@Url.Content("~/News/Add")" class="active">Add News</a>
     </li>
 </ul>
 <div id="content_container">
@@ -15,7 +15,7 @@
     <h2>Add News Item</h2>
 
     <p id="err">@ViewBag.err</p>
-    <form class="form_left" id="add_form" method="post" action="/Admin_News/Save">
+    <form class="form_left" id="add_form" method="post" action="/News/Save">
         <label for="title">
             Title
             <input type="text" id="title" name="title" placeholder="Enter the title here..." value="@ViewBag.t" />
@@ -41,7 +41,7 @@
         </label>
 
         <div id="buttons">
-            <a href="/Admin_News/" title="Cancel" id="btnCancel" class="cancel">Cancel</a>
+            <a href="/News/" title="Cancel" id="btnCancel" class="cancel">Cancel</a>
             <input type="submit" id="btnSave" name="btnSave" value="Save" />
         </div>
     </form>
@@ -60,8 +60,8 @@
         });
 
         CKEDITOR.replace('content', {
-            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageUploadUrl: '/File/CKUpload',
+            filebrowserImageBrowseUrl: '/File/CKIndex',
             filebrowserImageWindowWidth: '640',
             filebrowserImageWindowHeight: '480'
         });

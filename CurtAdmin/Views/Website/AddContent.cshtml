@@ -10,16 +10,16 @@
 
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Website/Content")">Manage Content</a>
+        <a href="@Url.Content("~/Website/Content")">Manage Content</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_Website/Menus")">Manage Menus</a>
+        <a href="@Url.Content("~/Website/Menus")">Manage Menus</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Website/Link/Add/" + ViewBag.menuID)">Add Link</a>
+        <a href="@Url.Content("~/Website/Link/Add/" + ViewBag.menuID)">Add Link</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Website/Content/Add/" + ViewBag.menuID)" class="active">Add Content</a>
+        <a href="@Url.Content("~/Website/Content/Add/" + ViewBag.menuID)" class="active">Add Content</a>
     </li>
 </ul>
 <div id="content_container">
@@ -28,7 +28,7 @@
     @if (error.Length != 0) {
         <p style="font-weight: bold; color: Red;">@error</p>
     }
-    <form action="/Admin_Website/Content/Add/@ViewBag.menuID" Method="post" id="saveform" class="form_left">
+    <form action="/Website/Content/Add/@ViewBag.menuID" Method="post" id="saveform" class="form_left">
         <input type="hidden" name="publish" id="publish" value="false" />
 
         <!-- Item Name -->
@@ -76,7 +76,7 @@
         </label>
 
         <div id="buttons">
-            <a href="/Admin_Website/" title="Cancel" id="btnCancel" class="cancel">Cancel</a>
+            <a href="/Website/" title="Cancel" id="btnCancel" class="cancel">Cancel</a>
             <input type="button" id="btnSubmitPublish" name="btnSubmitPublish" value="Save & Publish" />
             <input type="submit" id="btnSave" name="btnSave" value="Save" />
         </div>
@@ -87,8 +87,8 @@
     $(document).ready(function () {
 
         CKEDITOR.replace('page_content', {
-            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageUploadUrl: '/File/CKUpload',
+            filebrowserImageBrowseUrl: '/File/CKIndex',
             filebrowserImageWindowWidth: '640',
             filebrowserImageWindowHeight: '480'
         });

@@ -13,17 +13,17 @@
 
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Website/Content")" class="active">Manage Content</a>
+        <a href="@Url.Content("~/Website/Content")" class="active">Manage Content</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_Website/Menus")">Manage Menus</a>
+        <a href="@Url.Content("~/Website/Menus")">Manage Menus</a>
     </li>
         @if (menu != null && menu.menuID != 0) {
         <li class="add">
-            <a href="@Url.Content("~/Admin_Website/Link/Add/" + menu.menuID)">Add Link</a>
+            <a href="@Url.Content("~/Website/Link/Add/" + menu.menuID)">Add Link</a>
         </li>
         <li class="add">
-            <a href="@Url.Content("~/Admin_Website/Content/Add/" + menu.menuID)">Add Content</a>
+            <a href="@Url.Content("~/Website/Content/Add/" + menu.menuID)">Add Content</a>
         </li>
         }
 </ul>
@@ -54,16 +54,16 @@
                             <span class="title">@((item.hasContent()) ? item.content.page_title : (item.menuTitle + " (link)"))</span>
                             <span class="controls">
                                 @if (item.hasContent() && item.content.isPrimary) {
-                                    <a href="/Admin_Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/check.png" alt="Primary Page" title="Primary Page" /></a>
+                                    <a href="/Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/check.png" alt="Primary Page" title="Primary Page" /></a>
                                 } else if (item.hasContent()) {
-                                    <a href="/Admin_Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/makeprimary.png" alt="Make This Page the Primary Page" title="Make This Page the Primary Page" /></a>
+                                    <a href="/Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/makeprimary.png" alt="Make This Page the Primary Page" title="Make This Page the Primary Page" /></a>
                                 }
                                 @if (item.hasContent()) {
-                                    <a href="/Admin_Website/Content/Edit/@item.contentID"><img src="/Content/img/pencil.png" alt="Edit Page" title="Edit Page" /></a>
+                                    <a href="/Website/Content/Edit/@item.contentID"><img src="/Content/img/pencil.png" alt="Edit Page" title="Edit Page" /></a>
                                 } else {
-                                    <a href="/Admin_Website/Link/Edit/@item.menuContentID"><img src="/Content/img/pencil.png" alt="Edit Link" title="Edit Link" /></a>
+                                    <a href="/Website/Link/Edit/@item.menuContentID"><img src="/Content/img/pencil.png" alt="Edit Link" title="Edit Link" /></a>
                                 }
-                                <a href="/Admin_Website/RemoveContent/@item.menuContentID" class="remove" id="remove_@(item.menuContentID)"><img src="/Content/img/delete.png" alt="Remove Page From Menu" title="Remove Page From Menu" /></a>
+                                <a href="/Website/RemoveContent/@item.menuContentID" class="remove" id="remove_@(item.menuContentID)"><img src="/Content/img/delete.png" alt="Remove Page From Menu" title="Remove Page From Menu" /></a>
                             </span>
                             <span id="meta_@(item.menuContentID)">
                                 <input type="hidden" id="parent_@(item.menuContentID)" value="@((item.parentID == null) ? 0 : item.parentID)" />
@@ -89,11 +89,11 @@
                             <span class="title">@item.page_title</span>
                             <span class="controls">
                                 @if (item.isPrimary) {
-                                    <a href="/Admin_Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/check.png" alt="Primary Page" title="Primary Page" /></a>
+                                    <a href="/Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/check.png" alt="Primary Page" title="Primary Page" /></a>
                                 } else {
-                                    <a href="/Admin_Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/makeprimary.png" alt="Make This Page the Primary Page" title="Make This Page the Primary Page" /></a>
+                                    <a href="/Website/SetPrimaryContent/@item.contentID/@menu.menuID"><img src="/Content/img/makeprimary.png" alt="Make This Page the Primary Page" title="Make This Page the Primary Page" /></a>
                                 }
-                                <a href="/Admin_Website/Content/Edit/@item.contentID"><img src="/Content/img/pencil.png" alt="Edit Page" title="Edit Page" /></a>
+                                <a href="/Website/Content/Edit/@item.contentID"><img src="/Content/img/pencil.png" alt="Edit Page" title="Edit Page" /></a>
                                 <a href="javascript:;" class="delete" id="delete_@(item.contentID)"><img src="/Content/img/delete.png" alt="Permanently Delete Page" title="Permanently Delete Page" /></a>
                             </span>
                         </li>

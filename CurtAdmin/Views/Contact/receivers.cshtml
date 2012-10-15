@@ -8,22 +8,22 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Contact")">Contacts</a>
+        <a href="@Url.Content("~/Contact")">Contacts</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_Contact/Receivers")" class="active">Receivers</a>
+        <a href="@Url.Content("~/Contact/Receivers")" class="active">Receivers</a>
     </li>
     <li>
-        <a href="@Url.Content("~/Admin_Contact/Types")">Types</a>
+        <a href="@Url.Content("~/Contact/Types")">Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Contact/AddType")">Add Type</a>
+        <a href="@Url.Content("~/Contact/AddType")">Add Type</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Contact/AddReceiver")">Add Receiver</a>
+        <a href="@Url.Content("~/Contact/AddReceiver")">Add Receiver</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/Admin_Contact/Export")">Export</a>
+        <a href="@Url.Content("~/Contact/Export")">Export</a>
     </li>
 </ul>
 <div id="content_container">
@@ -50,8 +50,8 @@
                         }
                     </td>
                     <td class="center">
-                        <a href="/Admin_Contact/EditReceiver/@r.contactReceiverID">Edit</a> |
-                        <a href="/Admin_Contact/DeleteReceiver/@r.contactReceiverID">Delete</a>
+                        <a href="/Contact/EditReceiver/@r.contactReceiverID">Edit</a> |
+                        <a href="/Contact/DeleteReceiver/@r.contactReceiverID">Delete</a>
                     </td>
                 </tr>
             }

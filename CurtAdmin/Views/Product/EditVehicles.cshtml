@@ -58,7 +58,7 @@
 
 <div id="content_container">
     <h2>Edit Vehicles for part #@part.partID - @part.shortDesc</h2>
-    <a href="@Url.Content("~/Admin_Vehicles/Add")" title="Add Vehicle" id="addVehicle">
+    <a href="@Url.Content("~/Vehicles/Add")" title="Add Vehicle" id="addVehicle">
         <img src="@Url.Content("~/Content/img/addVehicle.png")" alt="Add Vehicle" />
     </a>
     <hr style="border-bottom: 1px dotted #343434;clear:right" />
@@ -142,7 +142,7 @@
         <hr style="border-bottom: 0.5px dotted #343434" />
 
         <h3>Add a Vehicle</h3>
-        <form action="/Admin_Product/Vehicles" method="get" id="addVehicleForm">
+        <form action="/Product/Vehicles" method="get" id="addVehicleForm">
             <label for="year">
                 Year
                 <select name="year" id="select_year">
@@ -175,5 +175,5 @@
     </div>
     <input type="hidden" name="partID" id="partID" value="@part.partID" />
 </div>
-<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Admin_Product/EditVehicles.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Product/EditVehicles.js")"></script>
 

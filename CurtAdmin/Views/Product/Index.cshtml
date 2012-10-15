@@ -26,13 +26,13 @@
 <div id="content_container">
     <h2>View Parts by category</h2>
     <div id="addPart">
-        <a href="@Url.Content("~/Admin_Product/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
+        <a href="@Url.Content("~/Product/Add")"><img src="@Url.Content("~/Content/img/addPart.png")" /></a>
     </div>
     <div style="clear:both"></div>
 
     <p>Loading all the parts onto one page would take a little while. So how about you select a category of parts to view? Might make things a little less painless.</p>
 
-    <p style="font-size: 8pt">However, if you're one of those people who love agonizing wait times.....<a href="@Url.Content("~/Admin_Product/ViewAll")">click here</a> and grab some coffee.</p>
+    <p style="font-size: 8pt">However, if you're one of those people who love agonizing wait times.....<a href="@Url.Content("~/Product/ViewAll")">click here</a> and grab some coffee.</p>
     
     <div id="loading_area">
         <p>Loading categories...</p>
@@ -58,7 +58,7 @@
                     <td>@cat.parentCat</td>
                     <td>@cat.partCount</td>
                     <td class="center">
-                        <a href="/Admin_ProductCategories/CategoryItems?catID=@cat.catID">View Parts</a>
+                        <a href="/ProductCategories/CategoryItems?catID=@cat.catID">View Parts</a>
                     </td>
                 </tr>
             }
@@ -69,7 +69,7 @@
                     <td></td>
                     <td>@ViewBag.unknown</td>
                     <td class="center">
-                        <a href="/Admin_ProductCategories/CategoryItems?unknown=unknown">View Parts</a>
+                        <a href="/ProductCategories/CategoryItems?unknown=unknown">View Parts</a>
                     </td>
                 </tr>
         </tbody>

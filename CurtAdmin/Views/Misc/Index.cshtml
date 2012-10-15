@@ -6,7 +6,7 @@
 }
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Misc/AddContentType")" id="addContentType">Add</a>
+        <a href="@Url.Content("~/Misc/AddContentType")" id="addContentType">Add</a>
     </li>
 </ul>
 <div id="content_container">
@@ -29,8 +29,8 @@
                     <td>@t.type</td>
                     <td>@((t.allowHTML) ? "Yes" : "No")</td>
                     <td class="center">
-                        <a href="/Admin_Misc/EditContentType?cTypeID=@t.cTypeID" id="edit_@(t.cTypeID)" class="edit">Edit</a> |
-                        <a href="/Admin_Misc/DeleteContentType?cTypeID=@t.cTypeID" id="delete_@(t.cTypeID)" class="delete">Delete</a>
+                        <a href="/Misc/EditContentType?cTypeID=@t.cTypeID" id="edit_@(t.cTypeID)" class="edit">Edit</a> |
+                        <a href="/Misc/DeleteContentType?cTypeID=@t.cTypeID" id="delete_@(t.cTypeID)" class="delete">Delete</a>
                     </td>
                 </tr>
             }
@@ -38,7 +38,7 @@
     </table>
 </div>
 <div id="editform" style="display: none;">
-    <form class="form_left" action="/Admin_Misc/EditContentType" method="post">
+    <form class="form_left" action="/Misc/EditContentType" method="post">
         <label for="type">
             Type:
             <input type="text" id="type" name="type" value="" placeholder="Type Name" />
@@ -75,13 +75,13 @@
                         if ($.trim(type) == "") bValid = false;
 
                         if (bValid) {
-                            $.post('/Admin_Misc/AddContentType', { 'type': type, 'allowHTML': allowHTML }, function (data) {
+                            $.post('/Misc/AddContentType', { 'type': type, 'allowHTML': allowHTML }, function (data) {
                                 // remove and re-add row to table
                                 var addId = typeTable.fnAddData([
                                         data.cTypeID,
                                         data.type,
                                         (data.allowHTML) ? 'Yes' : 'No',
-                                        '<a href="/Admin_Misc/EditContentType?cTypeID=' + data.cTypeID + '" id="edit_' + data.cTypeID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteContentType?cTypeID=' + data.cTypeID + '" id="delete_' + data.cTypeID + '" class="delete">Delete</a>'
+                                        '<a href="/Misc/EditContentType?cTypeID=' + data.cTypeID + '" id="edit_' + data.cTypeID + '" class="edit">Edit</a> | <a href="/Misc/DeleteContentType?cTypeID=' + data.cTypeID + '" id="delete_' + data.cTypeID + '" class="delete">Delete</a>'
                                     ]);
 
                                 var theNode = typeTable.fnSettings().aoData[addId[0]].nTr;
@@ -106,7 +106,7 @@
         $('.edit').live('click', function (event) {
             event.preventDefault();
             var idstr = $(this).attr('id').split('_')[1];
-            $.getJSON('/Admin_Misc/GetContentType', { 'cTypeID': idstr }, function (response) {
+            $.getJSON('/Misc/GetContentType', { 'cTypeID': idstr }, function (response) {
                 $('#cTypeID').val(response.cTypeID);
                 $('#type').val(response.type);
                 $('#type').attr('disabled', 'true');
@@ -131,14 +131,14 @@
                             if ($.trim(type) == "") bValid = false;
 
                             if (bValid) {
-                                $.post('/Admin_Misc/UpdateContentType', { 'cTypeID': cTypeID, 'allowHTML': allowHTML }, function (data) {
+                                $.post('/Misc/UpdateContentType', { 'cTypeID': cTypeID, 'allowHTML': allowHTML }, function (data) {
                                     // remove and re-add row to table
                                     typeTable.fnDeleteRow($('#typeRow\\:' + data.cTypeID).get()[0]);
                                     var addId = typeTable.fnAddData([
                                         data.cTypeID,
                                         data.type,
                                         (data.allowHTML) ? 'Yes' : 'No',
-                                        '<a href="/Admin_Misc/EditContentType?cTypeID=' + data.cTypeID + '" id="edit_' + data.cTypeID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteContentType?cTypeID=' + data.cTypeID + '" id="delete_' + data.cTypeID + '" class="delete">Delete</a>'
+                                        '<a href="/Misc/EditContentType?cTypeID=' + data.cTypeID + '" id="edit_' + data.cTypeID + '" class="edit">Edit</a> | <a href="/Misc/DeleteContentType?cTypeID=' + data.cTypeID + '" id="delete_' + data.cTypeID + '" class="delete">Delete</a>'
                                     ]);
 
                                     var theNode = typeTable.fnSettings().aoData[addId[0]].nTr;
@@ -165,7 +165,7 @@
             event.preventDefault();
             var idstr = $(this).attr('id').split('_')[1];
             if (confirm("Are you sure you want to remove this content type?\r\nThis cannot be undone!")) {
-                $.getJSON('/Admin_Misc/DeleteContentType', { 'cTypeID': idstr }, function (response) {
+                $.getJSON('/Misc/DeleteContentType', { 'cTypeID': idstr }, function (response) {
                     if ($.trim(response).length == 0) {
                         typeTable.fnDeleteRow($('#typeRow\\:' + idstr).get()[0]);
                         showMessage('Content Type has been removed.');

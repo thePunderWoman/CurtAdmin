@@ -15,7 +15,7 @@
 </style>
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_Misc/AddUnit")" id="addUnitType">Add</a>
+        <a href="@Url.Content("~/Misc/AddUnit")" id="addUnitType">Add</a>
     </li>
 </ul>
 <div id="content_container">
@@ -36,8 +36,8 @@
                     <td>@u.name</td>
                     <td>@u.code</td>
                     <td class="center">
-                        <a href="/Admin_Misc/EditUnit?id=@u.ID" id="edit_@(u.ID)" class="edit">Edit</a> |
-                        <a href="/Admin_Misc/DeleteUnit?id=@u.ID" id="delete_@(u.ID)" class="delete">Delete</a>
+                        <a href="/Misc/EditUnit?id=@u.ID" id="edit_@(u.ID)" class="edit">Edit</a> |
+                        <a href="/Misc/DeleteUnit?id=@u.ID" id="delete_@(u.ID)" class="delete">Delete</a>
                     </td>
                 </tr>
             }
@@ -45,7 +45,7 @@
     </table>
 </div>
 <div id="editform" style="display: none;">
-    <form class="form_left" action="/Admin_Misc/EditUnit" method="post">
+    <form class="form_left" action="/Misc/EditUnit" method="post">
         <label for="name">
             Unit:
             <input type="text" id="name" name="name" value="" placeholder="Unit Name" />
@@ -84,12 +84,12 @@
                         if ($.trim(code) == "") bValid = false;
 
                         if (bValid) {
-                            $.post('/Admin_Misc/AddUnit', { 'name': name, 'code': code }, function (data) {
+                            $.post('/Misc/AddUnit', { 'name': name, 'code': code }, function (data) {
                                 // remove and re-add row to table
                                 var addId = unitTable.fnAddData([
                                         data.name,
                                         data.code,
-                                        '<a href="/Admin_Misc/EditUnit?id=' + data.ID + '" id="edit_' + data.ID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteUnit?id=' + data.ID + '" id="delete_' + data.ID + '" class="delete">Delete</a>'
+                                        '<a href="/Misc/EditUnit?id=' + data.ID + '" id="edit_' + data.ID + '" class="edit">Edit</a> | <a href="/Misc/DeleteUnit?id=' + data.ID + '" id="delete_' + data.ID + '" class="delete">Delete</a>'
                                     ]);
 
                                 var theNode = unitTable.fnSettings().aoData[addId[0]].nTr;
@@ -114,7 +114,7 @@
         $('.edit').live('click', function (event) {
             event.preventDefault();
             var idstr = $(this).attr('id').split('_')[1];
-            $.getJSON('/Admin_Misc/GetUnit', { 'id': idstr }, function (response) {
+            $.getJSON('/Misc/GetUnit', { 'id': idstr }, function (response) {
                 $('#unitID').val(response.ID);
                 $('#name').val(response.name);
                 $('#code').val(response.code);
@@ -133,13 +133,13 @@
                             var bValid = true;
 
                             if (bValid) {
-                                $.post('/Admin_Misc/UpdateUnit', { 'id': id, 'name': name, 'code': code }, function (data) {
+                                $.post('/Misc/UpdateUnit', { 'id': id, 'name': name, 'code': code }, function (data) {
                                     // remove and re-add row to table
                                     unitTable.fnDeleteRow($('#unitRow\\:' + data.ID).get()[0]);
                                     var addId = unitTable.fnAddData([
                                         data.name,
                                         data.code,
-                                        '<a href="/Admin_Misc/EditUnit?id=' + data.ID + '" id="edit_' + data.ID + '" class="edit">Edit</a> | <a href="/Admin_Misc/DeleteUnit?id=' + data.ID + '" id="delete_' + data.ID + '" class="delete">Delete</a>'
+                                        '<a href="/Misc/EditUnit?id=' + data.ID + '" id="edit_' + data.ID + '" class="edit">Edit</a> | <a href="/Misc/DeleteUnit?id=' + data.ID + '" id="delete_' + data.ID + '" class="delete">Delete</a>'
                                     ]);
 
                                     var theNode = unitTable.fnSettings().aoData[addId[0]].nTr;
@@ -166,7 +166,7 @@
             event.preventDefault();
             var idstr = $(this).attr('id').split('_')[1];
             if (confirm("Are you sure you want to remove this Unit Of Measure?\r\nThis cannot be undone!")) {
-                $.getJSON('/Admin_Misc/DeleteUnit', { 'id': idstr }, function (response) {
+                $.getJSON('/Misc/DeleteUnit', { 'id': idstr }, function (response) {
                     if ($.trim(response).length == 0) {
                         unitTable.fnDeleteRow($('#unitRow\\:' + idstr).get()[0]);
                         showMessage('Unit of Measure has been removed.');

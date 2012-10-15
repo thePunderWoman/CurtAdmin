@@ -228,7 +228,7 @@
         $('#view_locations').live('click', function () {
             // Get the locations for this customer
             var custID = $('#cust_id').val();
-            $.getJSON('/Admin_Customers/GetLocations/' + custID, function (response) {
+            $.getJSON('/Customers/GetLocations/' + custID, function (response) {
                 $.each(response, function (i, loc) {
                     var loc_latlng = new google.maps.LatLng(loc.latitude, loc.longitude);
                     var image = '/Content/img/blue_map_marker.png';
@@ -243,7 +243,7 @@
                     });
                     google.maps.event.addListener(new_mark, 'click', toggleBounce);
 
-                    var loc_link = '<a href="/Admin_Customers/EditLocation/' + loc.locationID + '" title="Edit Location" style="display:block">' + loc.name + '</a>';
+                    var loc_link = '<a href="/Customers/EditLocation/' + loc.locationID + '" title="Edit Location" style="display:block">' + loc.name + '</a>';
                     $('#view_locations').after(loc_link);
                 });
                 $('#view_locations').remove();

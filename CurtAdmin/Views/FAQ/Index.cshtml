@@ -7,7 +7,7 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Admin_FAQ/Add")">Add Question/Answer</a>
+        <a href="@Url.Content("~/FAQ/Add")">Add Question/Answer</a>
     </li>
 </ul>
 <div id="content_container">
@@ -24,8 +24,8 @@
                 <tr>
                     <td>@faq.question</td>
                     <td>
-                        <a href="/Admin_FAQ/Edit/@faq.faqID" title="Edit">Edit</a> | 
-                        <a href="/Admin_FAQ/Delete/@faq.faqID" title="Delete" class="delete">Delete</a>
+                        <a href="/FAQ/Edit/@faq.faqID" title="Edit">Edit</a> | 
+                        <a href="/FAQ/Delete/@faq.faqID" title="Delete" class="delete">Delete</a>
                     </td>
                 </tr>
             }
