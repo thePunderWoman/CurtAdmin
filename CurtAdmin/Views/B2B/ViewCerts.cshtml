@@ -35,11 +35,11 @@
         margin-left:15px;  
     }
 </style>
-<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B/ViewCerts">Certificates</a></div>
+<div id="breadcrumbs"><a href="/B2B">B2B</a> > <a href="/B2B/ViewCerts">Certificates</a></div>
 
 <div id="content_container">
     <h2>Viewing B2B Certificates</h2>
-    <a href="/Admin_B2B/AddCert" title="Add Certificate" id="addCert" class="button">
+    <a href="/B2B/AddCert" title="Add Certificate" id="addCert" class="button">
         Add Certificate
     </a>
     <hr style="border-bottom:1px dotted #343434;clear:both" />
@@ -68,8 +68,8 @@
                     <td>@cert.requirementNum</td>
                     <td>@cert.inactive</td>
                     <td>
-                        <a href="/Admin_B2B/ViewCats/@cert.id" class="locations">Categories</a> | 
-                        <a href="/Admin_B2B/EditCert/@cert.id" class="edit">Edit</a> | 
+                        <a href="/B2B/ViewCats/@cert.id" class="locations">Categories</a> | 
+                        <a href="/B2B/EditCert/@cert.id" class="edit">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" id="@cert.id">Delete</a>
                     </td>
                 </tr>
@@ -87,7 +87,7 @@
             var certID = $(this).attr('id');
             var table_row = $(this).parent().parent().get()[0];
             if (certID > 0 && confirm('Are you sure you want to delete this certificate?')) {
-                $.get('/Admin_B2B/DeleteCert/' + certID, function (response) {
+                $.get('/B2B/DeleteCert/' + certID, function (response) {
                     if (response.length == 0) {
                         certTable.fnDeleteRow(table_row);
                     }else {

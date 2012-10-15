@@ -41,10 +41,10 @@
         margin-left:15px;  
     }
 </style>
-<div id="breadcrumbs"><a href="/Admin_B2B/">B2B</a> > <a href="/Admin_B2B/ViewCerts">Certificates</a> > <a href="/Admin_B2B/ViewCats/@question.B2BTest.B2BCategory.certID">Categories</a> > <a href="/Admin_B2B/ViewTests/@question.B2BTest.catID">Tests</a> > <a href="/Admin_B2B/ViewQuestions/@question.testID">Questions</a> > Answers</div>
+<div id="breadcrumbs"><a href="/B2B/">B2B</a> > <a href="/B2B/ViewCerts">Certificates</a> > <a href="/B2B/ViewCats/@question.B2BTest.B2BCategory.certID">Categories</a> > <a href="/B2B/ViewTests/@question.B2BTest.catID">Tests</a> > <a href="/B2B/ViewQuestions/@question.testID">Questions</a> > Answers</div>
 <div id="content_container">
     <h2>Viewing B2B Answers for question #@question.id.</h2>
-    <a href="/Admin_B2B/AddAnswer/@question.id" title="Add Answer" id="addAnswer" class="button">
+    <a href="/B2B/AddAnswer/@question.id" title="Add Answer" id="addAnswer" class="button">
         Add Answer
     </a>
     <hr style="border-bottom:1px dotted #343434;clear:both" />
@@ -75,7 +75,7 @@
                     <td>@ans.isCorrect</td>
                     <td>@ans.inactive</td>
                     <td>
-                        <a href="/Admin_B2B/EditAnswer/@ans.id" class="edit">Edit</a> | 
+                        <a href="/B2B/EditAnswer/@ans.id" class="edit">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" id="@ans.id">Delete</a>
                     </td>
                 </tr>
@@ -93,7 +93,7 @@
             var answerID = $(this).attr('id');
             var table_row = $(this).parent().parent().get()[0];
             if (answerID > 0 && confirm('Are you sure you want to delete this Answer?')) {
-                $.get('/Admin_B2B/DeleteAnswer/' + answerID, function (response) {
+                $.get('/B2B/DeleteAnswer/' + answerID, function (response) {
                     if (response.length == 0) {
                         answersTable.fnDeleteRow(table_row);
                     } else {

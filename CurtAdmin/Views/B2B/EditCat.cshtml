@@ -16,7 +16,7 @@
 </style>
 <script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
-<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B/ViewCerts">View Certificates</a> > <a href="/Admin_B2B/ViewCats/@cat.certID">View Categories</a> > Edit Category</div>
+<div id="breadcrumbs"><a href="/B2B">B2B</a> > <a href="/B2B/ViewCerts">View Certificates</a> > <a href="/B2B/ViewCats/@cat.certID">View Categories</a> > Edit Category</div>
 <div id="content_container">
     <h2>Edit Category: @cat.title</h2>
 
@@ -27,7 +27,7 @@
     {
         <p style="font-weight: bold; color: Green;">@ViewBag.msg</p>
     }
-    <form action="/Admin_B2B/EditCat/@cat.id" method="post" class="form_left">
+    <form action="/B2B/EditCat/@cat.id" method="post" class="form_left">
         <label for="title">
             Category Name
             <input type="text" name="title" id="title" value="@cat.title" required />

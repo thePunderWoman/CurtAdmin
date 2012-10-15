@@ -39,7 +39,7 @@
         margin-left: 15px;
     }
 </style>
-<div id="breadcrumbs"><a href="/Admin_B2B">B2B</a> > <a href="/Admin_B2B/ViewUsers">View Users</a> > View User Completed Certificates</div>
+<div id="breadcrumbs"><a href="/B2B">B2B</a> > <a href="/B2B/ViewUsers">View Users</a> > View User Completed Certificates</div>
 <div id="content_container">
     <h2>Viewing B2B User Info for: @B2BFullUser.name </h2>
     <hr style="border-bottom: 1px dotted #343434; clear: both" />
@@ -81,7 +81,7 @@
                         <td class="center">No</td>
                     }
                     <td>
-                        <a href="/Admin_B2B/ViewUserLessons/@B2BUser.id?certID=@compCert.id" class="locations">View Completed Lessons</a>
+                        <a href="/B2B/ViewUserLessons/@B2BUser.id?certID=@compCert.id" class="locations">View Completed Lessons</a>
                     </td>
                 </tr>
             }
@@ -110,7 +110,7 @@
 
     function set_hasPlaque(certID, custID) {
         
-        var path = "/Admin_B2B/SetPlaqueStatus/" + certID + "?custID=" + custID;
+        var path = "/B2B/SetPlaqueStatus/" + certID + "?custID=" + custID;
         $.get(path, function (response) {
             if (response.length == 0) {
                 
