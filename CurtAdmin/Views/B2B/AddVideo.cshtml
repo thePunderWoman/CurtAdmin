@@ -1,41 +1,34 @@
 ﻿@using CurtAdmin.Models.B2b
 @{
-    ViewBag.Title = "Add Lesson";
+    ViewBag.Title = "Add Video";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-
-    int catID = 0;
-    if(ViewBag.catID != null){
-        catID = ViewBag.catID;
-    }
+    CurtAdmin.B2BLesson lesson = ViewBag.lesson ?? new CurtAdmin.B2BLesson();
+   
 
 }
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
-<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
 <div id="content_container">
-    <h2>Add New Lesson</h2>
+    <h2>Add New Video</h2>
 
     @if (ViewBag.error.Length > 0) {
         <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
     }
-    <form action="/B2B/AddLesson/@catID" method="post" class="form_left">
+    <form action="/B2B/AddVideo/@lesson.id" method="post" class="form_left">
         <label for="title">
-            Lesson Name
-            <input type="text" name="title" id="title" placeholder="Enter the Name of the Lesson" required />
+            Video Title
+            <input type="text" name="title" id="title" placeholder="Enter the title of the video" required />
         </label>
 
-        <label for="text">
-            Additional Information
-            <textarea name="text" class="text" rows="10" cols="50" id="text" placeholder="Enter the Additional Information Content"></textarea>
-        </label>
-
-
-        <label for="pdf">
-           PDF Path URL - from File Manager (Copy link)
-            <input type="text" name="pdf" id="pdf" placeholder="Enter the the URL path to the PDF" required />
-        </label>
+        <!-- Loop through videoType file formats -->
+            Format:
+            <label for="text">
+                Video URL
+                <input type="text" name="text" id="text" placeholder="Copy/Paste video url from file manager." />
+            </label>
+       <!-- end of loop -->
 
         <label for="inactive">
             Inactive?
@@ -62,22 +55,5 @@
             }
         });
     });
-
-    $(document).ready(function () {
-
-        CKEDITOR.replace('text', {
-            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
-            filebrowserImageWindowWidth: '640',
-            filebrowserImageWindowHeight: '480'
-        });
-
-        $('#btnSubmitPublish').click(function () {
-            $('#publish').val("true");
-            $('#saveform').submit();
-        });
-
-    });
-
 </script>
 <div id="file-dialog"></div>

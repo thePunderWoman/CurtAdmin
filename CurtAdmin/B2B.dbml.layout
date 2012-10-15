@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 16.125, 10.25" name="B2B">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 18.375, 10.25" name="B2B">
   <DataContextMoniker Name="/B2BDataContext" />
   <nestedChildShapes>
     <classShape Id="20a6f81c-6588-4264-8864-c15a062a22c7" absoluteBounds="4.5, 8, 2, 1.9631982421875">
@@ -50,10 +50,10 @@
         <elementListCompartment Id="93af94ee-2044-4e59-a800-85011c557ea0" absoluteBounds="11.39, 1.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="b47197b2-2676-454b-8301-836125eb5557" absoluteBounds="11.375, 3.25, 2, 1.7708968098958331">
+    <classShape Id="b47197b2-2676-454b-8301-836125eb5557" absoluteBounds="11.375, 3.25, 2, 1.9631982421874996">
       <DataClassMoniker Name="/B2BDataContext/B2BVideo" />
       <nestedChildShapes>
-        <elementListCompartment Id="8255ef0d-12c7-484a-83ac-80745822f029" absoluteBounds="11.39, 3.71, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="8255ef0d-12c7-484a-83ac-80745822f029" absoluteBounds="11.39, 3.71, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="3594054d-3294-471f-8e5d-da04fefe7ef6" absoluteBounds="10.375, 8.25, 2, 1.7708968098958331">
@@ -62,7 +62,7 @@
         <elementListCompartment Id="d8a8fbf9-a5e0-4b8b-9d0b-9ef85e5eb697" absoluteBounds="10.39, 8.71, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.375 : 8); (5.375 : 4.09780110677083)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.375 : 8); (5.375 : 4.09780110677083)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/B2BDataContext/B2BCompletedTest/B2BCompletedTest_B2BCertificate" />
       <nodes>
         <classShapeMoniker Id="20a6f81c-6588-4264-8864-c15a062a22c7" />
@@ -90,7 +90,7 @@
         <classShapeMoniker Id="ef209d28-49aa-444f-8b37-b66ce4067f4d" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.8750025 : 8); (5.8750025 : 4.8125025); (9 : 4.8125025)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.8750025 : 8); (5.8750025 : 4.8125025); (9 : 4.8125025)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/B2BDataContext/B2BCompletedTest/B2BCompletedTest_B2BTest" />
       <nodes>
         <classShapeMoniker Id="20a6f81c-6588-4264-8864-c15a062a22c7" />
@@ -118,21 +118,21 @@
         <classShapeMoniker Id="a11ed5ff-8249-4238-941b-4ab441554e96" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(11 : 2.57774983723958); (11.375 : 2.57774983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(11 : 2.57774983723958); (11.375 : 2.57774983723958)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/B2BDataContext/B2BLesson/B2BLesson_B2BResource" />
       <nodes>
         <classShapeMoniker Id="d2ad0432-d8e5-4172-a75a-aab3789791a9" />
         <classShapeMoniker Id="dfd8cfcd-765c-477c-a7dc-364c2477e7c9" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(11 : 3.82774983723958); (11.375 : 3.82774983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(11 : 3.82774983723958); (11.375 : 3.82774983723958)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/B2BDataContext/B2BLesson/B2BLesson_B2BVideo" />
       <nodes>
         <classShapeMoniker Id="d2ad0432-d8e5-4172-a75a-aab3789791a9" />
         <classShapeMoniker Id="b47197b2-2676-454b-8301-836125eb5557" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.5 : 9.71079752604167); (10.375 : 9.71079752604167)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(6.5 : 9.71079752604167); (10.375 : 9.71079752604167)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/B2BDataContext/B2BCompletedTest/B2BCompletedTest_B2BTestResult" />
       <nodes>
         <classShapeMoniker Id="20a6f81c-6588-4264-8864-c15a062a22c7" />
@@ -145,7 +145,7 @@
         <elementListCompartment Id="675395ec-0b36-4255-aa23-87b249665bb8" absoluteBounds="7.14, 8.085, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(7.125 : 8.69794840494792); (6.5 : 8.69794840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(7.125 : 8.69794840494792); (6.5 : 8.69794840494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/B2BDataContext/B2BUser/B2BUser_B2BCompletedTest" />
       <nodes>
         <classShapeMoniker Id="bb1440ed-b94d-435a-9282-3086a704f2d4" />
@@ -158,18 +158,44 @@
         <elementListCompartment Id="dff8288c-5150-457a-a7fb-7979deddd66d" absoluteBounds="6.3900000000000006, 5.585, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(7.75 : 7.625); (7.75 : 7.0881982421875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(7.75 : 7.625); (7.75 : 7.0881982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/B2BDataContext/B2BUser/B2BUser_B2BCompletedCert" />
       <nodes>
         <classShapeMoniker Id="bb1440ed-b94d-435a-9282-3086a704f2d4" />
         <classShapeMoniker Id="c1731824-201b-43b6-b6ac-6aac9f3bd605" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.375 : 6.10659912109375); (5.95833583333333 : 6.10659912109375 : JumpStart); (5.79166916666667 : 6.10659912109375 : JumpEnd); (5.45833333333333 : 6.10659912109375 : JumpStart); (5.29166666666667 : 6.10659912109375 : JumpEnd); (4.7812475 : 6.10659912109375); (4.7812475 : 4.09780110677083)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(6.375 : 6.10659912109375); (5.95833583333333 : 6.10659912109375 : JumpStart); (5.79166916666667 : 6.10659912109375 : JumpEnd); (5.45833333333333 : 6.10659912109375 : JumpStart); (5.29166666666667 : 6.10659912109375 : JumpEnd); (4.7812475 : 6.10659912109375); (4.7812475 : 4.09780110677083)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/B2BDataContext/B2BCompletedCert/B2BCompletedCert_B2BCertificate" />
       <nodes>
         <classShapeMoniker Id="c1731824-201b-43b6-b6ac-6aac9f3bd605" />
         <classShapeMoniker Id="b929c157-f444-4a47-ab04-38702c8dab64" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="7c9c3c55-91a1-43fc-9f79-897e6f10c0e1" absoluteBounds="13.875, 3.375, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/B2BDataContext/B2BVideoSource" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c572caec-86a1-4e6d-a634-983adf54286a" absoluteBounds="13.89, 3.835, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="92a1e828-fa48-4a22-8951-28c0d011f12f" absoluteBounds="16.125, 3.375, 2, 1.3862939453125">
+      <DataClassMoniker Name="/B2BDataContext/B2BVideoType" />
+      <nestedChildShapes>
+        <elementListCompartment Id="530841f7-46a9-4c11-80aa-193965413ca4" absoluteBounds="16.14, 3.835, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(13.375 : 4.16429768880208); (13.875 : 4.16429768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/B2BDataContext/B2BVideo/B2BVideo_VideoSource" />
+      <nodes>
+        <classShapeMoniker Id="b47197b2-2676-454b-8301-836125eb5557" />
+        <classShapeMoniker Id="7c9c3c55-91a1-43fc-9f79-897e6f10c0e1" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(15.875 : 4.06814697265625); (16.125 : 4.06814697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/B2BDataContext/B2BVideoSource/VideoSource_VideoType" />
+      <nodes>
+        <classShapeMoniker Id="7c9c3c55-91a1-43fc-9f79-897e6f10c0e1" />
+        <classShapeMoniker Id="92a1e828-fa48-4a22-8951-28c0d011f12f" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

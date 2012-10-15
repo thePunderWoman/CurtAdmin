@@ -56,11 +56,6 @@
             <textarea name="text" class="text" rows="10" cols="50" id="text" placeholder="Enter the Additional Information Content">@lesson.Text</textarea>
         </label>
 
-        <label for="video">
-            YouTube Video ID
-            <input type="text" name="video" id="video" value="@video.embed_link" required />
-        </label>
-
         <label for="pdf">
            PDF Path URL - from File Manager (Copy link)
             <input type="text" name="pdf" id="pdf" value="@pdf.file_path" required />
@@ -101,8 +96,8 @@
     $(document).ready(function () {
 
         CKEDITOR.replace('text', {
-            filebrowserImageUploadUrl: '/File/CKUpload',
-            filebrowserImageBrowseUrl: '/File/CKIndex',
+            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
+            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
             filebrowserImageWindowWidth: '640',
             filebrowserImageWindowHeight: '480'
         });

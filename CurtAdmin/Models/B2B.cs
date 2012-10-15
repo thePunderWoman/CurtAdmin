@@ -57,7 +57,7 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not add category: " + e.Message);
             }
         }
-        public static void addLesson(int catID, string title, string text, string video, string pdf, bool inActive)
+        public static void addLesson(int catID, string title, string text, string pdf, bool inActive)
         {
             try
             {
@@ -75,7 +75,6 @@ namespace CurtAdmin.Models.B2b
                 db.SubmitChanges();
 
                 B2BVideo newVideo = new B2BVideo();
-                newVideo.embed_link = video;
                 newVideo.date_added = DateTime.Now;
                 newVideo.sort = 1;
                 newVideo.lessonID = newLesson.id;
@@ -93,7 +92,7 @@ namespace CurtAdmin.Models.B2b
                 newPDF.image_path = "http://curtmfg.com/Content/img/pdf.png";
                 db.B2BResources.InsertOnSubmit(newPDF);
                 db.SubmitChanges();
-               
+
             }
             catch (Exception e)
             {
@@ -374,7 +373,8 @@ namespace CurtAdmin.Models.B2b
 
 
         ///////////////////////==  Delete    ==/////////////////////////
-        public static string DeleteCert(int id){
+        public static string DeleteCert(int id)
+        {
             try
             {
                 B2BDataContext db = new B2BDataContext();
@@ -387,7 +387,7 @@ namespace CurtAdmin.Models.B2b
             catch (Exception e)
             {
                 return "Error while deleting" + e.Message;
-            }  
+            }
         }
         public static string DeleteCat(int id)
         {
@@ -403,7 +403,7 @@ namespace CurtAdmin.Models.B2b
             catch (Exception)
             {
                 return "Error while deleting";
-            }  
+            }
         }
         public static string DeleteLesson(int id)
         {
@@ -419,7 +419,7 @@ namespace CurtAdmin.Models.B2b
             catch (Exception)
             {
                 return "Error while deleting";
-            }  
+            }
         }
         public static string DeleteTest(int id)
         {
@@ -435,7 +435,7 @@ namespace CurtAdmin.Models.B2b
             catch (Exception)
             {
                 return "Error while deleting";
-            }  
+            }
         }
         public static string DeleteQuestion(int id)
         {
@@ -451,7 +451,7 @@ namespace CurtAdmin.Models.B2b
             catch (Exception)
             {
                 return "Error while deleting";
-            }  
+            }
         }
         public static string DeleteAnswer(int id)
         {
@@ -467,7 +467,7 @@ namespace CurtAdmin.Models.B2b
             catch (Exception)
             {
                 return "Error while deleting";
-            }  
+            }
         }
 
         ///////////////////== AJAX == ////////////////////////////////////
@@ -488,7 +488,7 @@ namespace CurtAdmin.Models.B2b
                     compCert.hasPlaque = false;
                 }
                 db.SubmitChanges();
-                
+
                 return "";
             }
             catch (Exception e)
@@ -569,12 +569,15 @@ namespace CurtAdmin.Models.B2b
             fullUser.join_date = user.join_date;
             fullUser.numCertsCompleted = user.numCertsCompleted;
             fullUser.numLessonsCompleted = user.numLessonsCompleted;
-            if(fullUser.isCustomerUser){
+            if (fullUser.isCustomerUser)
+            {
                 CustomerUser customerUser = B2B.getCustomerUser(user.custID);
                 fullUser.email = customerUser.email;
                 fullUser.name = customerUser.name;
                 fullUser.customerID = Convert.ToInt16(customerUser.customerID);
-            }else{
+            }
+            else
+            {
                 Customer customer = B2B.getCustomer(user.custID);
                 fullUser.email = customer.email;
                 fullUser.name = customer.name;

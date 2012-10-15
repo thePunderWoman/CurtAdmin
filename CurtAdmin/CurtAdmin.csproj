@@ -468,6 +468,8 @@
     <Content Include="Views\B2B\ViewUser.cshtml" />
     <Content Include="Views\B2B\ViewUserLessons.cshtml" />
     <Content Include="Views\B2B\Index.cshtml" />
+    <Content Include="Views\B2B\AddVideo.cshtml" />
+    <Content Include="Views\B2B\ViewVideos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

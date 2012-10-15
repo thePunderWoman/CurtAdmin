@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "View Videos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string msg = ViewBag.msg ?? "";  
+    CurtAdmin.B2BLesson lesson = ViewBag.lesson ?? new CurtAdmin.B2BLesson();
+    
+}
+    <style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addVideo, #massUpload{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<div id="breadcrumbs"><a href="/B2B/">B2B</a> > <a href="/B2B/ViewCerts">Certificates</a> > <a href="/B2B/ViewCats/@lesson.B2BCategory.certID">Categories</a> > <a href="/B2B/ViewLessons/@lesson.catID">Lessons</a> > Videos</div>
+<div id="content_container">
+    <h2>Viewing B2B Videos for @lesson.title</h2>
+    <a href="/B2B/AddVideo/@lesson.id" title="Add Video" id="addVideo" class="button">
+        Add Video
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the videos or a particular lesson and to modify them accordingly.</p>
+
+    <div id="loading_area">
+        <p>Loading Videos...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Videos" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Date Added</th>
+                <th>Is inactive</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.B2BVideo video in lesson.B2BVideos)
+            {
+                <tr>
+                    <td>@video.id</td>
+                    <td>@video.title</td>
+                    <td>@video.date_added</td>
+                    <td>@video.inactive</td>
+                    <td> 
+                        <a href="/B2B/EditVideo/@video.id" class="edit">Edit</a> | 
+                        <a href="javascript:void(0)" class="delete" id="@video.id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var videosTable = "";
+    $(function () {
+        videosTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+        $('.delete').live('click', function () {
+            var videoID = $(this).attr('id');
+            var table_row = $(this).parent().parent().get()[0];
+            if (videoID > 0 && confirm('Are you sure you want to delete this Video?')) {
+                $.get('/B2B/DeleteVideo/' + videoID, function (response) {
+                    if (response.length == 0) {
+                        videosTable.fnDeleteRow(table_row);
+                    } else {
+                        showMessage(response);
+                    }
+                }, "html");
+            }
+        });
+    });
+</script>
