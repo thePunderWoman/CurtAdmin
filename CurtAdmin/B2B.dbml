@@ -115,10 +115,12 @@
   <Table Name="dbo.Videos" Member="B2BVideos">
     <Type Name="B2BVideo">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="embed_link" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="title" Storage="_embed_link" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="sort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="lessonID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Association Name="B2BVideo_VideoSource" Member="B2BVideoSources" ThisKey="id" OtherKey="videoID" Type="B2BVideoSource" />
       <Association Name="B2BLesson_B2BVideo" Member="B2BLesson" Storage="_Lesson" ThisKey="lessonID" OtherKey="id" Type="B2BLesson" IsForeignKey="true" />
     </Type>
   </Table>
@@ -154,6 +156,24 @@
       <Column Name="sentPlaqueEmail" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="B2BCompletedCert_B2BCertificate" Member="B2BCertificates" ThisKey="certID" OtherKey="id" Type="B2BCertificate" />
       <Association Name="B2BUser_B2BCompletedCert" Member="B2BUser" ThisKey="custID" OtherKey="custID" Type="B2BUser" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VideoSource" Member="B2BVideoSources">
+    <Type Name="B2BVideoSource">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="videoID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="filePath" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="typeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="VideoSource_VideoType" Member="VideoTypes" ThisKey="typeID" OtherKey="id" Type="B2BVideoType" Cardinality="One" />
+      <Association Name="B2BVideo_VideoSource" Member="B2BVideo" ThisKey="videoID" OtherKey="id" Type="B2BVideo" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VideoType" Member="B2BVideoTypes">
+    <Type Name="B2BVideoType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="type" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="MIME" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="VideoSource_VideoType" Member="B2BVideoSource" ThisKey="id" OtherKey="typeID" Type="B2BVideoSource" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

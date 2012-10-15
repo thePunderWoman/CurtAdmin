@@ -43,6 +43,15 @@ namespace CurtAdmin.Controllers
             return View();
         }
 
+        public ActionResult ViewVideos(int id)
+        {
+            int lessonID = id;
+
+            ViewBag.lesson = B2B.getLesson(lessonID);
+
+            return View();
+        }
+
         public ActionResult ViewTests(int id)
         {
             int catID = id;
@@ -98,7 +107,6 @@ namespace CurtAdmin.Controllers
             ViewBag.Lessons = B2BUser.B2BCompletedTests.Where(x => x.certID == certID).ToList<B2BCompletedTest>();
             return View();
         }
-
 
         /////////////////==  Add Pages  ==///////////////////////
 
@@ -175,10 +183,10 @@ namespace CurtAdmin.Controllers
             ViewBag.catID = catID;
             return View();
         }
-        
+
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddLesson(int id, string title, string text, string video, string pdf, string inactive)
+        public ActionResult AddLesson(int id, string title, string text, string pdf, string inactive)
         {
             ViewBag.error = "";
             int catID = id;
@@ -187,11 +195,11 @@ namespace CurtAdmin.Controllers
             Boolean inActive = false;
             inActive = (inactive == "on") ? true : false;
 
-            if (title != "" && text != "" && catID.ToString().Length > 0 && video != "" && pdf != "")
+            if (title != "" && text != "" && catID.ToString().Length > 0 && pdf != "")
             {
                 try
                 {
-                    B2B.addLesson(catID, title, text, video, pdf, inActive);
+                    B2B.addLesson(catID, title, text, pdf, inActive);
                     return RedirectToAction("ViewLessons", new { id = catID });
                 }
                 catch (Exception e)
@@ -205,7 +213,14 @@ namespace CurtAdmin.Controllers
             }
             return View();
         }
-        
+
+        public ActionResult AddVideo(int id)
+        {
+            int lessonID = id;
+            return View();
+        }
+
+
         // add test
         [HttpGet]
         public ActionResult AddTest(int id)
@@ -296,7 +311,7 @@ namespace CurtAdmin.Controllers
             ViewBag.error = "";
             int questionID = id;
             bool isCorrectAnswer = false;
-            if (isCorrect == "on"){isCorrectAnswer = true;}else{isCorrectAnswer = false;}
+            if (isCorrect == "on") { isCorrectAnswer = true; } else { isCorrectAnswer = false; }
 
             Boolean inActive = false;
             inActive = (inactive == "on") ? true : false;
@@ -351,7 +366,7 @@ namespace CurtAdmin.Controllers
                 return RedirectToAction("Index");
             }
             return View();
-        }     
+        }
         [HttpGet]
         public ActionResult EditLesson(int id)
         {
@@ -427,11 +442,11 @@ namespace CurtAdmin.Controllers
                     B2BDataContext db = new B2BDataContext();
                     B2BCertificate cert = new B2BCertificate();
                     cert = db.B2BCertificates.Where(x => x.id == id).FirstOrDefault<B2BCertificate>();
-                        cert.title = title;
-                        cert.text = text;
-                        cert.requirementNum = reqNum;
-                        cert.image_path = logo;
-                        cert.inactive = inActive;
+                    cert.title = title;
+                    cert.text = text;
+                    cert.requirementNum = reqNum;
+                    cert.image_path = logo;
+                    cert.inactive = inActive;
                     db.SubmitChanges();
 
                     ViewBag.cert = cert;
@@ -440,7 +455,7 @@ namespace CurtAdmin.Controllers
                 catch (Exception e)
                 {
                     ViewBag.error = e.Message;
-                } 
+                }
             }
             else
             {
@@ -483,10 +498,10 @@ namespace CurtAdmin.Controllers
             }
             return View();
         }
-        
+
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult EditLesson(int id, string title, string text, string video, string pdf, string inactive)
+        public ActionResult EditLesson(int id, string title, string text, string pdf, string inactive)
         {
             ViewBag.error = "";
             if (id > 0)
@@ -507,7 +522,6 @@ namespace CurtAdmin.Controllers
 
                     B2BVideo videoObj = new B2BVideo();
                     videoObj = db.B2BVideos.Where(x => x.lessonID == lesson.id).FirstOrDefault<B2BVideo>();
-                    videoObj.embed_link = video;
                     db.SubmitChanges();
 
                     B2BResource pdfObj = new B2BResource();
@@ -532,7 +546,7 @@ namespace CurtAdmin.Controllers
             }
             return View();
         }
-        
+
         [HttpPost]
         public ActionResult EditTest(int id, string title, string text, double minPassPercent, string inactive)
         {
@@ -670,7 +684,7 @@ namespace CurtAdmin.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public string SetPlaqueStatus(int id, string custID)
         {
-            return B2B.SetPlaqueStatus(id,custID);
+            return B2B.SetPlaqueStatus(id, custID);
         }
     }
 }

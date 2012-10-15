@@ -66,6 +66,12 @@ namespace CurtAdmin
     partial void InsertB2BCompletedCert(B2BCompletedCert instance);
     partial void UpdateB2BCompletedCert(B2BCompletedCert instance);
     partial void DeleteB2BCompletedCert(B2BCompletedCert instance);
+    partial void InsertB2BVideoSource(B2BVideoSource instance);
+    partial void UpdateB2BVideoSource(B2BVideoSource instance);
+    partial void DeleteB2BVideoSource(B2BVideoSource instance);
+    partial void InsertB2BVideoType(B2BVideoType instance);
+    partial void UpdateB2BVideoType(B2BVideoType instance);
+    partial void DeleteB2BVideoType(B2BVideoType instance);
     #endregion
 		
 		public B2BDataContext() : 
@@ -191,6 +197,22 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<B2BCompletedCert>();
+			}
+		}
+		
+		public System.Data.Linq.Table<B2BVideoSource> B2BVideoSources
+		{
+			get
+			{
+				return this.GetTable<B2BVideoSource>();
+			}
+		}
+		
+		public System.Data.Linq.Table<B2BVideoType> B2BVideoTypes
+		{
+			get
+			{
+				return this.GetTable<B2BVideoType>();
 			}
 		}
 	}
@@ -2658,6 +2680,10 @@ namespace CurtAdmin
 		
 		private int _lessonID;
 		
+		private bool _inactive;
+		
+		private EntitySet<B2BVideoSource> _B2BVideoSources;
+		
 		private EntityRef<B2BLesson> _Lesson;
 		
     #region Extensibility Method Definitions
@@ -2666,18 +2692,21 @@ namespace CurtAdmin
     partial void OnCreated();
     partial void OnidChanging(int value);
     partial void OnidChanged();
-    partial void Onembed_linkChanging(string value);
-    partial void Onembed_linkChanged();
+    partial void OntitleChanging(string value);
+    partial void OntitleChanged();
     partial void Ondate_addedChanging(System.DateTime value);
     partial void Ondate_addedChanged();
     partial void OnsortChanging(int value);
     partial void OnsortChanged();
     partial void OnlessonIDChanging(int value);
     partial void OnlessonIDChanged();
+    partial void OninactiveChanging(bool value);
+    partial void OninactiveChanged();
     #endregion
 		
 		public B2BVideo()
 		{
+			this._B2BVideoSources = new EntitySet<B2BVideoSource>(new Action<B2BVideoSource>(this.attach_B2BVideoSources), new Action<B2BVideoSource>(this.detach_B2BVideoSources));
 			this._Lesson = default(EntityRef<B2BLesson>);
 			OnCreated();
 		}
@@ -2703,7 +2732,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_embed_link", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
-		public string embed_link
+		public string title
 		{
 			get
 			{
@@ -2713,11 +2742,11 @@ namespace CurtAdmin
 			{
 				if ((this._embed_link != value))
 				{
-					this.Onembed_linkChanging(value);
+					this.OntitleChanging(value);
 					this.SendPropertyChanging();
 					this._embed_link = value;
-					this.SendPropertyChanged("embed_link");
-					this.Onembed_linkChanged();
+					this.SendPropertyChanged("title");
+					this.OntitleChanged();
 				}
 			}
 		}
@@ -2786,6 +2815,39 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_inactive")]
+		public bool inactive
+		{
+			get
+			{
+				return this._inactive;
+			}
+			set
+			{
+				if ((this._inactive != value))
+				{
+					this.OninactiveChanging(value);
+					this.SendPropertyChanging();
+					this._inactive = value;
+					this.SendPropertyChanged("inactive");
+					this.OninactiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideo_VideoSource", Storage="_B2BVideoSources", ThisKey="id", OtherKey="videoID")]
+		public EntitySet<B2BVideoSource> B2BVideoSources
+		{
+			get
+			{
+				return this._B2BVideoSources;
+			}
+			set
+			{
+				this._B2BVideoSources.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BVideo", Storage="_Lesson", ThisKey="lessonID", OtherKey="id", IsForeignKey=true)]
 		public B2BLesson B2BLesson
 		{
@@ -2838,6 +2900,18 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_B2BVideoSources(B2BVideoSource entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BVideo = this;
+		}
+		
+		private void detach_B2BVideoSources(B2BVideoSource entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BVideo = null;
 		}
 	}
 	
@@ -3530,6 +3604,364 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.B2BCompletedCert = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VideoSource")]
+	public partial class B2BVideoSource : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _videoID;
+		
+		private string _filePath;
+		
+		private int _typeID;
+		
+		private EntityRef<B2BVideoType> _VideoTypes;
+		
+		private EntityRef<B2BVideo> _B2BVideo;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnvideoIDChanging(int value);
+    partial void OnvideoIDChanged();
+    partial void OnfilePathChanging(string value);
+    partial void OnfilePathChanged();
+    partial void OntypeIDChanging(int value);
+    partial void OntypeIDChanged();
+    #endregion
+		
+		public B2BVideoSource()
+		{
+			this._VideoTypes = default(EntityRef<B2BVideoType>);
+			this._B2BVideo = default(EntityRef<B2BVideo>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_videoID", DbType="Int NOT NULL")]
+		public int videoID
+		{
+			get
+			{
+				return this._videoID;
+			}
+			set
+			{
+				if ((this._videoID != value))
+				{
+					if (this._B2BVideo.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnvideoIDChanging(value);
+					this.SendPropertyChanging();
+					this._videoID = value;
+					this.SendPropertyChanged("videoID");
+					this.OnvideoIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_filePath", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string filePath
+		{
+			get
+			{
+				return this._filePath;
+			}
+			set
+			{
+				if ((this._filePath != value))
+				{
+					this.OnfilePathChanging(value);
+					this.SendPropertyChanging();
+					this._filePath = value;
+					this.SendPropertyChanged("filePath");
+					this.OnfilePathChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_typeID", DbType="Int NOT NULL")]
+		public int typeID
+		{
+			get
+			{
+				return this._typeID;
+			}
+			set
+			{
+				if ((this._typeID != value))
+				{
+					this.OntypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._typeID = value;
+					this.SendPropertyChanged("typeID");
+					this.OntypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VideoSource_VideoType", Storage="_VideoTypes", ThisKey="typeID", OtherKey="id", IsUnique=true, IsForeignKey=false)]
+		public B2BVideoType VideoTypes
+		{
+			get
+			{
+				return this._VideoTypes.Entity;
+			}
+			set
+			{
+				B2BVideoType previousValue = this._VideoTypes.Entity;
+				if (((previousValue != value) 
+							|| (this._VideoTypes.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VideoTypes.Entity = null;
+						previousValue.B2BVideoSource = null;
+					}
+					this._VideoTypes.Entity = value;
+					if ((value != null))
+					{
+						value.B2BVideoSource = this;
+					}
+					this.SendPropertyChanged("VideoTypes");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideo_VideoSource", Storage="_B2BVideo", ThisKey="videoID", OtherKey="id", IsForeignKey=true)]
+		public B2BVideo B2BVideo
+		{
+			get
+			{
+				return this._B2BVideo.Entity;
+			}
+			set
+			{
+				B2BVideo previousValue = this._B2BVideo.Entity;
+				if (((previousValue != value) 
+							|| (this._B2BVideo.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._B2BVideo.Entity = null;
+						previousValue.B2BVideoSources.Remove(this);
+					}
+					this._B2BVideo.Entity = value;
+					if ((value != null))
+					{
+						value.B2BVideoSources.Add(this);
+						this._videoID = value.id;
+					}
+					else
+					{
+						this._videoID = default(int);
+					}
+					this.SendPropertyChanged("B2BVideo");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VideoType")]
+	public partial class B2BVideoType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _type;
+		
+		private string _MIME;
+		
+		private EntityRef<B2BVideoSource> _B2BVideoSource;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OntypeChanging(string value);
+    partial void OntypeChanged();
+    partial void OnMIMEChanging(string value);
+    partial void OnMIMEChanged();
+    #endregion
+		
+		public B2BVideoType()
+		{
+			this._B2BVideoSource = default(EntityRef<B2BVideoSource>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					if (this._B2BVideoSource.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string type
+		{
+			get
+			{
+				return this._type;
+			}
+			set
+			{
+				if ((this._type != value))
+				{
+					this.OntypeChanging(value);
+					this.SendPropertyChanging();
+					this._type = value;
+					this.SendPropertyChanged("type");
+					this.OntypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MIME", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string MIME
+		{
+			get
+			{
+				return this._MIME;
+			}
+			set
+			{
+				if ((this._MIME != value))
+				{
+					this.OnMIMEChanging(value);
+					this.SendPropertyChanging();
+					this._MIME = value;
+					this.SendPropertyChanged("MIME");
+					this.OnMIMEChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VideoSource_VideoType", Storage="_B2BVideoSource", ThisKey="id", OtherKey="typeID", IsForeignKey=true)]
+		public B2BVideoSource B2BVideoSource
+		{
+			get
+			{
+				return this._B2BVideoSource.Entity;
+			}
+			set
+			{
+				B2BVideoSource previousValue = this._B2BVideoSource.Entity;
+				if (((previousValue != value) 
+							|| (this._B2BVideoSource.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._B2BVideoSource.Entity = null;
+						previousValue.VideoTypes = null;
+					}
+					this._B2BVideoSource.Entity = value;
+					if ((value != null))
+					{
+						value.VideoTypes = this;
+						this._id = value.typeID;
+					}
+					else
+					{
+						this._id = default(int);
+					}
+					this.SendPropertyChanged("B2BVideoSource");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }
