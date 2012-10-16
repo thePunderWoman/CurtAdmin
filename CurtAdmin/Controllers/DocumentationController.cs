@@ -76,7 +76,6 @@ namespace CurtAdmin.Controllers
                 docCategory newCat = new docCategory {
                     catName = catName,
                     parentID = parentID,
-                    moduleID = 0,
                     comments = comments
                 };
                 doc_db.docCategories.InsertOnSubmit(newCat);
@@ -160,7 +159,6 @@ namespace CurtAdmin.Controllers
             if (error_messages.Count == 0) { // Attempt to save category
                 cat.catName = catName;
                 cat.parentID = parentID;
-                cat.moduleID = 0;
                 cat.comments = comments;
 
                 try {
@@ -237,7 +235,7 @@ namespace CurtAdmin.Controllers
             ViewBag.categories = categories;            
 
             // get all of the users ::: this will allow us to designate the author of the new item
-            List<user> users = Users.GetAllUsers(1);
+            List<user> users = Users.GetAllUsers();
             ViewBag.users = users;
 
             return View();
@@ -335,7 +333,7 @@ namespace CurtAdmin.Controllers
             ViewBag.categories = categories;
 
             // get all of the users ::: this will allow us to designate the author of the new item
-            List<user> users = Users.GetAllUsers(1);
+            List<user> users = Users.GetAllUsers();
             ViewBag.users = users;
 
             return View();
@@ -376,7 +374,7 @@ namespace CurtAdmin.Controllers
             ViewBag.categories = categories;
 
             // get all of the users ::: this will allow us to designate the author of the new item
-            List<user> users = Users.GetAllUsers(1);
+            List<user> users = Users.GetAllUsers();
             ViewBag.users = users;
 
             // Get all the documents
@@ -508,7 +506,7 @@ namespace CurtAdmin.Controllers
             ViewBag.categories = categories;
 
             // get all of the users ::: this will allow us to designate the author of the new item
-            List<user> users = Users.GetAllUsers(1);
+            List<user> users = Users.GetAllUsers();
             ViewBag.users = users;
 
             return View();

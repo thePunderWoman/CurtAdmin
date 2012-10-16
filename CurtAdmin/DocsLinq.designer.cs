@@ -1014,8 +1014,6 @@ namespace CurtAdmin
 		
 		private string _comments;
 		
-		private int _moduleID;
-		
 		private EntitySet<cat_item> _cat_items;
 		
     #region Extensibility Method Definitions
@@ -1030,8 +1028,6 @@ namespace CurtAdmin
     partial void OncatNameChanged();
     partial void OncommentsChanging(string value);
     partial void OncommentsChanged();
-    partial void OnmoduleIDChanging(int value);
-    partial void OnmoduleIDChanged();
     #endregion
 		
 		public docCategory()
@@ -1116,26 +1112,6 @@ namespace CurtAdmin
 					this._comments = value;
 					this.SendPropertyChanged("comments");
 					this.OncommentsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_moduleID", DbType="Int NOT NULL")]
-		public int moduleID
-		{
-			get
-			{
-				return this._moduleID;
-			}
-			set
-			{
-				if ((this._moduleID != value))
-				{
-					this.OnmoduleIDChanging(value);
-					this.SendPropertyChanging();
-					this._moduleID = value;
-					this.SendPropertyChanged("moduleID");
-					this.OnmoduleIDChanged();
 				}
 			}
 		}
@@ -2506,8 +2482,6 @@ namespace CurtAdmin
 		
 		private string _fax;
 		
-		private int _isAdmin;
-		
 		private string _comments;
 		
 		private System.DateTime _dateAdded;
@@ -2550,8 +2524,6 @@ namespace CurtAdmin
     partial void OnphoneChanged();
     partial void OnfaxChanging(string value);
     partial void OnfaxChanged();
-    partial void OnisAdminChanging(int value);
-    partial void OnisAdminChanged();
     partial void OncommentsChanging(string value);
     partial void OncommentsChanged();
     partial void OndateAddedChanging(System.DateTime value);
@@ -2755,26 +2727,6 @@ namespace CurtAdmin
 					this._fax = value;
 					this.SendPropertyChanged("fax");
 					this.OnfaxChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_isAdmin", DbType="Int NOT NULL")]
-		public int isAdmin
-		{
-			get
-			{
-				return this._isAdmin;
-			}
-			set
-			{
-				if ((this._isAdmin != value))
-				{
-					this.OnisAdminChanging(value);
-					this.SendPropertyChanging();
-					this._isAdmin = value;
-					this.SendPropertyChanged("isAdmin");
-					this.OnisAdminChanged();
 				}
 			}
 		}

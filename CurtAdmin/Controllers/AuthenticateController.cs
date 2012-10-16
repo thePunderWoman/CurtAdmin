@@ -138,6 +138,7 @@ namespace CurtAdmin.Controllers
             if (lname.Length == 0) { error_messages.Add("Last name is required."); }
             if (new_username.Length < 6) { error_messages.Add("Username must be at least 6 characters."); }
             if (email.Length == 0) { error_messages.Add("E-Mail is required."); }
+            if (!email.Contains("curtmfg.com")) { error_messages.Add("CURT Manufacturing E-Mail address is required."); }
             if (phone.Length == 0) { error_messages.Add("Phone number is required."); }
             if (address.Length == 0) { error_messages.Add("Address is required."); }
             if (city.Length == 0) { error_messages.Add("City is required."); }
@@ -280,13 +281,13 @@ namespace CurtAdmin.Controllers
         /// <summary>
         /// Log the user out.
         /// </summary>
-        public void Logout() {
+        public ActionResult Logout() {
             string[] cookies = Request.Cookies.AllKeys;
             foreach (string cookie in cookies) {
                 Response.Cookies[cookie].Expires = DateTime.Now.AddDays(-1);
             }
             Session.Clear();
-            HttpContext.Response.Redirect("~/Authenticate");
+            return RedirectToAction("Index");
         }
 
         /// <summary>

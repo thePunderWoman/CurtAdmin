@@ -48,7 +48,6 @@
       <Column Name="parentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="catName" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="comments" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
-      <Column Name="moduleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="docCategory_cat_item" Member="cat_items" ThisKey="catID" OtherKey="catID" Type="cat_item" />
     </Type>
   </Table>
@@ -128,7 +127,6 @@
       <Column Name="website" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="phone" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="fax" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="isAdmin" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="comments" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="dateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="isActive" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />

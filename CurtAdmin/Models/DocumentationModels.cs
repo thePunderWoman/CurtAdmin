@@ -52,7 +52,6 @@ namespace CurtAdmin.Models {
 
             if (moduleID != 0) {
                 cats = (from c in doc_db.docCategories
-                        where c.moduleID.Equals(moduleID)
                         orderby c.catName
                         select c).ToList<docCategory>();
             } else {
@@ -93,7 +92,7 @@ namespace CurtAdmin.Models {
 
             if (moduleID != 0) {
                 cats = (from c in doc_db.docCategories
-                        where c.moduleID.Equals(moduleID) && c.parentID.Equals(0)
+                        where c.parentID.Equals(0)
                         orderby c.catName
                         select c).ToList<docCategory>();
             } else {
@@ -173,8 +172,7 @@ namespace CurtAdmin.Models {
                             itemID = ic.itemID,
                             parentComment = ic.parentComment,
                             fname = u.fname,
-                            lname = u.lname,
-                            isAdmin = u.isAdmin
+                            lname = u.lname
                         }).ToList<UserComment>();
             return comments;
         }
@@ -199,8 +197,7 @@ namespace CurtAdmin.Models {
                             itemID = ic.itemID,
                             parentComment = ic.parentComment,
                             fname = u.fname,
-                            lname = u.lname,
-                            isAdmin = u.isAdmin
+                            lname = u.lname
                         }).ToList<UserComment>();
             return comments;
         }
@@ -297,8 +294,7 @@ namespace CurtAdmin.Models {
                                         itemID = ic.itemID,
                                         parentComment = ic.parentComment,
                                         fname = u.fname,
-                                        lname = u.lname,
-                                        isAdmin = u.isAdmin
+                                        lname = u.lname
                                     }).Single<UserComment>();
 
             // Get the item

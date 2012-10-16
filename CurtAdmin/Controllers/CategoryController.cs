@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class ProductCategoriesController : BaseController {
+    public class CategoryController : BaseController {
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext) {
             base.OnActionExecuted(filterContext);
