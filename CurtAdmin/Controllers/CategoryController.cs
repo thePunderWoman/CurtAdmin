@@ -1,284 +1,247 @@
-﻿/*
- * Author       : Alex Ninneman
- * Created      : January 20, 2011
- * Description  : This controller holds all of the page/AJAX functions for dealing with documentation categories
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CurtAdmin.Models;
+using System.Web.Script.Serialization;
 
 namespace CurtAdmin.Controllers
 {
-    public class CategoryController : BaseController
-    {
+    public class CategoryController : BaseController {
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext) {
             base.OnActionExecuted(filterContext);
-            ViewBag.activeModule = "Doc Categories";
+            ViewBag.activeModule = "Product Categories";
         }
 
-
         /// <summary>
-        /// Load all of the categories in the database so the user can make actions on them.
+        /// Loads all the product categories in the database.
         /// </summary>
-        /// <returns>View of categories</returns>
+        /// <returns>View</returns>
         public ActionResult Index() {
 
-            DocsLinqDataContext doc_db = new DocsLinqDataContext();
-
-            // Get all categories
-            List<category> categories = (from c in doc_db.categories
-                                                 orderby c.catName
-                                                 select c).ToList<category>();
-            ViewBag.categories = categories;
+            // Get the categories
+            List<DetailedCategories> cats = ProductCat.GetCategories();
+            ViewBag.cats = cats;
 
 
-            // Get the modules for the logged in user
-            List<module> modules = new List<module>();
-            modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
-            ViewBag.Modules = modules;
-
+            // Get the number of unkown parts
+            int unknown = ProductCat.GetUncategorizedParts().Count;
+            ViewBag.unknown = unknown;
 
             return View();
         }
 
         /// <summary>
-        /// Loads the blank category page so that the user can add a brand new category. The user will be able to choose a category to mark as the parent category.
+        /// Display a list of all the products under a given category
         /// </summary>
-        /// <returns>View of new category.</returns>
-        public ActionResult Add() {
+        /// <param name="catID">ID of the category</param>
+        /// <returns>View</returns>
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult CategoryItems(int catID = 0, string unknown = "") {
 
-            DocsLinqDataContext doc_db = new DocsLinqDataContext();
+            List<ConvertedPart> parts = new List<ConvertedPart>();
+            if (catID != 0) {
+                // Get the category
+                DetailedCategories cat = new DetailedCategories();
+                cat = ProductCat.GetCategory(catID);
+                ViewBag.cat = cat;
 
-            // Get all categories
-            List<category> categories = (from c in doc_db.categories
-                                         orderby c.catName
-                                         select c).ToList<category>();
-            ViewBag.categories = categories;
+                // Get the category items
+                parts = ProductCat.GetCategoryItems(catID);
 
-            // get the user modules ::: this will allow a category to be added to a module
-            List<module> user_modules = new List<module>();
-            user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
+            } else if (catID == 0 && unknown == "unknown") {
+                DetailedCategories cat = new DetailedCategories();
+                cat.catTitle = "Uncategorized Parts";
+                ViewBag.cat = cat;
 
-            // Get the modules for the logged in user
-            List<module> modules = new List<module>();
-            modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
-            ViewBag.Modules = modules;
+                // Get the uncategorized parts
+                parts = ProductCat.GetUncategorizedParts();
 
-            return View();
-        }
-
-        /// <summary>
-        /// Handle the submission of a new category.
-        /// </summary>
-        /// <param name="catName"></param>
-        /// <returns>Redirects to list of categories on completion. If an error is captured, the user is brought back the Add Category page to refine errors.</returns>
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Add(string catName) {
-
-            DocsLinqDataContext doc_db = new DocsLinqDataContext();
-            catName = Request.Form["catName"].Trim();
-            int parentID = Convert.ToInt32(Request.Form["parentID"].Trim());
-            int moduleID = Convert.ToInt32(Request.Form["moduleID"].Trim());
-            string comments = Request.Form["comments"].Trim();
-
-            // Initiate our error message collection
-            List<string> error_messages = new List<string>();
-
-            // Make sure the category name is not blank.
-            if (catName.Length == 0) { error_messages.Add("Cateogry name is required."); }
+            }
+            ViewBag.parts = parts;
+            ViewBag.partCount = parts.Count();
             
+
+            return View();
+        }
+
+        public ActionResult Add(int isLifestyle = 0) {
+
+            // Get the categories so the use can make the new one a subcategory if they choose
+            List<DetailedCategories> cats = ProductCat.GetCategories();
+            ViewBag.cats = cats;
+            ViewBag.isLifestyle = isLifestyle;
+
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Post), ValidateInput(false)]
+        public ActionResult Add(string catTitle = "", int parentID = 0, string image = "", int isLifestyle = 0, string shortDesc = "", string longDesc = "", bool vehicleSpecific = false) {
+
+            // Save the category
+            List<string> error_messages = new List<string>();
+            Categories cat = new Categories();
+            try {
+                cat = ProductCat.SaveCategory(0, catTitle, parentID, image, isLifestyle, shortDesc, longDesc, vehicleSpecific);
+            } catch (Exception e) {
+                error_messages.Add(e.Message);
+            }
+
+            // Make sure we didn't catch any errors
+            if (error_messages.Count == 0 && cat.catID > 0) {
+                return RedirectToAction("Index");
+            } else {
+                ViewBag.catTitle = catTitle;
+                ViewBag.parentID = parentID;
+                ViewBag.image = image;
+                ViewBag.isLifestyle = isLifestyle;
+                ViewBag.shortDesc = shortDesc;
+                ViewBag.longDesc = longDesc;
+                ViewBag.vehicleSpecific = vehicleSpecific;
+                ViewBag.error_messages = error_messages;
+            }
+
+            // Get the categories so this category can make the new one a subcategory if they choose
+            List<DetailedCategories> cats = ProductCat.GetCategories();
+            ViewBag.cats = cats;
+
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult Edit(int catID = 0) {
+
+            // Get this category
+            DetailedCategories cat = ProductCat.GetCategory(catID);
+            ViewBag.cat = cat;
+
+            // Get the categories so the use can make the new one a subcategory if they choose
+            List<DetailedCategories> cats = ProductCat.GetCategories();
+            ViewBag.cats = cats;
+
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Post), ValidateInput(false)]
+        public ActionResult Edit(int catID, string catTitle = "", int parentID = 0, string image = "", int isLifestyle = 0, string shortDesc = "", string longDesc = "", bool vehicleSpecific = false) {
+
+            List<string> error_messages = new List<string>();
+            DetailedCategories cat = new DetailedCategories();
+            try {
+                Categories category = ProductCat.SaveCategory(catID, catTitle, parentID, image, isLifestyle, shortDesc, longDesc, vehicleSpecific);
+            } catch (Exception e) {
+                error_messages.Add(e.Message);
+            }
 
             if (error_messages.Count == 0) {
-                // Create new category object
-                category newCat = new category {
-                    catName = catName,
-                    parentID = parentID,
-                    moduleID = moduleID,
-                    comments = comments
-                };
-                doc_db.categories.InsertOnSubmit(newCat);
-
-                try { // Attempt to save the category
-                    doc_db.SubmitChanges();
-                    HttpContext.Response.Redirect("~/Category");
-                } catch (Exception e) {
-                    error_messages.Add(e.Message);
-                }
+                return RedirectToAction("Index");
             }
-
-            ViewBag.catName = catName;
-            ViewBag.parentID = parentID;
-            ViewBag.comments = comments;
-            ViewBag.moduleID = moduleID;
             ViewBag.error_messages = error_messages;
-
-            // Get all categories
-            List<category> categories = (from c in doc_db.categories
-                                         orderby c.catName
-                                         select c).ToList<category>();
-            ViewBag.categories = categories;
-
-            // get the user modules ::: this will allow a category to be added to a module
-            List<module> user_modules = new List<module>();
-            user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
-
-            // Get the modules for the logged in user
-            List<module> modules = new List<module>();
-            modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
-            ViewBag.Modules = modules;
-
-            return View();
-        }
-
-        /// <summary>
-        /// Edit information for a given category.
-        /// </summary>
-        /// <param name="cat_id"></param>
-        /// <returns>View containing information for this category.</returns>
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult Edit(string cat_id) {
-
-            DocsLinqDataContext doc_db = new DocsLinqDataContext();
-            int catID = Convert.ToInt32(cat_id);
-
-            // Get all categories
-            List<category> categories = (from cats in doc_db.categories
-                                         orderby cats.catName
-                                         select cats).ToList<category>();
-            ViewBag.categories = categories;
-
-            // Get the category to be updated
-            category cat = new category();
-            cat = (from c in doc_db.categories
-                   where c.catID.Equals(catID)
-                   select c).FirstOrDefault<category>();
+            // Get this category
+            cat = ProductCat.GetCategory(catID);
             ViewBag.cat = cat;
 
-            // get the user modules ::: this will allow a category to be added to a module
-            List<module> user_modules = new List<module>();
-            user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
-
-            // Get the modules for the logged in user
-            List<module> modules = new List<module>();
-            modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
-            ViewBag.Modules = modules;
+            // Get the categories so the use can make the new one a subcategory if they choose
+            List<DetailedCategories> cats = ProductCat.GetCategories();
+            ViewBag.cats = cats;
 
             return View();
         }
 
-        /// <summary>
-        /// Handles the submission of changes to a given category
-        /// </summary>
-        /// <param name="cat_id"></param>
-        /// <param name="catName"></param>
-        /// <returns>Redirects to list of categories on completion. If an error is captured, the user is brought back to the Edit Category page to refine errors.</returns>
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(string cat_id, string catName) {
-
-            DocsLinqDataContext doc_db = new DocsLinqDataContext();
-            int catID = Convert.ToInt32(cat_id);
-            catName = Request.Form["catName"].Trim();
-            int parentID = Convert.ToInt32(Request.Form["parentID"].Trim());
-            int moduleID = Convert.ToInt32(Request.Form["moduleID"].Trim());
-            string comments = Request.Form["comments"];
-
-            // Initiate error messages list
-            List<string> error_messages = new List<string>();
-
-            // validate category info
-            if (catName.Length == 0) { error_messages.Add("Cateogry name is required."); }
-
-            // Get the category to be updated
-            category cat = new category();
-            cat = (from c in doc_db.categories
-                   where c.catID.Equals(catID)
-                   select c).FirstOrDefault<category>();
-
-            if (error_messages.Count == 0) { // Attempt to save category
-                cat.catName = catName;
-                cat.parentID = parentID;
-                cat.moduleID = moduleID;
-                cat.comments = comments;
-
-                try {
-                    doc_db.SubmitChanges();
-                    HttpContext.Response.Redirect("~/Category");
-                } catch (Exception e) {
-                    error_messages.Add(e.Message);
-                }
-            }
-
-
-
-            // Get all categories
-            List<category> categories = (from cats in doc_db.categories
-                                         orderby cats.catName
-                                         select cats).ToList<category>();
-            ViewBag.categories = categories;
-
-            
-            ViewBag.cat = cat;
-            ViewBag.error_messages = error_messages;
-
-            // get the user modules ::: this will allow a category to be added to a module
-            List<module> user_modules = new List<module>();
-            user_modules = Users.GetAllModules("user");
-            ViewBag.user_modules = user_modules;
-
-            // Get the modules for the logged in user
-            List<module> modules = new List<module>();
-            modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
-            ViewBag.Modules = modules;
-
-            return View();
-
-        }
-
-        /********* AJAX Functions ***********/
-
-        /// <summary>
-        /// Removes a category from the database and takes all items under this category and moves them to the unknown category.
-        /// </summary>
-        /// <param name="cat_id"></param>
-        /// <returns>Blank string if successful. If error is captured - returns error message.</returns>
         [AcceptVerbs(HttpVerbs.Get)]
-        public string RemoveCategory(string cat_id) {
-            string error = "";
+        public string Delete(int catID = 0) {
+            return ProductCat.DeleteCategory(catID);
+        }
 
+        public ActionResult Content(int catID = 0) {
+
+            // Get this category
+            DetailedCategories cat = ProductCat.GetCategory(catID);
+            ViewBag.cat = cat;
+
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ContentType> types = new List<ContentType>();
+            types = db.ContentTypes.OrderBy(x => x.type).ToList<ContentType>();
+            ViewBag.types = types;
+
+            return View();
+        }
+
+        public string GetContent(int contentID = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            FullContent content = new FullContent();
             try {
-                // Convert cat_id into integer and instantiate LINQ object
-                int catID = Convert.ToInt32(cat_id);
-                DocsLinqDataContext doc_db = new DocsLinqDataContext();
+                content = (from c in db.Contents
+                           join ct in db.ContentTypes on c.cTypeID equals ct.cTypeID
+                           where c.contentID == contentID
+                           select new FullContent {
+                               contentID = c.contentID,
+                               content = c.text,
+                               content_type = ct.type,
+                               content_type_id = ct.cTypeID
+                           }).FirstOrDefault<FullContent>();
+            } catch { };
+            return js.Serialize(content);
+        }
 
-                // Get the category
-                category cat = (from c in doc_db.categories
-                                where c.catID.Equals(catID)
-                                select c).FirstOrDefault<category>();
-                doc_db.categories.DeleteOnSubmit(cat);
+        [ValidateInput(false)]
+        public string SaveContent(int catID = 0, int contentID = 0, int typeID = 0, string content = "") {
+            CurtDevDataContext db = new CurtDevDataContext();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            FullContent newcontent = new FullContent();
+            try {
+                Content c = new Content();
+                ContentBridge cb = new ContentBridge();
+                if (contentID != 0) {
+                    c = db.Contents.Where(x => x.contentID == contentID).First<Content>();
+                    c.cTypeID = typeID;
+                    c.text = content;
+                } else {
+                    c = new Content {
+                        cTypeID = typeID,
+                        text = content
+                    };
 
-                // Get the items under this category
-                List<cat_item> items = (from ci in doc_db.cat_items
-                                       where ci.catID.Equals(catID)
-                                       select ci).ToList<cat_item>();
+                    db.Contents.InsertOnSubmit(c);
+                    db.SubmitChanges();
 
-                foreach (cat_item item in items) { // Loop through the items and reset their category
-                    item.catID = 1;
+                    cb = new ContentBridge {
+                        catID = catID,
+                        contentID = c.contentID
+                    };
+                    db.ContentBridges.InsertOnSubmit(cb);
                 }
+                db.SubmitChanges();
 
-                doc_db.SubmitChanges(); // Save changes
-            } catch (Exception e) {
-                error = e.Message;
-            }
+                newcontent = (from co in db.Contents
+                                join ct in db.ContentTypes on co.cTypeID equals ct.cTypeID
+                                where co.contentID == c.contentID
+                                select new FullContent {
+                                    contentID = co.contentID,
+                                    content = co.text,
+                                    content_type = ct.type,
+                                    content_type_id = ct.cTypeID
+                                }).FirstOrDefault<FullContent>();
+            } catch { };
+            return js.Serialize(newcontent);
+        }
 
-            return error;
+        public string DeleteContent(int contentID = 0) {
+            try {
+                CurtDevDataContext db = new CurtDevDataContext();
+                ContentBridge cb = db.ContentBridges.Where(x => x.contentID.Equals(contentID)).First();
+                db.ContentBridges.DeleteOnSubmit(cb);
+                db.SubmitChanges();
+                if (db.ContentBridges.Where(x => x.contentID.Equals(contentID)).Count() == 0) {
+                    Content c = db.Contents.Where(x => x.contentID.Equals(contentID)).FirstOrDefault(); ;
+                    db.Contents.DeleteOnSubmit(c);
+                    db.SubmitChanges();
+                }
+                return "";
+            } catch { return "Content could not be removed."; };
         }
     }
 }

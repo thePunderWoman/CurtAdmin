@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "CURT Documentation - Edit Category";
+    ViewBag.navigation = "_DocumentationNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Documentation/AddCategory")" class="active">Add New</a>
+    </li>
+    <li class="clear"></li>
+</ul>
+<div id="content_container">
+    <h2>Add New Category</h2>
+
+    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
+        <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
+            <p style="color:whitesmoke;text-decoration:underline;font-size:14pt;margin-left:40px">Please fix the following errors:</p>
+            <ul style="list-style: none">
+                @foreach (string message in ViewBag.error_messages) {
+                    <li>- @message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form">
+        <div class="form_left">
+            <!-- Category Name -->
+            <label for="catName">
+                Category
+                <input type="text" name="catName" id="catName" placeholder="Enter the category name..." value="@ViewBag.cat.catName" />
+                <span class="inputHelper">* Required.</span>
+            </label>
+            
+            <!-- Parent Category -->
+            <label for="parentID">
+                Parent Category
+                <select name="parentID" id="parentID">
+                    <option value="0">Select Parent Category</option>
+                    @foreach (CurtAdmin.docCategory cat in ViewBag.categories) {
+                        <option value="@cat.catID" @((cat.catID == ViewBag.cat.parentID)?"selected='selected'":"")>@cat.catName</option>
+                    }
+                </select>
+            </label>
+
+            <!-- Comments -->
+            <label for="comments">
+                Comments
+                <textarea rows="5" cols="65" name="comments" id="comments" placeholder="Enter comments...">@ViewBag.cat.comments</textarea>
+            </label>
+
+            <div id="buttons">
+
+                <span id="formMessage"></span>
+
+                <!-- Submit -->
+                <input type="submit" name="btnSaveUser" id="btnSaveUser" value="Save" />
+
+                <!-- Reset -->
+                <input type="reset" name="btnResetUser" id="btnResetUser" value="Reset" />
+            </div>
+        </div>
+
+        <div class="form_right">
+            <p>1. Enter then name of your new category. This field is required</p>
+            <p>2. If you would like this to be a sub-category, choose it's parent.</p>
+            <p>3. Enter any comments you may have about this category i.e. category description.</p>
+        </div>
+        <div style="clear:both"></div>
+    
+    </form>
+</div>
+

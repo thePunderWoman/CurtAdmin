@@ -1,23 +1,17 @@
 ﻿@{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Documentation Item";
+    ViewBag.navigation = "_DocumentationNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
     CurtAdmin.DocsLinqDataContext doc_db = new CurtAdmin.DocsLinqDataContext();
     List<CurtAdmin.Models.UserComment> comments = ViewBag.comments;
 }
 
-<div id="usersNav">
-    <ul>
-        <li>
-            <a href="@Url.Content("~/Items")">View Items</a>
-        </li>
-        <li>
-            <a href="@Url.Content("~/Items/Add")">Add New</a>
-        </li>
-        <!--li>
-            <a href="@Url.Content("~/Items/ViewDocs")">View Documents</a>
-        </li-->
-    </ul>
-</div>
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Documentation/AddItem")">Add New</a>
+    </li>
+    <li class="clear"></li>
+</ul>
 <div id="content_container">
     <h2>Editing @ViewBag.item.itemName </h2>
 
@@ -161,7 +155,7 @@
                         <input type="button" id="addCategory" name="addCategory" value="Add"  style="margin-top: 3px" />
                         <select name="catID" id="catID">
                             <option value="0">Select Category</option>
-                            @foreach (CurtAdmin.category cat in ViewBag.categories) {
+                            @foreach (CurtAdmin.docCategory cat in ViewBag.categories) {
                                 <option value="@cat.catID">@cat.catName</option>
                             }
                         </select>
@@ -176,7 +170,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (CurtAdmin.category cat in ViewBag.item_cats) {
+                        @foreach (CurtAdmin.docCategory cat in ViewBag.item_cats) {
                             <tr id="cat:@cat.catID">
                                 <td>
                                     @cat.catName
@@ -263,7 +257,7 @@
                 // Make sure the category we're trying to add isn't already in the table
                 var existing = $(table).find('#' + catID).get()[0];
                 if (existing == undefined) {
-                    $.get('/Items/AddItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
+                    $.get('/Documentation/AddItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
                         if (response == "") {
                             var newCat_input = '<input type="hidden" name="cat" id="newCat:' + catID + '" value="' + catID + '" />';
                             $(this).after(newCat_input);
@@ -296,7 +290,7 @@
             if (confirm('Are you sure you want to remove this category from the item?')) {
                 var catID = $(this).attr('id');
                 var itemID = $('#itemID').val();
-                $.get('/Items/DeleteItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
+                $.get('/Documentation/DeleteItemCategory', { 'cat_id': catID, 'item_id': itemID }, function (response) {
                     if (response == '') {
                         catTable.fnDeleteRow($('#cat\\:' + catID).get()[0]);
                         showMessage("Cateogry removed");
@@ -324,7 +318,7 @@
             var docID = $(this).attr('id');
             var clicked_link = $(this);
             if (docID > 0 && confirm('Are you sure you want to remove this document?')) {
-                $.get('/Items/DeleteDocument', { 'docID': docID }, function (response) {
+                $.get('/Documentation/DeleteDocument', { 'docID': docID }, function (response) {
                     if (response == "") {
                         documentTable.fnDeleteRow($(clicked_link).parent().parent().get()[0]);
                         showMessage("Document removed");

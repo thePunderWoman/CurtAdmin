@@ -56,18 +56,12 @@ namespace CurtAdmin.Controllers
                 return View();
             } else {
                 // User login successful: assign Session data and redirect.
-                Session["auth_level"]   = login_user.isAdmin + "";
                 Session["userID"]       = login_user.userID;
                 Session["username"]     = login_user.username;
                 Session["superUser"]    = login_user.superUser;
                 Session["name"]         = login_user.fname + " " + login_user.lname;
 
                 if (rememberMe == "1") {
-                    HttpCookie authLevel = new HttpCookie("auth_level");
-                    authLevel.Value = login_user.isAdmin + "";
-                    authLevel.Expires = DateTime.Now.AddDays(30);
-                    Response.Cookies.Add(authLevel);
-
                     HttpCookie userID = new HttpCookie("userID");
                     userID.Value = login_user.userID + "";
                     userID.Expires = DateTime.Now.AddDays(30);
@@ -89,12 +83,10 @@ namespace CurtAdmin.Controllers
                     Response.Cookies.Add(name);
                 }
 
-                if (login_user.isAdmin == 1 && redirectUrl == "") { // Redirect to admin section
-                    HttpContext.Response.Redirect("~/Admin");
-                } else if(login_user.isAdmin == 0 && redirectUrl == "") { // Redirect to user home
-                    HttpContext.Response.Redirect("http://labs.curtmfg.com");
-                } else if (login_user.isAdmin == 1 || login_user.isAdmin == 0 && redirectUrl != "") {
-                    HttpContext.Response.Redirect(redirectUrl);
+                if (redirectUrl == "") { // Redirect to admin section
+                    return RedirectToAction("Index","home");
+                } else {
+                    Response.Redirect(redirectUrl);
                 }
             }
             ViewBag.Message = "There was error while logging you in, my bad!";
@@ -146,6 +138,7 @@ namespace CurtAdmin.Controllers
             if (lname.Length == 0) { error_messages.Add("Last name is required."); }
             if (new_username.Length < 6) { error_messages.Add("Username must be at least 6 characters."); }
             if (email.Length == 0) { error_messages.Add("E-Mail is required."); }
+            if (!email.Contains("curtmfg.com")) { error_messages.Add("CURT Manufacturing E-Mail address is required."); }
             if (phone.Length == 0) { error_messages.Add("Phone number is required."); }
             if (address.Length == 0) { error_messages.Add("Address is required."); }
             if (city.Length == 0) { error_messages.Add("City is required."); }
@@ -288,13 +281,13 @@ namespace CurtAdmin.Controllers
         /// <summary>
         /// Log the user out.
         /// </summary>
-        public void Logout() {
+        public ActionResult Logout() {
             string[] cookies = Request.Cookies.AllKeys;
             foreach (string cookie in cookies) {
                 Response.Cookies[cookie].Expires = DateTime.Now.AddDays(-1);
             }
             Session.Clear();
-            HttpContext.Response.Redirect("~/Authenticate");
+            return RedirectToAction("Index");
         }
 
         /// <summary>

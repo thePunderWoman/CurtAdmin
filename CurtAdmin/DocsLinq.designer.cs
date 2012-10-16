@@ -45,9 +45,9 @@ namespace CurtAdmin
     partial void InsertState(State instance);
     partial void UpdateState(State instance);
     partial void DeleteState(State instance);
-    partial void Insertcategory(category instance);
-    partial void Updatecategory(category instance);
-    partial void Deletecategory(category instance);
+    partial void InsertdocCategory(docCategory instance);
+    partial void UpdatedocCategory(docCategory instance);
+    partial void DeletedocCategory(docCategory instance);
     partial void InsertdocItem(docItem instance);
     partial void UpdatedocItem(docItem instance);
     partial void DeletedocItem(docItem instance);
@@ -141,11 +141,11 @@ namespace CurtAdmin
 			}
 		}
 		
-		public System.Data.Linq.Table<category> categories
+		public System.Data.Linq.Table<docCategory> docCategories
 		{
 			get
 			{
-				return this.GetTable<category>();
+				return this.GetTable<docCategory>();
 			}
 		}
 		
@@ -1001,7 +1001,7 @@ namespace CurtAdmin
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.categories")]
-	public partial class category : INotifyPropertyChanging, INotifyPropertyChanged
+	public partial class docCategory : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -1014,11 +1014,7 @@ namespace CurtAdmin
 		
 		private string _comments;
 		
-		private int _moduleID;
-		
-		private EntitySet<module> _modules;
-		
-		private EntityRef<cat_item> _cat_item;
+		private EntitySet<cat_item> _cat_items;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1032,14 +1028,11 @@ namespace CurtAdmin
     partial void OncatNameChanged();
     partial void OncommentsChanging(string value);
     partial void OncommentsChanged();
-    partial void OnmoduleIDChanging(int value);
-    partial void OnmoduleIDChanged();
     #endregion
 		
-		public category()
+		public docCategory()
 		{
-			this._modules = new EntitySet<module>(new Action<module>(this.attach_modules), new Action<module>(this.detach_modules));
-			this._cat_item = default(EntityRef<cat_item>);
+			this._cat_items = new EntitySet<cat_item>(new Action<cat_item>(this.attach_cat_items), new Action<cat_item>(this.detach_cat_items));
 			OnCreated();
 		}
 		
@@ -1054,10 +1047,6 @@ namespace CurtAdmin
 			{
 				if ((this._catID != value))
 				{
-					if (this._cat_item.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OncatIDChanging(value);
 					this.SendPropertyChanging();
 					this._catID = value;
@@ -1127,70 +1116,16 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_moduleID", DbType="Int NOT NULL")]
-		public int moduleID
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="docCategory_cat_item", Storage="_cat_items", ThisKey="catID", OtherKey="catID")]
+		public EntitySet<cat_item> cat_items
 		{
 			get
 			{
-				return this._moduleID;
+				return this._cat_items;
 			}
 			set
 			{
-				if ((this._moduleID != value))
-				{
-					this.OnmoduleIDChanging(value);
-					this.SendPropertyChanging();
-					this._moduleID = value;
-					this.SendPropertyChanged("moduleID");
-					this.OnmoduleIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="category_module", Storage="_modules", ThisKey="moduleID", OtherKey="moduleID")]
-		public EntitySet<module> modules
-		{
-			get
-			{
-				return this._modules;
-			}
-			set
-			{
-				this._modules.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="cat_item_category", Storage="_cat_item", ThisKey="catID", OtherKey="catID", IsForeignKey=true)]
-		public cat_item cat_item
-		{
-			get
-			{
-				return this._cat_item.Entity;
-			}
-			set
-			{
-				cat_item previousValue = this._cat_item.Entity;
-				if (((previousValue != value) 
-							|| (this._cat_item.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._cat_item.Entity = null;
-						previousValue.categories.Remove(this);
-					}
-					this._cat_item.Entity = value;
-					if ((value != null))
-					{
-						value.categories.Add(this);
-						this._catID = value.catID;
-					}
-					else
-					{
-						this._catID = default(int);
-					}
-					this.SendPropertyChanged("cat_item");
-				}
+				this._cat_items.Assign(value);
 			}
 		}
 		
@@ -1214,16 +1149,16 @@ namespace CurtAdmin
 			}
 		}
 		
-		private void attach_modules(module entity)
+		private void attach_cat_items(cat_item entity)
 		{
 			this.SendPropertyChanging();
-			entity.category = this;
+			entity.docCategory = this;
 		}
 		
-		private void detach_modules(module entity)
+		private void detach_cat_items(cat_item entity)
 		{
 			this.SendPropertyChanging();
-			entity.category = null;
+			entity.docCategory = null;
 		}
 	}
 	
@@ -1599,9 +1534,9 @@ namespace CurtAdmin
 		
 		private int _cat_items_id;
 		
-		private EntitySet<category> _categories;
-		
 		private EntitySet<docItem> _docItems;
+		
+		private EntityRef<docCategory> _docCategory;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1617,8 +1552,8 @@ namespace CurtAdmin
 		
 		public cat_item()
 		{
-			this._categories = new EntitySet<category>(new Action<category>(this.attach_categories), new Action<category>(this.detach_categories));
 			this._docItems = new EntitySet<docItem>(new Action<docItem>(this.attach_docItems), new Action<docItem>(this.detach_docItems));
+			this._docCategory = default(EntityRef<docCategory>);
 			OnCreated();
 		}
 		
@@ -1633,6 +1568,10 @@ namespace CurtAdmin
 			{
 				if ((this._catID != value))
 				{
+					if (this._docCategory.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OncatIDChanging(value);
 					this.SendPropertyChanging();
 					this._catID = value;
@@ -1682,19 +1621,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="cat_item_category", Storage="_categories", ThisKey="catID", OtherKey="catID")]
-		public EntitySet<category> categories
-		{
-			get
-			{
-				return this._categories;
-			}
-			set
-			{
-				this._categories.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="cat_item_docItem", Storage="_docItems", ThisKey="itemID", OtherKey="itemID")]
 		public EntitySet<docItem> docItems
 		{
@@ -1705,6 +1631,40 @@ namespace CurtAdmin
 			set
 			{
 				this._docItems.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="docCategory_cat_item", Storage="_docCategory", ThisKey="catID", OtherKey="catID", IsForeignKey=true)]
+		public docCategory docCategory
+		{
+			get
+			{
+				return this._docCategory.Entity;
+			}
+			set
+			{
+				docCategory previousValue = this._docCategory.Entity;
+				if (((previousValue != value) 
+							|| (this._docCategory.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._docCategory.Entity = null;
+						previousValue.cat_items.Remove(this);
+					}
+					this._docCategory.Entity = value;
+					if ((value != null))
+					{
+						value.cat_items.Add(this);
+						this._catID = value.catID;
+					}
+					else
+					{
+						this._catID = default(int);
+					}
+					this.SendPropertyChanged("docCategory");
+				}
 			}
 		}
 		
@@ -1726,18 +1686,6 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_categories(category entity)
-		{
-			this.SendPropertyChanging();
-			entity.cat_item = this;
-		}
-		
-		private void detach_categories(category entity)
-		{
-			this.SendPropertyChanging();
-			entity.cat_item = null;
 		}
 		
 		private void attach_docItems(docItem entity)
@@ -1981,8 +1929,6 @@ namespace CurtAdmin
 		
 		private EntitySet<user_module> _user_modules;
 		
-		private EntityRef<category> _category;
-		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -2002,7 +1948,6 @@ namespace CurtAdmin
 		public module()
 		{
 			this._user_modules = new EntitySet<user_module>(new Action<user_module>(this.attach_user_modules), new Action<user_module>(this.detach_user_modules));
-			this._category = default(EntityRef<category>);
 			OnCreated();
 		}
 		
@@ -2017,10 +1962,6 @@ namespace CurtAdmin
 			{
 				if ((this._moduleID != value))
 				{
-					if (this._category.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OnmoduleIDChanging(value);
 					this.SendPropertyChanging();
 					this._moduleID = value;
@@ -2120,40 +2061,6 @@ namespace CurtAdmin
 			set
 			{
 				this._user_modules.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="category_module", Storage="_category", ThisKey="moduleID", OtherKey="moduleID", IsForeignKey=true)]
-		public category category
-		{
-			get
-			{
-				return this._category.Entity;
-			}
-			set
-			{
-				category previousValue = this._category.Entity;
-				if (((previousValue != value) 
-							|| (this._category.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._category.Entity = null;
-						previousValue.modules.Remove(this);
-					}
-					this._category.Entity = value;
-					if ((value != null))
-					{
-						value.modules.Add(this);
-						this._moduleID = value.moduleID;
-					}
-					else
-					{
-						this._moduleID = default(int);
-					}
-					this.SendPropertyChanged("category");
-				}
 			}
 		}
 		
@@ -2575,8 +2482,6 @@ namespace CurtAdmin
 		
 		private string _fax;
 		
-		private int _isAdmin;
-		
 		private string _comments;
 		
 		private System.DateTime _dateAdded;
@@ -2619,8 +2524,6 @@ namespace CurtAdmin
     partial void OnphoneChanged();
     partial void OnfaxChanging(string value);
     partial void OnfaxChanged();
-    partial void OnisAdminChanging(int value);
-    partial void OnisAdminChanged();
     partial void OncommentsChanging(string value);
     partial void OncommentsChanged();
     partial void OndateAddedChanging(System.DateTime value);
@@ -2824,26 +2727,6 @@ namespace CurtAdmin
 					this._fax = value;
 					this.SendPropertyChanged("fax");
 					this.OnfaxChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_isAdmin", DbType="Int NOT NULL")]
-		public int isAdmin
-		{
-			get
-			{
-				return this._isAdmin;
-			}
-			set
-			{
-				if ((this._isAdmin != value))
-				{
-					this.OnisAdminChanging(value);
-					this.SendPropertyChanging();
-					this._isAdmin = value;
-					this.SendPropertyChanged("isAdmin");
-					this.OnisAdminChanged();
 				}
 			}
 		}

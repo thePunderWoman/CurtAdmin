@@ -1,143 +1,117 @@
 ﻿@{
-    ViewBag.Title = "CURT Documentation - Account Info";
+    ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-
+<style type="text/css">
+    #user_container{
+        width: 90%;
+        margin: auto;
+        border: 2px solid #343434;
+        border-radius: 4px 4px 4px;
+        display: none;
+    }
+    
+    #user_container #user_name{
+       min-height: 40px;
+       padding: 5px;
+       border-bottom: 1px solid black;
+       background: #343434;
+       color: White;
+       padding-left: 25px;
+    }
+    
+    #user_container #user_name h4{
+        margin: 0px;
+        line-height: 40px;
+    }
+    
+    #user_info span:nth-child(odd){
+        float:left;
+        margin: 3px 0px;
+        clear:left;
+    }
+    #user_info span:nth-child(even){
+        float: right;
+        margin: 3px 0px;
+        margin-right: 20%;
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<div id="usersNav">
+    <ul>
+        <li>
+            <a href="@Url.Content("~/Users")" class="active">View Internal Users</a>
+        </li>
+        <li>
+            <a href="@Url.Content("~/Users/Customers")">View Customer Users</a>
+        </li>
+        <li>
+            <a href="@Url.Content("~/Users/Add")">Add New</a>
+        </li>
+    </ul>
+</div>
 
 <div id="content_container">
-    <h2>@ViewBag.u.fname @ViewBag.u.lname Account Information</h2>
+    <h2>All Users (@ViewBag.users.Count)</h2>
 
-    @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
-        <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
-            <p style="color:whitesmoke;text-decoration:underline;font-size:14pt;margin-left:40px">Please fix the following errors:</p>
-            <ul style="list-style: none">
-                @foreach (string message in ViewBag.error_messages) {
-                    <li>- @message</li>
+    <div style="width: 90%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>E-Mail</th>
+                    <th>Date Added</th>
+                    <th>Is Active?</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.user u in ViewBag.users) {
+                    <tr id="user:@u.userID">
+                        <td>@u.username</td>
+                        <td>@u.fname @u.lname</td>
+                        <td>@u.email</td>
+                        <td>@u.dateAdded</td>
+                        <td class="center">
+                            <input type="checkbox" name="isActive" id="isActive:@u.userID" class="isActive" value="1" @((u.isActive == 1)?"checked":"") />
+                        </td>
+                        <td class="center">
+                            <select id="action:@u.userID" class="user_action">
+                                <option value="0">Select Action</option>
+                                <option value="view">View</option>
+                                <option value="edit">Edit</option>
+                                <option value="delete">Remove</option>
+                            </select>
+                        </td>
+                    </tr>
                 }
-            </ul>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="user_container">
+        <div id="user_name">
+            <h4></h4>
         </div>
-    }
-
-    <form method="post" action="@HttpContext.Current.Request.Url.AbsoluteUri" id="newUser_form" class="form">
-        <div id="newUser_form_left" class="form_left">
-            <!-- Username -->
-            <label for="username">
-                Username
-                <input type="text" name="username" id="username" placeholder="Enter username..." value="@ViewBag.u.username" disabled /><br />
-                <span class="inputHelper">Username must be at least 8 characters. * Required</span>
-            </label>
-
-            <!-- Initial Password -->
-            <label for="password1">
-                Password
-                <input type="password" name="password1" id="password1" placeholder="Enter password..." value="@ViewBag.u.password" required="required" /><br />
-                <span class="inputHelper">Password must be at least 8 characters. * Required</span>
-            </label>
-
-            <!-- Password validation -->
-            <label for="password2">
-                Re-enter Password
-                <input type="password" name="password2" id="password2" placeholder="Re-enter password..." value="@ViewBag.u.password" required="required" /><br />
-                <span class="inputHelper">Validate password. * Required</span>
-            </label>
-
-            <!-- E-Mail Address -->
-            <label for="email">
-                E-Mail
-                <input type="email" name="email" id="email" placeholder="Enter e-mail address..." value="@ViewBag.u.email" required="required" /><br />
-                <span class="inputHelper">* Required</span>
-            </label>
-
-            <!-- First Name -->
-            <label for="fname">
-                First Name
-                <input type="text" name="fname" id="fname" placeholder="Enter first name..." value="@ViewBag.u.fname" />
-            </label>
-
-            <!-- Last Name -->
-            <label for="lname">
-                Last Name
-                <input type="text" name="lname" id="lname" placeholder="Enter last name..." value="@ViewBag.u.lname" />
-            </label>
-
-            <!-- Address -->
-            <label for="address">
-                Address
-                <input type="text" name="address" id="address" placeholder="Enter your address..." value="@ViewBag.u.address" />
-            </label>
-
-            <!-- City/State -->
-            <label for="city">
-                City/State
-                <select name="stateID" id="stateID" style="width: 92px;margin-left: 8px">
-                    @foreach (CurtAdmin.State state in ViewBag.states) {
-                        <option value="@state.stateID" @((ViewBag.u.stateID == state.stateID)?"selected='selected'":"")>@state.abbr</option>
-                    }
-                </select>
-                <input type="text" name="city" id="city" placeholder="Enter your city..." value="@ViewBag.u.city" style="width:300px" />
-            </label>
-
-            <!-- Website -->
-            <label for="website">
-                Website
-                <input type="text" name="website" id="website" placeholder="http://" value="@ViewBag.u.website" />
-            </label>
-
-            <!-- Phone -->
-            <label for="phone">
-                Phone
-                <input type="text" name="phone" id="phone" placeholder="Enter phone number..." value="@ViewBag.u.phone" pattern="^[0-9]{10}" /><br />
-                <span class="inputHelper">Example: 7155550550</span>
-            </label>
-
-            <!-- Fax -->
-            <label for="fax">
-                Fax
-                <input type="text" name="fax" id="fax" placeholder="Enter fax number..." value="@ViewBag.u.fax" pattern="^[0-9]{10}" /><br />
-                <span class="inputHelper">Example: 7154446655</span>
-            </label>
-
-            <!-- Biography -->
-            <label for="biography">
-                Biography<br />
-                <textarea rows="5" cols="65" name="biography" id="biography" placeholder="Enter user biography...">@ViewBag.u.biography</textarea>
-            </label><br/>
-
-            <label for="photo">Photo</label>
-            <input type="hidden" name="photo" id="file" value="@ViewBag.u.photo" />
-            <div id="photobox">
-                <div id="photo-file">
-                    @if (ViewBag.u.photo != null && ViewBag.u.photo != "") {
-                        <img src="@ViewBag.u.photo" alt="photo" />
-                    } else {
-                        <img src="/Content/img/nophoto.jpg" alt="No Photo" />
-                    }
-                </div>
-                <button type="button" id="choose-photo">Choose</button>
-                <button type="button" id="clear-photo">Clear</button>
+        <div id="user_info">
+            <div style="float:left;width:45%;margin-left: 4%">
+                <span>Username:</span>
+                <span id="username"></span>
+                <span>E-Mail:</span>
+                <span id="email"></span>
+                <span>Website:</span>
+                <span id="website"></span>
+            </div>
+            <div style="float:left;width: 45%;margin-right:4%">
+                <span>Phone:</span>
+                <span id="phone"></span>
+                <span>Fax:</span>
+                <span id="fax"></span>
             </div>
             <div style="clear:both"></div>
-
-            <div id="buttons">
-
-                <span id="formMessage"></span>
-
-                <!-- Submit -->
-                <input type="submit" name="btnSaveUser" id="btnSaveUser" value="Save" />
-
-                <!-- Reset -->
-                <input type="reset" name="btnResetUser" id="btnResetUser" value="Reset" />
-            </div>
         </div>
-        <div id="newUser_form_right" class="form_right">
-            <p>You can use this form to update your account information.</p>
-            <p>Making sure this information is correct will greatly help us with contacting you for future updates and additions to the CURT Documentation and other tools.</p>
-        </div>
-        <div style="clear:both"></div>
-    </form>  
+    </div>
+
 </div>
-<div id="file-dialog"></div>
-
-<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/users_home.js")"></script>

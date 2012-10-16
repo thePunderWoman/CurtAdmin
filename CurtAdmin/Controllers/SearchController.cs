@@ -73,7 +73,7 @@ namespace CurtAdmin.Controllers
             if (cat_terms.Length > 0) {
                 List<SearchObject> cats = new List<SearchObject>();
                 foreach (string cat_term in cat_terms) {
-                    cats = (from c in doc_db.categories
+                    cats = (from c in doc_db.docCategories
                             where c.catName.Contains(cat_term)
                             select new SearchObject {
                                 id = c.catID.ToString(),

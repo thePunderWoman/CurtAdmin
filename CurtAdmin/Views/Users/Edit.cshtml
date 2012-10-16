@@ -1,22 +1,27 @@
 ﻿@{
-    ViewBag.Title = "CURT Documentation - Add User";
+    ViewBag.Title = "CURT Doc Admin - Editing User";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.module> these_modules = ViewBag.selected_modules;
+    List<string> users_modules = new List<string>();
+    foreach (CurtAdmin.module mod in these_modules) {
+        users_modules.Add(mod.moduleID.ToString());
+    }
 }
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 <div id="usersNav">
     <ul>
         <li>
-            <a href="@Url.Content("~/Admin_Users")">View Users</a>
+            <a href="@Url.Content("~/Users")" class="active">View Users</a>
         </li>
         <li>
-            <a href="@HttpContext.Current.Request.Url.AbsoluteUri" class="active">Add New</a>
+            <a href="@Url.Content("~/Users/Add")">Add New</a>
         </li>
     </ul>
 </div>
 
-
 <div id="content_container">
-
-    <h2>Add New User</h2>
+    <h2>Editing @ViewBag.u.fname @ViewBag.u.lname</h2>
 
     @if (ViewBag.error_messages != null && ViewBag.error_messages.Count > 0) {
         <div style="padding:5px;border:2px solid #343434;background:#827d70;width:60%;margin-bottom: 20px">
@@ -34,92 +39,80 @@
             <!-- Username -->
             <label for="username">
                 Username
-                <input type="text" name="username" id="username" placeholder="Enter username..." value="@ViewBag.username" required="required" /><br />
+                <input type="text" name="username" id="username" placeholder="Enter username..." value="@ViewBag.u.username" required="required" /><br />
                 <span class="inputHelper">Username must be at least 8 characters. * Required</span>
             </label>
 
             <!-- Initial Password -->
             <label for="password1">
                 Password
-                <input type="password" name="password1" id="password1" placeholder="Enter password..." required="required" /><br />
+                <input type="password" name="password1" id="password1" placeholder="Enter password..." value="@ViewBag.u.password" required="required" /><br />
                 <span class="inputHelper">Password must be at least 8 characters. * Required</span>
             </label>
 
             <!-- Password validation -->
             <label for="password2">
                 Re-enter Password
-                <input type="password" name="password2" id="password2" placeholder="Re-enter password..." required="required" /><br />
+                <input type="password" name="password2" id="password2" placeholder="Re-enter password..." value="@ViewBag.u.password" required="required" /><br />
                 <span class="inputHelper">Validate password. * Required</span>
             </label>
 
             <!-- E-Mail Address -->
             <label for="email">
                 E-Mail
-                <input type="email" name="email" id="email" placeholder="Enter e-mail address..." value="@ViewBag.email" required="required" /><br />
+                <input type="email" name="email" id="email" placeholder="Enter e-mail address..." value="@ViewBag.u.email" required="required" /><br />
                 <span class="inputHelper">* Required</span>
             </label>
 
             <!-- First Name -->
             <label for="fname">
                 First Name
-                <input type="text" name="fname" id="fname" placeholder="Enter first name..." value="@ViewBag.fname" />
+                <input type="text" name="fname" id="fname" placeholder="Enter first name..." value="@ViewBag.u.fname" />
             </label>
 
             <!-- Last Name -->
             <label for="lname">
                 Last Name
-                <input type="text" name="lname" id="lname" placeholder="Enter last name..." value="@ViewBag.lname" />
+                <input type="text" name="lname" id="lname" placeholder="Enter last name..." value="@ViewBag.u.lname" />
             </label>
 
             <!-- Website -->
             <label for="website">
                 Website
-                <input type="text" name="website" id="website" placeholder="http://" value="@ViewBag.website" />
+                <input type="text" name="website" id="website" placeholder="http://" value="@ViewBag.u.website" />
             </label>
 
             <!-- Phone -->
             <label for="phone">
                 Phone
-                <input type="text" name="phone" id="phone" placeholder="Enter phone number..." value="@ViewBag.phone" pattern="^[0-9]{10}" /><br />
+                <input type="text" name="phone" id="phone" placeholder="Enter phone number..." value="@ViewBag.u.phone" pattern="^[0-9]{10}" /><br />
                 <span class="inputHelper">Example: 7155550550</span>
             </label>
 
             <!-- Fax -->
             <label for="fax">
                 Fax
-                <input type="text" name="fax" id="fax" placeholder="Enter fax number..." value="@ViewBag.fax" pattern="^[0-9]{10}" /><br />
+                <input type="text" name="fax" id="fax" placeholder="Enter fax number..." value="@ViewBag.u.fax" pattern="^[0-9]{10}" /><br />
                 <span class="inputHelper">Example: 7154446655</span>
             </label>
-
-            @if (Convert.ToInt32(Session["superUser"]) == 1) {
-                <!-- Permissions -->
-                <label for="isAdmin">
-                    Permission Level
-                    <select name="isAdmin" id="isAdmin">
-                        <option value="-1">Select Permissions</option>
-                        <option value="0" @((ViewBag.isAdmin == 0) ? "selected" : "")>User Permission</option>
-                        <option value="1" @((ViewBag.isAdmin == 1) ? "selected" : "")>Admin Permission</option>
-                    </select>
-                </label>
-            }
 
             <!-- Comments -->
             <label for="comments">
                 Comments<br />
-                <textarea rows="5" cols="65" name="comments" id="comments" placeholder="Enter comments about user...">@ViewBag.comments</textarea>
+                <textarea rows="5" cols="65" name="comments" id="comments" placeholder="Enter comments about user...">@ViewBag.u.comments</textarea>
             </label><br/>
 
             <!-- Biography -->
             <label for="biography">
                 Biography<br />
-                <textarea rows="5" cols="65" name="biography" id="biography" placeholder="Enter user biography...">@ViewBag.biography</textarea>
+                <textarea rows="5" cols="65" name="biography" id="biography" placeholder="Enter user biography...">@ViewBag.u.biography</textarea>
             </label><br/>
 
             <label for="photo">Photo</label>
-            <input type="hidden" name="photo" id="file" value="@ViewBag.photo" />
+            <input type="hidden" name="photo" id="file" value="@ViewBag.u.photo" />
             <div id="photobox">
                 <div id="photo-file">
-                    @if (ViewBag.photo != null && ViewBag.photo != "") {
+                    @if (ViewBag.u.photo != null && ViewBag.u.photo != "") {
                         <img src="@ViewBag.u.photo" alt="photo" />
                     } else {
                         <img src="/Content/img/nophoto.jpg" alt="No Photo" />
@@ -128,8 +121,8 @@
                 <button type="button" id="choose-photo">Choose</button>
                 <button type="button" id="clear-photo">Clear</button>
             </div>
-            
             <div style="clear:both"></div>
+
             <div id="buttons">
 
                 <span id="formMessage"></span>
@@ -146,38 +139,25 @@
 
             <!-- Admin modules -->
             <div id="adminModules" class="moduleContainer">
-                <h4>Admin Modules</h4>
-                @foreach (CurtAdmin.module m in ViewBag.admin_modules) {
-                    List<string> these_modules = ViewBag.selected_modules;
+                <h4>Modules</h4>
+                @foreach (CurtAdmin.module m in ViewBag.modules) {
                     <label for="module:@m.moduleID">
                         @m.module1
-                        <input type="checkbox" name="module" id="module:@m.moduleID" value="@m.moduleID" @((these_modules.Contains(m.moduleID.ToString()))?"checked":"") />
+                        <input type="checkbox" name="module" id="module:@m.moduleID" value="@m.moduleID" @((users_modules.Contains(m.moduleID.ToString())) ? "checked" : "") />
                     </label>
                 }
             </div>
             
-            <!-- User modules -->
-            <div id="userModules" class="moduleContainer">
-                <h4>User Modules</h4>
-                @foreach (CurtAdmin.module m in ViewBag.user_modules) {
-                    List<string> these_modules = ViewBag.selected_modules;
-                    <label for="module:@m.moduleID">
-                        @m.module1
-                        <input type="checkbox" name="module" id="module:@m.moduleID" value="@m.moduleID" @((these_modules.Contains(m.moduleID.ToString()))?"checked":"") />
-                    </label>
-                }
-            </div>
-
             <div id="activeUser" class="moduleContainer">
                 <h4>User Access Layer</h4>
                 <label for="isActive">
                     Is Active?
-                    <input type="checkbox" name="isActive" id="isActive" value="1" @((ViewBag.isActive == 1)?"checked":"") />
+                    <input type="checkbox" name="isActive" id="isActive" value="1" @((ViewBag.u.isActive == 1) ? "checked" : "") />
                 </label>
                 @if (Convert.ToInt32(Session["superUser"]) == 1) {
                     <label for="isActive">
                         Super User?
-                        <input type="checkbox" name="superUser" id="superUser" value="1" @((ViewBag.superUser == 1) ? "checked" : "") />
+                        <input type="checkbox" name="superUser" id="superUser" value="1" @((ViewBag.u.superUser == 1) ? "checked" : "") />
                     </label>
                 }
             </div>
@@ -185,6 +165,7 @@
         </div>
         <div style="clear:both"></div>
     </form>
+        
 </div>
 <script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/users_home.js")"></script>

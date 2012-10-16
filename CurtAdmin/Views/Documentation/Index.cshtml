@@ -1,32 +1,92 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "View Documentation Categories";
+    ViewBag.navigation = "_DocumentationNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<CurtAdmin.category> categories = new List<CurtAdmin.category>();
-    categories = ViewBag.cateogries;
+    List<CurtAdmin.docCategory> categories = ViewBag.categories;
 }
-
-@if (categories != null && categories.Count > 0) {
-    <div id="usersNav">
-        <ul>
-            @foreach (CurtAdmin.category cat in categories) {
-                <li>
-                    <a href="@Url.Content("~/Documentation/Category?cat_id="+cat.catID)">@cat.catName</a>
-                </li>
-            }
-        </ul>
-    </div>
-}
-
+<script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+<ul id="subNav">
+    <li class="add">
+        <a href="@Url.Content("~/Documentation/AddCategory")">Add New</a>
+    </li>
+    <li class="clear"></li>
+</ul>
 <div id="content_container">
-    <h2>CURT Documentation</h2>
 
-    <p>In this section you will find eCommerce documentation for all of the tools that we create for our customers. This will include all versions of the API, the HitchWidget&trade;, and the CURT eLocal Program.</p>
+    <h2>Viewing All Documentation Categories(@categories.Count)</h2>
 
-    <p>If you feel there is insufficient examples or descriptive text for an element of our tools. Please use the contact form that can be located using the link in the top right corner of your screen.</p>
+    <div style="width: 90%;margin:auto">
+        <table style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Category ID</th>
+                    <th>Category</th>
+                    <th># of Items</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.docCategory cat in categories) {
+                    <tr id="cat:@cat.catID">
+                        <td style="width:15%">@cat.catID</td>
+                        <td style="width:35%">@cat.catName</td>
+                        <td style="width:35%">@cat.cat_items.Count</td>
+                        <td style="width: 15%" class="center">
+                            <select name="action" id="action:@cat.catID" class="action">
+                                <option value="0">Select Action</option>
+                                <option value="viewItems">View Items</option>
+                                <option value="edit">Edit</option>
+                                @if (cat.catID != 1) {
+                                    <option value="delete">Remove</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-    <p>Thank you,</p><br />
-
-    <p>CURT Documentation Administrator</p>
 </div>
 
+<script type="text/javascript">
 
+    $(function () {
+        $('table').dataTable({
+            "bJQueryUI": true
+        });
+
+        $('.action').change(function () {
+            var action = $(this).val();
+            var catID = $(this).attr('id').split(':')[1];
+            switch (action) {
+                case 'viewItems':
+                    window.location.href = '/Documentation/ViewCatItems?catID=' + catID;
+                    break;
+                case 'edit':
+                    window.location.href = '/Documentation/EditCategory?cat_id=' + catID;
+                    break;
+                case 'delete':
+                    if (confirm('Are you sure you want to remove this category?')) {
+                        $.get('/Documentation/RemoveCategory?cat_id=' + catID, function (response) {
+                            if (response == '') {
+                                $('#cat\\:' + catID).remove();
+                                showMessage('Category was removed.');
+                            } else {
+                                showMessage(response);
+                            }
+                        });
+                    }
+                    break;
+                default:
+                    // DO NOTHING
+            }
+            $(this).val(0);
+        });
+
+        $('.isActive').click(function () {
+            var user_id = $(this).attr('id').split(':')[1];
+            set_isActive(user_id);
+        });
+    });
+</script>

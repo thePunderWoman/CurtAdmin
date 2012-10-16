@@ -28,13 +28,13 @@ namespace CurtAdmin.Models {
         /// <param name="catID">The cat ID.</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public static category GetCategory(int catID = 0) {
-            category cat = new category();
+        public static docCategory GetCategory(int catID = 0) {
+            docCategory cat = new docCategory();
             DocsLinqDataContext doc_db = new DocsLinqDataContext();
             if (catID > 0) {
-                cat = (from c in doc_db.categories
+                cat = (from c in doc_db.docCategories
                        where c.catID.Equals(catID)
-                       select c).Single<category>();
+                       select c).Single<docCategory>();
             }
             return cat;
         }
@@ -46,17 +46,16 @@ namespace CurtAdmin.Models {
         /// <param name="moduleID">The module ID.</param>
         /// <returns>List of category</returns>
         /// <remarks></remarks>
-        public static List<category> GetCategories(int moduleID = 0) {
-            List<category> cats = new List<category>();
+        public static List<docCategory> GetCategories(int moduleID = 0) {
+            List<docCategory> cats = new List<docCategory>();
             DocsLinqDataContext doc_db = new DocsLinqDataContext();
 
             if (moduleID != 0) {
-                cats = (from c in doc_db.categories
-                        where c.moduleID.Equals(moduleID)
+                cats = (from c in doc_db.docCategories
                         orderby c.catName
-                        select c).ToList<category>();
+                        select c).ToList<docCategory>();
             } else {
-                cats = doc_db.categories.OrderBy(c => c.catName).ToList<category>();
+                cats = doc_db.docCategories.OrderBy(c => c.catName).ToList<docCategory>();
             }
 
             return cats;
@@ -68,14 +67,14 @@ namespace CurtAdmin.Models {
         /// <param name="catID">The cat ID.</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public static List<category> GetSubCategories(int catID = 0) {
-            List<category> cats = new List<category>();
+        public static List<docCategory> GetSubCategories(int catID = 0) {
+            List<docCategory> cats = new List<docCategory>();
             DocsLinqDataContext doc_db = new DocsLinqDataContext();
 
             if (catID != 0) {
-                cats = (from c in doc_db.categories
+                cats = (from c in doc_db.docCategories
                         where c.parentID.Equals(catID)
-                        select c).ToList<category>();
+                        select c).ToList<docCategory>();
             }
 
             return cats;
@@ -87,20 +86,20 @@ namespace CurtAdmin.Models {
         /// <param name="moduleID">The module ID.</param>
         /// <returns>List of categories</returns>
         /// <remarks></remarks>
-        public static List<category> GetParentCategories(int moduleID = 0) {
-            List<category> cats = new List<category>();
+        public static List<docCategory> GetParentCategories(int moduleID = 0) {
+            List<docCategory> cats = new List<docCategory>();
             DocsLinqDataContext doc_db = new DocsLinqDataContext();
 
             if (moduleID != 0) {
-                cats = (from c in doc_db.categories
-                        where c.moduleID.Equals(moduleID) && c.parentID.Equals(0)
-                        orderby c.catName
-                        select c).ToList<category>();
-            } else {
-                cats = (from c in doc_db.categories
+                cats = (from c in doc_db.docCategories
                         where c.parentID.Equals(0)
                         orderby c.catName
-                        select c).ToList<category>();
+                        select c).ToList<docCategory>();
+            } else {
+                cats = (from c in doc_db.docCategories
+                        where c.parentID.Equals(0)
+                        orderby c.catName
+                        select c).ToList<docCategory>();
             }
             return cats;
 
@@ -173,8 +172,7 @@ namespace CurtAdmin.Models {
                             itemID = ic.itemID,
                             parentComment = ic.parentComment,
                             fname = u.fname,
-                            lname = u.lname,
-                            isAdmin = u.isAdmin
+                            lname = u.lname
                         }).ToList<UserComment>();
             return comments;
         }
@@ -199,8 +197,7 @@ namespace CurtAdmin.Models {
                             itemID = ic.itemID,
                             parentComment = ic.parentComment,
                             fname = u.fname,
-                            lname = u.lname,
-                            isAdmin = u.isAdmin
+                            lname = u.lname
                         }).ToList<UserComment>();
             return comments;
         }
@@ -297,8 +294,7 @@ namespace CurtAdmin.Models {
                                         itemID = ic.itemID,
                                         parentComment = ic.parentComment,
                                         fname = u.fname,
-                                        lname = u.lname,
-                                        isAdmin = u.isAdmin
+                                        lname = u.lname
                                     }).Single<UserComment>();
 
             // Get the item
