@@ -74,14 +74,6 @@ namespace CurtAdmin.Models.B2b
                 db.B2BLessons.InsertOnSubmit(newLesson);
                 db.SubmitChanges();
 
-                B2BVideo newVideo = new B2BVideo();
-                newVideo.date_added = DateTime.Now;
-                newVideo.sort = 1;
-                newVideo.lessonID = newLesson.id;
-
-                db.B2BVideos.InsertOnSubmit(newVideo);
-                db.SubmitChanges();
-
                 B2BResource newPDF = new B2BResource();
 
                 newPDF.file_path = pdf;
@@ -162,7 +154,57 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not add Answer: " + e.Message);
             }
         }
+        public static void addVideo(int lessonID, string title, string mp4, string ogg, string webm, bool inActive)
+        {
+            try
+            {
+                // New Video
+                B2BDataContext db = new B2BDataContext();
+                B2BVideo newVideo = new B2BVideo();
+                newVideo.title = title;
+                newVideo.date_added = DateTime.Now;
+                newVideo.sort = 1;
+                newVideo.lessonID = lessonID;
+                newVideo.inactive = inActive;
+                db.B2BVideos.InsertOnSubmit(newVideo);
+                db.SubmitChanges();
+                // New Video Sources
+                int videoID = newVideo.id;
 
+                foreach (B2BVideoType videoType in getVideoTypes())
+                {
+                    string type = videoType.type;
+                    B2BVideoSource newVideoSource = new B2BVideoSource();
+                    newVideoSource.videoID = videoID;       
+                    if (type == "mp4")
+                    {
+                        newVideoSource.filePath = mp4;
+                        newVideoSource.typeID = videoType.id;
+                    }
+                    else if (type == "ogg")
+                    {
+                        newVideoSource.filePath = ogg;
+                        newVideoSource.typeID = videoType.id;
+                    }
+                    else if (type == "webm")
+                    {
+                        newVideoSource.filePath = webm;
+                        newVideoSource.typeID = videoType.id;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    db.B2BVideoSources.InsertOnSubmit(newVideoSource);
+                    db.SubmitChanges();
+                }// end foreach videoType
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not add video: " + e.Message);
+            }
+        }
         //////////////////////==  Read   ==/////////////////////////////
 
         public static List<B2BCertificate> getCertificates()
@@ -249,6 +291,20 @@ namespace CurtAdmin.Models.B2b
             }
 
         }
+        public static List<B2BVideoType> getVideoTypes()
+        {
+            try
+            {
+                List<B2BVideoType> listOfVideoTypes = new List<B2BVideoType>();
+                B2BDataContext db = new B2BDataContext();
+                listOfVideoTypes = db.B2BVideoTypes.ToList<B2BVideoType>();
+                return listOfVideoTypes;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not load B2B video types: " + e.Message );
+            }
+        }
 
         // get individual objects
         public static B2BAnswer getAnswer(int answerID)
@@ -311,6 +367,20 @@ namespace CurtAdmin.Models.B2b
             }
 
         }
+        public static B2BVideo getVideo(int videoID)
+        {
+            try
+            {
+                B2BDataContext db = new B2BDataContext();
+                B2BVideo video = new B2BVideo();
+                video = db.B2BVideos.Where(x => x.id == videoID).Select(x => x).FirstOrDefault<B2BVideo>();
+                return video;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not laod the video: " + e.Message);
+            }
+        }
         public static B2BCategory getCategory(int catID)
         {
             try
@@ -370,6 +440,7 @@ namespace CurtAdmin.Models.B2b
                 throw new Exception("Could not load B2B User Info: " + e.Message);
             }
         }
+
 
 
         ///////////////////////==  Delete    ==/////////////////////////
@@ -461,6 +532,22 @@ namespace CurtAdmin.Models.B2b
                 B2BAnswer answer = new B2BAnswer();
                 answer = db.B2BAnswers.Where(x => x.id == id).FirstOrDefault<B2BAnswer>();
                 db.B2BAnswers.DeleteOnSubmit(answer);
+                db.SubmitChanges();
+                return "";
+            }
+            catch (Exception)
+            {
+                return "Error while deleting";
+            }
+        }
+        public static string DeleteVideo(int id)
+        {
+            try
+            {
+                B2BDataContext db = new B2BDataContext();
+                B2BVideo video = new B2BVideo();
+                video = db.B2BVideos.Where(x => x.id == id).FirstOrDefault<B2BVideo>();
+                db.B2BVideos.DeleteOnSubmit(video);
                 db.SubmitChanges();
                 return "";
             }

@@ -1,0 +1,89 @@
+﻿@using CurtAdmin.Models.B2b
+@{
+    ViewBag.Title = "Edit Video";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    CurtAdmin.B2BLesson lesson = ViewBag.lesson ?? new CurtAdmin.B2BLesson();
+    CurtAdmin.B2BVideo video = ViewBag.video ?? new CurtAdmin.B2BVideo();
+    string mp4Path = ViewBag.mp4 ?? "";
+    string oggPath = ViewBag.ogg ?? "";
+    string webmPath = ViewBag.webm ?? "";
+    string msg = ViewBag.msg ?? "";
+   
+}
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/selectfile.js")"></script>
+
+<div id="breadcrumbs"><a href="/B2B/">B2B</a> > <a href="/B2B/ViewCerts">Certificates</a> > <a href="/B2B/ViewCats/@lesson.B2BCategory.certID">Categories</a> > <a href="/B2B/ViewLessons/@lesson.catID">Lessons</a> > <a href="/B2B/ViewVideos/@lesson.id">Videos</a> > Edit Video </div>
+<div id="content_container">
+    <h2>Edit Video: @video.title</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    @if (msg.Length > 0)
+    {
+        <p style="font-weight: bold; color: Green;">@ViewBag.msg</p>
+    }
+    <form action="/B2B/EditVideo/@video.id" method="post" class="form_left">
+        <label for="title">
+            Video Title
+            <input type="text" name="title" id="title" value="@video.title" placeholder="Enter the title of the video" required />
+        </label>
+
+        <h3>Video Formats:</h3>
+        <ul>
+                <label for="mp4">
+                    <em>.mp4</em> &nbsp;Video URL
+                    <input type="text" name="mp4" id="mp4" value="@mp4Path" placeholder="Copy/Paste .mp4 video url from file manager." />
+                </label>
+                <label for="ogg">
+                    <em>.ogg</em> &nbsp;Video URL
+                    <input type="text" name="ogg" id="ogg" value="@oggPath" placeholder="Copy/Paste .ogg video url from file manager." />
+                </label>
+                <label for="webm">
+                    <em>.webm</em> &nbsp;Video URL
+                    <input type="text" name="webm" id="webm" value="@webmPath" placeholder="Copy/Paste .webm video url from file manager." />
+                </label>
+        </ul>
+
+         <label for="inactive">
+            Inactive?
+             @if (video.inactive == true)
+                {
+                    <input type="checkbox" name="inactive" id="inactive" checked="checked"/>
+                }
+                else
+                {
+                    <input type="checkbox" name="inactive" id="inactive"/>
+                }
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>
+<div id="file-dialog"></div>

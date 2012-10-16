@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     CurtAdmin.B2BLesson lesson = ViewBag.lesson ?? new CurtAdmin.B2BLesson();
+    List<CurtAdmin.B2BVideoType> listOfVideoTypes = ViewBag.listOfVideoTypes ?? new List<CurtAdmin.B2BVideoType>();
    
 
 }
@@ -22,13 +23,21 @@
             <input type="text" name="title" id="title" placeholder="Enter the title of the video" required />
         </label>
 
-        <!-- Loop through videoType file formats -->
-            Format:
-            <label for="text">
-                Video URL
-                <input type="text" name="text" id="text" placeholder="Copy/Paste video url from file manager." />
-            </label>
-       <!-- end of loop -->
+        <h3>Video Formats:</h3>
+        <ul>
+                <label for="mp4">
+                    <em>.mp4</em> &nbsp;Video URL
+                    <input type="text" name="mp4" id="mp4" placeholder="Copy/Paste .mp4 video url from file manager." />
+                </label>
+                <label for="ogg">
+                    <em>.ogg</em> &nbsp;Video URL
+                    <input type="text" name="ogg" id="ogg" placeholder="Copy/Paste .ogg video url from file manager." />
+                </label>
+                <label for="webm">
+                    <em>.webm</em> &nbsp;Video URL
+                    <input type="text" name="webm" id="webm" placeholder="Copy/Paste .webm video url from file manager." />
+                </label>
+        </ul>
 
         <label for="inactive">
             Inactive?

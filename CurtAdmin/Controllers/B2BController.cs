@@ -216,10 +216,43 @@ namespace CurtAdmin.Controllers
 
         public ActionResult AddVideo(int id)
         {
+            ViewBag.error = "";
+            ViewBag.listOfVideoTypes = B2B.getVideoTypes();
+            ViewBag.lesson = B2B.getLesson(id);
             int lessonID = id;
             return View();
         }
 
+        [HttpPost] // handles some dynamic form fields as well
+        public ActionResult AddVideo(int id, string title, string mp4, string ogg, string webm, string inactive)
+        {
+            ViewBag.error = "";
+            List<B2BVideoType> listOfVideoTypes = new List<B2BVideoType>();
+            int lessonID = id;
+
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
+
+            try
+            {
+                listOfVideoTypes = B2B.getVideoTypes();
+                ViewBag.listOfVideoTypes = listOfVideoTypes;
+
+                // handle form data and insert into database
+                if (lessonID.ToString().Length > 0 && title != "" && mp4 != "")
+                {
+                    B2B.addVideo(lessonID, title, mp4, ogg, webm, inActive);
+                    return RedirectToAction("ViewVideos", new { id = lessonID });
+                }
+
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+            }
+
+            return View();
+        }
 
         // add test
         [HttpGet]
@@ -427,6 +460,50 @@ namespace CurtAdmin.Controllers
             }
             return View();
         }
+        [HttpGet]
+        public ActionResult EditVideo(int id)
+        {
+            try
+            {
+                ViewBag.error = "";
+                if (id > 0)
+                {
+                    B2BVideo video = B2B.getVideo(id);
+                    ViewBag.video = video;
+                    ViewBag.lesson = B2B.getLesson(video.lessonID);
+                    B2BVideoSource videoSrc = new B2BVideoSource();
+
+                    videoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "mp4").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                    if (videoSrc != null)
+                    {
+                        ViewBag.mp4 = videoSrc.filePath;
+                    }
+                    videoSrc = null;
+                    videoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "ogg").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                    if (videoSrc != null)
+                    {
+                        ViewBag.ogg = videoSrc.filePath;
+                    }
+                    videoSrc = null;
+                    videoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "webm").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                    if (videoSrc != null)
+                    {
+                        ViewBag.webm = videoSrc.filePath;
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+            }
+            return View();
+        }
+
         [HttpPost]
         public ActionResult EditCert(int id, string title, string text, int reqNum, string logo, string inactive)
         {
@@ -652,6 +729,113 @@ namespace CurtAdmin.Controllers
             }
             return View();
         }
+        [HttpPost]
+        public ActionResult EditVideo(int id, string title, string mp4, string ogg, string webm, string inactive)
+        {
+            ViewBag.error = "";
+            Boolean inActive = false;
+            inActive = (inactive == "on") ? true : false;
+            bool isCorrectAnswer = false;
+            if (id > 0 && title != "")
+            {
+                // retrieve the video with the id
+                try
+                {
+                    B2BDataContext db = new B2BDataContext();
+                    B2BVideo video = db.B2BVideos.Where(x => x.id == id).FirstOrDefault<B2BVideo>();
+                    video.title = title;
+                    video.inactive = inActive;
+                    db.SubmitChanges();
+
+                    if (mp4.Length > 0)
+                    {
+                        B2BVideoSource mp4videoSrc = new B2BVideoSource();
+                        mp4videoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "mp4").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                        if (mp4videoSrc != null)
+                        {
+                            mp4videoSrc.filePath = mp4;
+                            db.SubmitChanges();
+                        }
+                        else
+                        {
+                            B2BVideoSource newMp4Source = new B2BVideoSource();
+                            newMp4Source.filePath = mp4;
+                            newMp4Source.videoID = id;
+                            B2BVideoType videoType = B2B.getVideoTypes().Where(x => x.type == "mp4").FirstOrDefault();
+                            newMp4Source.typeID = videoType.id;
+                            db.B2BVideoSources.InsertOnSubmit(newMp4Source);
+                            db.SubmitChanges();
+                        }
+                    }
+
+                    if (ogg.Length > 0)
+                    {
+                        B2BVideoSource oggvideoSrc = new B2BVideoSource();
+                        oggvideoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "ogg").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                        if (oggvideoSrc != null)
+                        {
+                            oggvideoSrc.filePath = ogg;
+                            db.SubmitChanges();
+                        }
+                        else
+                        {
+                            B2BVideoSource newoggSource = new B2BVideoSource();
+                            newoggSource.filePath = ogg;
+                            newoggSource.videoID = id;
+                            B2BVideoType videoType = B2B.getVideoTypes().Where(x => x.type == "ogg").FirstOrDefault();
+                            newoggSource.typeID = videoType.id;
+                            db.B2BVideoSources.InsertOnSubmit(newoggSource);
+                            db.SubmitChanges();
+                        }
+                    }
+
+                    if (webm.Length > 0)
+                    {
+                        B2BVideoSource webmvideoSrc = new B2BVideoSource();
+                        webmvideoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "webm").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                        if (webmvideoSrc != null)
+                        {
+                            webmvideoSrc.filePath = webm;
+                            db.SubmitChanges();
+                        }
+                        else
+                        {
+                            B2BVideoSource newwebmSource = new B2BVideoSource();
+                            newwebmSource.filePath = webm;
+                            newwebmSource.videoID = id;
+                            B2BVideoType videoType = B2B.getVideoTypes().Where(x => x.type == "webm").FirstOrDefault();
+                            newwebmSource.typeID = videoType.id;
+                            db.B2BVideoSources.InsertOnSubmit(newwebmSource);
+                            db.SubmitChanges();
+                        }
+                    }
+
+                    ViewBag.msg = "The video has been changed.";
+
+                    ViewBag.video = video;
+                    ViewBag.lesson = B2B.getLesson(video.lessonID);
+                    B2BVideoSource videoSrc = new B2BVideoSource();
+                    videoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "mp4").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                    ViewBag.mp4 = videoSrc.filePath;
+
+                    videoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "ogg").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                    ViewBag.ogg = videoSrc.filePath;
+
+                    videoSrc = video.B2BVideoSources.Where(x => x.VideoTypes.type == "webm").Select(x => x).FirstOrDefault<B2BVideoSource>();
+                    ViewBag.webm = videoSrc.filePath;
+                }
+                catch (Exception e)
+                {
+                    ViewBag.error = e.Message;
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
 
         /////////////////==  AJAX/Delete ==///////////////////////
 
@@ -679,6 +863,10 @@ namespace CurtAdmin.Controllers
         public string DeleteAnswer(int ID = 0)
         {
             return B2B.DeleteAnswer(ID); //returns a string
+        }
+        public string DeleteVideo(int ID = 0)
+        {
+            return B2B.DeleteVideo(ID); // returns a string
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
