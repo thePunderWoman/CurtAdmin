@@ -26,12 +26,8 @@
             <input type="text" name="title" id="title" placeholder="Enter the Name of the Lesson" required />
         </label>
 
-        <label for="text">
-            Additional Information
-            <textarea name="text" class="text" rows="10" cols="50" id="text" placeholder="Enter the Additional Information Content"></textarea>
-        </label>
-
-
+        <label for="text">Additional Information</label>
+        <textarea name="text" class="text" rows="10" cols="50" id="text" placeholder="Enter the Additional Information Content"></textarea>
         <label for="pdf">
            PDF Path URL - from File Manager (Copy link)
             <input type="text" name="pdf" id="pdf" placeholder="Enter the the URL path to the PDF" required />
@@ -66,8 +62,8 @@
     $(document).ready(function () {
 
         CKEDITOR.replace('text', {
-            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageUploadUrl: '/File/CKUpload',
+            filebrowserImageBrowseUrl: '/File/CKIndex',
             filebrowserImageWindowWidth: '640',
             filebrowserImageWindowHeight: '480'
         });

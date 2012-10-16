@@ -51,11 +51,9 @@
             <input type="text" name="title" id="title" value="@lesson.title" required />
         </label>
 
-        <label for="text">
-            Additional Information
+        <label for="text">Additional Information</label>
             <textarea name="text" class="text" rows="10" cols="50" id="text" placeholder="Enter the Additional Information Content">@lesson.Text</textarea>
-        </label>
-
+        
         <label for="pdf">
            PDF Path URL - from File Manager (Copy link)
             <input type="text" name="pdf" id="pdf" value="@pdf.file_path" required />
@@ -96,8 +94,8 @@
     $(document).ready(function () {
 
         CKEDITOR.replace('text', {
-            filebrowserImageUploadUrl: '/Admin_File/CKUpload',
-            filebrowserImageBrowseUrl: '/Admin_File/CKIndex',
+            filebrowserImageUploadUrl: '/File/CKUpload',
+            filebrowserImageBrowseUrl: '/File/CKIndex',
             filebrowserImageWindowWidth: '640',
             filebrowserImageWindowHeight: '480'
         });
