@@ -14,7 +14,6 @@ namespace CurtAdmin.Controllers
 
             HttpCookie userID = new HttpCookie("");
             userID = Request.Cookies.Get("userID");
-            string uID = userID.Value;
 
             HttpCookie username = new HttpCookie("");
             username = Request.Cookies.Get("username");
@@ -26,24 +25,34 @@ namespace CurtAdmin.Controllers
             name = Request.Cookies.Get("name");
 
             try {
+                string uID = null;
+                try {
+                    // cookie login
+                    uID = userID.Value;
+                } catch {
+                    try {
+                        uID = Session["userID"].ToString();
+                    } catch { }
+                }
+
                 DocsLinqDataContext doc_db = new DocsLinqDataContext();
                 user u = (from users in doc_db.users
                           where users.userID.Equals(Convert.ToInt32(uID))
                           select users).First<user>();
+
+                Session["userID"] = u.userID;
+                Session["username"] = u.username;
+                Session["superUser"] = u.superUser;
+                Session["name"] = u.fname + " " + u.lname;
+
+                // Get the modules for the logged in user
+                List<module> modules = new List<module>();
+                modules = Users.GetUserModules(u.userID);
+                ViewBag.Modules = modules;
             } catch {
                 // user doesn't exist
                 Response.Redirect("~/Authenticate/Logout");
             }
-
-            Session["userID"] = userID.Value;
-            Session["username"] = username.Value;
-            Session["superUser"] = superUser.Value;
-            Session["name"] = name.Value;
-
-            // Get the modules for the logged in user
-            List<module> modules = new List<module>();
-            modules = Users.GetUserModules(Convert.ToInt32(Session["userID"]));
-            ViewBag.Modules = modules;
         }
 
     }

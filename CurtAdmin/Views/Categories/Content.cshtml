@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.navigation = "_CategoryNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.Models.DetailedCategories category = new CurtAdmin.Models.DetailedCategories();
+    if (ViewBag.cat != null) { category = ViewBag.cat; }
+    List<CurtAdmin.Models.FullContent> contents = category.content;
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/EditCategoryContent.js")"></script>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+
+<style type="text/css">
+    .form_left{
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        min-width: 550px;
+        display: none;
+    }
+    
+    #buttons{ margin-top: 0px; }
+    
+    #buttons input{
+        width: auto;
+    }
+    
+</style>
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/ProductCategories/Edit?catID=" + category.catID)">Info</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ProductCategories/Content?catID=" + category.catID)">Content</a>
+    </li>
+    <li class="add">
+        <a id="addContent" href="@Url.Content("~/ProductCategories/AddContent?catID=" + category.catID)">Add Content</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>Content for @category.catTitle</h2>
+
+    <form class="form_left">
+        <label for="contentType">
+            Content Type
+            <select name="contentType" id="contentType">
+                <option value="">- Select Content Type -</option>
+                @foreach (CurtAdmin.ContentType type in ViewBag.types) {
+                    <option value="@type.cTypeID">@type.type</option>
+                }
+            </select>
+        </label>
+        <label for="content" id="contentLabel">
+            Content
+            <textarea name="content" id="content" rows="5" cols="30"></textarea>
+            <span style="clear:both; display: block;"></span>
+        </label>
+        <div id="buttons">
+            <input type="hidden" id="contentID" value="0" />
+            <input type="hidden" id="categoryID" value="@category.catID" />
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Cancel" />
+        </div>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Content</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Models.FullContent c in contents) {
+                <tr id="contentRow:@c.contentID">
+                    <td>@c.content_type</td>
+                    <td>@((c.content.Length <= 90) ? c.content : c.content.Substring(0, 90) + "...")</td>
+                    <td class="center">
+                        <select class="action" id="@c.contentID">
+                            <option value="0">- Select Option -</option>
+                            <option value="edit">Edit</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
