@@ -154,7 +154,6 @@
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Controllers\WebsiteController.cs" />
     <Compile Include="Controllers\AuthenticateController.cs" />
-    <Compile Include="Controllers\ACESImportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -413,9 +412,7 @@
     <Content Include="Scripts\admin\website_menus.js" />
     <Content Include="Scripts\fileiframe.js" />
     <Content Include="Scripts\fileuploader.js" />
-    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
-    <None Include="Properties\PublishProfiles\Live.pubxml" />
-    <None Include="Properties\PublishProfiles\profile1.pubxml" />
+    <None Include="Properties\PublishProfiles\Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.4.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.4.js" />
     <Content Include="Scripts\jquery-1.4.4.min.js" />
@@ -454,7 +451,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
-    <Content Include="Views\ACESImport\Index.cshtml" />
     <Content Include="Views\B2B\ViewUser.cshtml" />
     <Content Include="Views\B2B\ViewUserLessons.cshtml" />
     <Content Include="Views\B2B\Index.cshtml" />
