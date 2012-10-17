@@ -455,11 +455,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\ACESImport\Index.cshtml" />
-    <Content Include="VCDB\VCDB.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>VCDB.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Views\B2B\ViewUser.cshtml" />
     <Content Include="Views\B2B\ViewUserLessons.cshtml" />
     <Content Include="Views\B2B\Index.cshtml" />
@@ -467,6 +462,11 @@
     <Content Include="Views\B2B\ViewVideos.cshtml" />
     <Content Include="Views\B2B\EditVideo.cshtml" />
     <Content Include="Views\Shared\Navigation\_DocumentationNavigation.cshtml" />
+    <Content Include="VCDB\VCDB.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>VCDB.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

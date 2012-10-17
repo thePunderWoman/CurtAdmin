@@ -22,7 +22,7 @@ namespace CurtAdmin.VCDB
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="VCDB")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="vcdb")]
 	public partial class VCDBDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -30,12 +30,12 @@ namespace CurtAdmin.VCDB
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertYear(Year instance);
-    partial void UpdateYear(Year instance);
-    partial void DeleteYear(Year instance);
     partial void InsertAbbreviation(Abbreviation instance);
     partial void UpdateAbbreviation(Abbreviation instance);
     partial void DeleteAbbreviation(Abbreviation instance);
+    partial void InsertYear(Year instance);
+    partial void UpdateYear(Year instance);
+    partial void DeleteYear(Year instance);
     partial void InsertAspiration(Aspiration instance);
     partial void UpdateAspiration(Aspiration instance);
     partial void DeleteAspiration(Aspiration instance);
@@ -198,9 +198,6 @@ namespace CurtAdmin.VCDB
     partial void InsertValve(Valve instance);
     partial void UpdateValve(Valve instance);
     partial void DeleteValve(Valve instance);
-    partial void Insertvcdb_Make(vcdb_Make instance);
-    partial void Updatevcdb_Make(vcdb_Make instance);
-    partial void Deletevcdb_Make(vcdb_Make instance);
     partial void InsertVehEngCfgToLegacyVehicle(VehEngCfgToLegacyVehicle instance);
     partial void UpdateVehEngCfgToLegacyVehicle(VehEngCfgToLegacyVehicle instance);
     partial void DeleteVehEngCfgToLegacyVehicle(VehEngCfgToLegacyVehicle instance);
@@ -249,7 +246,7 @@ namespace CurtAdmin.VCDB
     #endregion
 		
 		public VCDBDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["VCDBConnectionString"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["vcdbConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -278,19 +275,19 @@ namespace CurtAdmin.VCDB
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<Year> Years
-		{
-			get
-			{
-				return this.GetTable<Year>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Abbreviation> Abbreviations
 		{
 			get
 			{
 				return this.GetTable<Abbreviation>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Year> Years
+		{
+			get
+			{
+				return this.GetTable<Year>();
 			}
 		}
 		
@@ -734,14 +731,6 @@ namespace CurtAdmin.VCDB
 			}
 		}
 		
-		public System.Data.Linq.Table<vcdb_Make> vcdb_Makes
-		{
-			get
-			{
-				return this.GetTable<vcdb_Make>();
-			}
-		}
-		
 		public System.Data.Linq.Table<vcdbchange> vcdbchanges
 		{
 			get
@@ -887,96 +876,6 @@ namespace CurtAdmin.VCDB
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Year")]
-	public partial class Year : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _YearID;
-		
-		private EntitySet<BaseVehicle> _BaseVehicles;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnYearIDChanging(int value);
-    partial void OnYearIDChanged();
-    #endregion
-		
-		public Year()
-		{
-			this._BaseVehicles = new EntitySet<BaseVehicle>(new Action<BaseVehicle>(this.attach_BaseVehicles), new Action<BaseVehicle>(this.detach_BaseVehicles));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearID", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int YearID
-		{
-			get
-			{
-				return this._YearID;
-			}
-			set
-			{
-				if ((this._YearID != value))
-				{
-					this.OnYearIDChanging(value);
-					this.SendPropertyChanging();
-					this._YearID = value;
-					this.SendPropertyChanged("YearID");
-					this.OnYearIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Year_BaseVehicle", Storage="_BaseVehicles", ThisKey="YearID", OtherKey="YearID")]
-		public EntitySet<BaseVehicle> BaseVehicles
-		{
-			get
-			{
-				return this._BaseVehicles;
-			}
-			set
-			{
-				this._BaseVehicles.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_BaseVehicles(BaseVehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.Year = this;
-		}
-		
-		private void detach_BaseVehicles(BaseVehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.Year = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Abbreviation")]
 	public partial class Abbreviation : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1084,6 +983,96 @@ namespace CurtAdmin.VCDB
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Year")]
+	public partial class Year : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _YearID;
+		
+		private EntitySet<BaseVehicle> _BaseVehicles;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnYearIDChanging(int value);
+    partial void OnYearIDChanged();
+    #endregion
+		
+		public Year()
+		{
+			this._BaseVehicles = new EntitySet<BaseVehicle>(new Action<BaseVehicle>(this.attach_BaseVehicles), new Action<BaseVehicle>(this.detach_BaseVehicles));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int YearID
+		{
+			get
+			{
+				return this._YearID;
+			}
+			set
+			{
+				if ((this._YearID != value))
+				{
+					this.OnYearIDChanging(value);
+					this.SendPropertyChanging();
+					this._YearID = value;
+					this.SendPropertyChanged("YearID");
+					this.OnYearIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Year_BaseVehicle", Storage="_BaseVehicles", ThisKey="YearID", OtherKey="YearID")]
+		public EntitySet<BaseVehicle> BaseVehicles
+		{
+			get
+			{
+				return this._BaseVehicles;
+			}
+			set
+			{
+				this._BaseVehicles.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.Year = this;
+		}
+		
+		private void detach_BaseVehicles(BaseVehicle entity)
+		{
+			this.SendPropertyChanging();
+			entity.Year = null;
 		}
 	}
 	
@@ -10416,92 +10405,6 @@ namespace CurtAdmin.VCDB
 		{
 			this.SendPropertyChanging();
 			entity.Valve1 = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vcdb_Make")]
-	public partial class vcdb_Make : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _MakeID;
-		
-		private string _MakeName;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnMakeIDChanging(int value);
-    partial void OnMakeIDChanged();
-    partial void OnMakeNameChanging(string value);
-    partial void OnMakeNameChanged();
-    #endregion
-		
-		public vcdb_Make()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MakeID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int MakeID
-		{
-			get
-			{
-				return this._MakeID;
-			}
-			set
-			{
-				if ((this._MakeID != value))
-				{
-					this.OnMakeIDChanging(value);
-					this.SendPropertyChanging();
-					this._MakeID = value;
-					this.SendPropertyChanged("MakeID");
-					this.OnMakeIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MakeName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string MakeName
-		{
-			get
-			{
-				return this._MakeName;
-			}
-			set
-			{
-				if ((this._MakeName != value))
-				{
-					this.OnMakeNameChanging(value);
-					this.SendPropertyChanging();
-					this._MakeName = value;
-					this.SendPropertyChanged("MakeName");
-					this.OnMakeNameChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 	

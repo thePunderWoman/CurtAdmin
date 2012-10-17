@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="VCDB" Class="VCDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=VCDB;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="VCDBConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.Year" Member="Years">
-    <Type Name="Year">
-      <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="Year_BaseVehicle" Member="BaseVehicles" ThisKey="YearID" OtherKey="YearID" Type="BaseVehicle" />
-    </Type>
-  </Table>
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="vcdb" Class="VCDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=vcdb;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="vcdbConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Abbreviation" Member="Abbreviations">
     <Type Name="Abbreviation">
       <Column Name="Abbreviation" Member="Abbreviation1" Type="System.String" DbType="Char(3) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
       <Column Name="LongDescription" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Year" Member="Years">
+    <Type Name="Year">
+      <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Year_BaseVehicle" Member="BaseVehicles" ThisKey="YearID" OtherKey="YearID" Type="BaseVehicle" />
     </Type>
   </Table>
   <Table Name="dbo.Aspiration" Member="Aspirations">
@@ -495,12 +495,6 @@
       <Column Name="ValvesPerEngine" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
       <Association Name="Valve_EngineConfig" Member="EngineConfigs" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" />
       <Association Name="Valve_EngineConfig1" Member="EngineConfigs1" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" />
-    </Type>
-  </Table>
-  <Table Name="dbo.vcdb_Make" Member="vcdb_Makes">
-    <Type Name="vcdb_Make">
-      <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="MakeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.vcdbchanges" Member="vcdbchanges">
