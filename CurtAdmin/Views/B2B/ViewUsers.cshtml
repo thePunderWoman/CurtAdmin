@@ -6,11 +6,8 @@
 
     List<CustomerUser> listOfUsers = new List<CustomerUser>();
 
-    string msg = ViewBag.msg;
-    if (msg == null)
-    {
-        msg = "";
-    }
+    string msg = ViewBag.msg ?? "";
+    string err = ViewBag.err ?? "";
 
     List<B2BFullUser> listOfB2BUsers = ViewBag.listOfB2BUsers ?? new List<B2BFullUser>();
 }
@@ -42,7 +39,9 @@
     <hr style="border-bottom:1px dotted #343434;clear:both" />
     <!-- Explain what's here (for Chris) -->
     <p>This page is for viewing all of the B2B users and their B2B completion.</p>
-
+    @if (err != "") {
+        <p style="font-weight: bold; color: red;">@err</p>
+    }
     <div id="loading_area">
         <p>Loading Users...</p>
         <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Users" />
