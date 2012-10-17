@@ -144,7 +144,7 @@
     <Compile Include="Controllers\LifestyleController.cs" />
     <Compile Include="Controllers\MiscController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
-    <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -455,11 +455,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\ACESImport\Index.cshtml" />
-    <Content Include="VCDB\VCDB.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>VCDB.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Views\B2B\ViewUser.cshtml" />
     <Content Include="Views\B2B\ViewUserLessons.cshtml" />
     <Content Include="Views\B2B\Index.cshtml" />
@@ -467,6 +462,11 @@
     <Content Include="Views\B2B\ViewVideos.cshtml" />
     <Content Include="Views\B2B\EditVideo.cshtml" />
     <Content Include="Views\Shared\Navigation\_DocumentationNavigation.cshtml" />
+    <Content Include="VCDB\VCDB.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>VCDB.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -612,11 +612,11 @@
     <Content Include="Views\News\Add.cshtml" />
     <Content Include="Views\News\Edit.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
-    <Content Include="Views\Category\Add.cshtml" />
-    <Content Include="Views\Category\CategoryItems.cshtml" />
-    <Content Include="Views\Category\Content.cshtml" />
-    <Content Include="Views\Category\Edit.cshtml" />
-    <Content Include="Views\Category\Index.cshtml" />
+    <Content Include="Views\Categories\Add.cshtml" />
+    <Content Include="Views\Categories\CategoryItems.cshtml" />
+    <Content Include="Views\Categories\Content.cshtml" />
+    <Content Include="Views\Categories\Edit.cshtml" />
+    <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Product\Add.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />
     <Content Include="Views\Product\EditAttributes.cshtml" />
