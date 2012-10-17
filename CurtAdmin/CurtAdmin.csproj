@@ -154,7 +154,6 @@
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Controllers\WebsiteController.cs" />
     <Compile Include="Controllers\AuthenticateController.cs" />
-    <Compile Include="Controllers\ACESImportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
