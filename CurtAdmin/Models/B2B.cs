@@ -213,24 +213,19 @@ namespace CurtAdmin.Models.B2b {
             }
         }
         public static List<B2BFullUser> getB2BUsers() {
-            try {
-                List<B2BUser> listOfB2BUsers = new List<B2BUser>();
-                B2BDataContext db = new B2BDataContext();
+            List<B2BUser> listOfB2BUsers = new List<B2BUser>();
+            B2BDataContext db = new B2BDataContext();
 
-                listOfB2BUsers = db.B2BUsers.ToList<B2BUser>();
+            listOfB2BUsers = db.B2BUsers.ToList<B2BUser>();
 
-                List<B2BFullUser> listOfFullUsers = new List<B2BFullUser>();
+            List<B2BFullUser> listOfFullUsers = new List<B2BFullUser>();
 
 
-                foreach (B2BUser user in listOfB2BUsers) {
-                    listOfFullUsers.Add(B2BFullUser.castToFullUser(user)); // add the generated full user to the list of Full Users
-                }// end foreach b2b user
+            foreach (B2BUser user in listOfB2BUsers) {
+                listOfFullUsers.Add(B2BFullUser.castToFullUser(user)); // add the generated full user to the list of Full Users
+            }// end foreach b2b user
 
-                return listOfFullUsers;
-            } catch (Exception e) {
-                throw new Exception("Could not load B2B Users: " + e.Message);
-            }
-
+            return listOfFullUsers;
         }
         public static List<B2BVideoType> getVideoTypes() {
             try {
