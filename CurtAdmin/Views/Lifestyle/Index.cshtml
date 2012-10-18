@@ -87,9 +87,9 @@
             switch (action) {
                 case 'items':
                     if (catID == 'unknown') {
-                        window.location.href = '/ProductCategories/CategoryItems?catID=0&unknown=unknown';
+                        window.location.href = '/Categories/CategoryItems?catID=0&unknown=unknown';
                     } else {
-                        window.location.href = '/ProductCategories/CategoryItems?catID=' + catID;
+                        window.location.href = '/Categories/CategoryItems?catID=' + catID;
                     }
                     break;
 
@@ -111,7 +111,7 @@
                 case 'delete':
                     // Delete this category
                     if (confirm("Are you sure you want to remove this category?\r\nThis cannot be undone!")) {
-                        $.getJSON('/ProductCategories/Delete', { 'catID': catID }, function (response) {
+                        $.getJSON('/Categories/Delete', { 'catID': catID }, function (response) {
                             if ($.trim(response).length == 0) {
                                 catTable.fnDeleteRow($('#catRow\\:' + catID).get()[0]);
                                 showMessage('Category has been removed.');
