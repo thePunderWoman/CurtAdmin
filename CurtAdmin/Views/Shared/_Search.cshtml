@@ -10,9 +10,7 @@
                 <input type="text" name="searchTerm" id="searchTerm" placeholder="Search" autocomplete="off" />
             </label>
             <input type="submit" name="btnSearch" id="btnSearch" value="" />
-            @if (Session["auth_level"] != null && Session["auth_level"].ToString() == "1") {
-                <div id="searchResults"><ul></ul></div>
-            }
+            <div id="searchResults"><ul></ul></div>
         </form>
     }
 </div>
