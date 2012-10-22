@@ -2835,7 +2835,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideo_VideoSource", Storage="_B2BVideoSources", ThisKey="id", OtherKey="videoID")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideo_B2BVideoSource", Storage="_B2BVideoSources", ThisKey="id", OtherKey="videoID")]
 		public EntitySet<B2BVideoSource> B2BVideoSources
 		{
 			get
@@ -3158,6 +3158,8 @@ namespace CurtAdmin
 		
 		private System.DateTime _join_date;
 		
+		private bool _hasSign;
+		
 		private EntitySet<B2BCompletedTest> _B2BCompletedTests;
 		
 		private EntitySet<B2BCompletedCert> _B2BCompletedCerts;
@@ -3176,6 +3178,8 @@ namespace CurtAdmin
     partial void OnnumCertsCompletedChanged();
     partial void Onjoin_dateChanging(System.DateTime value);
     partial void Onjoin_dateChanged();
+    partial void OnhasSignChanging(bool value);
+    partial void OnhasSignChanged();
     #endregion
 		
 		public B2BUser()
@@ -3281,6 +3285,26 @@ namespace CurtAdmin
 					this._join_date = value;
 					this.SendPropertyChanged("join_date");
 					this.Onjoin_dateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_hasSign")]
+		public bool hasSign
+		{
+			get
+			{
+				return this._hasSign;
+			}
+			set
+			{
+				if ((this._hasSign != value))
+				{
+					this.OnhasSignChanging(value);
+					this.SendPropertyChanging();
+					this._hasSign = value;
+					this.SendPropertyChanged("hasSign");
+					this.OnhasSignChanged();
 				}
 			}
 		}
@@ -3730,7 +3754,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VideoSource_VideoType", Storage="_VideoTypes", ThisKey="typeID", OtherKey="id", IsUnique=true, IsForeignKey=false)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideoSource_B2BVideoType", Storage="_VideoTypes", ThisKey="typeID", OtherKey="id", IsUnique=true, IsForeignKey=false)]
 		public B2BVideoType VideoTypes
 		{
 			get
@@ -3759,7 +3783,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideo_VideoSource", Storage="_B2BVideo", ThisKey="videoID", OtherKey="id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideo_B2BVideoSource", Storage="_B2BVideo", ThisKey="videoID", OtherKey="id", IsForeignKey=true)]
 		public B2BVideo B2BVideo
 		{
 			get
@@ -3910,7 +3934,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VideoSource_VideoType", Storage="_B2BVideoSource", ThisKey="id", OtherKey="typeID", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BVideoSource_B2BVideoType", Storage="_B2BVideoSource", ThisKey="id", OtherKey="typeID", IsForeignKey=true)]
 		public B2BVideoSource B2BVideoSource
 		{
 			get

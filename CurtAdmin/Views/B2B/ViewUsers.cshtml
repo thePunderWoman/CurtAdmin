@@ -57,6 +57,7 @@
                 <th>B2B User Type</th>
                 <th># of certs completed</th>
                 <th># of tests completed</th>
+                <th>Has Sign</th>
                 <th></th>
             </tr>
         </thead>
@@ -79,6 +80,11 @@
                     }
                     <td>@user.numCertsCompleted</td>
                     <td>@user.numLessonsCompleted</td>
+                    @if(user.hasSign){
+                       <td>Yes</td> 
+                    }else{
+                        <td>No</td>
+                    }
                     <td>
                         <a href="/B2B/ViewUser/@user.B2BUserID" class="locations">Completed Certs</a>
 

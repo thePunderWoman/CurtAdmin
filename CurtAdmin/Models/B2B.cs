@@ -491,6 +491,7 @@ namespace CurtAdmin.Models.B2b {
         public int numLessonsCompleted { get; set; }
         public int numCertsCompleted { get; set; }
         public DateTime join_date { get; set; }
+        public bool hasSign { get; set; }
 
 
         public static B2BFullUser castToFullUser(B2BUser user) {
@@ -503,6 +504,7 @@ namespace CurtAdmin.Models.B2b {
             fullUser.join_date = user.join_date;
             fullUser.numCertsCompleted = user.numCertsCompleted;
             fullUser.numLessonsCompleted = user.numLessonsCompleted;
+            fullUser.hasSign = user.hasSign;
             if (fullUser.isCustomerUser) {
                 CustomerUser customerUser = B2B.getCustomerUser(user.custID);
                 fullUser.email = customerUser.email;
