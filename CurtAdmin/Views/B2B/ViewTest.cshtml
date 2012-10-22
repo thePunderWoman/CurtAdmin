@@ -70,7 +70,7 @@
                 <th>ID</th>
                 <th>Text</th>
                 <th>Date Modified</th>
-                <th>Is inactive</th>
+                <th>Active State</th>
                 <th></th>
             </tr>
         </thead>
@@ -81,7 +81,14 @@
                     <td>@q.id</td>
                     <td>@q.text</td>
                     <td>@q.date_modified</td>
-                    <td>@q.inactive</td>
+                    @if (q.inactive == true)
+                    {
+                        <td>Not Active</td>  
+                    }
+                    else
+                    {
+                        <td>Active</td>
+                    }
                     <td>
                         <a href="/B2B/ViewAnswers/@q.id" class="edit">Answers</a> | 
                         <a href="/B2B/EditQuestion/@q.id" class="edit">Edit</a> | 

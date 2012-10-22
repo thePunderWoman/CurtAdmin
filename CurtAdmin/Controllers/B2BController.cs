@@ -171,7 +171,7 @@ namespace CurtAdmin.Controllers {
             Boolean inActive = false;
             inActive = (inactive == "on") ? true : false;
 
-            if (title != "" && text != "" && catID.ToString().Length > 0 && pdf != "") {
+            if (title != "" && catID.ToString().Length > 0 && pdf != "") {
                 try {
                     B2B.addLesson(catID, title, text, pdf, inActive);
                     return RedirectToAction("ViewLessons", new { id = catID });

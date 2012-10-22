@@ -16,12 +16,8 @@
     if(ViewBag.pdf != null){
         pdf = ViewBag.pdf;   
     }
-    
-    string msg = ViewBag.msg;
-    if (msg == null)
-    {
-        msg = "";
-    }
+
+    string msg = ViewBag.msg ?? "";
 
 }
 <style>

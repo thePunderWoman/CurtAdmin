@@ -67,7 +67,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Minimum Passing %</th>
-                <th>Is inactive</th>
+                <th>Active State</th>
                 <th></th>
             </tr>
         </thead>
@@ -78,7 +78,14 @@
                     <td>@test.title</td>
                     <td>@test.text</td>
                     <td>@test.min_pass_percent</td>
-                    <td>@test.inactive</td>
+                    @if (test.inactive == true)
+                    {
+                        <td>Not Active</td>  
+                    }
+                    else
+                    {
+                        <td>Active</td>
+                    }
                     <td>
                         <a href="/B2B/ViewQuestions/@test.id" class="Questions">Questions</a> |  
                         <a href="/B2B/EditTest/@test.id" class="edit">Edit</a> | 
