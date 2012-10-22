@@ -9,7 +9,7 @@ $(function () {
 
         switch (action) {
             case 'edit':
-                $.getJSON('/ProductCategories/GetContent', { 'contentID': contentID }, function (response) {
+                $.getJSON('/Categories/GetContent', { 'contentID': contentID }, function (response) {
                     $('#contentID').val(response.contentID);
                     $('#content').val(response.content);
                     $('#contentType').val(response.content_type_id).trigger('change');
@@ -20,7 +20,7 @@ $(function () {
             case 'delete':
                 // Delete this category
                 if (confirm("Are you sure you want to remove this content?\r\nThis cannot be undone!")) {
-                    $.getJSON('/ProductCategories/DeleteContent', { 'catID': catID, 'contentID': contentID }, function (response) {
+                    $.getJSON('/Categories/DeleteContent', { 'catID': catID, 'contentID': contentID }, function (response) {
                         if ($.trim(response).length == 0) {
                             contentTable.fnDeleteRow($('#contentRow\\:' + contentID).get()[0]);
                             showMessage('Content has been removed from this Category.');
@@ -65,7 +65,7 @@ $(function () {
         var catID = $('#categoryID').val();
         var content = (CKEDITOR.instances.content == undefined) ? $('#content').val() : CKEDITOR.instances.content.getData();
         var typeID = $('#contentType').val();
-        $.post('/ProductCategories/SaveContent', { 'catID': catID, 'contentID': contentID, 'typeID': typeID, 'content': content }, function (data) {
+        $.post('/Categories/SaveContent', { 'catID': catID, 'contentID': contentID, 'typeID': typeID, 'content': content }, function (data) {
             if (contentID != 0) {
                 contentTable.fnDeleteRow($('#contentRow\\:' + data.contentID).get()[0]);
             }
