@@ -67,7 +67,7 @@
                 <th>ID</th>
                 <th>Title</th>
                 <th>Additional Information</th>
-                <th>Is inactive</th>
+                <th>Active State</th>
                 <th></th>
             </tr>
         </thead>
@@ -78,7 +78,14 @@
                     <td>@Lesson.id</td>
                     <td>@Lesson.title</td>
                     <td>@Lesson.Text</td>
-                    <td>@Lesson.inactive</td>
+                    @if (Lesson.inactive == true)
+                    {
+                        <td>Not Active</td>  
+                    }
+                    else
+                    {
+                        <td>Active</td>
+                    }
                     <td>
                         <a href="/B2B/ViewVideos/@Lesson.id" class="videos">Videos</a> | 
                         <a href="/B2B/EditLesson/@Lesson.id" class="edit">Edit</a> | 

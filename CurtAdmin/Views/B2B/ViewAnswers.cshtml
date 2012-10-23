@@ -61,7 +61,7 @@
                 <th>Text</th>
                 <th>Date Modified</th>
                 <th>Is correct</th>
-                <th>Is inactive</th>
+                <th>Active State</th>
                 <th></th>
             </tr>
         </thead>
@@ -73,7 +73,14 @@
                     <td>@ans.text</td>
                     <td>@ans.date_modified</td>
                     <td>@ans.isCorrect</td>
-                    <td>@ans.inactive</td>
+                    @if(ans.inactive == true)
+                    {
+                        <td>Not Active</td>  
+                    }
+                    else
+                    {
+                        <td>Active</td>
+                    }
                     <td>
                         <a href="/B2B/EditAnswer/@ans.id" class="edit">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" id="@ans.id">Delete</a>

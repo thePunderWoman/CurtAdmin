@@ -118,7 +118,7 @@ namespace CurtAdmin.Controllers {
             if (title != "" && text != "" && reqNum.ToString().Length > 0 && logo != "") {
                 try {
                     B2B.addCert(title, text, reqNum, logo, inActive);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("ViewCerts");
                 } catch (Exception e) {
                     ViewBag.error = e.Message;
                 }
@@ -171,7 +171,7 @@ namespace CurtAdmin.Controllers {
             Boolean inActive = false;
             inActive = (inactive == "on") ? true : false;
 
-            if (title != "" && text != "" && catID.ToString().Length > 0 && pdf != "") {
+            if (title != "" && catID.ToString().Length > 0 && pdf != "") {
                 try {
                     B2B.addLesson(catID, title, text, pdf, inActive);
                     return RedirectToAction("ViewLessons", new { id = catID });
