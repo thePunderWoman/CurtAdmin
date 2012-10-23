@@ -1,5 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "All Vehicles";
+    ViewBag.navigation = "_VehicleNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style type="text/css">
@@ -7,16 +8,14 @@
         display:none;
     }
 </style>
-<div id="pageNav">
-    <ul>
-        <li>
-            <a href="@Url.Content("~/Vehicles")" class="active">View Vehicles</a>
-        </li>
-        <li>
-            <a href="@Url.Content("~/Vehicles/Add")">Add New</a>
-        </li>
-    </ul>
-</div>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Vehicles")" class="active">View Vehicles</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Vehicles/Add")">Add New</a>
+    </li>
+</ul>
 <div id="content_container">
 
 <div id="vehicle_header">
