@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Index";
+    ViewBag.navigation = "_VehicleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.vcdb_Make> makes = ViewBag.makes ?? new List<CurtAdmin.vcdb_Make>();
+}
+<style type="text/css">
+    #partTable_wrapper{
+        display:none;
+    }
+</style>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/Vehicles")" class="active">View Vehicles</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/Vehicles/Add")">Add New</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage ACES Vehicle Data</h2>
+    <select id="make" name="make">
+        <option value="">Select a Make</option>
+        @foreach (CurtAdmin.vcdb_Make make in makes) {
+            <option value="@make.ID">@make.MakeName</option>
+        }
+    </select>
+
+    <select id="model" name="model" disabled="disabled">
+        <option value="">Select a Model</option>
+    </select>
+    <button id="find">Find</button>
+    <div class="clear"></div>
+    <div id="vData">
+        <img id="loading" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+        <ul id="vehicleData"></ul>
+    </div>
+</div>
+<script type="text/javascript" src="/Scripts/admin/aces.js"></script>

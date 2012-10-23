@@ -128,6 +128,7 @@
   <ItemGroup>
     <Compile Include="ActiveResults\ExcelResult.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ACESController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\B2BController.cs" />
     <Compile Include="Controllers\BlogCategoryController.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Models\BlogComment.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\ContactModel.cs" />
+    <Compile Include="Models\ACES.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\CustomerUser.cs" />
     <Compile Include="Models\DocumentationModels.cs" />
@@ -372,6 +374,7 @@
       <LastGenOutput>CurtDev1.designer.cs</LastGenOutput>
     </Content>
     <Content Include="Global.asax" />
+    <Content Include="Scripts\admin\aces.js" />
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
     <Content Include="Scripts\admin\Product\EditAttributes.js" />
     <Content Include="Scripts\admin\Product\EditCategories.js" />
@@ -442,7 +445,9 @@
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\modernizr-2.0.6-development-only.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -463,6 +468,8 @@
       <LastGenOutput>VCDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Shared\Navigation\_VehicleNavigation.cshtml" />
+    <Content Include="Views\ACES\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -282,12 +282,6 @@ namespace CurtAdmin
     partial void InsertAcesType(AcesType instance);
     partial void UpdateAcesType(AcesType instance);
     partial void DeleteAcesType(AcesType instance);
-    partial void InsertNote(Note instance);
-    partial void UpdateNote(Note instance);
-    partial void DeleteNote(Note instance);
-    partial void InsertNoteField(NoteField instance);
-    partial void UpdateNoteField(NoteField instance);
-    partial void DeleteNoteField(NoteField instance);
     partial void InsertConfigAttributeType(ConfigAttributeType instance);
     partial void UpdateConfigAttributeType(ConfigAttributeType instance);
     partial void DeleteConfigAttributeType(ConfigAttributeType instance);
@@ -300,6 +294,9 @@ namespace CurtAdmin
     partial void InsertVehicleConfigAttribute(VehicleConfigAttribute instance);
     partial void UpdateVehicleConfigAttribute(VehicleConfigAttribute instance);
     partial void DeleteVehicleConfigAttribute(VehicleConfigAttribute instance);
+    partial void InsertNote(Note instance);
+    partial void UpdateNote(Note instance);
+    partial void DeleteNote(Note instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1012,22 +1009,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		public System.Data.Linq.Table<Note> Notes
-		{
-			get
-			{
-				return this.GetTable<Note>();
-			}
-		}
-		
-		public System.Data.Linq.Table<NoteField> NoteFields
-		{
-			get
-			{
-				return this.GetTable<NoteField>();
-			}
-		}
-		
 		public System.Data.Linq.Table<ACESImport> ACESImports
 		{
 			get
@@ -1065,6 +1046,14 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<VehicleConfigAttribute>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Note> Notes
+		{
+			get
+			{
+				return this.GetTable<Note>();
 			}
 		}
 		
@@ -17866,7 +17855,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Make_BaseVehicle", Storage="_BaseVehicles", ThisKey="ID", OtherKey="MakeID")]
-		public EntitySet<BaseVehicle> BaseVehicles
+		internal EntitySet<BaseVehicle> BaseVehicles
 		{
 			get
 			{
@@ -18028,7 +18017,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Model_BaseVehicle", Storage="_BaseVehicles", ThisKey="ID", OtherKey="ModelID")]
-		public EntitySet<BaseVehicle> BaseVehicles
+		internal EntitySet<BaseVehicle> BaseVehicles
 		{
 			get
 			{
@@ -18478,7 +18467,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_vcdb_VehiclePart", Storage="_Part", ThisKey="PartNumber", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
@@ -18512,7 +18501,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Vehicle_vcdb_VehiclePart", Storage="_vcdb_Vehicle", ThisKey="VehicleID", OtherKey="ID", IsForeignKey=true)]
-		public vcdb_Vehicle vcdb_Vehicle
+		internal vcdb_Vehicle vcdb_Vehicle
 		{
 			get
 			{
@@ -18623,7 +18612,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_Year_BaseVehicle", Storage="_BaseVehicles", ThisKey="YearID", OtherKey="YearID")]
-		public EntitySet<BaseVehicle> BaseVehicles
+		internal EntitySet<BaseVehicle> BaseVehicles
 		{
 			get
 			{
@@ -18761,7 +18750,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Submodel_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="SubModelID")]
-		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		internal EntitySet<vcdb_Vehicle> vcdb_Vehicles
 		{
 			get
 			{
@@ -19233,7 +19222,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="BaseVehicleID")]
-		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		internal EntitySet<vcdb_Vehicle> vcdb_Vehicles
 		{
 			get
 			{
@@ -19449,7 +19438,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AcesType_ConfigAttributeType", Storage="_ConfigAttributeTypes", ThisKey="ID", OtherKey="AcesTypeID")]
-		public EntitySet<ConfigAttributeType> ConfigAttributeTypes
+		internal EntitySet<ConfigAttributeType> ConfigAttributeTypes
 		{
 			get
 			{
@@ -19491,336 +19480,6 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.AcesType = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Note")]
-	public partial class Note : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private int _vehiclePartID;
-		
-		private int _fieldID;
-		
-		private string _value;
-		
-		private EntityRef<vcdb_VehiclePart> _vcdb_VehiclePart;
-		
-		private EntityRef<NoteField> _NoteField;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnvehiclePartIDChanging(int value);
-    partial void OnvehiclePartIDChanged();
-    partial void OnfieldIDChanging(int value);
-    partial void OnfieldIDChanged();
-    partial void OnvalueChanging(string value);
-    partial void OnvalueChanged();
-    #endregion
-		
-		public Note()
-		{
-			this._vcdb_VehiclePart = default(EntityRef<vcdb_VehiclePart>);
-			this._NoteField = default(EntityRef<NoteField>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_vehiclePartID", DbType="Int NOT NULL")]
-		public int vehiclePartID
-		{
-			get
-			{
-				return this._vehiclePartID;
-			}
-			set
-			{
-				if ((this._vehiclePartID != value))
-				{
-					if (this._vcdb_VehiclePart.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnvehiclePartIDChanging(value);
-					this.SendPropertyChanging();
-					this._vehiclePartID = value;
-					this.SendPropertyChanged("vehiclePartID");
-					this.OnvehiclePartIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fieldID", DbType="Int NOT NULL")]
-		public int fieldID
-		{
-			get
-			{
-				return this._fieldID;
-			}
-			set
-			{
-				if ((this._fieldID != value))
-				{
-					if (this._NoteField.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnfieldIDChanging(value);
-					this.SendPropertyChanging();
-					this._fieldID = value;
-					this.SendPropertyChanged("fieldID");
-					this.OnfieldIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
-		public string value
-		{
-			get
-			{
-				return this._value;
-			}
-			set
-			{
-				if ((this._value != value))
-				{
-					this.OnvalueChanging(value);
-					this.SendPropertyChanging();
-					this._value = value;
-					this.SendPropertyChanged("value");
-					this.OnvalueChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_VehiclePart_Note", Storage="_vcdb_VehiclePart", ThisKey="vehiclePartID", OtherKey="ID", IsForeignKey=true)]
-		public vcdb_VehiclePart vcdb_VehiclePart
-		{
-			get
-			{
-				return this._vcdb_VehiclePart.Entity;
-			}
-			set
-			{
-				vcdb_VehiclePart previousValue = this._vcdb_VehiclePart.Entity;
-				if (((previousValue != value) 
-							|| (this._vcdb_VehiclePart.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._vcdb_VehiclePart.Entity = null;
-						previousValue.Notes.Remove(this);
-					}
-					this._vcdb_VehiclePart.Entity = value;
-					if ((value != null))
-					{
-						value.Notes.Add(this);
-						this._vehiclePartID = value.ID;
-					}
-					else
-					{
-						this._vehiclePartID = default(int);
-					}
-					this.SendPropertyChanged("vcdb_VehiclePart");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NoteField_Note", Storage="_NoteField", ThisKey="fieldID", OtherKey="ID", IsForeignKey=true)]
-		public NoteField NoteField
-		{
-			get
-			{
-				return this._NoteField.Entity;
-			}
-			set
-			{
-				NoteField previousValue = this._NoteField.Entity;
-				if (((previousValue != value) 
-							|| (this._NoteField.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._NoteField.Entity = null;
-						previousValue.Notes.Remove(this);
-					}
-					this._NoteField.Entity = value;
-					if ((value != null))
-					{
-						value.Notes.Add(this);
-						this._fieldID = value.ID;
-					}
-					else
-					{
-						this._fieldID = default(int);
-					}
-					this.SendPropertyChanged("NoteField");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.NoteField")]
-	public partial class NoteField : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private string _field;
-		
-		private EntitySet<Note> _Notes;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnfieldChanging(string value);
-    partial void OnfieldChanged();
-    #endregion
-		
-		public NoteField()
-		{
-			this._Notes = new EntitySet<Note>(new Action<Note>(this.attach_Notes), new Action<Note>(this.detach_Notes));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_field", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string field
-		{
-			get
-			{
-				return this._field;
-			}
-			set
-			{
-				if ((this._field != value))
-				{
-					this.OnfieldChanging(value);
-					this.SendPropertyChanging();
-					this._field = value;
-					this.SendPropertyChanged("field");
-					this.OnfieldChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NoteField_Note", Storage="_Notes", ThisKey="ID", OtherKey="fieldID")]
-		public EntitySet<Note> Notes
-		{
-			get
-			{
-				return this._Notes;
-			}
-			set
-			{
-				this._Notes.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Notes(Note entity)
-		{
-			this.SendPropertyChanging();
-			entity.NoteField = this;
-		}
-		
-		private void detach_Notes(Note entity)
-		{
-			this.SendPropertyChanging();
-			entity.NoteField = null;
 		}
 	}
 	
@@ -20209,7 +19868,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttributeType_ConfigAttribute", Storage="_ConfigAttributes", ThisKey="ID", OtherKey="ConfigAttributeTypeID")]
-		public EntitySet<ConfigAttribute> ConfigAttributes
+		internal EntitySet<ConfigAttribute> ConfigAttributes
 		{
 			get
 			{
@@ -20436,7 +20095,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ConfigAttribute_VehicleConfigAttribute", Storage="_VehicleConfigAttributes", ThisKey="ID", OtherKey="AttributeID")]
-		public EntitySet<VehicleConfigAttribute> VehicleConfigAttributes
+		internal EntitySet<VehicleConfigAttribute> VehicleConfigAttributes
 		{
 			get
 			{
@@ -20587,7 +20246,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="ConfigID")]
-		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		internal EntitySet<vcdb_Vehicle> vcdb_Vehicles
 		{
 			get
 			{
@@ -20795,7 +20454,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_VehicleConfigAttribute", Storage="_VehicleConfig", ThisKey="VehicleConfigID", OtherKey="ID", IsForeignKey=true)]
-		public VehicleConfig VehicleConfig
+		internal VehicleConfig VehicleConfig
 		{
 			get
 			{
@@ -20824,6 +20483,157 @@ namespace CurtAdmin
 						this._VehicleConfigID = default(int);
 					}
 					this.SendPropertyChanged("VehicleConfig");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Note")]
+	public partial class Note : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _vehiclePartID;
+		
+		private string _note1;
+		
+		private EntityRef<vcdb_VehiclePart> _vcdb_VehiclePart;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnvehiclePartIDChanging(int value);
+    partial void OnvehiclePartIDChanged();
+    partial void Onnote1Changing(string value);
+    partial void Onnote1Changed();
+    #endregion
+		
+		public Note()
+		{
+			this._vcdb_VehiclePart = default(EntityRef<vcdb_VehiclePart>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_vehiclePartID", DbType="Int NOT NULL")]
+		public int vehiclePartID
+		{
+			get
+			{
+				return this._vehiclePartID;
+			}
+			set
+			{
+				if ((this._vehiclePartID != value))
+				{
+					if (this._vcdb_VehiclePart.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnvehiclePartIDChanging(value);
+					this.SendPropertyChanging();
+					this._vehiclePartID = value;
+					this.SendPropertyChanged("vehiclePartID");
+					this.OnvehiclePartIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="note", Storage="_note1", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string note1
+		{
+			get
+			{
+				return this._note1;
+			}
+			set
+			{
+				if ((this._note1 != value))
+				{
+					this.Onnote1Changing(value);
+					this.SendPropertyChanging();
+					this._note1 = value;
+					this.SendPropertyChanged("note1");
+					this.Onnote1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="vcdb_VehiclePart_Note", Storage="_vcdb_VehiclePart", ThisKey="vehiclePartID", OtherKey="ID", IsForeignKey=true)]
+		internal vcdb_VehiclePart vcdb_VehiclePart
+		{
+			get
+			{
+				return this._vcdb_VehiclePart.Entity;
+			}
+			set
+			{
+				vcdb_VehiclePart previousValue = this._vcdb_VehiclePart.Entity;
+				if (((previousValue != value) 
+							|| (this._vcdb_VehiclePart.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._vcdb_VehiclePart.Entity = null;
+						previousValue.Notes.Remove(this);
+					}
+					this._vcdb_VehiclePart.Entity = value;
+					if ((value != null))
+					{
+						value.Notes.Add(this);
+						this._vehiclePartID = value.ID;
+					}
+					else
+					{
+						this._vehiclePartID = default(int);
+					}
+					this.SendPropertyChanged("vcdb_VehiclePart");
 				}
 			}
 		}
