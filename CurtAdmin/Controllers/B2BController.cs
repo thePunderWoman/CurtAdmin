@@ -118,7 +118,7 @@ namespace CurtAdmin.Controllers {
             if (title != "" && text != "" && reqNum.ToString().Length > 0 && logo != "") {
                 try {
                     B2B.addCert(title, text, reqNum, logo, inActive);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("ViewCerts");
                 } catch (Exception e) {
                     ViewBag.error = e.Message;
                 }
