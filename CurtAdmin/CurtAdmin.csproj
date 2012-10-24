@@ -469,7 +469,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Shared\Navigation\_VehicleNavigation.cshtml" />
+    <Content Include="Views\ACES\Vehicles.cshtml" />
     <Content Include="Views\ACES\Index.cshtml" />
+    <Content Include="Views\Shared\Navigation\_ACESNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

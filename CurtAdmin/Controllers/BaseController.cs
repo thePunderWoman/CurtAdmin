@@ -48,6 +48,7 @@ namespace CurtAdmin.Controllers
                 // Get the modules for the logged in user
                 List<module> modules = new List<module>();
                 modules = Users.GetUserModules(u.userID);
+                ViewBag.name = u.fname + " " + u.lname;
                 ViewBag.Modules = modules;
             } catch {
                 // user doesn't exist

@@ -20,7 +20,7 @@ namespace CurtAdmin.Models {
                          join dt in db.DealerTypes on c.dealer_type equals dt.dealer_type
                          join dtr in db.DealerTiers on c.tier equals dtr.ID
                          orderby c.name
-                         select c).ToList<Customer>();
+                         select c).AsParallel<Customer>().WithDegreeOfParallelism(12).ToList<Customer>();
 
             return customers;
         }
