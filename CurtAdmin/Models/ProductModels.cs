@@ -55,6 +55,7 @@ namespace CurtAdmin.Models {
                         priceCode = Convert.ToInt32(p.priceCode),
                         pClass = p.classID,
                         featured = p.featured,
+                        ACESPartTypeID = p.ACESPartTypeID,
                         listPrice = String.Format("{0:C}", (from prices in db.Prices
                                                             where prices.partID.Equals(p.partID) && prices.priceType.Equals("List")
                                                             select prices.price1 != null ? prices.price1 : (decimal?)0).FirstOrDefault<decimal?>())

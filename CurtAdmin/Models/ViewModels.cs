@@ -424,6 +424,7 @@ namespace CurtAdmin.Models {
         public int priceCode { get; set; }
         public int pClass { get; set; }
         public bool featured { get; set; }
+        public int? ACESPartTypeID { get; set; }
 
         public string listPrice { get; set; }
     }

@@ -82,6 +82,11 @@
                 <input type="checkbox" name="featured" id="featured" value="true" @((part.featured) ? "checked" : "")/>
             </label>
 
+            <label for="ACESPartTypeID">
+                ACES Part Type ID
+                <input type="text" name="ACESPartTypeID" id="ACESPartTypeID" value="@((part.ACESPartTypeID != null) ? part.ACESPartTypeID.ToString() : "")" />
+            </label>
+
             <div id="buttons">
                 <input type="submit" name="btnContinue" id="btnContinue" value="Save &amp; Continue" />
                 <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />

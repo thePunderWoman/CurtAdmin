@@ -9292,6 +9292,8 @@ namespace CurtAdmin
 		
 		private bool _featured;
 		
+		private System.Nullable<int> _ACESPartTypeID;
+		
 		private EntitySet<CatParts> _CatParts;
 		
 		private EntitySet<PartAttribute> _PartAttributes;
@@ -9336,6 +9338,8 @@ namespace CurtAdmin
     partial void OnclassIDChanged();
     partial void OnfeaturedChanging(bool value);
     partial void OnfeaturedChanged();
+    partial void OnACESPartTypeIDChanging(System.Nullable<int> value);
+    partial void OnACESPartTypeIDChanged();
     #endregion
 		
 		public Part()
@@ -9530,6 +9534,26 @@ namespace CurtAdmin
 					this._featured = value;
 					this.SendPropertyChanged("featured");
 					this.OnfeaturedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ACESPartTypeID", DbType="Int")]
+		public System.Nullable<int> ACESPartTypeID
+		{
+			get
+			{
+				return this._ACESPartTypeID;
+			}
+			set
+			{
+				if ((this._ACESPartTypeID != value))
+				{
+					this.OnACESPartTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._ACESPartTypeID = value;
+					this.SendPropertyChanged("ACESPartTypeID");
+					this.OnACESPartTypeIDChanged();
 				}
 			}
 		}

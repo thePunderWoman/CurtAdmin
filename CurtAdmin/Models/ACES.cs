@@ -35,4 +35,5 @@ namespace CurtAdmin.Models {
         public int ID { get; set; }
         public string name { get; set; }
     }
+
 }

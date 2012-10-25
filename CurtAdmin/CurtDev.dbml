@@ -431,6 +431,7 @@
       <Column Name="priceCode" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="classID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="featured" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ACESPartTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="Part_CatParts" Member="CatParts" ThisKey="partID" OtherKey="partID" Type="CatParts" />
       <Association Name="Part_PartAttribute" Member="PartAttributes" ThisKey="partID" OtherKey="partID" Type="PartAttribute" />
       <Association Name="Part_Price" Member="Prices" ThisKey="partID" OtherKey="partID" Type="Price" />
