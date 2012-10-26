@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,8 +57,8 @@ namespace CurtAdmin.Controllers {
             CurtDevDataContext db = new CurtDevDataContext();
 
             string name = ViewBag.name;
-            XDocument report = new XDocument();
-
+            XDocument report = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+            
             XElement xdoc = new XElement("ACES",
                             new XAttribute("version","3.0"),
                             new XElement("Header",
@@ -94,6 +95,9 @@ namespace CurtAdmin.Controllers {
                              new XElement("Footer",
                                 new XElement("RecordCount", db.vcdb_VehicleParts.Count())));
             report.Add(xdoc);
+            
+            StringWriter wr = new StringWriter();
+            report.Save(wr);
 
             string attachment = "attachment; filename=ACESreport-" + String.Format("{0:yyyyMMddhhmmss}",DateTime.Now) + ".xml";
             HttpContext.Response.Clear();
@@ -102,7 +106,7 @@ namespace CurtAdmin.Controllers {
             HttpContext.Response.AddHeader("content-disposition", attachment);
             HttpContext.Response.ContentType = "text/xml";
             HttpContext.Response.AddHeader("Pragma", "public");
-            HttpContext.Response.Write(report.ToString());
+            HttpContext.Response.Write(wr.GetStringBuilder().ToString());
             HttpContext.Response.End();
         }
 

@@ -115,7 +115,7 @@ namespace CurtAdmin.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddTrailer(List<string> lifestyles, string name = "", string image = "", int tw = 0, int gtw = 0, string hitchClass = "", string shortDesc = "", string message = "") {
+        public ActionResult AddTrailer(List<string> lifestyles = null, string name = "", string image = "", int tw = 0, int gtw = 0, string hitchClass = "", string shortDesc = "", string message = "") {
             // Save the category
             List<string> error_messages = new List<string>();
             Trailer trailer = new Trailer();
@@ -167,7 +167,7 @@ namespace CurtAdmin.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditTrailer(List<string> lifestyles, int id = 0, string name = "", string image = "", int tw = 0, int gtw = 0, string hitchClass = "", string shortDesc = "", string message = "") {
+        public ActionResult EditTrailer(List<string> lifestyles = null, int id = 0, string name = "", string image = "", int tw = 0, int gtw = 0, string hitchClass = "", string shortDesc = "", string message = "") {
             // Save the category
             List<string> error_messages = new List<string>();
             Trailer trailer = new Trailer();

@@ -100,6 +100,7 @@ namespace CurtAdmin.Controllers {
                     int parentID = (Request.Form["parentID"] != null && Request.Form["parentID"] != "") ? Convert.ToInt32(Request.Form["parentID"]) : 0;
                     int tier = (Request.Form["tier"] != null && Request.Form["tier"] != "") ? Convert.ToInt32(Request.Form["tier"]) : 1;
                     bool isDummy = (Request.Form["isDummy"] != null && Request.Form["isDummy"] != "") ? Convert.ToBoolean(Request.Form["isDummy"]) : false;
+                    bool showWebsite = (Request.Form["showWebsite"] != null && Request.Form["showWebsite"] != "") ? Convert.ToBoolean(Request.Form["showWebsite"]) : false;
                     LatLng location = new LatLng();
 
                     // Validate the form fields
@@ -131,7 +132,8 @@ namespace CurtAdmin.Controllers {
                         salesRepID = salesRepID,
                         dealer_type = dealer_type,
                         isDummy = isDummy,
-                        tier = tier
+                        tier = tier,
+                        showWebsite = showWebsite
                     };
 
                     if (location.latitude != null && location.longitude != null) {
@@ -214,6 +216,7 @@ namespace CurtAdmin.Controllers {
                     int parentID = (Request.Form["parentID"] != null && Request.Form["parentID"] != "") ? Convert.ToInt32(Request.Form["parentID"]) : 0;
                     int tier = (Request.Form["tier"] != null && Request.Form["tier"] != "") ? Convert.ToInt32(Request.Form["tier"]) : 1;
                     bool isDummy = (Request.Form["isDummy"] != null && Request.Form["isDummy"] != "") ? Convert.ToBoolean(Request.Form["isDummy"]) : false;
+                    bool showWebsite = (Request.Form["showWebsite"] != null && Request.Form["showWebsite"] != "") ? Convert.ToBoolean(Request.Form["showWebsite"]) : false;
 
                     // Validate the form fields
                     if (name.Length == 0) throw new Exception("Name is required.");
@@ -249,6 +252,7 @@ namespace CurtAdmin.Controllers {
                     cust.longitude = location.longitude;
                     cust.isDummy = isDummy;
                     cust.tier = tier;
+                    cust.showWebsite = showWebsite;
 
                     if (customerID != 0) {
                         cust.customerID = customerID;

@@ -345,6 +345,7 @@
       <Column Name="salesRepID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="APIKey" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="tier" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="showWebsite" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="Customer_CustomerPricing" Member="CustomerPricings" ThisKey="cust_id" OtherKey="cust_id" Type="CustomerPricing" />
       <Association Name="Customer_PartStates" Member="PartStates" ThisKey="stateID" OtherKey="stateID" Type="PartStates" />
       <Association Name="Customer_CustomerLocation" Member="CustomerLocations" ThisKey="cust_id" OtherKey="cust_id" Type="CustomerLocation" />
@@ -625,7 +626,7 @@
       <Column Name="hitchClass" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="shortDesc" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
       <Column Name="message" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Association Name="Trailer_Lifestyle_Trailer" Member="Lifestyle_Trailers" ThisKey="trailerID" OtherKey="trailerID" Type="Lifestyle_Trailer" />
+      <Association Name="Trailer_Lifestyle_Trailer" Member="Lifestyle_Trailers" AccessModifier="Internal" ThisKey="trailerID" OtherKey="trailerID" Type="Lifestyle_Trailer" />
     </Type>
   </Table>
   <Table Name="dbo.Lifestyle_Trailer" Member="Lifestyle_Trailers">
@@ -917,24 +918,6 @@
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
       <Association Name="AcesType_ConfigAttributeType" Member="ConfigAttributeTypes" AccessModifier="Internal" ThisKey="ID" OtherKey="AcesTypeID" Type="ConfigAttributeType" />
-    </Type>
-  </Table>
-  <Table Name="dbo.ACESImport" Member="ACESImports">
-    <Type Name="ACESImport">
-      <Column Name="AAIAAPPID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AAIAYearID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AAIAMakeNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="AAIAModelNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="AAIASubmodelNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="AAIAMakeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AAIAModelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AAIASubModelID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AAIABaseVehicleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AAIAPartTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PartNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AAIAAttributeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AAIAAttribFamilyNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="AAIATableNm" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.ConfigAttributeType" Member="ConfigAttributeTypes">
