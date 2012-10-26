@@ -115,6 +115,11 @@
             <input type="url" name="website" id="website" placeholder="Enter customer's web address" value="@customer.website" />
         </label>
 
+        <label for="eLocalURL">
+            eLocal URL
+            <input type="url" name="eLocalURL" id="eLocalURL" placeholder="Enter customer's eLocal address" value="@customer.eLocalURL" />
+        </label>
+
         <label for="logo">
             Customer Logo
             <input type="hidden" name="logo" id="file" value="@customer.logo" />
@@ -181,10 +186,10 @@
             </select>
         </label>
 
-        <label for="isdummy">
+        <label for="isDummy">
             Show on Where To Buy?
-            Yes <input type="radio" id="isdummy" name="isdummy" value="false" @((customer.isDummy) ? "checked" : "") />
-            No <input type="radio" name="isdummy" value="true" @((!customer.isDummy) ? "checked" : "") />
+            Yes <input type="radio" id="isDummy" name="isDummy" value="false" @((!customer.isDummy) ? "checked" : "") />
+            No <input type="radio" name="isDummy" value="true" @((customer.isDummy) ? "checked" : "") />
         </label>
 
         <label for="showWebsite">

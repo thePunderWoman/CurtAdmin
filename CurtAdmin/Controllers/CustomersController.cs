@@ -91,6 +91,7 @@ namespace CurtAdmin.Controllers {
                     string postalCode = (Request.Form["postal_code"] != null) ? Request.Form["postal_code"] : "";
                     string contact = (Request.Form["contact_person"] != null) ? Request.Form["contact_person"] : "";
                     string website = (Request.Form["website"] != null) ? Request.Form["website"] : "";
+                    string eLocalURL = (Request.Form["eLocalURL"] != null) ? Request.Form["eLocalURL"] : "";
                     string searchURL = (Request.Form["searchURL"] != null) ? Request.Form["searchURL"] : "";
                     string logo = (Request.Form["logo"] != null && Request.Form["logo"].Trim() != "") ? Request.Form["logo"] : null;
                     int dealer_type = (Request.Form["dealer_type"] != null) ? Convert.ToInt32(Request.Form["dealer_type"]) : 0;
@@ -126,6 +127,7 @@ namespace CurtAdmin.Controllers {
                         postal_code = postalCode,
                         contact_person = contact,
                         website = website,
+                        eLocalURL = eLocalURL,
                         searchURL = searchURL,
                         logo = logo,
                         mCodeID = mapixCodeID,
@@ -207,6 +209,7 @@ namespace CurtAdmin.Controllers {
                     string postalCode = (Request.Form["postal_code"] != null) ? Request.Form["postal_code"] : "";
                     string contact = (Request.Form["contact_person"] != null) ? Request.Form["contact_person"] : "";
                     string website = (Request.Form["website"] != null) ? Request.Form["website"] : "";
+                    string eLocalURL = (Request.Form["eLocalURL"] != null) ? Request.Form["eLocalURL"] : "";
                     string searchURL = (Request.Form["searchURL"] != null) ? Request.Form["searchURL"] : "";
                     string logo = (Request.Form["logo"] != null && Request.Form["logo"].Trim() != "") ? Request.Form["logo"] : null;
                     int dealer_type = (Request.Form["dealer_type"] != null) ? Convert.ToInt32(Request.Form["dealer_type"]) : 0;
@@ -243,6 +246,7 @@ namespace CurtAdmin.Controllers {
                     cust.postal_code = postalCode;
                     cust.contact_person = contact;
                     cust.website = website;
+                    cust.eLocalURL = eLocalURL;
                     cust.searchURL = searchURL;
                     cust.logo = logo;
                     cust.dealer_type = dealer_type;
