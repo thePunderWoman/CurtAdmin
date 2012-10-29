@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="EPPlus">
       <HintPath>..\packages\EPPlus.3.1.1\lib\net35\EPPlus.dll</HintPath>
     </Reference>
@@ -63,6 +66,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
@@ -126,6 +130,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AAIA\pcdb.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>pcdb.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="AAIA\qdb.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>qdb.dbml</DependentUpon>
+    </Compile>
     <Compile Include="ActiveResults\ExcelResult.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ACESController.cs" />
@@ -227,7 +241,7 @@
       <DependentUpon>ProductLinq.dbml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VCDB\VCDB.designer.cs">
+    <Compile Include="AAIA\VCDB.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>VCDB.dbml</DependentUpon>
@@ -376,6 +390,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\admin\aces.js" />
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
+    <Content Include="Scripts\admin\Product\Edit.js" />
     <Content Include="Scripts\admin\Product\EditAttributes.js" />
     <Content Include="Scripts\admin\Product\EditCategories.js" />
     <Content Include="Scripts\admin\Product\EditContent.js" />
@@ -415,6 +430,16 @@
     <Content Include="Scripts\admin\website_menus.js" />
     <Content Include="Scripts\fileiframe.js" />
     <Content Include="Scripts\fileuploader.js" />
+    <Content Include="AAIA\pcdb.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>pcdb.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="AAIA\qdb.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>qdb.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Properties\PublishProfiles\Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.4.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.4.js" />
@@ -463,7 +488,7 @@
     <Content Include="Views\B2B\ViewVideos.cshtml" />
     <Content Include="Views\B2B\EditVideo.cshtml" />
     <Content Include="Views\Shared\Navigation\_DocumentationNavigation.cshtml" />
-    <Content Include="VCDB\VCDB.dbml">
+    <Content Include="AAIA\VCDB.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>VCDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
@@ -687,6 +712,7 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DocsLinq.dbml.layout">
@@ -697,8 +723,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VCDB\VCDB.dbml.layout">
+    <None Include="AAIA\VCDB.dbml.layout">
       <DependentUpon>VCDB.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AAIA\pcdb.dbml.layout">
+      <DependentUpon>pcdb.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AAIA\qdb.dbml.layout">
+      <DependentUpon>qdb.dbml</DependentUpon>
     </None>
   </ItemGroup>
   <PropertyGroup>

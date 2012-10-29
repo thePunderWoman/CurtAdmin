@@ -76,9 +76,10 @@
                 Featured
                 <input type="checkbox" name="featured" id="featured" value="true" />
             </label>
-            <label for="ACESPartTypeID">
+            <label for="PartTypeID">
                 ACES Part Type ID
-                <input type="text" name="ACESPartTypeID" id="ACESPartTypeID" value="" />
+                <input type="text" id="PartTypeID" value="" placeholder="Choose an ACES Part Type" />
+                <input type="hidden" name="ACESPartTypeID" id="ACESPartTypeID" value="" />
             </label>
 
             <div id="buttons">
@@ -89,4 +90,4 @@
         </div>
     </form>
 </div>
-
+<script src="/Scripts/admin/Product/Edit.js"></script>

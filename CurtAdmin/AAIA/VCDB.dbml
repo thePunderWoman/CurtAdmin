@@ -641,8 +641,8 @@
       <Column Name="VehicleTypeGroupName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
-  <Table Name="dbo.Version" Member="Versions">
-    <Type Name="Version">
+  <Table Name="dbo.Version" Member="VCDBVersions">
+    <Type Name="VCDBVersion">
       <Column Name="VersionDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
     </Type>
   </Table>

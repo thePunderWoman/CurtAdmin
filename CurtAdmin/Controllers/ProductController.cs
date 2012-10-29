@@ -328,6 +328,8 @@ namespace CurtAdmin.Controllers
             ViewBag.classes = ProductModels.GetClasses();
             ViewBag.UPC = ProductModels.GetAttribute(part.partID, "UPC");
 
+            ViewBag.PartTypes = new ACES().GetPartTypes();
+
             ViewBag.active_tab = "info";
             return View();
         }
@@ -386,6 +388,8 @@ namespace CurtAdmin.Controllers
 
             // Get the product classes
             ViewBag.classes = ProductModels.GetClasses();
+
+            ViewBag.PartTypes = new ACES().GetPartTypes();
 
             ViewBag.active_tab = "info";
             return View();

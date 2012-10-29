@@ -30,9 +30,6 @@ namespace CurtAdmin
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertAAIA(AAIA instance);
-    partial void UpdateAAIA(AAIA instance);
-    partial void DeleteAAIA(AAIA instance);
     partial void InsertClass(Class instance);
     partial void UpdateClass(Class instance);
     partial void DeleteClass(Class instance);
@@ -327,14 +324,6 @@ namespace CurtAdmin
 				base(connection, mappingSource)
 		{
 			OnCreated();
-		}
-		
-		public System.Data.Linq.Table<AAIA> AAIAs
-		{
-			get
-			{
-				return this.GetTable<AAIA>();
-			}
 		}
 		
 		public System.Data.Linq.Table<Class> Classes
@@ -1068,92 +1057,6 @@ namespace CurtAdmin
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchparams);
 			return ((ISingleResult<Part>)(result.ReturnValue));
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AAIA")]
-	public partial class AAIA : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _aaiaID;
-		
-		private string _value;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnaaiaIDChanging(int value);
-    partial void OnaaiaIDChanged();
-    partial void OnvalueChanging(string value);
-    partial void OnvalueChanged();
-    #endregion
-		
-		public AAIA()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_aaiaID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int aaiaID
-		{
-			get
-			{
-				return this._aaiaID;
-			}
-			set
-			{
-				if ((this._aaiaID != value))
-				{
-					this.OnaaiaIDChanging(value);
-					this.SendPropertyChanging();
-					this._aaiaID = value;
-					this.SendPropertyChanged("aaiaID");
-					this.OnaaiaIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="VarChar(255)")]
-		public string value
-		{
-			get
-			{
-				return this._value;
-			}
-			set
-			{
-				if ((this._value != value))
-				{
-					this.OnvalueChanging(value);
-					this.SendPropertyChanging();
-					this._value = value;
-					this.SendPropertyChanged("value");
-					this.OnvalueChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 	

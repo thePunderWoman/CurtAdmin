@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="qdb">
+  <DataContextMoniker Name="/qdbDataContext" />
+  <nestedChildShapes>
+    <classShape Id="20824ab0-c9bb-44c8-b766-d1a3d8ff17fd" absoluteBounds="0.75, 0.75, 2, 1.9631982421875">
+      <DataClassMoniker Name="/qdbDataContext/Qualifier" />
+      <nestedChildShapes>
+        <elementListCompartment Id="93e98665-95c6-46ed-bb3b-eb3e8ed92153" absoluteBounds="0.765, 1.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="1ccd8885-86cd-4bd7-ba8b-7b37bfaac6d4" absoluteBounds="3.75, 0.75, 2, 1.1939925130208335">
+      <DataClassMoniker Name="/qdbDataContext/QualifierType" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ae60cc5e-cc8b-441c-85f8-acf84a70e3a2" absoluteBounds="3.765, 1.21, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="d44158c4-d0f5-44c7-bb04-a970dfac2255" absoluteBounds="0.75, 3.375, 2, 1.0016910807291666">
+      <DataClassMoniker Name="/qdbDataContext/QDBVersion" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ddcd3de9-edfa-45f9-ac1e-31ef8b21d321" absoluteBounds="0.765, 3.835, 1.9700000000000002, 0.44169108072916669" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
