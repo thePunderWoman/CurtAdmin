@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 9.375" name="pcdb">
+  <DataContextMoniker Name="/pcdbDataContext" />
+  <nestedChildShapes>
+    <classShape Id="33056746-fb02-4203-9ada-8564e2270814" absoluteBounds="0.75, 3.875, 2, 1.193992513020834">
+      <DataClassMoniker Name="/pcdbDataContext/Subcategory" />
+      <nestedChildShapes>
+        <elementListCompartment Id="81b94c53-2452-47f0-bf50-94bb19577c13" absoluteBounds="0.765, 4.335, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="515f2531-ac28-463c-ad38-14f3a6e6adf4" absoluteBounds="3.75, 3.75, 2, 1.0016910807291666">
+      <DataClassMoniker Name="/pcdbDataContext/PCDBVersion" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9735f458-a1e1-4423-94de-c58c7b984791" absoluteBounds="3.765, 4.21, 1.9700000000000002, 0.44169108072916669" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="ab1fb983-b3d0-4a07-9698-f6710250d25a" absoluteBounds="0.75, 1.25, 2, 1.1939925130208338">
+      <DataClassMoniker Name="/pcdbDataContext/Position" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3a837cc3-e26e-46bd-9310-0d0638ae229a" absoluteBounds="0.765, 1.71, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="6093fc3d-f334-4b78-8a5c-4a8075f633f0" absoluteBounds="0.75, 7.75, 2, 1.3862939453124996">
+      <DataClassMoniker Name="/pcdbDataContext/PartTerminology" />
+      <nestedChildShapes>
+        <elementListCompartment Id="1c53ce42-e98d-4a33-b81e-d313a45bc58a" absoluteBounds="0.765, 8.21, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="9484bdd4-d316-44e7-babb-00411ef28d67" absoluteBounds="3.5, 0.875, 2, 1.9631982421874998">
+      <DataClassMoniker Name="/pcdbDataContext/CodeMaster" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3a1d26a7-79a9-4abb-98b2-7e67bcddd48e" absoluteBounds="3.515, 1.335, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="d5c6b8b7-b92f-4064-a6dc-0ad7f5d5b60d" absoluteBounds="0.75, 5.75, 2, 1.1939925130208344">
+      <DataClassMoniker Name="/pcdbDataContext/Category" />
+      <nestedChildShapes>
+        <elementListCompartment Id="58a3a256-adf6-4712-917c-6d68aa6ff300" absoluteBounds="0.765, 6.21, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.75 : 1.84699625651042); (3.5 : 1.84699625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/pcdbDataContext/Position/Position_CodeMaster" />
+      <nodes>
+        <classShapeMoniker Id="ab1fb983-b3d0-4a07-9698-f6710250d25a" />
+        <classShapeMoniker Id="9484bdd4-d316-44e7-babb-00411ef28d67" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 4.941591796875); (3.5624975 : 4.941591796875); (3.5624975 : 2.8381982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/pcdbDataContext/Subcategory/Subcategory_CodeMaster" />
+      <nodes>
+        <classShapeMoniker Id="33056746-fb02-4203-9ada-8564e2270814" />
+        <classShapeMoniker Id="9484bdd4-d316-44e7-babb-00411ef28d67" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 6.34699625651042); (3.6250025 : 6.34699625651042); (3.6250025 : 2.8381982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/pcdbDataContext/Category/Category_CodeMaster" />
+      <nodes>
+        <classShapeMoniker Id="d5c6b8b7-b92f-4064-a6dc-0ad7f5d5b60d" />
+        <classShapeMoniker Id="9484bdd4-d316-44e7-babb-00411ef28d67" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 8.44314697265625); (3.59375 : 8.44314697265625); (3.59375 : 2.8381982421875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/pcdbDataContext/PartTerminology/PartTerminology_CodeMaster" />
+      <nodes>
+        <classShapeMoniker Id="6093fc3d-f334-4b78-8a5c-4a8075f633f0" />
+        <classShapeMoniker Id="9484bdd4-d316-44e7-babb-00411ef28d67" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

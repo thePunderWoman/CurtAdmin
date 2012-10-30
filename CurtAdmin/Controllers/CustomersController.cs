@@ -91,6 +91,7 @@ namespace CurtAdmin.Controllers {
                     string postalCode = (Request.Form["postal_code"] != null) ? Request.Form["postal_code"] : "";
                     string contact = (Request.Form["contact_person"] != null) ? Request.Form["contact_person"] : "";
                     string website = (Request.Form["website"] != null) ? Request.Form["website"] : "";
+                    string eLocalURL = (Request.Form["eLocalURL"] != null) ? Request.Form["eLocalURL"] : "";
                     string searchURL = (Request.Form["searchURL"] != null) ? Request.Form["searchURL"] : "";
                     string logo = (Request.Form["logo"] != null && Request.Form["logo"].Trim() != "") ? Request.Form["logo"] : null;
                     int dealer_type = (Request.Form["dealer_type"] != null) ? Convert.ToInt32(Request.Form["dealer_type"]) : 0;
@@ -100,6 +101,7 @@ namespace CurtAdmin.Controllers {
                     int parentID = (Request.Form["parentID"] != null && Request.Form["parentID"] != "") ? Convert.ToInt32(Request.Form["parentID"]) : 0;
                     int tier = (Request.Form["tier"] != null && Request.Form["tier"] != "") ? Convert.ToInt32(Request.Form["tier"]) : 1;
                     bool isDummy = (Request.Form["isDummy"] != null && Request.Form["isDummy"] != "") ? Convert.ToBoolean(Request.Form["isDummy"]) : false;
+                    bool showWebsite = (Request.Form["showWebsite"] != null && Request.Form["showWebsite"] != "") ? Convert.ToBoolean(Request.Form["showWebsite"]) : false;
                     LatLng location = new LatLng();
 
                     // Validate the form fields
@@ -125,13 +127,15 @@ namespace CurtAdmin.Controllers {
                         postal_code = postalCode,
                         contact_person = contact,
                         website = website,
+                        eLocalURL = eLocalURL,
                         searchURL = searchURL,
                         logo = logo,
                         mCodeID = mapixCodeID,
                         salesRepID = salesRepID,
                         dealer_type = dealer_type,
                         isDummy = isDummy,
-                        tier = tier
+                        tier = tier,
+                        showWebsite = showWebsite
                     };
 
                     if (location.latitude != null && location.longitude != null) {
@@ -205,6 +209,7 @@ namespace CurtAdmin.Controllers {
                     string postalCode = (Request.Form["postal_code"] != null) ? Request.Form["postal_code"] : "";
                     string contact = (Request.Form["contact_person"] != null) ? Request.Form["contact_person"] : "";
                     string website = (Request.Form["website"] != null) ? Request.Form["website"] : "";
+                    string eLocalURL = (Request.Form["eLocalURL"] != null) ? Request.Form["eLocalURL"] : "";
                     string searchURL = (Request.Form["searchURL"] != null) ? Request.Form["searchURL"] : "";
                     string logo = (Request.Form["logo"] != null && Request.Form["logo"].Trim() != "") ? Request.Form["logo"] : null;
                     int dealer_type = (Request.Form["dealer_type"] != null) ? Convert.ToInt32(Request.Form["dealer_type"]) : 0;
@@ -214,6 +219,7 @@ namespace CurtAdmin.Controllers {
                     int parentID = (Request.Form["parentID"] != null && Request.Form["parentID"] != "") ? Convert.ToInt32(Request.Form["parentID"]) : 0;
                     int tier = (Request.Form["tier"] != null && Request.Form["tier"] != "") ? Convert.ToInt32(Request.Form["tier"]) : 1;
                     bool isDummy = (Request.Form["isDummy"] != null && Request.Form["isDummy"] != "") ? Convert.ToBoolean(Request.Form["isDummy"]) : false;
+                    bool showWebsite = (Request.Form["showWebsite"] != null && Request.Form["showWebsite"] != "") ? Convert.ToBoolean(Request.Form["showWebsite"]) : false;
 
                     // Validate the form fields
                     if (name.Length == 0) throw new Exception("Name is required.");
@@ -240,6 +246,7 @@ namespace CurtAdmin.Controllers {
                     cust.postal_code = postalCode;
                     cust.contact_person = contact;
                     cust.website = website;
+                    cust.eLocalURL = eLocalURL;
                     cust.searchURL = searchURL;
                     cust.logo = logo;
                     cust.dealer_type = dealer_type;
@@ -249,6 +256,7 @@ namespace CurtAdmin.Controllers {
                     cust.longitude = location.longitude;
                     cust.isDummy = isDummy;
                     cust.tier = tier;
+                    cust.showWebsite = showWebsite;
 
                     if (customerID != 0) {
                         cust.customerID = customerID;

@@ -3,6 +3,12 @@
     string UPC = ViewBag.UPC;
     ViewBag.Title = "CURT Admin - Editing " + part.shortDesc;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.AAIA.PartTerminology> PartTypes = ViewBag.PartTypes ?? new List<CurtAdmin.AAIA.PartTerminology>();
+    string partType = "";
+    if(part.ACESPartTypeID != null) {
+        partType = PartTypes.Where(x => x.PartTerminologyID.Equals((int)part.ACESPartTypeID)).Select(x => x.PartTerminologyName.Trim()).FirstOrDefault();
+        partType += " - " + part.ACESPartTypeID;
+    }
 }
 <style type="text/css">
     .form_left #buttons #btnContinue{
@@ -82,6 +88,12 @@
                 <input type="checkbox" name="featured" id="featured" value="true" @((part.featured) ? "checked" : "")/>
             </label>
 
+            <label for="PartTypeID">
+                ACES Part Type ID
+                <input type="text" id="PartTypeID" value="@partType" placeholder="Choose an ACES Part Type" />
+                <input type="hidden" name="ACESPartTypeID" id="ACESPartTypeID" value="@((part.ACESPartTypeID != null) ? part.ACESPartTypeID.ToString() : "")" />
+            </label>
+
             <div id="buttons">
                 <input type="submit" name="btnContinue" id="btnContinue" value="Save &amp; Continue" />
                 <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
@@ -91,3 +103,4 @@
         
     </form>
 </div>
+<script src="/Scripts/admin/Product/Edit.js"></script>

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="pcdb" Class="pcdbDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=pcdb;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="pcdbConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Subcategories" Member="Subcategories">
+    <Type Name="Subcategory">
+      <Column Name="SubCategoryID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SubCategoryName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Subcategory_CodeMaster" Member="CodeMasters" ThisKey="SubCategoryID" OtherKey="SubCategoryID" Type="CodeMaster" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Version" Member="PCDBVersions">
+    <Type Name="PCDBVersion">
+      <Column Name="VersionDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Positions" Member="Positions">
+    <Type Name="Position">
+      <Column Name="PositionID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Position" Member="Position1" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Position_CodeMaster" Member="CodeMasters" ThisKey="PositionID" OtherKey="PositionID" Type="CodeMaster" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Parts" Member="PartTerminologies">
+    <Type Name="PartTerminology">
+      <Column Name="PartTerminologyID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PartTerminologyName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="RevDate" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Association Name="PartTerminology_CodeMaster" Member="CodeMasters" AccessModifier="Internal" ThisKey="PartTerminologyID" OtherKey="PartTerminologyID" Type="CodeMaster" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CodeMaster" Member="CodeMasters">
+    <Type Name="CodeMaster">
+      <Column Name="CodeMasterID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SubCategoryID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PartTerminologyID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PositionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RevDate" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Association Name="PartTerminology_CodeMaster" Member="PartTerminology" Storage="_Part" ThisKey="PartTerminologyID" OtherKey="PartTerminologyID" Type="PartTerminology" IsForeignKey="true" />
+      <Association Name="Position_CodeMaster" Member="Position" ThisKey="PositionID" OtherKey="PositionID" Type="Position" IsForeignKey="true" />
+      <Association Name="Subcategory_CodeMaster" Member="Subcategory" ThisKey="SubCategoryID" OtherKey="SubCategoryID" Type="Subcategory" IsForeignKey="true" />
+      <Association Name="Category_CodeMaster" Member="Category" ThisKey="CategoryID" OtherKey="CategoryID" Type="Category" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Categories" Member="Categories">
+    <Type Name="Category">
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CategoryName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Category_CodeMaster" Member="CodeMasters" ThisKey="CategoryID" OtherKey="CategoryID" Type="CodeMaster" />
+    </Type>
+  </Table>
+</Database>

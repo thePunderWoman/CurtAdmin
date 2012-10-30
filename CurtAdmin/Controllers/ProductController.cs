@@ -42,7 +42,7 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Add(int partID = 0, string shortDesc = "", int status = 0, string oldPartNumber = "", int priceCode = 0, int classID = 0, string btnSubmit = "", string btnContinue = "", string upc = "", bool featured = false) {
+        public ActionResult Add(int partID = 0, string shortDesc = "", int status = 0, string oldPartNumber = "", int priceCode = 0, int classID = 0, string btnSubmit = "", string btnContinue = "", string upc = "", bool featured = false, int? ACESPartTypeID = null) {
 
             CurtDevDataContext db = new CurtDevDataContext();
             List<string> error_messages = new List<string>();
@@ -55,7 +55,8 @@ namespace CurtAdmin.Controllers
                     classID = classID,
                     dateAdded = DateTime.Now,
                     dateModified = DateTime.Now,
-                    featured = featured
+                    featured = featured,
+                    ACESPartTypeID = ACESPartTypeID
             };
 
 
@@ -133,7 +134,8 @@ namespace CurtAdmin.Controllers
                         oldPartNumber = cp.oldPartNumber,
                         priceCode = cp.priceCode,
                         shortDesc = cp.shortDesc,
-                        status = cp.status
+                        status = cp.status,
+                        ACESPartTypeID = cp.ACESPartTypeID
                     };
                     db.Parts.InsertOnSubmit(new_part);
                     db.SubmitChanges();
@@ -326,12 +328,14 @@ namespace CurtAdmin.Controllers
             ViewBag.classes = ProductModels.GetClasses();
             ViewBag.UPC = ProductModels.GetAttribute(part.partID, "UPC");
 
+            ViewBag.PartTypes = new ACES().GetPartTypes();
+
             ViewBag.active_tab = "info";
             return View();
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(int partID = 0, string shortDesc = "", int status = 0, string oldPartNumber = "", int priceCode = 0, int classID = 0, string btnSubmit = "", string btnContinue = "", string upc = "", bool featured = false) {
+        public ActionResult Edit(int partID = 0, string shortDesc = "", int status = 0, string oldPartNumber = "", int priceCode = 0, int classID = 0, string btnSubmit = "", string btnContinue = "", string upc = "", bool featured = false, int? ACESPartTypeID = null) {
 
             CurtDevDataContext db = new CurtDevDataContext();
             List<string> error_messages = new List<string>();
@@ -348,6 +352,7 @@ namespace CurtAdmin.Controllers
             part.classID = classID;
             part.dateModified = DateTime.Now;
             part.featured = featured;
+            part.ACESPartTypeID = ACESPartTypeID;
 
             // Validate the partID and shortDesc fields
             if (partID == 0) { error_messages.Add("You must enter a part number."); }
@@ -383,6 +388,8 @@ namespace CurtAdmin.Controllers
 
             // Get the product classes
             ViewBag.classes = ProductModels.GetClasses();
+
+            ViewBag.PartTypes = new ACES().GetPartTypes();
 
             ViewBag.active_tab = "info";
             return View();

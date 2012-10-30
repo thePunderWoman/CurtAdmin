@@ -62,7 +62,7 @@ namespace CurtAdmin.Models {
             }
         }
 
-        public static Trailer Save(List<string> lifestyles, int trailerID = 0, string name = "", string image = "", int tw = 0, int gtw = 0, string hitchClass = "", string shortDesc = "", string message = "") {
+        public static Trailer Save(List<string> lifestyles = null, int trailerID = 0, string name = "", string image = "", int tw = 0, int gtw = 0, string hitchClass = "", string shortDesc = "", string message = "") {
 
             CurtDevDataContext db = new CurtDevDataContext();
             Trailer t = new Trailer();
@@ -100,12 +100,14 @@ namespace CurtAdmin.Models {
 
             List<Lifestyle_Trailer> new_lts = new List<Lifestyle_Trailer>();
 
-            foreach (string lifestyle in lifestyles) {
-                Lifestyle_Trailer new_lt = new Lifestyle_Trailer {
-                    trailerID = t.trailerID,
-                    catID = Convert.ToInt32(lifestyle)
-                };
-                new_lts.Add(new_lt);
+            if (lifestyles != null) {
+                foreach (string lifestyle in lifestyles) {
+                    Lifestyle_Trailer new_lt = new Lifestyle_Trailer {
+                        trailerID = t.trailerID,
+                        catID = Convert.ToInt32(lifestyle)
+                    };
+                    new_lts.Add(new_lt);
+                }
             }
             db.Lifestyle_Trailers.InsertAllOnSubmit(new_lts);
             db.SubmitChanges();

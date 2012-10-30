@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CurtAdmin.VCDB
+namespace CurtAdmin.AAIA
 {
 	using System.Data.Linq;
 	using System.Data.Linq.Mapping;
@@ -859,11 +859,11 @@ namespace CurtAdmin.VCDB
 			}
 		}
 		
-		public System.Data.Linq.Table<Version> Versions
+		public System.Data.Linq.Table<VCDBVersion> VCDBVersions
 		{
 			get
 			{
-				return this.GetTable<Version>();
+				return this.GetTable<VCDBVersion>();
 			}
 		}
 		
@@ -12953,12 +12953,12 @@ namespace CurtAdmin.VCDB
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Version")]
-	public partial class Version
+	public partial class VCDBVersion
 	{
 		
 		private System.DateTime _VersionDate;
 		
-		public Version()
+		public VCDBVersion()
 		{
 		}
 		

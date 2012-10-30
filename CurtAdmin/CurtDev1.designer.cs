@@ -30,9 +30,6 @@ namespace CurtAdmin
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertAAIA(AAIA instance);
-    partial void UpdateAAIA(AAIA instance);
-    partial void DeleteAAIA(AAIA instance);
     partial void InsertClass(Class instance);
     partial void UpdateClass(Class instance);
     partial void DeleteClass(Class instance);
@@ -327,14 +324,6 @@ namespace CurtAdmin
 				base(connection, mappingSource)
 		{
 			OnCreated();
-		}
-		
-		public System.Data.Linq.Table<AAIA> AAIAs
-		{
-			get
-			{
-				return this.GetTable<AAIA>();
-			}
 		}
 		
 		public System.Data.Linq.Table<Class> Classes
@@ -1009,14 +998,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		public System.Data.Linq.Table<ACESImport> ACESImports
-		{
-			get
-			{
-				return this.GetTable<ACESImport>();
-			}
-		}
-		
 		public System.Data.Linq.Table<ConfigAttributeType> ConfigAttributeTypes
 		{
 			get
@@ -1076,92 +1057,6 @@ namespace CurtAdmin
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchparams);
 			return ((ISingleResult<Part>)(result.ReturnValue));
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AAIA")]
-	public partial class AAIA : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _aaiaID;
-		
-		private string _value;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnaaiaIDChanging(int value);
-    partial void OnaaiaIDChanged();
-    partial void OnvalueChanging(string value);
-    partial void OnvalueChanged();
-    #endregion
-		
-		public AAIA()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_aaiaID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int aaiaID
-		{
-			get
-			{
-				return this._aaiaID;
-			}
-			set
-			{
-				if ((this._aaiaID != value))
-				{
-					this.OnaaiaIDChanging(value);
-					this.SendPropertyChanging();
-					this._aaiaID = value;
-					this.SendPropertyChanged("aaiaID");
-					this.OnaaiaIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="VarChar(255)")]
-		public string value
-		{
-			get
-			{
-				return this._value;
-			}
-			set
-			{
-				if ((this._value != value))
-				{
-					this.OnvalueChanging(value);
-					this.SendPropertyChanging();
-					this._value = value;
-					this.SendPropertyChanged("value");
-					this.OnvalueChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 	
@@ -7222,6 +7117,8 @@ namespace CurtAdmin
 		
 		private int _tier;
 		
+		private bool _showWebsite;
+		
 		private EntitySet<CustomerPricing> _CustomerPricings;
 		
 		private EntitySet<PartStates> _PartStates;
@@ -7290,6 +7187,8 @@ namespace CurtAdmin
     partial void OnAPIKeyChanged();
     partial void OntierChanging(int value);
     partial void OntierChanged();
+    partial void OnshowWebsiteChanging(bool value);
+    partial void OnshowWebsiteChanged();
     #endregion
 		
 		public Customer()
@@ -7827,6 +7726,26 @@ namespace CurtAdmin
 					this._tier = value;
 					this.SendPropertyChanged("tier");
 					this.OntierChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_showWebsite", DbType="Bit NOT NULL")]
+		public bool showWebsite
+		{
+			get
+			{
+				return this._showWebsite;
+			}
+			set
+			{
+				if ((this._showWebsite != value))
+				{
+					this.OnshowWebsiteChanging(value);
+					this.SendPropertyChanging();
+					this._showWebsite = value;
+					this.SendPropertyChanged("showWebsite");
+					this.OnshowWebsiteChanged();
 				}
 			}
 		}
@@ -9292,6 +9211,8 @@ namespace CurtAdmin
 		
 		private bool _featured;
 		
+		private System.Nullable<int> _ACESPartTypeID;
+		
 		private EntitySet<CatParts> _CatParts;
 		
 		private EntitySet<PartAttribute> _PartAttributes;
@@ -9336,6 +9257,8 @@ namespace CurtAdmin
     partial void OnclassIDChanged();
     partial void OnfeaturedChanging(bool value);
     partial void OnfeaturedChanged();
+    partial void OnACESPartTypeIDChanging(System.Nullable<int> value);
+    partial void OnACESPartTypeIDChanged();
     #endregion
 		
 		public Part()
@@ -9530,6 +9453,26 @@ namespace CurtAdmin
 					this._featured = value;
 					this.SendPropertyChanged("featured");
 					this.OnfeaturedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ACESPartTypeID", DbType="Int")]
+		public System.Nullable<int> ACESPartTypeID
+		{
+			get
+			{
+				return this._ACESPartTypeID;
+			}
+			set
+			{
+				if ((this._ACESPartTypeID != value))
+				{
+					this.OnACESPartTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._ACESPartTypeID = value;
+					this.SendPropertyChanged("ACESPartTypeID");
+					this.OnACESPartTypeIDChanged();
 				}
 			}
 		}
@@ -13498,7 +13441,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Trailer_Lifestyle_Trailer", Storage="_Lifestyle_Trailers", ThisKey="trailerID", OtherKey="trailerID")]
-		public EntitySet<Lifestyle_Trailer> Lifestyle_Trailers
+		internal EntitySet<Lifestyle_Trailer> Lifestyle_Trailers
 		{
 			get
 			{
@@ -19480,267 +19423,6 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.AcesType = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ACESImport")]
-	public partial class ACESImport
-	{
-		
-		private int _AAIAAPPID;
-		
-		private int _AAIAYearID;
-		
-		private string _AAIAMakeNm;
-		
-		private string _AAIAModelNm;
-		
-		private string _AAIASubmodelNm;
-		
-		private int _AAIAMakeID;
-		
-		private int _AAIAModelID;
-		
-		private System.Nullable<int> _AAIASubModelID;
-		
-		private int _AAIABaseVehicleID;
-		
-		private int _AAIAPartTypeID;
-		
-		private int _PartNumber;
-		
-		private System.Nullable<int> _AAIAAttributeID;
-		
-		private string _AAIAAttribFamilyNm;
-		
-		private string _AAIATableNm;
-		
-		public ACESImport()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAAPPID", DbType="Int NOT NULL")]
-		public int AAIAAPPID
-		{
-			get
-			{
-				return this._AAIAAPPID;
-			}
-			set
-			{
-				if ((this._AAIAAPPID != value))
-				{
-					this._AAIAAPPID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAYearID", DbType="Int NOT NULL")]
-		public int AAIAYearID
-		{
-			get
-			{
-				return this._AAIAYearID;
-			}
-			set
-			{
-				if ((this._AAIAYearID != value))
-				{
-					this._AAIAYearID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAMakeNm", DbType="VarChar(255)")]
-		public string AAIAMakeNm
-		{
-			get
-			{
-				return this._AAIAMakeNm;
-			}
-			set
-			{
-				if ((this._AAIAMakeNm != value))
-				{
-					this._AAIAMakeNm = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAModelNm", DbType="VarChar(255)")]
-		public string AAIAModelNm
-		{
-			get
-			{
-				return this._AAIAModelNm;
-			}
-			set
-			{
-				if ((this._AAIAModelNm != value))
-				{
-					this._AAIAModelNm = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIASubmodelNm", DbType="VarChar(255)")]
-		public string AAIASubmodelNm
-		{
-			get
-			{
-				return this._AAIASubmodelNm;
-			}
-			set
-			{
-				if ((this._AAIASubmodelNm != value))
-				{
-					this._AAIASubmodelNm = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAMakeID", DbType="Int NOT NULL")]
-		public int AAIAMakeID
-		{
-			get
-			{
-				return this._AAIAMakeID;
-			}
-			set
-			{
-				if ((this._AAIAMakeID != value))
-				{
-					this._AAIAMakeID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAModelID", DbType="Int NOT NULL")]
-		public int AAIAModelID
-		{
-			get
-			{
-				return this._AAIAModelID;
-			}
-			set
-			{
-				if ((this._AAIAModelID != value))
-				{
-					this._AAIAModelID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIASubModelID", DbType="Int")]
-		public System.Nullable<int> AAIASubModelID
-		{
-			get
-			{
-				return this._AAIASubModelID;
-			}
-			set
-			{
-				if ((this._AAIASubModelID != value))
-				{
-					this._AAIASubModelID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIABaseVehicleID", DbType="Int NOT NULL")]
-		public int AAIABaseVehicleID
-		{
-			get
-			{
-				return this._AAIABaseVehicleID;
-			}
-			set
-			{
-				if ((this._AAIABaseVehicleID != value))
-				{
-					this._AAIABaseVehicleID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAPartTypeID", DbType="Int NOT NULL")]
-		public int AAIAPartTypeID
-		{
-			get
-			{
-				return this._AAIAPartTypeID;
-			}
-			set
-			{
-				if ((this._AAIAPartTypeID != value))
-				{
-					this._AAIAPartTypeID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartNumber", DbType="Int NOT NULL")]
-		public int PartNumber
-		{
-			get
-			{
-				return this._PartNumber;
-			}
-			set
-			{
-				if ((this._PartNumber != value))
-				{
-					this._PartNumber = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAAttributeID", DbType="Int")]
-		public System.Nullable<int> AAIAAttributeID
-		{
-			get
-			{
-				return this._AAIAAttributeID;
-			}
-			set
-			{
-				if ((this._AAIAAttributeID != value))
-				{
-					this._AAIAAttributeID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIAAttribFamilyNm", DbType="VarChar(255)")]
-		public string AAIAAttribFamilyNm
-		{
-			get
-			{
-				return this._AAIAAttribFamilyNm;
-			}
-			set
-			{
-				if ((this._AAIAAttribFamilyNm != value))
-				{
-					this._AAIAAttribFamilyNm = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AAIATableNm", DbType="VarChar(255)")]
-		public string AAIATableNm
-		{
-			get
-			{
-				return this._AAIATableNm;
-			}
-			set
-			{
-				if ((this._AAIATableNm != value))
-				{
-					this._AAIATableNm = value;
-				}
-			}
 		}
 	}
 	

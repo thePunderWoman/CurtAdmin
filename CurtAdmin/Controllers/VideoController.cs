@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using CurtAdmin.Models;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 namespace CurtAdmin.Controllers {
     public class VideoController : BaseController {
@@ -25,17 +26,13 @@ namespace CurtAdmin.Controllers {
         }
 
         public string AddVideo(string ytID = "") {
-            FullVideo record = VideoModel.Create(ytID);
             Google.YouTube.Video ytVideo = new Google.YouTube.Video();
             ytVideo = VideoModel.GetYTVideo(ytID);
-            record.videoTitle = ytVideo.Title;
-            record.thumb = (ytVideo.Thumbnails.Count > 0) ? ytVideo.Thumbnails[0].Url : "/Content/img/noimage.jpg";
+            FullVideo record = VideoModel.Create(ytVideo);
 
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            return js.Serialize(record);
+            return JsonConvert.SerializeObject(record);
         }
         
-
         public string Delete(int id = 0) {
             return VideoModel.Delete(id);
         }

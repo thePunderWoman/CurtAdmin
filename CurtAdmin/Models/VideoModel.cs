@@ -61,13 +61,18 @@ namespace CurtAdmin.Models {
         }
 
 
-        public static FullVideo Create(string embed_link = "") {
-            if (embed_link.Length == 0) {
+        public static FullVideo Create(Google.YouTube.Video ytVideo = null) {
+            if (ytVideo == null) {
                 throw new Exception("Invalid link");
             }
             CurtDevDataContext db = new CurtDevDataContext();
             Video new_video = new Video {
-                embed_link = embed_link,
+                embed_link = ytVideo.VideoId,
+                title = ytVideo.Title,
+                screenshot = (ytVideo.Thumbnails.Count > 0) ? ytVideo.Thumbnails[2].Url : "/Content/img/noimage.jpg",
+                description = ytVideo.Description,
+                watchpage = ytVideo.WatchPage.ToString(),
+                youtubeID = ytVideo.VideoId,
                 dateAdded = DateTime.Now,
                 sort = (db.Videos.Count() == 0) ? 1 : db.Videos.OrderByDescending(x => x.sort).Select(x => x.sort).First() + 1
             };
@@ -78,9 +83,11 @@ namespace CurtAdmin.Models {
                 videoID = new_video.videoID,
                 embed_link = new_video.embed_link,
                 dateAdded = new_video.dateAdded,
-                sort = new_video.sort
+                sort = new_video.sort,
+                videoTitle = new_video.title,
+                thumb = (ytVideo.Thumbnails.Count > 0) ? ytVideo.Thumbnails[0].Url : "/Content/img/noimage.jpg"
             };
-            
+
             return fullvideo;
         }
 
@@ -108,7 +115,7 @@ namespace CurtAdmin.Models {
                 YouTubeQuery query = new YouTubeQuery(YouTubeQuery.DefaultVideoUri);
                 query.Author = "curtmfg";
                 query.Formats.Add(YouTubeQuery.VideoFormat.Embeddable);
-                query.OrderBy = "viewCount";
+                query.OrderBy = "published";
                 query.StartIndex = ((page - 1) * 25) + 1;
 
                 // We need to load the feed data for the CURTMfg Youtube Channel
