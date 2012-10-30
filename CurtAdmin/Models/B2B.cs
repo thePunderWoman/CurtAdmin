@@ -509,12 +509,12 @@ namespace CurtAdmin.Models.B2b {
                 CustomerUser customerUser = B2B.getCustomerUser(user.custID);
                 fullUser.email = customerUser.email;
                 fullUser.name = customerUser.name;
-                fullUser.customerID = Convert.ToInt16(customerUser.customerID);
+                fullUser.customerID = Convert.ToInt32(customerUser.customerID);
             } else {
                 Customer customer = B2B.getCustomer(user.custID);
                 fullUser.email = customer.email;
                 fullUser.name = customer.name;
-                fullUser.customerID = Convert.ToInt16(customer.cust_id);
+                fullUser.customerID = Convert.ToInt32(customer.cust_id);
             }
             return fullUser;
 
