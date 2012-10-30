@@ -49,7 +49,9 @@ namespace CurtAdmin.Controllers {
         }
 
         public string GetVCDBVehicles(int makeid, int modelid) {
-            return "";
+            List<AAIA.BaseVehicle> vehicles = new List<AAIA.BaseVehicle>();
+            vehicles = new ACES().GetVCDBVehicles(makeid, modelid);
+            return JsonConvert.SerializeObject(vehicles);
         }
 
         public void GenerateReport() {

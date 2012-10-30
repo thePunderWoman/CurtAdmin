@@ -47,7 +47,7 @@
             }
         });
         $.getJSON('/ACES/GetVCDBVehicles', { makeid: makeid, modelid: modelid }, function (vcdbData) {
-
+            console.log(vcdbData);
         });
 
     });

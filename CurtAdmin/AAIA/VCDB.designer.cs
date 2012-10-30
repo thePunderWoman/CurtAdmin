@@ -1031,7 +1031,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Year_BaseVehicle", Storage="_BaseVehicles", ThisKey="YearID", OtherKey="YearID")]
-		public EntitySet<BaseVehicle> BaseVehicles
+		internal EntitySet<BaseVehicle> BaseVehicles
 		{
 			get
 			{
@@ -1086,7 +1086,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _AspirationName;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1100,7 +1100,7 @@ namespace CurtAdmin.AAIA
 		
 		public Aspiration()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -1144,16 +1144,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Aspiration_EngineConfig", Storage="_EngineConfigs", ThisKey="AspirationID", OtherKey="AspirationID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Aspiration_EngineConfig", Storage="_EngineConfigs", ThisKey="AspirationID", OtherKey="AspirationID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.Aspiration = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.Aspiration = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -1175,18 +1191,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Aspiration = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Aspiration = null;
 		}
 	}
 	
@@ -1832,6 +1836,8 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<BedType> _BedType;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1848,6 +1854,7 @@ namespace CurtAdmin.AAIA
 		{
 			this._BedLength = default(EntityRef<BedLength>);
 			this._BedType = default(EntityRef<BedType>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -1862,6 +1869,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._BedConfigID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnBedConfigIDChanging(value);
 					this.SendPropertyChanging();
 					this._BedConfigID = value;
@@ -1936,12 +1947,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._BedLength.Entity = null;
-						previousValue.BedConfigs.Remove(this);
+						previousValue.BedConfigs = null;
 					}
 					this._BedLength.Entity = value;
 					if ((value != null))
 					{
-						value.BedConfigs.Add(this);
+						value.BedConfigs = this;
 						this._BedLengthID = value.BedLengthID;
 					}
 					else
@@ -1970,12 +1981,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._BedType.Entity = null;
-						previousValue.BedConfigs.Remove(this);
+						previousValue.BedConfigs = null;
 					}
 					this._BedType.Entity = value;
 					if ((value != null))
 					{
-						value.BedConfigs.Add(this);
+						value.BedConfigs = this;
 						this._BedTypeID = value.BedTypeID;
 					}
 					else
@@ -1983,6 +1994,40 @@ namespace CurtAdmin.AAIA
 						this._BedTypeID = default(int);
 					}
 					this.SendPropertyChanged("BedType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_BedConfig", Storage="_VehicleConfig", ThisKey="BedConfigID", OtherKey="BedConfigID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.BedConfig = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.BedConfig = this;
+						this._BedConfigID = value.BedConfigID;
+					}
+					else
+					{
+						this._BedConfigID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -2020,7 +2065,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _BedLengthMetric;
 		
-		private EntitySet<BedConfig> _BedConfigs;
+		private EntityRef<BedConfig> _BedConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2036,7 +2081,7 @@ namespace CurtAdmin.AAIA
 		
 		public BedLength()
 		{
-			this._BedConfigs = new EntitySet<BedConfig>(new Action<BedConfig>(this.attach_BedConfigs), new Action<BedConfig>(this.detach_BedConfigs));
+			this._BedConfigs = default(EntityRef<BedConfig>);
 			OnCreated();
 		}
 		
@@ -2100,16 +2145,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BedLength_BedConfig", Storage="_BedConfigs", ThisKey="BedLengthID", OtherKey="BedLengthID")]
-		public EntitySet<BedConfig> BedConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BedLength_BedConfig", Storage="_BedConfigs", ThisKey="BedLengthID", OtherKey="BedLengthID", IsUnique=true, IsForeignKey=false)]
+		internal BedConfig BedConfigs
 		{
 			get
 			{
-				return this._BedConfigs;
+				return this._BedConfigs.Entity;
 			}
 			set
 			{
-				this._BedConfigs.Assign(value);
+				BedConfig previousValue = this._BedConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._BedConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BedConfigs.Entity = null;
+						previousValue.BedLength = null;
+					}
+					this._BedConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.BedLength = this;
+					}
+					this.SendPropertyChanged("BedConfigs");
+				}
 			}
 		}
 		
@@ -2132,18 +2193,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_BedConfigs(BedConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BedLength = this;
-		}
-		
-		private void detach_BedConfigs(BedConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BedLength = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.BedType")]
@@ -2156,7 +2205,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _BedTypeName;
 		
-		private EntitySet<BedConfig> _BedConfigs;
+		private EntityRef<BedConfig> _BedConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2170,7 +2219,7 @@ namespace CurtAdmin.AAIA
 		
 		public BedType()
 		{
-			this._BedConfigs = new EntitySet<BedConfig>(new Action<BedConfig>(this.attach_BedConfigs), new Action<BedConfig>(this.detach_BedConfigs));
+			this._BedConfigs = default(EntityRef<BedConfig>);
 			OnCreated();
 		}
 		
@@ -2214,16 +2263,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BedType_BedConfig", Storage="_BedConfigs", ThisKey="BedTypeID", OtherKey="BedTypeID")]
-		public EntitySet<BedConfig> BedConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BedType_BedConfig", Storage="_BedConfigs", ThisKey="BedTypeID", OtherKey="BedTypeID", IsUnique=true, IsForeignKey=false)]
+		internal BedConfig BedConfigs
 		{
 			get
 			{
-				return this._BedConfigs;
+				return this._BedConfigs.Entity;
 			}
 			set
 			{
-				this._BedConfigs.Assign(value);
+				BedConfig previousValue = this._BedConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._BedConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BedConfigs.Entity = null;
+						previousValue.BedType = null;
+					}
+					this._BedConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.BedType = this;
+					}
+					this.SendPropertyChanged("BedConfigs");
+				}
 			}
 		}
 		
@@ -2246,18 +2311,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_BedConfigs(BedConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BedType = this;
-		}
-		
-		private void detach_BedConfigs(BedConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BedType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.BodyNumDoors")]
@@ -2270,7 +2323,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _BodyNumDoors;
 		
-		private EntitySet<BodyStyleConfig> _BodyStyleConfigs;
+		private EntityRef<BodyStyleConfig> _BodyStyleConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2284,7 +2337,7 @@ namespace CurtAdmin.AAIA
 		
 		public BodyNumDoor()
 		{
-			this._BodyStyleConfigs = new EntitySet<BodyStyleConfig>(new Action<BodyStyleConfig>(this.attach_BodyStyleConfigs), new Action<BodyStyleConfig>(this.detach_BodyStyleConfigs));
+			this._BodyStyleConfigs = default(EntityRef<BodyStyleConfig>);
 			OnCreated();
 		}
 		
@@ -2328,16 +2381,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BodyNumDoor_BodyStyleConfig", Storage="_BodyStyleConfigs", ThisKey="BodyNumDoorsID", OtherKey="BodyNumDoorsID")]
-		public EntitySet<BodyStyleConfig> BodyStyleConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BodyNumDoor_BodyStyleConfig", Storage="_BodyStyleConfigs", ThisKey="BodyNumDoorsID", OtherKey="BodyNumDoorsID", IsUnique=true, IsForeignKey=false)]
+		internal BodyStyleConfig BodyStyleConfigs
 		{
 			get
 			{
-				return this._BodyStyleConfigs;
+				return this._BodyStyleConfigs.Entity;
 			}
 			set
 			{
-				this._BodyStyleConfigs.Assign(value);
+				BodyStyleConfig previousValue = this._BodyStyleConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._BodyStyleConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BodyStyleConfigs.Entity = null;
+						previousValue.BodyNumDoor = null;
+					}
+					this._BodyStyleConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.BodyNumDoor = this;
+					}
+					this.SendPropertyChanged("BodyStyleConfigs");
+				}
 			}
 		}
 		
@@ -2360,18 +2429,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_BodyStyleConfigs(BodyStyleConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BodyNumDoor = this;
-		}
-		
-		private void detach_BodyStyleConfigs(BodyStyleConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BodyNumDoor = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.BodyStyleConfig")]
@@ -2390,6 +2447,8 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<BodyType> _BodyType;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -2406,6 +2465,7 @@ namespace CurtAdmin.AAIA
 		{
 			this._BodyNumDoor = default(EntityRef<BodyNumDoor>);
 			this._BodyType = default(EntityRef<BodyType>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -2420,6 +2480,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._BodyStyleConfigID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnBodyStyleConfigIDChanging(value);
 					this.SendPropertyChanging();
 					this._BodyStyleConfigID = value;
@@ -2494,12 +2558,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._BodyNumDoor.Entity = null;
-						previousValue.BodyStyleConfigs.Remove(this);
+						previousValue.BodyStyleConfigs = null;
 					}
 					this._BodyNumDoor.Entity = value;
 					if ((value != null))
 					{
-						value.BodyStyleConfigs.Add(this);
+						value.BodyStyleConfigs = this;
 						this._BodyNumDoorsID = value.BodyNumDoorsID;
 					}
 					else
@@ -2528,12 +2592,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._BodyType.Entity = null;
-						previousValue.BodyStyleConfigs.Remove(this);
+						previousValue.BodyStyleConfigs = null;
 					}
 					this._BodyType.Entity = value;
 					if ((value != null))
 					{
-						value.BodyStyleConfigs.Add(this);
+						value.BodyStyleConfigs = this;
 						this._BodyTypeID = value.BodyTypeID;
 					}
 					else
@@ -2541,6 +2605,40 @@ namespace CurtAdmin.AAIA
 						this._BodyTypeID = default(int);
 					}
 					this.SendPropertyChanged("BodyType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_BodyStyleConfig", Storage="_VehicleConfig", ThisKey="BodyStyleConfigID", OtherKey="BodyStyleConfigID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.BodyStyleConfig = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.BodyStyleConfig = this;
+						this._BodyStyleConfigID = value.BodyStyleConfigID;
+					}
+					else
+					{
+						this._BodyStyleConfigID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -2576,7 +2674,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _BodyTypeName;
 		
-		private EntitySet<BodyStyleConfig> _BodyStyleConfigs;
+		private EntityRef<BodyStyleConfig> _BodyStyleConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2590,7 +2688,7 @@ namespace CurtAdmin.AAIA
 		
 		public BodyType()
 		{
-			this._BodyStyleConfigs = new EntitySet<BodyStyleConfig>(new Action<BodyStyleConfig>(this.attach_BodyStyleConfigs), new Action<BodyStyleConfig>(this.detach_BodyStyleConfigs));
+			this._BodyStyleConfigs = default(EntityRef<BodyStyleConfig>);
 			OnCreated();
 		}
 		
@@ -2634,16 +2732,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BodyType_BodyStyleConfig", Storage="_BodyStyleConfigs", ThisKey="BodyTypeID", OtherKey="BodyTypeID")]
-		public EntitySet<BodyStyleConfig> BodyStyleConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BodyType_BodyStyleConfig", Storage="_BodyStyleConfigs", ThisKey="BodyTypeID", OtherKey="BodyTypeID", IsUnique=true, IsForeignKey=false)]
+		internal BodyStyleConfig BodyStyleConfigs
 		{
 			get
 			{
-				return this._BodyStyleConfigs;
+				return this._BodyStyleConfigs.Entity;
 			}
 			set
 			{
-				this._BodyStyleConfigs.Assign(value);
+				BodyStyleConfig previousValue = this._BodyStyleConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._BodyStyleConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BodyStyleConfigs.Entity = null;
+						previousValue.BodyType = null;
+					}
+					this._BodyStyleConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.BodyType = this;
+					}
+					this.SendPropertyChanged("BodyStyleConfigs");
+				}
 			}
 		}
 		
@@ -2665,18 +2779,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_BodyStyleConfigs(BodyStyleConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BodyType = this;
-		}
-		
-		private void detach_BodyStyleConfigs(BodyStyleConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BodyType = null;
 		}
 	}
 	
@@ -2749,7 +2851,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeAB_BrakeConfig", Storage="_BrakeConfigs", ThisKey="BrakeABSID", OtherKey="BrakeABSID")]
-		public EntitySet<BrakeConfig> BrakeConfigs
+		internal EntitySet<BrakeConfig> BrakeConfigs
 		{
 			get
 			{
@@ -2818,6 +2920,8 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<BrakeType> _BrakeType1;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -2840,6 +2944,7 @@ namespace CurtAdmin.AAIA
 			this._BrakeSystem = default(EntityRef<BrakeSystem>);
 			this._BrakeType = default(EntityRef<BrakeType>);
 			this._BrakeType1 = default(EntityRef<BrakeType>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -2854,6 +2959,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._BrakeConfigID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnBrakeConfigIDChanging(value);
 					this.SendPropertyChanging();
 					this._BrakeConfigID = value;
@@ -3010,12 +3119,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._BrakeSystem.Entity = null;
-						previousValue.BrakeConfigs.Remove(this);
+						previousValue.BrakeConfigs = null;
 					}
 					this._BrakeSystem.Entity = value;
 					if ((value != null))
 					{
-						value.BrakeConfigs.Add(this);
+						value.BrakeConfigs = this;
 						this._BrakeSystemID = value.BrakeSystemID;
 					}
 					else
@@ -3028,7 +3137,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeType_BrakeConfig", Storage="_BrakeType", ThisKey="FrontBrakeTypeID", OtherKey="BrakeTypeID", IsForeignKey=true)]
-		public BrakeType BrakeType
+		public BrakeType FrontBrakeType
 		{
 			get
 			{
@@ -3044,25 +3153,25 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._BrakeType.Entity = null;
-						previousValue.BrakeConfigs.Remove(this);
+						previousValue.BrakeConfigs = null;
 					}
 					this._BrakeType.Entity = value;
 					if ((value != null))
 					{
-						value.BrakeConfigs.Add(this);
+						value.BrakeConfigs = this;
 						this._FrontBrakeTypeID = value.BrakeTypeID;
 					}
 					else
 					{
 						this._FrontBrakeTypeID = default(int);
 					}
-					this.SendPropertyChanged("BrakeType");
+					this.SendPropertyChanged("FrontBrakeType");
 				}
 			}
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeType_BrakeConfig1", Storage="_BrakeType1", ThisKey="RearBrakeTypeID", OtherKey="BrakeTypeID", IsForeignKey=true)]
-		public BrakeType BrakeType1
+		public BrakeType RearBrakeType
 		{
 			get
 			{
@@ -3078,19 +3187,53 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._BrakeType1.Entity = null;
-						previousValue.BrakeConfigs1.Remove(this);
+						previousValue.BrakeConfigs1 = null;
 					}
 					this._BrakeType1.Entity = value;
 					if ((value != null))
 					{
-						value.BrakeConfigs1.Add(this);
+						value.BrakeConfigs1 = this;
 						this._RearBrakeTypeID = value.BrakeTypeID;
 					}
 					else
 					{
 						this._RearBrakeTypeID = default(int);
 					}
-					this.SendPropertyChanged("BrakeType1");
+					this.SendPropertyChanged("RearBrakeType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_BrakeConfig", Storage="_VehicleConfig", ThisKey="BrakeConfigID", OtherKey="BrakeConfigID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.BrakeConfig = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.BrakeConfig = this;
+						this._BrakeConfigID = value.BrakeConfigID;
+					}
+					else
+					{
+						this._BrakeConfigID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -3126,7 +3269,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _BrakeSystemName;
 		
-		private EntitySet<BrakeConfig> _BrakeConfigs;
+		private EntityRef<BrakeConfig> _BrakeConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3140,7 +3283,7 @@ namespace CurtAdmin.AAIA
 		
 		public BrakeSystem()
 		{
-			this._BrakeConfigs = new EntitySet<BrakeConfig>(new Action<BrakeConfig>(this.attach_BrakeConfigs), new Action<BrakeConfig>(this.detach_BrakeConfigs));
+			this._BrakeConfigs = default(EntityRef<BrakeConfig>);
 			OnCreated();
 		}
 		
@@ -3184,16 +3327,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeSystem_BrakeConfig", Storage="_BrakeConfigs", ThisKey="BrakeSystemID", OtherKey="BrakeSystemID")]
-		public EntitySet<BrakeConfig> BrakeConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeSystem_BrakeConfig", Storage="_BrakeConfigs", ThisKey="BrakeSystemID", OtherKey="BrakeSystemID", IsUnique=true, IsForeignKey=false)]
+		internal BrakeConfig BrakeConfigs
 		{
 			get
 			{
-				return this._BrakeConfigs;
+				return this._BrakeConfigs.Entity;
 			}
 			set
 			{
-				this._BrakeConfigs.Assign(value);
+				BrakeConfig previousValue = this._BrakeConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._BrakeConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BrakeConfigs.Entity = null;
+						previousValue.BrakeSystem = null;
+					}
+					this._BrakeConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.BrakeSystem = this;
+					}
+					this.SendPropertyChanged("BrakeConfigs");
+				}
 			}
 		}
 		
@@ -3216,18 +3375,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_BrakeConfigs(BrakeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BrakeSystem = this;
-		}
-		
-		private void detach_BrakeConfigs(BrakeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BrakeSystem = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.BrakeType")]
@@ -3240,9 +3387,9 @@ namespace CurtAdmin.AAIA
 		
 		private string _BrakeTypeName;
 		
-		private EntitySet<BrakeConfig> _BrakeConfigs;
+		private EntityRef<BrakeConfig> _BrakeConfigs;
 		
-		private EntitySet<BrakeConfig> _BrakeConfigs1;
+		private EntityRef<BrakeConfig> _BrakeConfigs1;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3256,8 +3403,8 @@ namespace CurtAdmin.AAIA
 		
 		public BrakeType()
 		{
-			this._BrakeConfigs = new EntitySet<BrakeConfig>(new Action<BrakeConfig>(this.attach_BrakeConfigs), new Action<BrakeConfig>(this.detach_BrakeConfigs));
-			this._BrakeConfigs1 = new EntitySet<BrakeConfig>(new Action<BrakeConfig>(this.attach_BrakeConfigs1), new Action<BrakeConfig>(this.detach_BrakeConfigs1));
+			this._BrakeConfigs = default(EntityRef<BrakeConfig>);
+			this._BrakeConfigs1 = default(EntityRef<BrakeConfig>);
 			OnCreated();
 		}
 		
@@ -3301,29 +3448,61 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeType_BrakeConfig", Storage="_BrakeConfigs", ThisKey="BrakeTypeID", OtherKey="FrontBrakeTypeID")]
-		public EntitySet<BrakeConfig> BrakeConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeType_BrakeConfig", Storage="_BrakeConfigs", ThisKey="BrakeTypeID", OtherKey="FrontBrakeTypeID", IsUnique=true, IsForeignKey=false)]
+		internal BrakeConfig BrakeConfigs
 		{
 			get
 			{
-				return this._BrakeConfigs;
+				return this._BrakeConfigs.Entity;
 			}
 			set
 			{
-				this._BrakeConfigs.Assign(value);
+				BrakeConfig previousValue = this._BrakeConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._BrakeConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BrakeConfigs.Entity = null;
+						previousValue.FrontBrakeType = null;
+					}
+					this._BrakeConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FrontBrakeType = this;
+					}
+					this.SendPropertyChanged("BrakeConfigs");
+				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeType_BrakeConfig1", Storage="_BrakeConfigs1", ThisKey="BrakeTypeID", OtherKey="RearBrakeTypeID")]
-		public EntitySet<BrakeConfig> BrakeConfigs1
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BrakeType_BrakeConfig1", Storage="_BrakeConfigs1", ThisKey="BrakeTypeID", OtherKey="RearBrakeTypeID", IsUnique=true, IsForeignKey=false)]
+		internal BrakeConfig BrakeConfigs1
 		{
 			get
 			{
-				return this._BrakeConfigs1;
+				return this._BrakeConfigs1.Entity;
 			}
 			set
 			{
-				this._BrakeConfigs1.Assign(value);
+				BrakeConfig previousValue = this._BrakeConfigs1.Entity;
+				if (((previousValue != value) 
+							|| (this._BrakeConfigs1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BrakeConfigs1.Entity = null;
+						previousValue.RearBrakeType = null;
+					}
+					this._BrakeConfigs1.Entity = value;
+					if ((value != null))
+					{
+						value.RearBrakeType = this;
+					}
+					this.SendPropertyChanged("BrakeConfigs1");
+				}
 			}
 		}
 		
@@ -3346,30 +3525,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_BrakeConfigs(BrakeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BrakeType = this;
-		}
-		
-		private void detach_BrakeConfigs(BrakeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BrakeType = null;
-		}
-		
-		private void attach_BrakeConfigs1(BrakeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BrakeType1 = this;
-		}
-		
-		private void detach_BrakeConfigs1(BrakeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.BrakeType1 = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CylinderHeadType")]
@@ -3382,7 +3537,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _CylinderHeadTypeName;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3396,7 +3551,7 @@ namespace CurtAdmin.AAIA
 		
 		public CylinderHeadType()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -3440,16 +3595,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CylinderHeadType_EngineConfig", Storage="_EngineConfigs", ThisKey="CylinderHeadTypeID", OtherKey="CylinderHeadTypeID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CylinderHeadType_EngineConfig", Storage="_EngineConfigs", ThisKey="CylinderHeadTypeID", OtherKey="CylinderHeadTypeID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.CylinderHeadType = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.CylinderHeadType = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -3472,18 +3643,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.CylinderHeadType = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.CylinderHeadType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DriveType")]
@@ -3495,6 +3654,8 @@ namespace CurtAdmin.AAIA
 		private int _DriveTypeID;
 		
 		private string _DriveTypeName;
+		
+		private EntityRef<VehicleConfig> _VehicleConfig;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3508,6 +3669,7 @@ namespace CurtAdmin.AAIA
 		
 		public DriveType()
 		{
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -3522,6 +3684,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._DriveTypeID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnDriveTypeIDChanging(value);
 					this.SendPropertyChanging();
 					this._DriveTypeID = value;
@@ -3547,6 +3713,40 @@ namespace CurtAdmin.AAIA
 					this._DriveTypeName = value;
 					this.SendPropertyChanged("DriveTypeName");
 					this.OnDriveTypeNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_DriveType", Storage="_VehicleConfig", ThisKey="DriveTypeID", OtherKey="DriveTypeID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.DriveType = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.DriveType = this;
+						this._DriveTypeID = value.DriveTypeID;
+					}
+					else
+					{
+						this._DriveTypeID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -3582,7 +3782,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _ElecControlled1;
 		
-		private EntitySet<Transmission> _Transmissions;
+		private EntityRef<Transmission> _Transmissions;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3596,7 +3796,7 @@ namespace CurtAdmin.AAIA
 		
 		public ElecControlled()
 		{
-			this._Transmissions = new EntitySet<Transmission>(new Action<Transmission>(this.attach_Transmissions), new Action<Transmission>(this.detach_Transmissions));
+			this._Transmissions = default(EntityRef<Transmission>);
 			OnCreated();
 		}
 		
@@ -3640,16 +3840,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ElecControlled_Transmission", Storage="_Transmissions", ThisKey="ElecControlledID", OtherKey="TransmissionElecControlledID")]
-		public EntitySet<Transmission> Transmissions
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ElecControlled_Transmission", Storage="_Transmissions", ThisKey="ElecControlledID", OtherKey="TransmissionElecControlledID", IsUnique=true, IsForeignKey=false)]
+		internal Transmission Transmissions
 		{
 			get
 			{
-				return this._Transmissions;
+				return this._Transmissions.Entity;
 			}
 			set
 			{
-				this._Transmissions.Assign(value);
+				Transmission previousValue = this._Transmissions.Entity;
+				if (((previousValue != value) 
+							|| (this._Transmissions.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Transmissions.Entity = null;
+						previousValue.ElecControlled = null;
+					}
+					this._Transmissions.Entity = value;
+					if ((value != null))
+					{
+						value.ElecControlled = this;
+					}
+					this.SendPropertyChanged("Transmissions");
+				}
 			}
 		}
 		
@@ -3671,18 +3887,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.ElecControlled = this;
-		}
-		
-		private void detach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.ElecControlled = null;
 		}
 	}
 	
@@ -3712,7 +3916,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _EngStrokeMetric;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3742,7 +3946,7 @@ namespace CurtAdmin.AAIA
 		
 		public EngineBase()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -3946,16 +4150,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineBase_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineBaseID", OtherKey="EngineBaseID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineBase_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineBaseID", OtherKey="EngineBaseID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.EngineBase = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.EngineBase = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -3977,18 +4197,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineBase = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineBase = null;
 		}
 	}
 	
@@ -4048,6 +4256,8 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<Valve> _Valve1;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -4094,6 +4304,7 @@ namespace CurtAdmin.AAIA
 			this._Mfr = default(EntityRef<Mfr>);
 			this._Valve = default(EntityRef<Valve>);
 			this._Valve1 = default(EntityRef<Valve>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -4108,6 +4319,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._EngineConfigID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnEngineConfigIDChanging(value);
 					this.SendPropertyChanging();
 					this._EngineConfigID = value;
@@ -4418,12 +4633,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._Aspiration.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._Aspiration.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._AspirationID = value.AspirationID;
 					}
 					else
@@ -4452,12 +4667,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._CylinderHeadType.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._CylinderHeadType.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._CylinderHeadTypeID = value.CylinderHeadTypeID;
 					}
 					else
@@ -4486,12 +4701,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._EngineBase.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._EngineBase.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._EngineBaseID = value.EngineBaseID;
 					}
 					else
@@ -4520,12 +4735,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._EngineDesignation.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._EngineDesignation.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._EngineDesignationID = value.EngineDesignationID;
 					}
 					else
@@ -4554,12 +4769,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._EngineVersion.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._EngineVersion.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._EngineVersionID = value.EngineVersionID;
 					}
 					else
@@ -4588,12 +4803,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._EngineVIN.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._EngineVIN.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._EngineVINID = value.EngineVINID;
 					}
 					else
@@ -4622,12 +4837,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._FuelDeliveryConfig.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._FuelDeliveryConfig.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._FuelDeliveryConfigID = value.FuelDeliveryConfigID;
 					}
 					else
@@ -4656,12 +4871,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._FuelType.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._FuelType.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._FuelTypeID = value.FuelTypeID;
 					}
 					else
@@ -4690,12 +4905,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._IgnitionSystemType.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._IgnitionSystemType.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._IgnitionSystemTypeID = value.IgnitionSystemTypeID;
 					}
 					else
@@ -4724,12 +4939,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._Mfr.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._Mfr.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._EngineMfrID = value.MfrID;
 					}
 					else
@@ -4758,12 +4973,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._Valve.Entity = null;
-						previousValue.EngineConfigs.Remove(this);
+						previousValue.EngineConfigs = null;
 					}
 					this._Valve.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs.Add(this);
+						value.EngineConfigs = this;
 						this._ValvesID = value.ValvesID;
 					}
 					else
@@ -4792,12 +5007,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._Valve1.Entity = null;
-						previousValue.EngineConfigs1.Remove(this);
+						previousValue.EngineConfigs1 = null;
 					}
 					this._Valve1.Entity = value;
 					if ((value != null))
 					{
-						value.EngineConfigs1.Add(this);
+						value.EngineConfigs1 = this;
 						this._ValvesID = value.ValvesID;
 					}
 					else
@@ -4805,6 +5020,40 @@ namespace CurtAdmin.AAIA
 						this._ValvesID = default(int);
 					}
 					this.SendPropertyChanged("Valve1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_EngineConfig", Storage="_VehicleConfig", ThisKey="EngineConfigID", OtherKey="EngineConfigID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.EngineConfig = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.EngineConfig = this;
+						this._EngineConfigID = value.EngineConfigID;
+					}
+					else
+					{
+						this._EngineConfigID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -4840,7 +5089,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _EngineDesignationName;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -4854,7 +5103,7 @@ namespace CurtAdmin.AAIA
 		
 		public EngineDesignation()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -4898,16 +5147,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineDesignation_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineDesignationID", OtherKey="EngineDesignationID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineDesignation_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineDesignationID", OtherKey="EngineDesignationID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.EngineDesignation = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.EngineDesignation = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -4929,18 +5194,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineDesignation = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineDesignation = null;
 		}
 	}
 	
@@ -5232,7 +5485,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _EngineVersion1;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -5246,7 +5499,7 @@ namespace CurtAdmin.AAIA
 		
 		public EngineVersion()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -5290,16 +5543,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineVersion_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineVersionID", OtherKey="EngineVersionID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineVersion_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineVersionID", OtherKey="EngineVersionID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.EngineVersion = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.EngineVersion = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -5322,18 +5591,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineVersion = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineVersion = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EngineVIN")]
@@ -5346,7 +5603,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _EngineVINName;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -5360,7 +5617,7 @@ namespace CurtAdmin.AAIA
 		
 		public EngineVIN()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -5404,16 +5661,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineVIN_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineVINID", OtherKey="EngineVINID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="EngineVIN_EngineConfig", Storage="_EngineConfigs", ThisKey="EngineVINID", OtherKey="EngineVINID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.EngineVIN = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.EngineVIN = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -5435,18 +5708,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineVIN = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.EngineVIN = null;
 		}
 	}
 	
@@ -5580,7 +5841,7 @@ namespace CurtAdmin.AAIA
 		
 		private int _FuelSystemDesignID;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
 		private EntityRef<FuelDeliverySubType> _FuelDeliverySubType;
 		
@@ -5608,7 +5869,7 @@ namespace CurtAdmin.AAIA
 		
 		public FuelDeliveryConfig()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			this._FuelDeliverySubType = default(EntityRef<FuelDeliverySubType>);
 			this._FuelDeliveryType = default(EntityRef<FuelDeliveryType>);
 			this._FuelSystemControlType = default(EntityRef<FuelSystemControlType>);
@@ -5732,16 +5993,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelDeliveryConfig_EngineConfig", Storage="_EngineConfigs", ThisKey="FuelDeliveryConfigID", OtherKey="FuelDeliveryConfigID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelDeliveryConfig_EngineConfig", Storage="_EngineConfigs", ThisKey="FuelDeliveryConfigID", OtherKey="FuelDeliveryConfigID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.FuelDeliveryConfig = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FuelDeliveryConfig = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -5762,12 +6039,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._FuelDeliverySubType.Entity = null;
-						previousValue.FuelDeliveryConfigs.Remove(this);
+						previousValue.FuelDeliveryConfigs = null;
 					}
 					this._FuelDeliverySubType.Entity = value;
 					if ((value != null))
 					{
-						value.FuelDeliveryConfigs.Add(this);
+						value.FuelDeliveryConfigs = this;
 						this._FuelDeliverySubTypeID = value.FuelDeliverySubTypeID;
 					}
 					else
@@ -5796,12 +6073,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._FuelDeliveryType.Entity = null;
-						previousValue.FuelDeliveryConfigs.Remove(this);
+						previousValue.FuelDeliveryConfigs = null;
 					}
 					this._FuelDeliveryType.Entity = value;
 					if ((value != null))
 					{
-						value.FuelDeliveryConfigs.Add(this);
+						value.FuelDeliveryConfigs = this;
 						this._FuelDeliveryTypeID = value.FuelDeliveryTypeID;
 					}
 					else
@@ -5830,12 +6107,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._FuelSystemControlType.Entity = null;
-						previousValue.FuelDeliveryConfigs.Remove(this);
+						previousValue.FuelDeliveryConfigs = null;
 					}
 					this._FuelSystemControlType.Entity = value;
 					if ((value != null))
 					{
-						value.FuelDeliveryConfigs.Add(this);
+						value.FuelDeliveryConfigs = this;
 						this._FuelSystemControlTypeID = value.FuelSystemControlTypeID;
 					}
 					else
@@ -5864,12 +6141,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._FuelSystemDesign.Entity = null;
-						previousValue.FuelDeliveryConfigs.Remove(this);
+						previousValue.FuelDeliveryConfigs = null;
 					}
 					this._FuelSystemDesign.Entity = value;
 					if ((value != null))
 					{
-						value.FuelDeliveryConfigs.Add(this);
+						value.FuelDeliveryConfigs = this;
 						this._FuelSystemDesignID = value.FuelSystemDesignID;
 					}
 					else
@@ -5900,18 +6177,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelDeliveryConfig = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelDeliveryConfig = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FuelDeliverySubType")]
@@ -5924,7 +6189,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _FuelDeliverySubTypeName;
 		
-		private EntitySet<FuelDeliveryConfig> _FuelDeliveryConfigs;
+		private EntityRef<FuelDeliveryConfig> _FuelDeliveryConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -5938,7 +6203,7 @@ namespace CurtAdmin.AAIA
 		
 		public FuelDeliverySubType()
 		{
-			this._FuelDeliveryConfigs = new EntitySet<FuelDeliveryConfig>(new Action<FuelDeliveryConfig>(this.attach_FuelDeliveryConfigs), new Action<FuelDeliveryConfig>(this.detach_FuelDeliveryConfigs));
+			this._FuelDeliveryConfigs = default(EntityRef<FuelDeliveryConfig>);
 			OnCreated();
 		}
 		
@@ -5982,16 +6247,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelDeliverySubType_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelDeliverySubTypeID", OtherKey="FuelDeliverySubTypeID")]
-		public EntitySet<FuelDeliveryConfig> FuelDeliveryConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelDeliverySubType_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelDeliverySubTypeID", OtherKey="FuelDeliverySubTypeID", IsUnique=true, IsForeignKey=false)]
+		internal FuelDeliveryConfig FuelDeliveryConfigs
 		{
 			get
 			{
-				return this._FuelDeliveryConfigs;
+				return this._FuelDeliveryConfigs.Entity;
 			}
 			set
 			{
-				this._FuelDeliveryConfigs.Assign(value);
+				FuelDeliveryConfig previousValue = this._FuelDeliveryConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._FuelDeliveryConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._FuelDeliveryConfigs.Entity = null;
+						previousValue.FuelDeliverySubType = null;
+					}
+					this._FuelDeliveryConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FuelDeliverySubType = this;
+					}
+					this.SendPropertyChanged("FuelDeliveryConfigs");
+				}
 			}
 		}
 		
@@ -6014,18 +6295,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelDeliverySubType = this;
-		}
-		
-		private void detach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelDeliverySubType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FuelDeliveryType")]
@@ -6038,7 +6307,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _FuelDeliveryTypeName;
 		
-		private EntitySet<FuelDeliveryConfig> _FuelDeliveryConfigs;
+		private EntityRef<FuelDeliveryConfig> _FuelDeliveryConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -6052,7 +6321,7 @@ namespace CurtAdmin.AAIA
 		
 		public FuelDeliveryType()
 		{
-			this._FuelDeliveryConfigs = new EntitySet<FuelDeliveryConfig>(new Action<FuelDeliveryConfig>(this.attach_FuelDeliveryConfigs), new Action<FuelDeliveryConfig>(this.detach_FuelDeliveryConfigs));
+			this._FuelDeliveryConfigs = default(EntityRef<FuelDeliveryConfig>);
 			OnCreated();
 		}
 		
@@ -6096,16 +6365,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelDeliveryType_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelDeliveryTypeID", OtherKey="FuelDeliveryTypeID")]
-		public EntitySet<FuelDeliveryConfig> FuelDeliveryConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelDeliveryType_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelDeliveryTypeID", OtherKey="FuelDeliveryTypeID", IsUnique=true, IsForeignKey=false)]
+		internal FuelDeliveryConfig FuelDeliveryConfigs
 		{
 			get
 			{
-				return this._FuelDeliveryConfigs;
+				return this._FuelDeliveryConfigs.Entity;
 			}
 			set
 			{
-				this._FuelDeliveryConfigs.Assign(value);
+				FuelDeliveryConfig previousValue = this._FuelDeliveryConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._FuelDeliveryConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._FuelDeliveryConfigs.Entity = null;
+						previousValue.FuelDeliveryType = null;
+					}
+					this._FuelDeliveryConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FuelDeliveryType = this;
+					}
+					this.SendPropertyChanged("FuelDeliveryConfigs");
+				}
 			}
 		}
 		
@@ -6128,18 +6413,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelDeliveryType = this;
-		}
-		
-		private void detach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelDeliveryType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FuelSystemControlType")]
@@ -6152,7 +6425,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _FuelSystemControlTypeName;
 		
-		private EntitySet<FuelDeliveryConfig> _FuelDeliveryConfigs;
+		private EntityRef<FuelDeliveryConfig> _FuelDeliveryConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -6166,7 +6439,7 @@ namespace CurtAdmin.AAIA
 		
 		public FuelSystemControlType()
 		{
-			this._FuelDeliveryConfigs = new EntitySet<FuelDeliveryConfig>(new Action<FuelDeliveryConfig>(this.attach_FuelDeliveryConfigs), new Action<FuelDeliveryConfig>(this.detach_FuelDeliveryConfigs));
+			this._FuelDeliveryConfigs = default(EntityRef<FuelDeliveryConfig>);
 			OnCreated();
 		}
 		
@@ -6210,16 +6483,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelSystemControlType_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelSystemControlTypeID", OtherKey="FuelSystemControlTypeID")]
-		public EntitySet<FuelDeliveryConfig> FuelDeliveryConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelSystemControlType_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelSystemControlTypeID", OtherKey="FuelSystemControlTypeID", IsUnique=true, IsForeignKey=false)]
+		internal FuelDeliveryConfig FuelDeliveryConfigs
 		{
 			get
 			{
-				return this._FuelDeliveryConfigs;
+				return this._FuelDeliveryConfigs.Entity;
 			}
 			set
 			{
-				this._FuelDeliveryConfigs.Assign(value);
+				FuelDeliveryConfig previousValue = this._FuelDeliveryConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._FuelDeliveryConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._FuelDeliveryConfigs.Entity = null;
+						previousValue.FuelSystemControlType = null;
+					}
+					this._FuelDeliveryConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FuelSystemControlType = this;
+					}
+					this.SendPropertyChanged("FuelDeliveryConfigs");
+				}
 			}
 		}
 		
@@ -6242,18 +6531,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelSystemControlType = this;
-		}
-		
-		private void detach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelSystemControlType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FuelSystemDesign")]
@@ -6266,7 +6543,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _FuelSystemDesignName;
 		
-		private EntitySet<FuelDeliveryConfig> _FuelDeliveryConfigs;
+		private EntityRef<FuelDeliveryConfig> _FuelDeliveryConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -6280,7 +6557,7 @@ namespace CurtAdmin.AAIA
 		
 		public FuelSystemDesign()
 		{
-			this._FuelDeliveryConfigs = new EntitySet<FuelDeliveryConfig>(new Action<FuelDeliveryConfig>(this.attach_FuelDeliveryConfigs), new Action<FuelDeliveryConfig>(this.detach_FuelDeliveryConfigs));
+			this._FuelDeliveryConfigs = default(EntityRef<FuelDeliveryConfig>);
 			OnCreated();
 		}
 		
@@ -6324,16 +6601,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelSystemDesign_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelSystemDesignID", OtherKey="FuelSystemDesignID")]
-		public EntitySet<FuelDeliveryConfig> FuelDeliveryConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelSystemDesign_FuelDeliveryConfig", Storage="_FuelDeliveryConfigs", ThisKey="FuelSystemDesignID", OtherKey="FuelSystemDesignID", IsUnique=true, IsForeignKey=false)]
+		internal FuelDeliveryConfig FuelDeliveryConfigs
 		{
 			get
 			{
-				return this._FuelDeliveryConfigs;
+				return this._FuelDeliveryConfigs.Entity;
 			}
 			set
 			{
-				this._FuelDeliveryConfigs.Assign(value);
+				FuelDeliveryConfig previousValue = this._FuelDeliveryConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._FuelDeliveryConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._FuelDeliveryConfigs.Entity = null;
+						previousValue.FuelSystemDesign = null;
+					}
+					this._FuelDeliveryConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FuelSystemDesign = this;
+					}
+					this.SendPropertyChanged("FuelDeliveryConfigs");
+				}
 			}
 		}
 		
@@ -6356,18 +6649,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelSystemDesign = this;
-		}
-		
-		private void detach_FuelDeliveryConfigs(FuelDeliveryConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelSystemDesign = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FuelType")]
@@ -6380,7 +6661,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _FuelTypeName;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -6394,7 +6675,7 @@ namespace CurtAdmin.AAIA
 		
 		public FuelType()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -6438,16 +6719,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelType_EngineConfig", Storage="_EngineConfigs", ThisKey="FuelTypeID", OtherKey="FuelTypeID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FuelType_EngineConfig", Storage="_EngineConfigs", ThisKey="FuelTypeID", OtherKey="FuelTypeID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.FuelType = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FuelType = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -6470,18 +6767,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelType = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.FuelType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.IgnitionSystemType")]
@@ -6494,7 +6779,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _IgnitionSystemTypeName;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -6508,7 +6793,7 @@ namespace CurtAdmin.AAIA
 		
 		public IgnitionSystemType()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -6552,16 +6837,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IgnitionSystemType_EngineConfig", Storage="_EngineConfigs", ThisKey="IgnitionSystemTypeID", OtherKey="IgnitionSystemTypeID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IgnitionSystemType_EngineConfig", Storage="_EngineConfigs", ThisKey="IgnitionSystemTypeID", OtherKey="IgnitionSystemTypeID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.IgnitionSystemType = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.IgnitionSystemType = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
@@ -6583,18 +6884,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.IgnitionSystemType = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.IgnitionSystemType = null;
 		}
 	}
 	
@@ -7475,7 +7764,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Make_BaseVehicle", Storage="_BaseVehicles", ThisKey="MakeID", OtherKey="MakeID")]
-		public EntitySet<BaseVehicle> BaseVehicles
+		internal EntitySet<BaseVehicle> BaseVehicles
 		{
 			get
 			{
@@ -7530,9 +7819,9 @@ namespace CurtAdmin.AAIA
 		
 		private string _MfrName;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
-		private EntitySet<Transmission> _Transmissions;
+		private EntityRef<Transmission> _Transmissions;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -7546,8 +7835,8 @@ namespace CurtAdmin.AAIA
 		
 		public Mfr()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
-			this._Transmissions = new EntitySet<Transmission>(new Action<Transmission>(this.attach_Transmissions), new Action<Transmission>(this.detach_Transmissions));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
+			this._Transmissions = default(EntityRef<Transmission>);
 			OnCreated();
 		}
 		
@@ -7591,29 +7880,61 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Mfr_EngineConfig", Storage="_EngineConfigs", ThisKey="MfrID", OtherKey="EngineMfrID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Mfr_EngineConfig", Storage="_EngineConfigs", ThisKey="MfrID", OtherKey="EngineMfrID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.Mfr = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.Mfr = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Mfr_Transmission", Storage="_Transmissions", ThisKey="MfrID", OtherKey="TransmissionMfrID")]
-		public EntitySet<Transmission> Transmissions
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Mfr_Transmission", Storage="_Transmissions", ThisKey="MfrID", OtherKey="TransmissionMfrID", IsUnique=true, IsForeignKey=false)]
+		internal Transmission Transmissions
 		{
 			get
 			{
-				return this._Transmissions;
+				return this._Transmissions.Entity;
 			}
 			set
 			{
-				this._Transmissions.Assign(value);
+				Transmission previousValue = this._Transmissions.Entity;
+				if (((previousValue != value) 
+							|| (this._Transmissions.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Transmissions.Entity = null;
+						previousValue.Mfr = null;
+					}
+					this._Transmissions.Entity = value;
+					if ((value != null))
+					{
+						value.Mfr = this;
+					}
+					this.SendPropertyChanged("Transmissions");
+				}
 			}
 		}
 		
@@ -7636,30 +7957,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Mfr = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Mfr = null;
-		}
-		
-		private void attach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.Mfr = this;
-		}
-		
-		private void detach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.Mfr = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.MfrBodyCode")]
@@ -7671,6 +7968,8 @@ namespace CurtAdmin.AAIA
 		private int _MfrBodyCodeID;
 		
 		private string _MfrBodyCodeName;
+		
+		private EntityRef<VehicleConfig> _VehicleConfig;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -7684,6 +7983,7 @@ namespace CurtAdmin.AAIA
 		
 		public MfrBodyCode()
 		{
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -7698,6 +7998,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._MfrBodyCodeID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnMfrBodyCodeIDChanging(value);
 					this.SendPropertyChanging();
 					this._MfrBodyCodeID = value;
@@ -7723,6 +8027,40 @@ namespace CurtAdmin.AAIA
 					this._MfrBodyCodeName = value;
 					this.SendPropertyChanged("MfrBodyCodeName");
 					this.OnMfrBodyCodeNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_MfrBodyCode", Storage="_VehicleConfig", ThisKey="MfrBodyCodeID", OtherKey="MfrBodyCodeID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.MfrBodyCode = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.MfrBodyCode = this;
+						this._MfrBodyCodeID = value.MfrBodyCodeID;
+					}
+					else
+					{
+						this._MfrBodyCodeID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -7848,7 +8186,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Model_BaseVehicle", Storage="_BaseVehicles", ThisKey="ModelID", OtherKey="ModelID")]
-		public EntitySet<BaseVehicle> BaseVehicles
+		internal EntitySet<BaseVehicle> BaseVehicles
 		{
 			get
 			{
@@ -8000,7 +8338,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _PublicationStageName;
 		
-		private EntitySet<Vehicle> _Vehicles;
+		private EntityRef<Vehicle> _Vehicles;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -8014,7 +8352,7 @@ namespace CurtAdmin.AAIA
 		
 		public PublicationStage()
 		{
-			this._Vehicles = new EntitySet<Vehicle>(new Action<Vehicle>(this.attach_Vehicles), new Action<Vehicle>(this.detach_Vehicles));
+			this._Vehicles = default(EntityRef<Vehicle>);
 			OnCreated();
 		}
 		
@@ -8058,16 +8396,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PublicationStage_Vehicle", Storage="_Vehicles", ThisKey="PublicationStageID", OtherKey="PublicationStageID")]
-		public EntitySet<Vehicle> Vehicles
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PublicationStage_Vehicle", Storage="_Vehicles", ThisKey="PublicationStageID", OtherKey="PublicationStageID", IsUnique=true, IsForeignKey=false)]
+		internal Vehicle Vehicles
 		{
 			get
 			{
-				return this._Vehicles;
+				return this._Vehicles.Entity;
 			}
 			set
 			{
-				this._Vehicles.Assign(value);
+				Vehicle previousValue = this._Vehicles.Entity;
+				if (((previousValue != value) 
+							|| (this._Vehicles.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Vehicles.Entity = null;
+						previousValue.PublicationStage = null;
+					}
+					this._Vehicles.Entity = value;
+					if ((value != null))
+					{
+						value.PublicationStage = this;
+					}
+					this.SendPropertyChanged("Vehicles");
+				}
 			}
 		}
 		
@@ -8090,18 +8444,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_Vehicles(Vehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.PublicationStage = this;
-		}
-		
-		private void detach_Vehicles(Vehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.PublicationStage = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Region")]
@@ -8120,7 +8462,7 @@ namespace CurtAdmin.AAIA
 		
 		private EntitySet<Region> _Regions;
 		
-		private EntitySet<Vehicle> _Vehicles;
+		private EntityRef<Vehicle> _Vehicles;
 		
 		private EntityRef<Region> _Region1;
 		
@@ -8141,7 +8483,7 @@ namespace CurtAdmin.AAIA
 		public Region()
 		{
 			this._Regions = new EntitySet<Region>(new Action<Region>(this.attach_Regions), new Action<Region>(this.detach_Regions));
-			this._Vehicles = new EntitySet<Vehicle>(new Action<Vehicle>(this.attach_Vehicles), new Action<Vehicle>(this.detach_Vehicles));
+			this._Vehicles = default(EntityRef<Vehicle>);
 			this._Region1 = default(EntityRef<Region>);
 			OnCreated();
 		}
@@ -8243,16 +8585,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Region_Vehicle", Storage="_Vehicles", ThisKey="RegionID", OtherKey="RegionID")]
-		public EntitySet<Vehicle> Vehicles
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Region_Vehicle", Storage="_Vehicles", ThisKey="RegionID", OtherKey="RegionID", IsUnique=true, IsForeignKey=false)]
+		internal Vehicle Vehicles
 		{
 			get
 			{
-				return this._Vehicles;
+				return this._Vehicles.Entity;
 			}
 			set
 			{
-				this._Vehicles.Assign(value);
+				Vehicle previousValue = this._Vehicles.Entity;
+				if (((previousValue != value) 
+							|| (this._Vehicles.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Vehicles.Entity = null;
+						previousValue.Region = null;
+					}
+					this._Vehicles.Entity = value;
+					if ((value != null))
+					{
+						value.Region = this;
+					}
+					this.SendPropertyChanged("Vehicles");
+				}
 			}
 		}
 		
@@ -8321,18 +8679,6 @@ namespace CurtAdmin.AAIA
 			this.SendPropertyChanging();
 			entity.Region1 = null;
 		}
-		
-		private void attach_Vehicles(Vehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.Region = this;
-		}
-		
-		private void detach_Vehicles(Vehicle entity)
-		{
-			this.SendPropertyChanging();
-			entity.Region = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SpringType")]
@@ -8345,9 +8691,9 @@ namespace CurtAdmin.AAIA
 		
 		private string _SpringTypeName;
 		
-		private EntitySet<SpringTypeConfig> _SpringTypeConfigs;
+		private EntityRef<SpringTypeConfig> _SpringTypeConfigs;
 		
-		private EntitySet<SpringTypeConfig> _SpringTypeConfigs1;
+		private EntityRef<SpringTypeConfig> _SpringTypeConfigs1;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -8361,8 +8707,8 @@ namespace CurtAdmin.AAIA
 		
 		public SpringType()
 		{
-			this._SpringTypeConfigs = new EntitySet<SpringTypeConfig>(new Action<SpringTypeConfig>(this.attach_SpringTypeConfigs), new Action<SpringTypeConfig>(this.detach_SpringTypeConfigs));
-			this._SpringTypeConfigs1 = new EntitySet<SpringTypeConfig>(new Action<SpringTypeConfig>(this.attach_SpringTypeConfigs1), new Action<SpringTypeConfig>(this.detach_SpringTypeConfigs1));
+			this._SpringTypeConfigs = default(EntityRef<SpringTypeConfig>);
+			this._SpringTypeConfigs1 = default(EntityRef<SpringTypeConfig>);
 			OnCreated();
 		}
 		
@@ -8406,29 +8752,61 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SpringType_SpringTypeConfig", Storage="_SpringTypeConfigs", ThisKey="SpringTypeID", OtherKey="FrontSpringTypeID")]
-		public EntitySet<SpringTypeConfig> SpringTypeConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SpringType_SpringTypeConfig", Storage="_SpringTypeConfigs", ThisKey="SpringTypeID", OtherKey="FrontSpringTypeID", IsUnique=true, IsForeignKey=false)]
+		internal SpringTypeConfig SpringTypeConfigs
 		{
 			get
 			{
-				return this._SpringTypeConfigs;
+				return this._SpringTypeConfigs.Entity;
 			}
 			set
 			{
-				this._SpringTypeConfigs.Assign(value);
+				SpringTypeConfig previousValue = this._SpringTypeConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._SpringTypeConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._SpringTypeConfigs.Entity = null;
+						previousValue.FrontSprintType = null;
+					}
+					this._SpringTypeConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.FrontSprintType = this;
+					}
+					this.SendPropertyChanged("SpringTypeConfigs");
+				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SpringType_SpringTypeConfig1", Storage="_SpringTypeConfigs1", ThisKey="SpringTypeID", OtherKey="RearSpringTypeID")]
-		public EntitySet<SpringTypeConfig> SpringTypeConfigs1
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SpringType_SpringTypeConfig1", Storage="_SpringTypeConfigs1", ThisKey="SpringTypeID", OtherKey="RearSpringTypeID", IsUnique=true, IsForeignKey=false)]
+		internal SpringTypeConfig SpringTypeConfigs1
 		{
 			get
 			{
-				return this._SpringTypeConfigs1;
+				return this._SpringTypeConfigs1.Entity;
 			}
 			set
 			{
-				this._SpringTypeConfigs1.Assign(value);
+				SpringTypeConfig previousValue = this._SpringTypeConfigs1.Entity;
+				if (((previousValue != value) 
+							|| (this._SpringTypeConfigs1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._SpringTypeConfigs1.Entity = null;
+						previousValue.RearSpringType = null;
+					}
+					this._SpringTypeConfigs1.Entity = value;
+					if ((value != null))
+					{
+						value.RearSpringType = this;
+					}
+					this.SendPropertyChanged("SpringTypeConfigs1");
+				}
 			}
 		}
 		
@@ -8451,30 +8829,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_SpringTypeConfigs(SpringTypeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SpringType = this;
-		}
-		
-		private void detach_SpringTypeConfigs(SpringTypeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SpringType = null;
-		}
-		
-		private void attach_SpringTypeConfigs1(SpringTypeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SpringType1 = this;
-		}
-		
-		private void detach_SpringTypeConfigs1(SpringTypeConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SpringType1 = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SpringTypeConfig")]
@@ -8493,6 +8847,8 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<SpringType> _SpringType1;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -8509,6 +8865,7 @@ namespace CurtAdmin.AAIA
 		{
 			this._SpringType = default(EntityRef<SpringType>);
 			this._SpringType1 = default(EntityRef<SpringType>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -8523,6 +8880,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._SpringTypeConfigID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnSpringTypeConfigIDChanging(value);
 					this.SendPropertyChanging();
 					this._SpringTypeConfigID = value;
@@ -8581,7 +8942,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SpringType_SpringTypeConfig", Storage="_SpringType", ThisKey="FrontSpringTypeID", OtherKey="SpringTypeID", IsForeignKey=true)]
-		public SpringType SpringType
+		public SpringType FrontSprintType
 		{
 			get
 			{
@@ -8597,25 +8958,25 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._SpringType.Entity = null;
-						previousValue.SpringTypeConfigs.Remove(this);
+						previousValue.SpringTypeConfigs = null;
 					}
 					this._SpringType.Entity = value;
 					if ((value != null))
 					{
-						value.SpringTypeConfigs.Add(this);
+						value.SpringTypeConfigs = this;
 						this._FrontSpringTypeID = value.SpringTypeID;
 					}
 					else
 					{
 						this._FrontSpringTypeID = default(int);
 					}
-					this.SendPropertyChanged("SpringType");
+					this.SendPropertyChanged("FrontSprintType");
 				}
 			}
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SpringType_SpringTypeConfig1", Storage="_SpringType1", ThisKey="RearSpringTypeID", OtherKey="SpringTypeID", IsForeignKey=true)]
-		public SpringType SpringType1
+		public SpringType RearSpringType
 		{
 			get
 			{
@@ -8631,19 +8992,53 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._SpringType1.Entity = null;
-						previousValue.SpringTypeConfigs1.Remove(this);
+						previousValue.SpringTypeConfigs1 = null;
 					}
 					this._SpringType1.Entity = value;
 					if ((value != null))
 					{
-						value.SpringTypeConfigs1.Add(this);
+						value.SpringTypeConfigs1 = this;
 						this._RearSpringTypeID = value.SpringTypeID;
 					}
 					else
 					{
 						this._RearSpringTypeID = default(int);
 					}
-					this.SendPropertyChanged("SpringType1");
+					this.SendPropertyChanged("RearSpringType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_SpringTypeConfig", Storage="_VehicleConfig", ThisKey="SpringTypeConfigID", OtherKey="SpringTypeConfigID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.SpringTypeConfig = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.SpringTypeConfig = this;
+						this._SpringTypeConfigID = value.SpringTypeConfigID;
+					}
+					else
+					{
+						this._SpringTypeConfigID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -8685,6 +9080,8 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<SteeringType> _SteeringType;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -8701,6 +9098,7 @@ namespace CurtAdmin.AAIA
 		{
 			this._SteeringSystem = default(EntityRef<SteeringSystem>);
 			this._SteeringType = default(EntityRef<SteeringType>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -8715,6 +9113,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._SteeringConfigID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnSteeringConfigIDChanging(value);
 					this.SendPropertyChanging();
 					this._SteeringConfigID = value;
@@ -8789,12 +9191,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._SteeringSystem.Entity = null;
-						previousValue.SteeringConfigs.Remove(this);
+						previousValue.SteeringConfigs = null;
 					}
 					this._SteeringSystem.Entity = value;
 					if ((value != null))
 					{
-						value.SteeringConfigs.Add(this);
+						value.SteeringConfigs = this;
 						this._SteeringSystemID = value.SteeringSystemID;
 					}
 					else
@@ -8823,12 +9225,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._SteeringType.Entity = null;
-						previousValue.SteeringConfigs.Remove(this);
+						previousValue.SteeringConfigs = null;
 					}
 					this._SteeringType.Entity = value;
 					if ((value != null))
 					{
-						value.SteeringConfigs.Add(this);
+						value.SteeringConfigs = this;
 						this._SteeringTypeID = value.SteeringTypeID;
 					}
 					else
@@ -8836,6 +9238,40 @@ namespace CurtAdmin.AAIA
 						this._SteeringTypeID = default(int);
 					}
 					this.SendPropertyChanged("SteeringType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_SteeringConfig", Storage="_VehicleConfig", ThisKey="SteeringConfigID", OtherKey="SteeringConfigID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.SteeringConfig = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.SteeringConfig = this;
+						this._SteeringConfigID = value.SteeringConfigID;
+					}
+					else
+					{
+						this._SteeringConfigID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -8871,7 +9307,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _SteeringSystemName;
 		
-		private EntitySet<SteeringConfig> _SteeringConfigs;
+		private EntityRef<SteeringConfig> _SteeringConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -8885,7 +9321,7 @@ namespace CurtAdmin.AAIA
 		
 		public SteeringSystem()
 		{
-			this._SteeringConfigs = new EntitySet<SteeringConfig>(new Action<SteeringConfig>(this.attach_SteeringConfigs), new Action<SteeringConfig>(this.detach_SteeringConfigs));
+			this._SteeringConfigs = default(EntityRef<SteeringConfig>);
 			OnCreated();
 		}
 		
@@ -8929,16 +9365,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SteeringSystem_SteeringConfig", Storage="_SteeringConfigs", ThisKey="SteeringSystemID", OtherKey="SteeringSystemID")]
-		public EntitySet<SteeringConfig> SteeringConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SteeringSystem_SteeringConfig", Storage="_SteeringConfigs", ThisKey="SteeringSystemID", OtherKey="SteeringSystemID", IsUnique=true, IsForeignKey=false)]
+		internal SteeringConfig SteeringConfigs
 		{
 			get
 			{
-				return this._SteeringConfigs;
+				return this._SteeringConfigs.Entity;
 			}
 			set
 			{
-				this._SteeringConfigs.Assign(value);
+				SteeringConfig previousValue = this._SteeringConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._SteeringConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._SteeringConfigs.Entity = null;
+						previousValue.SteeringSystem = null;
+					}
+					this._SteeringConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.SteeringSystem = this;
+					}
+					this.SendPropertyChanged("SteeringConfigs");
+				}
 			}
 		}
 		
@@ -8961,18 +9413,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_SteeringConfigs(SteeringConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SteeringSystem = this;
-		}
-		
-		private void detach_SteeringConfigs(SteeringConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SteeringSystem = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SteeringType")]
@@ -8985,7 +9425,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _SteeringTypeName;
 		
-		private EntitySet<SteeringConfig> _SteeringConfigs;
+		private EntityRef<SteeringConfig> _SteeringConfigs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -8999,7 +9439,7 @@ namespace CurtAdmin.AAIA
 		
 		public SteeringType()
 		{
-			this._SteeringConfigs = new EntitySet<SteeringConfig>(new Action<SteeringConfig>(this.attach_SteeringConfigs), new Action<SteeringConfig>(this.detach_SteeringConfigs));
+			this._SteeringConfigs = default(EntityRef<SteeringConfig>);
 			OnCreated();
 		}
 		
@@ -9043,16 +9483,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SteeringType_SteeringConfig", Storage="_SteeringConfigs", ThisKey="SteeringTypeID", OtherKey="SteeringTypeID")]
-		public EntitySet<SteeringConfig> SteeringConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SteeringType_SteeringConfig", Storage="_SteeringConfigs", ThisKey="SteeringTypeID", OtherKey="SteeringTypeID", IsUnique=true, IsForeignKey=false)]
+		internal SteeringConfig SteeringConfigs
 		{
 			get
 			{
-				return this._SteeringConfigs;
+				return this._SteeringConfigs.Entity;
 			}
 			set
 			{
-				this._SteeringConfigs.Assign(value);
+				SteeringConfig previousValue = this._SteeringConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._SteeringConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._SteeringConfigs.Entity = null;
+						previousValue.SteeringType = null;
+					}
+					this._SteeringConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.SteeringType = this;
+					}
+					this.SendPropertyChanged("SteeringConfigs");
+				}
 			}
 		}
 		
@@ -9074,18 +9530,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_SteeringConfigs(SteeringConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SteeringType = this;
-		}
-		
-		private void detach_SteeringConfigs(SteeringConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.SteeringType = null;
 		}
 	}
 	
@@ -9158,7 +9602,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Submodel_Vehicle", Storage="_Vehicles", ThisKey="SubmodelID", OtherKey="SubmodelID")]
-		public EntitySet<Vehicle> Vehicles
+		internal EntitySet<Vehicle> Vehicles
 		{
 			get
 			{
@@ -9227,6 +9671,8 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<TransmissionMfrCode> _TransmissionMfrCode;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -9249,6 +9695,7 @@ namespace CurtAdmin.AAIA
 			this._ElecControlled = default(EntityRef<ElecControlled>);
 			this._TransmissionBase = default(EntityRef<TransmissionBase>);
 			this._TransmissionMfrCode = default(EntityRef<TransmissionMfrCode>);
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -9263,6 +9710,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._TransmissionID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnTransmissionIDChanging(value);
 					this.SendPropertyChanging();
 					this._TransmissionID = value;
@@ -9385,12 +9836,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._Mfr.Entity = null;
-						previousValue.Transmissions.Remove(this);
+						previousValue.Transmissions = null;
 					}
 					this._Mfr.Entity = value;
 					if ((value != null))
 					{
-						value.Transmissions.Add(this);
+						value.Transmissions = this;
 						this._TransmissionMfrID = value.MfrID;
 					}
 					else
@@ -9419,12 +9870,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._ElecControlled.Entity = null;
-						previousValue.Transmissions.Remove(this);
+						previousValue.Transmissions = null;
 					}
 					this._ElecControlled.Entity = value;
 					if ((value != null))
 					{
-						value.Transmissions.Add(this);
+						value.Transmissions = this;
 						this._TransmissionElecControlledID = value.ElecControlledID;
 					}
 					else
@@ -9453,12 +9904,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._TransmissionBase.Entity = null;
-						previousValue.Transmissions.Remove(this);
+						previousValue.Transmissions = null;
 					}
 					this._TransmissionBase.Entity = value;
 					if ((value != null))
 					{
-						value.Transmissions.Add(this);
+						value.Transmissions = this;
 						this._TransmissionBaseID = value.TransmissionBaseID;
 					}
 					else
@@ -9487,12 +9938,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._TransmissionMfrCode.Entity = null;
-						previousValue.Transmissions.Remove(this);
+						previousValue.Transmissions = null;
 					}
 					this._TransmissionMfrCode.Entity = value;
 					if ((value != null))
 					{
-						value.Transmissions.Add(this);
+						value.Transmissions = this;
 						this._TransmissionMfrCodeID = value.TransmissionMfrCodeID;
 					}
 					else
@@ -9500,6 +9951,40 @@ namespace CurtAdmin.AAIA
 						this._TransmissionMfrCodeID = default(int);
 					}
 					this.SendPropertyChanged("TransmissionMfrCode");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_Transmission", Storage="_VehicleConfig", ThisKey="TransmissionID", OtherKey="TransmissionID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.Transmission = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.Transmission = this;
+						this._TransmissionID = value.TransmissionID;
+					}
+					else
+					{
+						this._TransmissionID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}
@@ -9539,7 +10024,7 @@ namespace CurtAdmin.AAIA
 		
 		private int _TransmissionControlTypeID;
 		
-		private EntitySet<Transmission> _Transmissions;
+		private EntityRef<Transmission> _Transmissions;
 		
 		private EntityRef<TransmissionControlType> _TransmissionControlType;
 		
@@ -9563,7 +10048,7 @@ namespace CurtAdmin.AAIA
 		
 		public TransmissionBase()
 		{
-			this._Transmissions = new EntitySet<Transmission>(new Action<Transmission>(this.attach_Transmissions), new Action<Transmission>(this.detach_Transmissions));
+			this._Transmissions = default(EntityRef<Transmission>);
 			this._TransmissionControlType = default(EntityRef<TransmissionControlType>);
 			this._TransmissionNumSpeed = default(EntityRef<TransmissionNumSpeed>);
 			this._TransmissionType = default(EntityRef<TransmissionType>);
@@ -9662,16 +10147,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionBase_Transmission", Storage="_Transmissions", ThisKey="TransmissionBaseID", OtherKey="TransmissionBaseID")]
-		public EntitySet<Transmission> Transmissions
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionBase_Transmission", Storage="_Transmissions", ThisKey="TransmissionBaseID", OtherKey="TransmissionBaseID", IsUnique=true, IsForeignKey=false)]
+		internal Transmission Transmissions
 		{
 			get
 			{
-				return this._Transmissions;
+				return this._Transmissions.Entity;
 			}
 			set
 			{
-				this._Transmissions.Assign(value);
+				Transmission previousValue = this._Transmissions.Entity;
+				if (((previousValue != value) 
+							|| (this._Transmissions.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Transmissions.Entity = null;
+						previousValue.TransmissionBase = null;
+					}
+					this._Transmissions.Entity = value;
+					if ((value != null))
+					{
+						value.TransmissionBase = this;
+					}
+					this.SendPropertyChanged("Transmissions");
+				}
 			}
 		}
 		
@@ -9692,12 +10193,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._TransmissionControlType.Entity = null;
-						previousValue.TransmissionBases.Remove(this);
+						previousValue.TransmissionBases = null;
 					}
 					this._TransmissionControlType.Entity = value;
 					if ((value != null))
 					{
-						value.TransmissionBases.Add(this);
+						value.TransmissionBases = this;
 						this._TransmissionControlTypeID = value.TransmissionControlTypeID;
 					}
 					else
@@ -9726,12 +10227,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._TransmissionNumSpeed.Entity = null;
-						previousValue.TransmissionBases.Remove(this);
+						previousValue.TransmissionBases = null;
 					}
 					this._TransmissionNumSpeed.Entity = value;
 					if ((value != null))
 					{
-						value.TransmissionBases.Add(this);
+						value.TransmissionBases = this;
 						this._TransmissionNumSpeedsID = value.TransmissionNumSpeedsID;
 					}
 					else
@@ -9760,12 +10261,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._TransmissionType.Entity = null;
-						previousValue.TransmissionBases.Remove(this);
+						previousValue.TransmissionBases = null;
 					}
 					this._TransmissionType.Entity = value;
 					if ((value != null))
 					{
-						value.TransmissionBases.Add(this);
+						value.TransmissionBases = this;
 						this._TransmissionTypeID = value.TransmissionTypeID;
 					}
 					else
@@ -9796,18 +10297,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionBase = this;
-		}
-		
-		private void detach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionBase = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TransmissionControlType")]
@@ -9820,7 +10309,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _TransmissionControlTypeName;
 		
-		private EntitySet<TransmissionBase> _TransmissionBases;
+		private EntityRef<TransmissionBase> _TransmissionBases;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -9834,7 +10323,7 @@ namespace CurtAdmin.AAIA
 		
 		public TransmissionControlType()
 		{
-			this._TransmissionBases = new EntitySet<TransmissionBase>(new Action<TransmissionBase>(this.attach_TransmissionBases), new Action<TransmissionBase>(this.detach_TransmissionBases));
+			this._TransmissionBases = default(EntityRef<TransmissionBase>);
 			OnCreated();
 		}
 		
@@ -9878,16 +10367,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionControlType_TransmissionBase", Storage="_TransmissionBases", ThisKey="TransmissionControlTypeID", OtherKey="TransmissionControlTypeID")]
-		public EntitySet<TransmissionBase> TransmissionBases
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionControlType_TransmissionBase", Storage="_TransmissionBases", ThisKey="TransmissionControlTypeID", OtherKey="TransmissionControlTypeID", IsUnique=true, IsForeignKey=false)]
+		internal TransmissionBase TransmissionBases
 		{
 			get
 			{
-				return this._TransmissionBases;
+				return this._TransmissionBases.Entity;
 			}
 			set
 			{
-				this._TransmissionBases.Assign(value);
+				TransmissionBase previousValue = this._TransmissionBases.Entity;
+				if (((previousValue != value) 
+							|| (this._TransmissionBases.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TransmissionBases.Entity = null;
+						previousValue.TransmissionControlType = null;
+					}
+					this._TransmissionBases.Entity = value;
+					if ((value != null))
+					{
+						value.TransmissionControlType = this;
+					}
+					this.SendPropertyChanged("TransmissionBases");
+				}
 			}
 		}
 		
@@ -9910,18 +10415,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_TransmissionBases(TransmissionBase entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionControlType = this;
-		}
-		
-		private void detach_TransmissionBases(TransmissionBase entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionControlType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TransmissionMfrCode")]
@@ -9934,7 +10427,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _TransmissionMfrCode1;
 		
-		private EntitySet<Transmission> _Transmissions;
+		private EntityRef<Transmission> _Transmissions;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -9948,7 +10441,7 @@ namespace CurtAdmin.AAIA
 		
 		public TransmissionMfrCode()
 		{
-			this._Transmissions = new EntitySet<Transmission>(new Action<Transmission>(this.attach_Transmissions), new Action<Transmission>(this.detach_Transmissions));
+			this._Transmissions = default(EntityRef<Transmission>);
 			OnCreated();
 		}
 		
@@ -9992,16 +10485,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionMfrCode_Transmission", Storage="_Transmissions", ThisKey="TransmissionMfrCodeID", OtherKey="TransmissionMfrCodeID")]
-		public EntitySet<Transmission> Transmissions
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionMfrCode_Transmission", Storage="_Transmissions", ThisKey="TransmissionMfrCodeID", OtherKey="TransmissionMfrCodeID", IsUnique=true, IsForeignKey=false)]
+		internal Transmission Transmissions
 		{
 			get
 			{
-				return this._Transmissions;
+				return this._Transmissions.Entity;
 			}
 			set
 			{
-				this._Transmissions.Assign(value);
+				Transmission previousValue = this._Transmissions.Entity;
+				if (((previousValue != value) 
+							|| (this._Transmissions.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Transmissions.Entity = null;
+						previousValue.TransmissionMfrCode = null;
+					}
+					this._Transmissions.Entity = value;
+					if ((value != null))
+					{
+						value.TransmissionMfrCode = this;
+					}
+					this.SendPropertyChanged("Transmissions");
+				}
 			}
 		}
 		
@@ -10024,18 +10533,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionMfrCode = this;
-		}
-		
-		private void detach_Transmissions(Transmission entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionMfrCode = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TransmissionNumSpeeds")]
@@ -10048,7 +10545,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _TransmissionNumSpeeds;
 		
-		private EntitySet<TransmissionBase> _TransmissionBases;
+		private EntityRef<TransmissionBase> _TransmissionBases;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -10062,7 +10559,7 @@ namespace CurtAdmin.AAIA
 		
 		public TransmissionNumSpeed()
 		{
-			this._TransmissionBases = new EntitySet<TransmissionBase>(new Action<TransmissionBase>(this.attach_TransmissionBases), new Action<TransmissionBase>(this.detach_TransmissionBases));
+			this._TransmissionBases = default(EntityRef<TransmissionBase>);
 			OnCreated();
 		}
 		
@@ -10106,16 +10603,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionNumSpeed_TransmissionBase", Storage="_TransmissionBases", ThisKey="TransmissionNumSpeedsID", OtherKey="TransmissionNumSpeedsID")]
-		public EntitySet<TransmissionBase> TransmissionBases
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionNumSpeed_TransmissionBase", Storage="_TransmissionBases", ThisKey="TransmissionNumSpeedsID", OtherKey="TransmissionNumSpeedsID", IsUnique=true, IsForeignKey=false)]
+		internal TransmissionBase TransmissionBases
 		{
 			get
 			{
-				return this._TransmissionBases;
+				return this._TransmissionBases.Entity;
 			}
 			set
 			{
-				this._TransmissionBases.Assign(value);
+				TransmissionBase previousValue = this._TransmissionBases.Entity;
+				if (((previousValue != value) 
+							|| (this._TransmissionBases.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TransmissionBases.Entity = null;
+						previousValue.TransmissionNumSpeed = null;
+					}
+					this._TransmissionBases.Entity = value;
+					if ((value != null))
+					{
+						value.TransmissionNumSpeed = this;
+					}
+					this.SendPropertyChanged("TransmissionBases");
+				}
 			}
 		}
 		
@@ -10138,18 +10651,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_TransmissionBases(TransmissionBase entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionNumSpeed = this;
-		}
-		
-		private void detach_TransmissionBases(TransmissionBase entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionNumSpeed = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TransmissionType")]
@@ -10162,7 +10663,7 @@ namespace CurtAdmin.AAIA
 		
 		private string _TransmissionTypeName;
 		
-		private EntitySet<TransmissionBase> _TransmissionBases;
+		private EntityRef<TransmissionBase> _TransmissionBases;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -10176,7 +10677,7 @@ namespace CurtAdmin.AAIA
 		
 		public TransmissionType()
 		{
-			this._TransmissionBases = new EntitySet<TransmissionBase>(new Action<TransmissionBase>(this.attach_TransmissionBases), new Action<TransmissionBase>(this.detach_TransmissionBases));
+			this._TransmissionBases = default(EntityRef<TransmissionBase>);
 			OnCreated();
 		}
 		
@@ -10220,16 +10721,32 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionType_TransmissionBase", Storage="_TransmissionBases", ThisKey="TransmissionTypeID", OtherKey="TransmissionTypeID")]
-		public EntitySet<TransmissionBase> TransmissionBases
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TransmissionType_TransmissionBase", Storage="_TransmissionBases", ThisKey="TransmissionTypeID", OtherKey="TransmissionTypeID", IsUnique=true, IsForeignKey=false)]
+		internal TransmissionBase TransmissionBases
 		{
 			get
 			{
-				return this._TransmissionBases;
+				return this._TransmissionBases.Entity;
 			}
 			set
 			{
-				this._TransmissionBases.Assign(value);
+				TransmissionBase previousValue = this._TransmissionBases.Entity;
+				if (((previousValue != value) 
+							|| (this._TransmissionBases.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TransmissionBases.Entity = null;
+						previousValue.TransmissionType = null;
+					}
+					this._TransmissionBases.Entity = value;
+					if ((value != null))
+					{
+						value.TransmissionType = this;
+					}
+					this.SendPropertyChanged("TransmissionBases");
+				}
 			}
 		}
 		
@@ -10252,18 +10769,6 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_TransmissionBases(TransmissionBase entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionType = this;
-		}
-		
-		private void detach_TransmissionBases(TransmissionBase entity)
-		{
-			this.SendPropertyChanging();
-			entity.TransmissionType = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Valves")]
@@ -10276,9 +10781,9 @@ namespace CurtAdmin.AAIA
 		
 		private string _ValvesPerEngine;
 		
-		private EntitySet<EngineConfig> _EngineConfigs;
+		private EntityRef<EngineConfig> _EngineConfigs;
 		
-		private EntitySet<EngineConfig> _EngineConfigs1;
+		private EntityRef<EngineConfig> _EngineConfigs1;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -10292,8 +10797,8 @@ namespace CurtAdmin.AAIA
 		
 		public Valve()
 		{
-			this._EngineConfigs = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs), new Action<EngineConfig>(this.detach_EngineConfigs));
-			this._EngineConfigs1 = new EntitySet<EngineConfig>(new Action<EngineConfig>(this.attach_EngineConfigs1), new Action<EngineConfig>(this.detach_EngineConfigs1));
+			this._EngineConfigs = default(EntityRef<EngineConfig>);
+			this._EngineConfigs1 = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -10337,29 +10842,61 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Valve_EngineConfig", Storage="_EngineConfigs", ThisKey="ValvesID", OtherKey="ValvesID")]
-		public EntitySet<EngineConfig> EngineConfigs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Valve_EngineConfig", Storage="_EngineConfigs", ThisKey="ValvesID", OtherKey="ValvesID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs
 		{
 			get
 			{
-				return this._EngineConfigs;
+				return this._EngineConfigs.Entity;
 			}
 			set
 			{
-				this._EngineConfigs.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs.Entity = null;
+						previousValue.Valve = null;
+					}
+					this._EngineConfigs.Entity = value;
+					if ((value != null))
+					{
+						value.Valve = this;
+					}
+					this.SendPropertyChanged("EngineConfigs");
+				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Valve_EngineConfig1", Storage="_EngineConfigs1", ThisKey="ValvesID", OtherKey="ValvesID")]
-		public EntitySet<EngineConfig> EngineConfigs1
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Valve_EngineConfig1", Storage="_EngineConfigs1", ThisKey="ValvesID", OtherKey="ValvesID", IsUnique=true, IsForeignKey=false)]
+		internal EngineConfig EngineConfigs1
 		{
 			get
 			{
-				return this._EngineConfigs1;
+				return this._EngineConfigs1.Entity;
 			}
 			set
 			{
-				this._EngineConfigs1.Assign(value);
+				EngineConfig previousValue = this._EngineConfigs1.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfigs1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfigs1.Entity = null;
+						previousValue.Valve1 = null;
+					}
+					this._EngineConfigs1.Entity = value;
+					if ((value != null))
+					{
+						value.Valve1 = this;
+					}
+					this.SendPropertyChanged("EngineConfigs1");
+				}
 			}
 		}
 		
@@ -10381,30 +10918,6 @@ namespace CurtAdmin.AAIA
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Valve = this;
-		}
-		
-		private void detach_EngineConfigs(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Valve = null;
-		}
-		
-		private void attach_EngineConfigs1(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Valve1 = this;
-		}
-		
-		private void detach_EngineConfigs1(EngineConfig entity)
-		{
-			this.SendPropertyChanging();
-			entity.Valve1 = null;
 		}
 	}
 	
@@ -10703,6 +11216,8 @@ namespace CurtAdmin.AAIA
 		
 		private System.DateTime _PublicationStageDate;
 		
+		private EntitySet<VehicleConfig> _VehicleConfigs;
+		
 		private EntityRef<BaseVehicle> _BaseVehicle;
 		
 		private EntityRef<PublicationStage> _PublicationStage;
@@ -10735,6 +11250,7 @@ namespace CurtAdmin.AAIA
 		
 		public Vehicle()
 		{
+			this._VehicleConfigs = new EntitySet<VehicleConfig>(new Action<VehicleConfig>(this.attach_VehicleConfigs), new Action<VehicleConfig>(this.detach_VehicleConfigs));
 			this._BaseVehicle = default(EntityRef<BaseVehicle>);
 			this._PublicationStage = default(EntityRef<PublicationStage>);
 			this._Region = default(EntityRef<Region>);
@@ -10918,8 +11434,21 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Vehicle_VehicleConfig", Storage="_VehicleConfigs", ThisKey="VehicleID", OtherKey="VehicleID")]
+		public EntitySet<VehicleConfig> VehicleConfigs
+		{
+			get
+			{
+				return this._VehicleConfigs;
+			}
+			set
+			{
+				this._VehicleConfigs.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_Vehicle", Storage="_BaseVehicle", ThisKey="BaseVehicleID", OtherKey="BaseVehicleID", IsForeignKey=true)]
-		public BaseVehicle BaseVehicle
+		internal BaseVehicle BaseVehicle
 		{
 			get
 			{
@@ -10969,12 +11498,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._PublicationStage.Entity = null;
-						previousValue.Vehicles.Remove(this);
+						previousValue.Vehicles = null;
 					}
 					this._PublicationStage.Entity = value;
 					if ((value != null))
 					{
-						value.Vehicles.Add(this);
+						value.Vehicles = this;
 						this._PublicationStageID = value.PublicationStageID;
 					}
 					else
@@ -10987,7 +11516,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Region_Vehicle", Storage="_Region", ThisKey="RegionID", OtherKey="RegionID", IsForeignKey=true)]
-		public Region Region
+		internal Region Region
 		{
 			get
 			{
@@ -11003,12 +11532,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._Region.Entity = null;
-						previousValue.Vehicles.Remove(this);
+						previousValue.Vehicles = null;
 					}
 					this._Region.Entity = value;
 					if ((value != null))
 					{
-						value.Vehicles.Add(this);
+						value.Vehicles = this;
 						this._RegionID = value.RegionID;
 					}
 					else
@@ -11073,6 +11602,18 @@ namespace CurtAdmin.AAIA
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
+		
+		private void attach_VehicleConfigs(VehicleConfig entity)
+		{
+			this.SendPropertyChanging();
+			entity.Vehicle = this;
+		}
+		
+		private void detach_VehicleConfigs(VehicleConfig entity)
+		{
+			this.SendPropertyChanging();
+			entity.Vehicle = null;
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.VehicleConfig")]
@@ -11104,6 +11645,28 @@ namespace CurtAdmin.AAIA
 		private int _TransmissionID;
 		
 		private int _WheelbaseID;
+		
+		private EntityRef<BedConfig> _BedConfig;
+		
+		private EntityRef<BodyStyleConfig> _BodyStyleConfig;
+		
+		private EntityRef<BrakeConfig> _BrakeConfig;
+		
+		private EntityRef<DriveType> _DriveType;
+		
+		private EntityRef<EngineConfig> _EngineConfig;
+		
+		private EntityRef<MfrBodyCode> _MfrBodyCode;
+		
+		private EntityRef<SpringTypeConfig> _SpringTypeConfig;
+		
+		private EntityRef<SteeringConfig> _SteeringConfig;
+		
+		private EntityRef<Transmission> _Transmission;
+		
+		private EntityRef<WheelBase> _WheelBase;
+		
+		private EntityRef<Vehicle> _Vehicle;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -11137,6 +11700,17 @@ namespace CurtAdmin.AAIA
 		
 		public VehicleConfig()
 		{
+			this._BedConfig = default(EntityRef<BedConfig>);
+			this._BodyStyleConfig = default(EntityRef<BodyStyleConfig>);
+			this._BrakeConfig = default(EntityRef<BrakeConfig>);
+			this._DriveType = default(EntityRef<DriveType>);
+			this._EngineConfig = default(EntityRef<EngineConfig>);
+			this._MfrBodyCode = default(EntityRef<MfrBodyCode>);
+			this._SpringTypeConfig = default(EntityRef<SpringTypeConfig>);
+			this._SteeringConfig = default(EntityRef<SteeringConfig>);
+			this._Transmission = default(EntityRef<Transmission>);
+			this._WheelBase = default(EntityRef<WheelBase>);
+			this._Vehicle = default(EntityRef<Vehicle>);
 			OnCreated();
 		}
 		
@@ -11171,6 +11745,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._VehicleID != value))
 				{
+					if (this._Vehicle.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnVehicleIDChanging(value);
 					this.SendPropertyChanging();
 					this._VehicleID = value;
@@ -11376,6 +11954,330 @@ namespace CurtAdmin.AAIA
 					this._WheelbaseID = value;
 					this.SendPropertyChanged("WheelbaseID");
 					this.OnWheelbaseIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_BedConfig", Storage="_BedConfig", ThisKey="BedConfigID", OtherKey="BedConfigID", IsUnique=true, IsForeignKey=false)]
+		public BedConfig BedConfig
+		{
+			get
+			{
+				return this._BedConfig.Entity;
+			}
+			set
+			{
+				BedConfig previousValue = this._BedConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._BedConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BedConfig.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._BedConfig.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("BedConfig");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_BodyStyleConfig", Storage="_BodyStyleConfig", ThisKey="BodyStyleConfigID", OtherKey="BodyStyleConfigID", IsUnique=true, IsForeignKey=false)]
+		public BodyStyleConfig BodyStyleConfig
+		{
+			get
+			{
+				return this._BodyStyleConfig.Entity;
+			}
+			set
+			{
+				BodyStyleConfig previousValue = this._BodyStyleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._BodyStyleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BodyStyleConfig.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._BodyStyleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("BodyStyleConfig");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_BrakeConfig", Storage="_BrakeConfig", ThisKey="BrakeConfigID", OtherKey="BrakeConfigID", IsUnique=true, IsForeignKey=false)]
+		public BrakeConfig BrakeConfig
+		{
+			get
+			{
+				return this._BrakeConfig.Entity;
+			}
+			set
+			{
+				BrakeConfig previousValue = this._BrakeConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._BrakeConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._BrakeConfig.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._BrakeConfig.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("BrakeConfig");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_DriveType", Storage="_DriveType", ThisKey="DriveTypeID", OtherKey="DriveTypeID", IsUnique=true, IsForeignKey=false)]
+		public DriveType DriveType
+		{
+			get
+			{
+				return this._DriveType.Entity;
+			}
+			set
+			{
+				DriveType previousValue = this._DriveType.Entity;
+				if (((previousValue != value) 
+							|| (this._DriveType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._DriveType.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._DriveType.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("DriveType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_EngineConfig", Storage="_EngineConfig", ThisKey="EngineConfigID", OtherKey="EngineConfigID", IsUnique=true, IsForeignKey=false)]
+		public EngineConfig EngineConfig
+		{
+			get
+			{
+				return this._EngineConfig.Entity;
+			}
+			set
+			{
+				EngineConfig previousValue = this._EngineConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._EngineConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._EngineConfig.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._EngineConfig.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("EngineConfig");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_MfrBodyCode", Storage="_MfrBodyCode", ThisKey="MfrBodyCodeID", OtherKey="MfrBodyCodeID", IsUnique=true, IsForeignKey=false)]
+		public MfrBodyCode MfrBodyCode
+		{
+			get
+			{
+				return this._MfrBodyCode.Entity;
+			}
+			set
+			{
+				MfrBodyCode previousValue = this._MfrBodyCode.Entity;
+				if (((previousValue != value) 
+							|| (this._MfrBodyCode.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MfrBodyCode.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._MfrBodyCode.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("MfrBodyCode");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_SpringTypeConfig", Storage="_SpringTypeConfig", ThisKey="SpringTypeConfigID", OtherKey="SpringTypeConfigID", IsUnique=true, IsForeignKey=false)]
+		public SpringTypeConfig SpringTypeConfig
+		{
+			get
+			{
+				return this._SpringTypeConfig.Entity;
+			}
+			set
+			{
+				SpringTypeConfig previousValue = this._SpringTypeConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._SpringTypeConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._SpringTypeConfig.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._SpringTypeConfig.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("SpringTypeConfig");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_SteeringConfig", Storage="_SteeringConfig", ThisKey="SteeringConfigID", OtherKey="SteeringConfigID", IsUnique=true, IsForeignKey=false)]
+		public SteeringConfig SteeringConfig
+		{
+			get
+			{
+				return this._SteeringConfig.Entity;
+			}
+			set
+			{
+				SteeringConfig previousValue = this._SteeringConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._SteeringConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._SteeringConfig.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._SteeringConfig.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("SteeringConfig");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_Transmission", Storage="_Transmission", ThisKey="TransmissionID", OtherKey="TransmissionID", IsUnique=true, IsForeignKey=false)]
+		public Transmission Transmission
+		{
+			get
+			{
+				return this._Transmission.Entity;
+			}
+			set
+			{
+				Transmission previousValue = this._Transmission.Entity;
+				if (((previousValue != value) 
+							|| (this._Transmission.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Transmission.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._Transmission.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("Transmission");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_WheelBase", Storage="_WheelBase", ThisKey="WheelbaseID", OtherKey="WheelBaseID", IsUnique=true, IsForeignKey=false)]
+		public WheelBase WheelBase
+		{
+			get
+			{
+				return this._WheelBase.Entity;
+			}
+			set
+			{
+				WheelBase previousValue = this._WheelBase.Entity;
+				if (((previousValue != value) 
+							|| (this._WheelBase.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._WheelBase.Entity = null;
+						previousValue.VehicleConfig = null;
+					}
+					this._WheelBase.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfig = this;
+					}
+					this.SendPropertyChanged("WheelBase");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Vehicle_VehicleConfig", Storage="_Vehicle", ThisKey="VehicleID", OtherKey="VehicleID", IsForeignKey=true)]
+		internal Vehicle Vehicle
+		{
+			get
+			{
+				return this._Vehicle.Entity;
+			}
+			set
+			{
+				Vehicle previousValue = this._Vehicle.Entity;
+				if (((previousValue != value) 
+							|| (this._Vehicle.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Vehicle.Entity = null;
+						previousValue.VehicleConfigs.Remove(this);
+					}
+					this._Vehicle.Entity = value;
+					if ((value != null))
+					{
+						value.VehicleConfigs.Add(this);
+						this._VehicleID = value.VehicleID;
+					}
+					else
+					{
+						this._VehicleID = default(int);
+					}
+					this.SendPropertyChanged("Vehicle");
 				}
 			}
 		}
@@ -12862,7 +13764,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleType_Model", Storage="_Models", ThisKey="VehicleTypeID", OtherKey="VehicleTypeID")]
-		public EntitySet<Model> Models
+		internal EntitySet<Model> Models
 		{
 			get
 			{
@@ -12991,6 +13893,8 @@ namespace CurtAdmin.AAIA
 		
 		private string _WheelBaseMetric;
 		
+		private EntityRef<VehicleConfig> _VehicleConfig;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -13005,6 +13909,7 @@ namespace CurtAdmin.AAIA
 		
 		public WheelBase()
 		{
+			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
 		
@@ -13019,6 +13924,10 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._WheelBaseID != value))
 				{
+					if (this._VehicleConfig.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnWheelBaseIDChanging(value);
 					this.SendPropertyChanging();
 					this._WheelBaseID = value;
@@ -13064,6 +13973,40 @@ namespace CurtAdmin.AAIA
 					this._WheelBaseMetric = value;
 					this.SendPropertyChanged("WheelBaseMetric");
 					this.OnWheelBaseMetricChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="VehicleConfig_WheelBase", Storage="_VehicleConfig", ThisKey="WheelBaseID", OtherKey="WheelbaseID", IsForeignKey=true)]
+		internal VehicleConfig VehicleConfig
+		{
+			get
+			{
+				return this._VehicleConfig.Entity;
+			}
+			set
+			{
+				VehicleConfig previousValue = this._VehicleConfig.Entity;
+				if (((previousValue != value) 
+							|| (this._VehicleConfig.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._VehicleConfig.Entity = null;
+						previousValue.WheelBase = null;
+					}
+					this._VehicleConfig.Entity = value;
+					if ((value != null))
+					{
+						value.WheelBase = this;
+						this._WheelBaseID = value.WheelbaseID;
+					}
+					else
+					{
+						this._WheelBaseID = default(int);
+					}
+					this.SendPropertyChanged("VehicleConfig");
 				}
 			}
 		}

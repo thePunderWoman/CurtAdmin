@@ -31,6 +31,20 @@ namespace CurtAdmin.Models {
             return vehicles;
         }
 
+        public List<AAIA.BaseVehicle> GetVCDBVehicles(int makeid, int modelid) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            vcdb_Make make = db.vcdb_Makes.Where(x => x.ID.Equals(makeid)).First<vcdb_Make>();
+            vcdb_Model model = db.vcdb_Models.Where(x => x.ID.Equals(modelid)).First<vcdb_Model>();
+
+            List<AAIA.BaseVehicle> vehicles = new List<AAIA.BaseVehicle>();
+            vehicles = (from bv in vcdb.BaseVehicles
+                        where bv.MakeID.Equals(make.AAIAMakeID) && bv.ModelID.Equals(model.AAIAModelID)
+                        orderby bv.YearID
+                        select bv).ToList<AAIA.BaseVehicle>();
+            return vehicles;
+        }
+        
         public List<AAIA.PartTerminology> GetPartTypes() {
             AAIA.pcdbDataContext db = new AAIA.pcdbDataContext();
             List<AAIA.PartTerminology> parttypes = new List<AAIA.PartTerminology>();
