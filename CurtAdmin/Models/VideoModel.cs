@@ -115,7 +115,7 @@ namespace CurtAdmin.Models {
                 YouTubeQuery query = new YouTubeQuery(YouTubeQuery.DefaultVideoUri);
                 query.Author = "curtmfg";
                 query.Formats.Add(YouTubeQuery.VideoFormat.Embeddable);
-                query.OrderBy = "viewCount";
+                query.OrderBy = "published";
                 query.StartIndex = ((page - 1) * 25) + 1;
 
                 // We need to load the feed data for the CURTMfg Youtube Channel
