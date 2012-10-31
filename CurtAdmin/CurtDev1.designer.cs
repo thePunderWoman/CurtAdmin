@@ -294,6 +294,15 @@ namespace CurtAdmin
     partial void InsertNote(Note instance);
     partial void UpdateNote(Note instance);
     partial void DeleteNote(Note instance);
+    partial void InsertReportType(ReportType instance);
+    partial void UpdateReportType(ReportType instance);
+    partial void DeleteReportType(ReportType instance);
+    partial void InsertCustomerReport(CustomerReport instance);
+    partial void UpdateCustomerReport(CustomerReport instance);
+    partial void DeleteCustomerReport(CustomerReport instance);
+    partial void InsertCustomerReportPart(CustomerReportPart instance);
+    partial void UpdateCustomerReportPart(CustomerReportPart instance);
+    partial void DeleteCustomerReportPart(CustomerReportPart instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1035,6 +1044,30 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<Note>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ReportType> ReportTypes
+		{
+			get
+			{
+				return this.GetTable<ReportType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<CustomerReport> CustomerReports
+		{
+			get
+			{
+				return this.GetTable<CustomerReport>();
+			}
+		}
+		
+		public System.Data.Linq.Table<CustomerReportPart> CustomerReportParts
+		{
+			get
+			{
+				return this.GetTable<CustomerReportPart>();
 			}
 		}
 		
@@ -20316,6 +20349,405 @@ namespace CurtAdmin
 						this._vehiclePartID = default(int);
 					}
 					this.SendPropertyChanged("vcdb_VehiclePart");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ReportType")]
+	public partial class ReportType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _name;
+		
+		private EntitySet<CustomerReport> _CustomerReports;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public ReportType()
+		{
+			this._CustomerReports = new EntitySet<CustomerReport>(new Action<CustomerReport>(this.attach_CustomerReports), new Action<CustomerReport>(this.detach_CustomerReports));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ReportType_CustomerReport", Storage="_CustomerReports", ThisKey="ID", OtherKey="ReportTypeID")]
+		public EntitySet<CustomerReport> CustomerReports
+		{
+			get
+			{
+				return this._CustomerReports;
+			}
+			set
+			{
+				this._CustomerReports.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_CustomerReports(CustomerReport entity)
+		{
+			this.SendPropertyChanging();
+			entity.ReportType = this;
+		}
+		
+		private void detach_CustomerReports(CustomerReport entity)
+		{
+			this.SendPropertyChanging();
+			entity.ReportType = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CustomerReport")]
+	public partial class CustomerReport : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _customerID;
+		
+		private System.DateTime _created;
+		
+		private int _ReportTypeID;
+		
+		private EntityRef<ReportType> _ReportType;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OncustomerIDChanging(int value);
+    partial void OncustomerIDChanged();
+    partial void OncreatedChanging(System.DateTime value);
+    partial void OncreatedChanged();
+    partial void OnReportTypeIDChanging(int value);
+    partial void OnReportTypeIDChanged();
+    #endregion
+		
+		public CustomerReport()
+		{
+			this._ReportType = default(EntityRef<ReportType>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerID", DbType="Int NOT NULL")]
+		public int customerID
+		{
+			get
+			{
+				return this._customerID;
+			}
+			set
+			{
+				if ((this._customerID != value))
+				{
+					this.OncustomerIDChanging(value);
+					this.SendPropertyChanging();
+					this._customerID = value;
+					this.SendPropertyChanged("customerID");
+					this.OncustomerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_created", DbType="DateTime NOT NULL")]
+		public System.DateTime created
+		{
+			get
+			{
+				return this._created;
+			}
+			set
+			{
+				if ((this._created != value))
+				{
+					this.OncreatedChanging(value);
+					this.SendPropertyChanging();
+					this._created = value;
+					this.SendPropertyChanged("created");
+					this.OncreatedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReportTypeID", DbType="Int NOT NULL")]
+		public int ReportTypeID
+		{
+			get
+			{
+				return this._ReportTypeID;
+			}
+			set
+			{
+				if ((this._ReportTypeID != value))
+				{
+					if (this._ReportType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnReportTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._ReportTypeID = value;
+					this.SendPropertyChanged("ReportTypeID");
+					this.OnReportTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ReportType_CustomerReport", Storage="_ReportType", ThisKey="ReportTypeID", OtherKey="ID", IsForeignKey=true)]
+		public ReportType ReportType
+		{
+			get
+			{
+				return this._ReportType.Entity;
+			}
+			set
+			{
+				ReportType previousValue = this._ReportType.Entity;
+				if (((previousValue != value) 
+							|| (this._ReportType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ReportType.Entity = null;
+						previousValue.CustomerReports.Remove(this);
+					}
+					this._ReportType.Entity = value;
+					if ((value != null))
+					{
+						value.CustomerReports.Add(this);
+						this._ReportTypeID = value.ID;
+					}
+					else
+					{
+						this._ReportTypeID = default(int);
+					}
+					this.SendPropertyChanged("ReportType");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CustomerReportPart")]
+	public partial class CustomerReportPart : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _customerID;
+		
+		private int _partID;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OncustomerIDChanging(int value);
+    partial void OncustomerIDChanged();
+    partial void OnpartIDChanging(int value);
+    partial void OnpartIDChanged();
+    #endregion
+		
+		public CustomerReportPart()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerID", DbType="Int NOT NULL")]
+		public int customerID
+		{
+			get
+			{
+				return this._customerID;
+			}
+			set
+			{
+				if ((this._customerID != value))
+				{
+					this.OncustomerIDChanging(value);
+					this.SendPropertyChanging();
+					this._customerID = value;
+					this.SendPropertyChanged("customerID");
+					this.OncustomerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partID", DbType="Int NOT NULL")]
+		public int partID
+		{
+			get
+			{
+				return this._partID;
+			}
+			set
+			{
+				if ((this._partID != value))
+				{
+					this.OnpartIDChanging(value);
+					this.SendPropertyChanging();
+					this._partID = value;
+					this.SendPropertyChanged("partID");
+					this.OnpartIDChanged();
 				}
 			}
 		}

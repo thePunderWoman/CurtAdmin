@@ -960,6 +960,29 @@
       <Association Name="vcdb_VehiclePart_Note" Member="vcdb_VehiclePart" AccessModifier="Internal" ThisKey="vehiclePartID" OtherKey="ID" Type="vcdb_VehiclePart" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.ReportType" Member="ReportTypes">
+    <Type Name="ReportType">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Association Name="ReportType_CustomerReport" Member="CustomerReports" ThisKey="ID" OtherKey="ReportTypeID" Type="CustomerReport" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustomerReport" Member="CustomerReports">
+    <Type Name="CustomerReport">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="customerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ReportTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="ReportType_CustomerReport" Member="ReportType" ThisKey="ReportTypeID" OtherKey="ID" Type="ReportType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustomerReportPart" Member="CustomerReportParts">
+    <Type Name="CustomerReportPart">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="customerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
   <Function Name="dbo.indexPart" Method="indexPart">
     <Parameter Name="partid" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />

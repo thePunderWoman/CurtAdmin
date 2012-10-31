@@ -135,7 +135,7 @@
             <!-- Admin modules -->
             <div id="adminModules" class="moduleContainer">
                 <h4>Modules</h4>
-                @foreach (CurtAdmin.module m in ViewBag.modules) {
+                @foreach (CurtAdmin.module m in ViewBag.allmodules) {
                     List<string> these_modules = ViewBag.selected_modules;
                     <label for="module:@m.moduleID">
                         @m.module1

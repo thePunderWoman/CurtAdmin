@@ -44,7 +44,8 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus">
+    <Reference Include="EPPlus, Version=3.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EPPlus.3.1.1\lib\net35\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="ExcelGenerator">
@@ -146,6 +147,7 @@
     <Compile Include="ActiveResults\ExcelResult.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ACESController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\B2BController.cs" />
     <Compile Include="Controllers\BlogCategoryController.cs" />
@@ -222,6 +224,7 @@
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\OAuth.cs" />
     <Compile Include="Models\PartVideoModel.cs" />
+    <Compile Include="Models\PIES.cs" />
     <Compile Include="Models\ProductCatModels.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\ReviewModel.cs" />
@@ -266,25 +269,15 @@
     <Content Include="bin\LinqKit.dll" />
     <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
     <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Newtonsoft.Json.xml" />
     <Content Include="bin\System.Net.Http.Formatting.dll" />
-    <Content Include="bin\System.Net.Http.Formatting.xml" />
     <Content Include="bin\System.Web.Helpers.dll" />
-    <Content Include="bin\System.Web.Helpers.xml" />
     <Content Include="bin\System.Web.Http.dll" />
     <Content Include="bin\System.Web.Http.WebHost.dll" />
-    <Content Include="bin\System.Web.Http.WebHost.xml" />
-    <Content Include="bin\System.Web.Http.xml" />
     <Content Include="bin\System.Web.Mvc.dll" />
-    <Content Include="bin\System.Web.Mvc.xml" />
     <Content Include="bin\System.Web.Razor.dll" />
-    <Content Include="bin\System.Web.Razor.xml" />
     <Content Include="bin\System.Web.WebPages.Deployment.dll" />
-    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
     <Content Include="bin\System.Web.WebPages.dll" />
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.xml" />
     <Content Include="Content\admin.css" />
     <Content Include="Content\demo_table.css" />
     <Content Include="Content\demo_table_jui.css" />
@@ -369,6 +362,7 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\logs\log.txt" />
     <Content Include="Content\public.css" />
+    <Content Include="Content\reports.css" />
     <Content Include="Content\signup.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -420,6 +414,7 @@
     <Content Include="Scripts\admin\jquery.easing.1.3.js" />
     <Content Include="Scripts\admin\news.js" />
     <Content Include="Scripts\admin\partimages.js" />
+    <Content Include="Scripts\admin\reports.js" />
     <Content Include="Scripts\admin\resource_admin.js" />
     <Content Include="Scripts\admin\reviews.js" />
     <Content Include="Scripts\admin\search.js" />
@@ -498,8 +493,8 @@
     </Content>
     <Content Include="Views\Shared\Navigation\_VehicleNavigation.cshtml" />
     <Content Include="Views\ACES\Vehicles.cshtml" />
-    <Content Include="Views\ACES\Index.cshtml" />
     <Content Include="Views\Shared\Navigation\_ACESNavigation.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
