@@ -31,17 +31,19 @@ namespace CurtAdmin.Models {
             return vehicles;
         }
 
-        public List<AAIA.BaseVehicle> GetVCDBVehicles(int makeid, int modelid) {
+        public List<AAIA.Vehicle> GetVCDBVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             vcdb_Make make = db.vcdb_Makes.Where(x => x.ID.Equals(makeid)).First<vcdb_Make>();
             vcdb_Model model = db.vcdb_Models.Where(x => x.ID.Equals(modelid)).First<vcdb_Model>();
+            List<int> regions = new List<int> {1,2};
 
-            List<AAIA.BaseVehicle> vehicles = new List<AAIA.BaseVehicle>();
-            vehicles = (from bv in vcdb.BaseVehicles
-                        where bv.MakeID.Equals(make.AAIAMakeID) && bv.ModelID.Equals(model.AAIAModelID)
-                        orderby bv.YearID
-                        select bv).ToList<AAIA.BaseVehicle>();
+            List<AAIA.Vehicle> vehicles = new List<AAIA.Vehicle>();
+            vehicles = (from v in vcdb.Vehicles
+                        where v.BaseVehicle.MakeID.Equals(make.AAIAMakeID) && v.BaseVehicle.ModelID.Equals(model.AAIAModelID)
+                        && regions.Contains(v.RegionID)
+                        orderby v.BaseVehicle.YearID
+                        select v).ToList<AAIA.Vehicle>().Distinct(new AAIAVehicleComparer()).ToList<AAIA.Vehicle>();
             return vehicles;
         }
         
@@ -78,6 +80,21 @@ namespace CurtAdmin.Models {
         }
     }
 
+    public class AAIAVehicleComparer : IEqualityComparer<AAIA.Vehicle> {
+        bool IEqualityComparer<AAIA.Vehicle>.Equals(AAIA.Vehicle x, AAIA.Vehicle y) {
+            // Check whether the compared objects reference the same data.
+            if (x.BaseVehicleID.Equals(y.BaseVehicleID) && x.SubmodelID.Equals(y.SubmodelID)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        int IEqualityComparer<AAIA.Vehicle>.GetHashCode(AAIA.Vehicle obj) {
+            return obj.BaseVehicle.GetHashCode();
+        }
+    }
     public class ACESModel {
         public int ID { get; set; }
         public string name { get; set; }

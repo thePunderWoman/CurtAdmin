@@ -560,7 +560,7 @@ img{
 
 /********** tab styling ************/
 
-.tabs{
+.doctabs{
     height: 35px;
     width: 100%;
     list-style: none;
@@ -569,13 +569,13 @@ img{
     padding: 0px;
 }
     
-.tabs li{
+.doctabs li{
     display: inline-block;
     float:left;
     margin-right: 1px;
 }
     
-.tabs li a{
+.doctabs li a{
     display: inline-block;
     background: #a8a8a8;
     height: 25px;
@@ -595,20 +595,20 @@ img{
     -webkit-transition: top 0.25s ease-in;
 }
     
-.tabs li a:hover{
+.doctabs li a:hover{
     text-decoration: underline;
     top: 3px;
     height: 30px;
 }
 
-.tabs li a.active{
+.doctabs li a.active{
     background: white;
     text-decoration: underline;
     top: 3px;
     height: 33px;
 }
     
-.tab_content{
+.doctab_content{
     padding: 10px 5px;
     border: 2px solid #343434;
 }
@@ -1454,4 +1454,8 @@ div#postform .form_left label {
 }
 .error {
     border-color: red;
+}
+
+ul.configs {
+    display: none;
 }

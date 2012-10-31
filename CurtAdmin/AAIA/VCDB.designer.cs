@@ -1673,7 +1673,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_Vehicle", Storage="_Vehicles", ThisKey="BaseVehicleID", OtherKey="BaseVehicleID")]
-		public EntitySet<Vehicle> Vehicles
+		internal EntitySet<Vehicle> Vehicles
 		{
 			get
 			{
@@ -11448,7 +11448,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_Vehicle", Storage="_BaseVehicle", ThisKey="BaseVehicleID", OtherKey="BaseVehicleID", IsForeignKey=true)]
-		internal BaseVehicle BaseVehicle
+		public BaseVehicle BaseVehicle
 		{
 			get
 			{

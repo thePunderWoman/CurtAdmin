@@ -31,9 +31,16 @@
     </select>
     <button id="find">Find</button>
     <div class="clear"></div>
-    <div id="vData">
-        <img id="loading" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
-        <ul id="vehicleData"></ul>
+    <div id="tabs">
+        <ul class="tabs"><li><a href="#CurtDev">CurtDev</a></li><li><a href="#vcdb">VCDB</a></li></ul>
+        <div id="CurtDev">
+            <img id="loadingCurtDev" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+            <ul id="vehicleData"></ul>
+        </div>
+        <div id="vcdb">
+            <img id="loadingVCDB" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+            <ul id="vcdbData"></ul>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="/Scripts/admin/aces.js"></script>

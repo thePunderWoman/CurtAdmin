@@ -13,15 +13,15 @@
 <div id="content_container">
     <h2>Adding New Item</h2>
 
-    <ul class="tabs">
+    <ul class="doctabs">
         <li>
-            <a class="tab active" href="#info" id="info_tab">Info</a>
+            <a class="doctab active" href="#info" id="info_tab">Info</a>
         </li>
         <li>
-            <a class="tab" href="#htmleditor" id="htmleditor_tab">HTML</a>
+            <a class="doctab" href="#htmleditor" id="htmleditor_tab">HTML</a>
         </li>
         <li>
-            <a class="tab" href="#categories" id="categories_tab">Categories</a>
+            <a class="doctab" href="#categories" id="categories_tab">Categories</a>
         </li>
     </ul>
 
@@ -38,7 +38,7 @@
 
     <form action="@HttpContext.Current.Request.Url.AbsoluteUri" method="post" class="form">
         <div class="tab_container">
-            <div class="tab_content" id="info">
+            <div class="doctab_content" id="info">
                 <div class="form_left">    
                     <!-- Item Name -->
                     <label for="itemName">
@@ -91,7 +91,7 @@
                 <div style="clear:both"></div>
             </div>
 
-            <div class="tab_content" id="htmleditor">
+            <div class="doctab_content" id="htmleditor">
                 <label for="html">
                     <strong>Enter HTML</strong><br />
                     <textarea rows="15" cols="50" name="html" id="html" style="width: 90%">@ViewBag.itemHTML</textarea>
@@ -99,7 +99,7 @@
                 <div style="clear:both"></div>
             </div>
 
-            <div class="tab_content" id="categories">
+            <div class="doctab_content" id="categories">
                 <div class="form_left">
                     <!-- Display Categories -->
                     <label for="catID">
@@ -142,15 +142,15 @@
     
     $(document).ready(function () {
         var table = $('table').dataTable();
-        $('.tab_content').hide();
+        $('.doctab_content').hide();
         $('#info').show();
 
-        $('.tab').click(function () {
+        $('.doctab').click(function () {
             var tab = $(this).attr('id').split('_')[0];
             if (!$('#' + tab).is(':visible')) {
-                $('.tab_content').hide();
+                $('.doctab_content').hide();
                 $('#' + tab).slideDown();
-                $('.tab').removeClass('active');
+                $('.doctab').removeClass('active');
                 $(this).addClass('active');
             }
         });
