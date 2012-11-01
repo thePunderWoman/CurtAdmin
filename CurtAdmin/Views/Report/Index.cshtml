@@ -7,6 +7,12 @@
 <div id="content_container">
     <h2>ACES Reporting</h2>
     <a href="/Report/GenerateACES">Generate Report</a>
+    <form action="/Report/GenerateACES" method="post" class="form" id="acesreportform">
+        <label for="ACESCustomerID">
+            <input type="number" name="customerID" id="ACESCustomerID" value="" placeholder="Enter a customer ID (optional)" />
+        </label>
+        <input type="submit" value="Generate Report" />
+    </form>
 
     <h2>PIES Reporting</h2>
     <form action="/Report/GeneratePIES" method="post" class="form" id="piesreportform">

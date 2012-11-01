@@ -18223,7 +18223,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_vcdb_Vehicle", Storage="_BaseVehicle", ThisKey="BaseVehicleID", OtherKey="ID", IsForeignKey=true)]
-		public BaseVehicle BaseVehicle
+		internal BaseVehicle BaseVehicle
 		{
 			get
 			{
@@ -19198,7 +19198,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BaseVehicle_vcdb_Vehicle", Storage="_vcdb_Vehicles", ThisKey="ID", OtherKey="BaseVehicleID")]
-		internal EntitySet<vcdb_Vehicle> vcdb_Vehicles
+		public EntitySet<vcdb_Vehicle> vcdb_Vehicles
 		{
 			get
 			{

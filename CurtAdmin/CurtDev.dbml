@@ -851,7 +851,7 @@
       <Column Name="ConfigID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="vcdb_Vehicle_vcdb_VehiclePart" Member="vcdb_VehicleParts" ThisKey="ID" OtherKey="VehicleID" Type="vcdb_VehiclePart" />
       <Association Name="Submodel_vcdb_Vehicle" Member="Submodel" ThisKey="SubModelID" OtherKey="ID" Type="Submodel" IsForeignKey="true" />
-      <Association Name="BaseVehicle_vcdb_Vehicle" Member="BaseVehicle" ThisKey="BaseVehicleID" OtherKey="ID" Type="BaseVehicle" IsForeignKey="true" />
+      <Association Name="BaseVehicle_vcdb_Vehicle" Member="BaseVehicle" AccessModifier="Internal" ThisKey="BaseVehicleID" OtherKey="ID" Type="BaseVehicle" IsForeignKey="true" />
       <Association Name="VehicleConfig_vcdb_Vehicle" Member="VehicleConfig" ThisKey="ConfigID" OtherKey="ID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
@@ -901,7 +901,7 @@
       <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="ModelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="BaseVehicle_vcdb_Vehicle" Member="vcdb_Vehicles" AccessModifier="Internal" ThisKey="ID" OtherKey="BaseVehicleID" Type="vcdb_Vehicle" />
+      <Association Name="BaseVehicle_vcdb_Vehicle" Member="vcdb_Vehicles" ThisKey="ID" OtherKey="BaseVehicleID" Type="vcdb_Vehicle" />
       <Association Name="vcdb_Make_BaseVehicle" Member="vcdb_Make" ThisKey="MakeID" OtherKey="ID" Type="vcdb_Make" IsForeignKey="true" />
       <Association Name="vcdb_Model_BaseVehicle" Member="vcdb_Model" ThisKey="ModelID" OtherKey="ID" Type="vcdb_Model" IsForeignKey="true" />
       <Association Name="vcdb_Year_BaseVehicle" Member="vcdb_Year" ThisKey="YearID" OtherKey="YearID" Type="vcdb_Year" IsForeignKey="true" />

@@ -39,13 +39,13 @@ namespace CurtAdmin.Controllers {
         }
 
         public string GetVehicles(int makeid, int modelid) {
-            List<vcdb_Vehicle> vehicles = new List<vcdb_Vehicle>();
+            List<BaseVehicle> vehicles = new List<BaseVehicle>();
             vehicles = new ACES().GetVehicles(makeid, modelid);
             return JsonConvert.SerializeObject(vehicles);
         }
 
         public string GetVCDBVehicles(int makeid, int modelid) {
-            List<AAIA.Vehicle> vehicles = new List<AAIA.Vehicle>();
+            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
             vehicles = new ACES().GetVCDBVehicles(makeid, modelid);
             return JsonConvert.SerializeObject(vehicles);
         }

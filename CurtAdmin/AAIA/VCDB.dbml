@@ -44,7 +44,7 @@
       <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="ModelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="BaseVehicle_Vehicle" Member="Vehicles" AccessModifier="Internal" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="Vehicle" />
+      <Association Name="BaseVehicle_Vehicle" Member="Vehicles" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="Vehicle" />
       <Association Name="Year_BaseVehicle" Member="Year" ThisKey="YearID" OtherKey="YearID" Type="Year" IsForeignKey="true" />
       <Association Name="Make_BaseVehicle" Member="Make" ThisKey="MakeID" OtherKey="MakeID" Type="Make" IsForeignKey="true" />
       <Association Name="Model_BaseVehicle" Member="Model" ThisKey="ModelID" OtherKey="ModelID" Type="Model" IsForeignKey="true" />
@@ -534,7 +534,7 @@
       <Column Name="PublicationStageSource" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="PublicationStageDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
       <Association Name="Vehicle_VehicleConfig" Member="VehicleConfigs" ThisKey="VehicleID" OtherKey="VehicleID" Type="VehicleConfig" />
-      <Association Name="BaseVehicle_Vehicle" Member="BaseVehicle" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="BaseVehicle" IsForeignKey="true" />
+      <Association Name="BaseVehicle_Vehicle" Member="BaseVehicle" AccessModifier="Internal" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="BaseVehicle" IsForeignKey="true" />
       <Association Name="PublicationStage_Vehicle" Member="PublicationStage" ThisKey="PublicationStageID" OtherKey="PublicationStageID" Type="PublicationStage" IsForeignKey="true" />
       <Association Name="Region_Vehicle" Member="Region" AccessModifier="Internal" ThisKey="RegionID" OtherKey="RegionID" Type="Region" IsForeignKey="true" />
       <Association Name="Submodel_Vehicle" Member="Submodel" ThisKey="SubmodelID" OtherKey="SubmodelID" Type="Submodel" IsForeignKey="true" />

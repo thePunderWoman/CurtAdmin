@@ -29,7 +29,7 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
-        public void GenerateACES() {
+        public void GenerateACES(int customerID = 1) {
             
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.pcdbDataContext pcdb = new AAIA.pcdbDataContext();
@@ -37,6 +37,8 @@ namespace CurtAdmin.Controllers {
             AAIA.qdbDataContext qdb = new AAIA.qdbDataContext();
             string name = ViewBag.name;
             XDocument report = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+            List<int> parts = db.CustomerReportParts.Where(x => x.customerID.Equals(customerID)).Select(x => x.partID).ToList<int>();
+            List<XElement> vparts = new List<XElement>();
 
             XElement xdoc = new XElement("ACES",
                             new XAttribute("version", "3.0"),
@@ -51,27 +53,52 @@ namespace CurtAdmin.Controllers {
                                 new XElement("SubmissionType", "FULL"),
                                 new XElement("VcdbVersionDate", String.Format("{0:yyyy-MM-dd}", vcdb.VCDBVersions.Select(x => x.VersionDate).FirstOrDefault())),
                                 new XElement("QdbVersionDate", String.Format("{0:yyyy-MM-dd}", qdb.QDBVersions.Select(x => x.VersionDate).FirstOrDefault())),
-                                new XElement("PcdbVersionDate", String.Format("{0:yyyy-MM-dd}", pcdb.PCDBVersions.Select(x => x.VersionDate).FirstOrDefault()))),
-                            (from vp in db.vcdb_VehicleParts
-                             select new XElement("App",
-                                 new XAttribute("action", "A"),
-                                 new XAttribute("id", vp.ID),
-                                 new XElement("BaseVehicle",
-                                     new XAttribute("id", vp.vcdb_Vehicle.BaseVehicle.AAIABaseVehicleID)),
-                                 new XElement("Part", vp.PartNumber),
-                                 new XElement("MfrLabel", vp.Part.shortDesc),
-                                 new XElement("Qty", 1),
-                                 new XElement("PartType",
-                                     new XAttribute("id", vp.Part.ACESPartTypeID)),
-                                 (from n in vp.Notes
-                                  select new XElement("Note", n.note1)
-                                     ).ToList<XElement>(),
-                                 ((vp.vcdb_Vehicle.SubModelID != null) ? new XElement("SubModel", new XAttribute("id", vp.vcdb_Vehicle.Submodel.AAIASubmodelID)) : null),
-                                 ((vp.vcdb_Vehicle.ConfigID != null) ? (from ca in vp.vcdb_Vehicle.VehicleConfig.VehicleConfigAttributes
-                                                                        select new XElement(((ca.ConfigAttribute.vcdbID == null) ? "Note" : ca.ConfigAttribute.ConfigAttributeType.AcesType.name), ((ca.ConfigAttribute.vcdbID == null) ? ca.ConfigAttribute.value : null),
-                                                                            ((ca.ConfigAttribute.vcdbID == null) ? null : new XAttribute("id", ca.ConfigAttribute.vcdbID.ToString())))).ToList<XElement>() : null)
-                             )).AsParallel<XElement>().WithDegreeOfParallelism(12),
-                            new XElement("Footer", new XElement("RecordCount", db.vcdb_VehicleParts.Count())));
+                                new XElement("PcdbVersionDate", String.Format("{0:yyyy-MM-dd}", pcdb.PCDBVersions.Select(x => x.VersionDate).FirstOrDefault()))));
+            if (parts.Count == 0) {
+                vparts = (from vp in db.vcdb_VehicleParts
+                          select new XElement("App",
+                              new XAttribute("action", "A"),
+                              new XAttribute("id", vp.ID),
+                              new XElement("BaseVehicle",
+                                  new XAttribute("id", vp.vcdb_Vehicle.BaseVehicle.AAIABaseVehicleID)),
+                              new XElement("Part", vp.PartNumber),
+                              new XElement("MfrLabel", vp.Part.shortDesc),
+                              new XElement("Qty", 1),
+                              new XElement("PartType",
+                                  new XAttribute("id", vp.Part.ACESPartTypeID)),
+                              (from n in vp.Notes
+                               select new XElement("Note", n.note1)
+                                  ).ToList<XElement>(),
+                              ((vp.vcdb_Vehicle.SubModelID != null) ? new XElement("SubModel", new XAttribute("id", vp.vcdb_Vehicle.Submodel.AAIASubmodelID)) : null),
+                              ((vp.vcdb_Vehicle.ConfigID != null) ? (from ca in vp.vcdb_Vehicle.VehicleConfig.VehicleConfigAttributes
+                                                                     select new XElement(((ca.ConfigAttribute.vcdbID == null) ? "Note" : ca.ConfigAttribute.ConfigAttributeType.AcesType.name), ((ca.ConfigAttribute.vcdbID == null) ? ca.ConfigAttribute.value : null),
+                                                                         ((ca.ConfigAttribute.vcdbID == null) ? null : new XAttribute("id", ca.ConfigAttribute.vcdbID.ToString())))).ToList<XElement>() : null)
+                          )).AsParallel<XElement>().WithDegreeOfParallelism(12).ToList<XElement>();
+            } else {
+                vparts = (from vp in db.vcdb_VehicleParts
+                          join crp in db.CustomerReportParts on vp.PartNumber equals crp.partID
+                          select new XElement("App",
+                              new XAttribute("action", "A"),
+                              new XAttribute("id", vp.ID),
+                              new XElement("BaseVehicle",
+                                  new XAttribute("id", vp.vcdb_Vehicle.BaseVehicle.AAIABaseVehicleID)),
+                              new XElement("Part", vp.PartNumber),
+                              new XElement("MfrLabel", vp.Part.shortDesc),
+                              new XElement("Qty", 1),
+                              new XElement("PartType",
+                                  new XAttribute("id", vp.Part.ACESPartTypeID)),
+                              (from n in vp.Notes
+                               select new XElement("Note", n.note1)
+                                  ).ToList<XElement>(),
+                              ((vp.vcdb_Vehicle.SubModelID != null) ? new XElement("SubModel", new XAttribute("id", vp.vcdb_Vehicle.Submodel.AAIASubmodelID)) : null),
+                              ((vp.vcdb_Vehicle.ConfigID != null) ? (from ca in vp.vcdb_Vehicle.VehicleConfig.VehicleConfigAttributes
+                                                                     select new XElement(((ca.ConfigAttribute.vcdbID == null) ? "Note" : ca.ConfigAttribute.ConfigAttributeType.AcesType.name), ((ca.ConfigAttribute.vcdbID == null) ? ca.ConfigAttribute.value : null),
+                                                                         ((ca.ConfigAttribute.vcdbID == null) ? null : new XAttribute("id", ca.ConfigAttribute.vcdbID.ToString())))).ToList<XElement>() : null)
+                          )).AsParallel<XElement>().WithDegreeOfParallelism(12).ToList<XElement>();
+            }
+            XElement footer = new XElement("Footer", new XElement("RecordCount", db.vcdb_VehicleParts.Count()));
+            xdoc.Add(vparts);
+            xdoc.Add(footer);
             report.Add(xdoc);
             
             StringWriter wr = new StringWriter();

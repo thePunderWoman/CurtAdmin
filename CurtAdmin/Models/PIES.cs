@@ -45,15 +45,27 @@ namespace CurtAdmin.Models {
             XElement items = new XElement("Items");
 
             List<Part> parts = new List<Part>();
-            List<int> partids = db.CustomerReportParts.Where(x => x.customerID.Equals(customerID)).Select(x => x.partID).ToList<int>();
-            if (partids.Count == 0) {
-                partids = db.Parts.Select(x => x.partID).ToList<int>();
-            }
+            int partcount = db.CustomerReportParts.Where(x => x.customerID.Equals(customerID)).Select(x => x.partID).Count();
 
             if (start == null) {
-                parts = db.Parts.Where(x => partids.Contains(x.partID)).OrderBy(x => x.partID).ToList<Part>();
+                if (partcount == 0) {
+                    parts = db.Parts.OrderBy(x => x.partID).ToList<Part>();
+                } else {
+                    parts = (from p in db.Parts
+                             join crp in db.CustomerReportParts on p.partID equals crp.partID
+                             orderby p.partID
+                             select p).ToList<Part>();
+                }
             } else {
-                parts = db.Parts.Where(x => partids.Contains(x.partID) && x.dateModified >= start).OrderBy(x => x.partID).ToList<Part>();
+                if (partcount == 0) {
+                    parts = db.Parts.Where(x => x.dateModified >= start).OrderBy(x => x.partID).ToList<Part>();
+                } else {
+                    parts = (from p in db.Parts
+                             join crp in db.CustomerReportParts on p.partID equals crp.partID
+                             where p.dateModified >= start
+                             orderby p.partID
+                             select p).ToList<Part>();
+                }
             }
             
             foreach (Part part in parts) {

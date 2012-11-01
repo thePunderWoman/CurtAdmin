@@ -1456,6 +1456,54 @@ div#postform .form_left label {
     border-color: red;
 }
 
-ul.configs {
+ul.vehicles, ul.submodels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.submodels {
+    margin-left: 10px;
+}
+
+ul.vehicles li {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+ul.submodels li {
+    border: 1px solid #000;
+    background-color: #ddd;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+ul.submodels li a.showConfig {
+    float: right;
+}
+
+table.configs {
     display: none;
+    font-size: 12px;
+    list-style: none;
+    border-collapse: collapse;
+}
+
+table.configs th {
+    border: 1px solid #ccc;
+    padding: 3px 8px;
+    background-color: #999;
+}
+
+table.configs td {
+    padding: 3px 8px;
+    background-color: #eee;
+    font-size: 11px;
+}
+
+table.configs tr:nth-child(odd) td {
+    background-color: #fff;
 }

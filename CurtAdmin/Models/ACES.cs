@@ -22,29 +22,47 @@ namespace CurtAdmin.Models {
             return models;
         }
 
-        public List<vcdb_Vehicle> GetVehicles(int makeid, int modelid) {
+        public List<BaseVehicle> GetVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
-            List<vcdb_Vehicle> vehicles = new List<vcdb_Vehicle>();
-            vehicles = (from v in db.vcdb_Vehicles
-                        where v.BaseVehicle.MakeID.Equals(makeid) && v.BaseVehicle.ModelID.Equals(modelid)
-                        select v).Distinct().OrderBy(x => x.BaseVehicle.YearID).ThenBy(x => x.Submodel.SubmodelName).ToList<vcdb_Vehicle>();
+            List<BaseVehicle> vehicles = new List<BaseVehicle>();
+            vehicles = (from bv in db.BaseVehicles
+                        where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid)
+                        select bv).Distinct().OrderBy(x => x.YearID).ToList<BaseVehicle>();
             return vehicles;
         }
 
-        public List<AAIA.Vehicle> GetVCDBVehicles(int makeid, int modelid) {
+        public List<ACESBaseVehicle> GetVCDBVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             vcdb_Make make = db.vcdb_Makes.Where(x => x.ID.Equals(makeid)).First<vcdb_Make>();
             vcdb_Model model = db.vcdb_Models.Where(x => x.ID.Equals(modelid)).First<vcdb_Model>();
             List<int> regions = new List<int> {1,2};
 
-            List<AAIA.Vehicle> vehicles = new List<AAIA.Vehicle>();
-            vehicles = (from v in vcdb.Vehicles
-                        where v.BaseVehicle.MakeID.Equals(make.AAIAMakeID) && v.BaseVehicle.ModelID.Equals(model.AAIAModelID)
-                        && regions.Contains(v.RegionID)
-                        orderby v.BaseVehicle.YearID
-                        select v).ToList<AAIA.Vehicle>().Distinct(new AAIAVehicleComparer()).ToList<AAIA.Vehicle>();
+            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
+            vehicles = (from bv in vcdb.BaseVehicles
+                        where bv.MakeID.Equals(make.AAIAMakeID) && bv.ModelID.Equals(model.AAIAModelID)
+                        && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                        select new ACESBaseVehicle {
+                            BaseVehicleID = bv.BaseVehicleID,
+                            Year = bv.YearID,
+                            Make = bv.Make,
+                            Model = bv.Model,
+                            Vehicles = (from v in bv.Vehicles
+                                        where regions.Contains(v.RegionID)
+                                        select new ACESVehicle {
+                                            Submodel = v.Submodel,
+                                            Region = v.Region,
+                                            Configs = v.VehicleConfigs.Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>()
+                                        }).Distinct().OrderBy(x => x.Region.RegionID).ThenBy(x => x.Submodel.SubmodelID).ToList<ACESVehicle>()
+                        }).OrderBy(x => x.Year).ToList<ACESBaseVehicle>();
             return vehicles;
+        }
+
+        internal List<AAIA.VehicleConfig> getVehicleConfigs(int BaseVehicleID, int SubmodelID) {
+            AAIA.VCDBDataContext db = new AAIA.VCDBDataContext();
+            List<int> regions = new List<int> {1,2};
+            List<AAIA.VehicleConfig> configs = db.VehicleConfigs.Where(x => x.Vehicle.BaseVehicleID.Equals(BaseVehicleID) && x.Vehicle.SubmodelID.Equals(SubmodelID) && regions.Contains(x.Vehicle.RegionID)).Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>();
+            return configs;
         }
         
         public List<AAIA.PartTerminology> GetPartTypes() {
@@ -80,10 +98,10 @@ namespace CurtAdmin.Models {
         }
     }
 
-    public class AAIAVehicleComparer : IEqualityComparer<AAIA.Vehicle> {
-        bool IEqualityComparer<AAIA.Vehicle>.Equals(AAIA.Vehicle x, AAIA.Vehicle y) {
+    /*public class AAIAVehicleComparer : IEqualityComparer<ACESVehicle> {
+        bool IEqualityComparer<ACESVehicle>.Equals(ACESVehicle x, ACESVehicle y) {
             // Check whether the compared objects reference the same data.
-            if (x.BaseVehicleID.Equals(y.BaseVehicleID) && x.SubmodelID.Equals(y.SubmodelID)) {
+            if (x.BaseVehicle.BaseVehicleID.Equals(y.BaseVehicle.BaseVehicleID) && x.Submodel.SubmodelID.Equals(y.Submodel.SubmodelID)) {
                 return true;
             } else {
                 return false;
@@ -91,40 +109,61 @@ namespace CurtAdmin.Models {
 
         }
 
-        int IEqualityComparer<AAIA.Vehicle>.GetHashCode(AAIA.Vehicle obj) {
+        int IEqualityComparer<ACESVehicle>.GetHashCode(ACESVehicle obj) {
             return obj.BaseVehicle.GetHashCode();
         }
     }
+
+    public class AAIAVehicleConfigComparer : IEqualityComparer<AAIA.VehicleConfig> {
+        bool IEqualityComparer<AAIA.VehicleConfig>.Equals(AAIA.VehicleConfig x, AAIA.VehicleConfig y) {
+            // Check whether the compared objects reference the same data.
+            if (x.BedConfig.BedLengthID.Equals(y.BedConfig.BedLengthID) && x.BedConfig.BedTypeID.Equals(y.BedConfig.BedTypeID)
+                && x.BodyStyleConfig.BodyTypeID.Equals(y.BodyStyleConfig.BodyTypeID) && x.BodyStyleConfig.BodyNumDoorsID.Equals(y.BodyStyleConfig.BodyNumDoorsID)
+                && x.BrakeConfig.BrakeABSID.Equals(y.BrakeConfig.BrakeABSID)  && x.BrakeConfig.BrakeSystemID.Equals(y.BrakeConfig.BrakeSystemID)
+                && x.BrakeConfig.FrontBrakeTypeID.Equals(y.BrakeConfig.FrontBrakeTypeID) && x.BrakeConfig.RearBrakeTypeID.Equals(y.BrakeConfig.RearBrakeTypeID)
+                && x.DriveTypeID.Equals(y.DriveTypeID) && x.WheelbaseID.Equals(y.WheelbaseID) && x.MfrBodyCodeID.Equals(y.MfrBodyCodeID) 
+                && x.EngineConfig.EngineBaseID.Equals(y.EngineConfig.EngineBaseID) && x.EngineConfig.FuelDeliveryConfigID.Equals(y.EngineConfig.FuelDeliveryConfigID)
+                && x.EngineConfig.FuelTypeID.Equals(y.EngineConfig.FuelTypeID) && x.EngineConfig.ValvesID.Equals(y.EngineConfig.ValvesID)
+                && x.EngineConfig.IgnitionSystemTypeID.Equals(y.EngineConfig.IgnitionSystemTypeID) && x.EngineConfig.EngineVINID.Equals(y.EngineConfig.EngineVINID)
+                && x.EngineConfig.EngineVersionID.Equals(y.EngineConfig.EngineVersionID) && x.EngineConfig.EngineMfrID.Equals(y.EngineConfig.EngineMfrID)
+                && x.EngineConfig.EngineDesignationID.Equals(y.EngineConfig.EngineDesignationID) && x.EngineConfig.CylinderHeadTypeID.Equals(y.EngineConfig.CylinderHeadTypeID)
+                && x.EngineConfig.AspirationID.Equals(y.EngineConfig.AspirationID) && x.SpringTypeConfig.RearSpringTypeID.Equals(y.SpringTypeConfig.RearSpringTypeID)
+                && x.SpringTypeConfig.FrontSpringTypeID.Equals(y.SpringTypeConfig.FrontSpringTypeID) && x.SteeringConfig.SteeringSystemID.Equals(y.SteeringConfig.SteeringSystemID)
+                && x.SteeringConfig.SteeringTypeID.Equals(y.SteeringConfig.SteeringTypeID) && x.SpringTypeConfigID.Equals(y.SpringTypeConfigID) && x.SteeringConfigID.Equals(y.SteeringConfigID)
+                && x.Transmission.TransmissionElecControlledID.Equals(y.Transmission.TransmissionElecControlledID)
+                && x.Transmission.TransmissionMfrCodeID.Equals(y.Transmission.TransmissionMfrCodeID)
+                && x.Transmission.TransmissionMfrID.Equals(y.Transmission.TransmissionMfrID) && x.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(y.Transmission.TransmissionBase.TransmissionControlTypeID)
+                && x.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(y.Transmission.TransmissionBase.TransmissionNumSpeedsID)
+                && x.Transmission.TransmissionBase.TransmissionTypeID.Equals(x.Transmission.TransmissionBase.TransmissionTypeID)
+                ) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        int IEqualityComparer<AAIA.VehicleConfig>.GetHashCode(AAIA.VehicleConfig obj) {
+            return obj.BedConfig.GetHashCode();
+        }
+    }*/
     public class ACESModel {
         public int ID { get; set; }
         public string name { get; set; }
     }
 
-    public class ACESVehiclePart {
-        public int ID { get; set; }
-        public int vehicleID { get; set; }
-        public int PartNumber { get; set; }
-        public string PartDescription { get; set; }
-        public int PartTypeID { get; set; }
-        public List<Note> Notes { get; set; }
-        public ACESVehicle Vehicle { get; set; }
+    public class ACESBaseVehicle {
+        public int BaseVehicleID { get; set; }
+        public int Year { get; set; }
+        public AAIA.Make Make { get; set; }
+        public AAIA.Model Model { get; set; }
+        public List<ACESVehicle> Vehicles { get; set; }
     }
 
     public class ACESVehicle {
-        public int ID { get; set; }
-        public int BaseVehicleID { get; set; }
-        public int? SubmodelID { get; set; }
-        public int? ConfigID { get; set; }
-        public ACESConfig Config { get; set; }
+        public AAIA.Submodel Submodel { get; set; }
+        public AAIA.Region Region { get; set; }
+        public List<AAIA.VehicleConfig> Configs { get; set; }
     }
 
-    public class ACESConfig {
-        public List<ACESAttribute> Notes { get; set; }
-        public List<ACESAttribute> attributes { get; set; }
-    }
-
-    public class ACESAttribute {
-        public string name { get; set; }
-        public string value { get; set; }
-    }
 }
