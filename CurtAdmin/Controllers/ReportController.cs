@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -36,7 +37,7 @@ namespace CurtAdmin.Controllers {
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             AAIA.qdbDataContext qdb = new AAIA.qdbDataContext();
             string name = ViewBag.name;
-            XDocument report = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+            XDocument report = new XDocument(new XDeclaration("1.0", "utf-16", "yes"));
             List<int> parts = db.CustomerReportParts.Where(x => x.customerID.Equals(customerID)).Select(x => x.partID).ToList<int>();
             List<XElement> vparts = new List<XElement>();
 
@@ -103,13 +104,14 @@ namespace CurtAdmin.Controllers {
             
             StringWriter wr = new StringWriter();
             report.Save(wr);
-
+            
             string attachment = "attachment; filename=ACESreport-" + String.Format("{0:yyyyMMddhhmmss}",DateTime.Now) + ".xml";
             HttpContext.Response.Clear();
             HttpContext.Response.ClearHeaders();
             HttpContext.Response.ClearContent();
             HttpContext.Response.AddHeader("content-disposition", attachment);
             HttpContext.Response.ContentType = "text/xml";
+            HttpContext.Response.ContentEncoding = System.Text.Encoding.Unicode;
             HttpContext.Response.AddHeader("Pragma", "public");
             HttpContext.Response.Write(wr.GetStringBuilder().ToString());
             HttpContext.Response.End();
@@ -131,6 +133,7 @@ namespace CurtAdmin.Controllers {
             HttpContext.Response.ClearContent();
             HttpContext.Response.AddHeader("content-disposition", attachment);
             HttpContext.Response.ContentType = "text/xml";
+            HttpContext.Response.ContentEncoding = System.Text.Encoding.Unicode;
             HttpContext.Response.AddHeader("Pragma", "public");
             HttpContext.Response.Write(wr.GetStringBuilder().ToString());
             HttpContext.Response.End();

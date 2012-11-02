@@ -15,7 +15,7 @@ namespace CurtAdmin.Models {
             pricecodes.Add("List","LST");
             pricecodes.Add("Map","RMP");
 
-            XDocument xdoc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+            XDocument xdoc = new XDocument(new XDeclaration("1.0", "utf-16", "yes"));
             XElement root = new XElement("PIES");
             //<header>
             //    <PIESVersion> 6.4 </PIESVersion>
