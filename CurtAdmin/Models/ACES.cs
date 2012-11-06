@@ -64,7 +64,23 @@ namespace CurtAdmin.Models {
             List<AAIA.VehicleConfig> configs = db.VehicleConfigs.Where(x => x.Vehicle.BaseVehicleID.Equals(BaseVehicleID) && x.Vehicle.SubmodelID.Equals(SubmodelID) && regions.Contains(x.Vehicle.RegionID)).Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>();
             return configs;
         }
-        
+
+        public List<ConfigAttributeType> GetConfigAttributeTypes() {
+            List<ConfigAttributeType> configs = new List<ConfigAttributeType>();
+            CurtDevDataContext db = new CurtDevDataContext();
+            configs = db.ConfigAttributeTypes.OrderBy(x => x.sort).ToList<ConfigAttributeType>();
+            return configs;
+        }
+
+        public List<BaseVehicle> GetVehiclesByPart(int partid) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<BaseVehicle> vehicles = new List<BaseVehicle>();
+            vehicles = (from vp in db.vcdb_VehicleParts
+                        where vp.PartNumber.Equals(partid)
+                        select vp.vcdb_Vehicle.BaseVehicle).Distinct().OrderBy(x => x.YearID).ToList<BaseVehicle>();
+            return vehicles;
+        }
+
         public List<AAIA.PartTerminology> GetPartTypes() {
             AAIA.pcdbDataContext db = new AAIA.pcdbDataContext();
             List<AAIA.PartTerminology> parttypes = new List<AAIA.PartTerminology>();

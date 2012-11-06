@@ -387,6 +387,8 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\admin\aces.js" />
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
+    <Content Include="Scripts\admin\admin.js" />
+    <Content Include="Scripts\admin\Product\EditACESVehicles.js" />
     <Content Include="Scripts\admin\Product\Edit.js" />
     <Content Include="Scripts\admin\Product\EditAttributes.js" />
     <Content Include="Scripts\admin\Product\EditCategories.js" />
@@ -495,6 +497,7 @@
     <Content Include="Views\ACES\Vehicles.cshtml" />
     <Content Include="Views\Shared\Navigation\_ACESNavigation.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Product\EditACESVehicles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -702,7 +705,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Search.cshtml" />
-    <Content Include="Views\Shared\_SideBar.cshtml" />
+    <Content Include="Views\Shared\_Menu.cshtml" />
     <Content Include="Views\Shared\_UploadForm.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\_404\Index.cshtml" />

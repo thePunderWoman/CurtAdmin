@@ -4,11 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CurtAdmin.vcdb_Make> makes = ViewBag.makes ?? new List<CurtAdmin.vcdb_Make>();
 }
-<style type="text/css">
-    #partTable_wrapper{
-        display:none;
-    }
-</style>
 <ul id="subNav">
     <li>
         <a href="@Url.Content("~/ACES/Vehicles")" class="active">View Vehicles</a>
