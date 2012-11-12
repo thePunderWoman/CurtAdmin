@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Modify ACES Types";
+    ViewBag.navigation = "_VehicleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.ConfigAttributeType> types = ViewBag.types ?? new List<CurtAdmin.ConfigAttributeType>();
+}
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/ACES/Vehicles")">View Vehicles</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigAttributes")">View Configuration Attributes</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigTypes")" class="active">View Configuration Types</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/ACES/AddVehicle")">Add New</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage Configuration Attribute Types</h2>
+    <table id="AcesTypes">
+        <thead>
+            <tr>
+                <th>sort</th>
+                <th>type</th>
+                <th>ACES Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.ConfigAttributeType type in types) {
+                <tr id="typeRow:@type.ID">
+                    <td>@type.sort</td>
+                    <td>@type.name</td>
+                    <td>@((type.AcesTypeID != null) ? type.AcesType.name : "")</td>
+                    <td><a href="#" class="edit" data-id="@type.ID">Edit</a> | <a href="#" class="remove" data-id="@type.ID">Remove</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="/Scripts/admin/ACES/AcesTypes.js"></script>

@@ -88,6 +88,59 @@ namespace CurtAdmin.Models {
             return parttypes;
         }
 
+        public List<AcesType> GetACESTypes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<AcesType> types = new List<AcesType>();
+            types = db.AcesTypes.OrderBy(x => x.name).ToList<AcesType>();
+            foreach (AcesType t in types) {
+                t.count = t.ConfigAttributeTypes.Count;
+            }
+            return types;
+        }
+
+        public List<ConfigAttributeType> GetConfigTypes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ConfigAttributeType> types = new List<ConfigAttributeType>();
+            types = db.ConfigAttributeTypes.OrderBy(x => x.name).ToList<ConfigAttributeType>();
+            return types;
+        }
+
+        public List<ConfigAttribute> GetConfigAttributes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ConfigAttribute> attributes = new List<ConfigAttribute>();
+            attributes = db.ConfigAttributes.OrderBy(x => x.value).ToList<ConfigAttribute>();
+            return attributes;
+        }
+
+        public AcesType SaveACESType(int id = 0, string name = null) {
+            AcesType type = new AcesType();
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                type = db.AcesTypes.Where(x => x.ID.Equals(id)).First<AcesType>();
+                if (name != null) {
+                    try {
+                        AcesType t = db.AcesTypes.Where(x => x.name.Trim().Equals(name.Trim()) && !x.ID.Equals(id)).First<AcesType>();
+                    } catch {
+                        type.name = name.Trim();
+                        db.SubmitChanges();
+                    }
+                }
+            } catch {
+                if (name != null && name.Trim() != "") {
+                    try {
+                        AcesType t = db.AcesTypes.Where(x => x.name.Trim().Equals(name.Trim())).First<AcesType>();
+                    } catch {
+                        type.name = name.Trim();
+                        db.AcesTypes.InsertOnSubmit(type);
+                        db.SubmitChanges();
+                    }
+                } else {
+                    throw new Exception("You must enter a name.");
+                }
+            }
+            return type;
+        }
+
         public string SearchPartTypes(string keyword = "") {
             AAIA.pcdbDataContext db = new AAIA.pcdbDataContext();
             if (keyword != "" && keyword.Length > 2) {

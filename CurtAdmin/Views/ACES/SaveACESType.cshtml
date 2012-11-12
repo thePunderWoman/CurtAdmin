@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Add ACES Type";
+    ViewBag.navigation = "_VehicleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.AcesType type = ViewBag.type ?? new CurtAdmin.AcesType();
+    string error = ViewBag.error ?? "";
+}
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/ACES/Vehicles")">View Vehicles</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigAttributes")">View Configuration Attributes</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigTypes")">View Configuration Types</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/ACES/AddACESType")" class="active">Add New</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>Add ACES Type</h2>
+    @if (error != "") {
+        <p>@error</p>
+    }
+    <form method="post" action="/ACES/SaveACESType/@((type != null) ? type.ID : 0)"  class="form">
+        <div class="form_left">
+            <label for="name">
+                Name
+                <input type="text" name="name" id="name" placeholder="Enter the XML Node for this ACES Type" value="@((type != null) ? type.name:"")" required />
+            </label>
+
+            <div id="buttons">
+                <input type="submit" id="btnSubmit" name="btnSubmit" value="Save" />
+            </div>
+        </div>
+    </form>
+</div>

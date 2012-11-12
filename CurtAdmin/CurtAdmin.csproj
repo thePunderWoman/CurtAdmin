@@ -191,6 +191,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ACES\AcesType.cs" />
     <Compile Include="Models\API.cs" />
     <Compile Include="Models\AuthenticateModels.cs" />
     <Compile Include="B2B.designer.cs">
@@ -386,6 +387,7 @@
     </Content>
     <Content Include="Global.asax" />
     <Content Include="Scripts\admin\aces.js" />
+    <Content Include="Scripts\admin\ACES\AcesTypes.js" />
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
     <Content Include="Scripts\admin\admin.js" />
     <Content Include="Scripts\admin\Product\EditACESVehicles.js" />
@@ -498,6 +500,10 @@
     <Content Include="Views\Shared\Navigation\_ACESNavigation.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Product\EditACESVehicles.cshtml" />
+    <Content Include="Views\ACES\ACESTypes.cshtml" />
+    <Content Include="Views\ACES\ConfigTypes.cshtml" />
+    <Content Include="Views\ACES\ConfigAttributes.cshtml" />
+    <Content Include="Views\ACES\SaveACESType.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

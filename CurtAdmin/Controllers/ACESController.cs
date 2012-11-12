@@ -26,13 +26,56 @@ namespace CurtAdmin.Controllers {
         }
 
         public ActionResult Vehicles() {
-
             List<vcdb_Make> makes = new ACES().GetMakes();
             ViewBag.makes = makes;
-
             return View();
         }
 
+        public ActionResult AcesTypes() {
+            List<AcesType> types = new ACES().GetACESTypes();
+            ViewBag.types = types;
+            return View();
+        }
+
+        public ActionResult ConfigTypes() {
+            List<ConfigAttributeType> types = new ACES().GetConfigTypes();
+            ViewBag.types = types;
+            return View();
+        }
+
+        public ActionResult ConfigAttributes() {
+            List<ConfigAttribute> attributes = new ACES().GetConfigAttributes();
+            ViewBag.attributes = attributes;
+            return View();
+        }
+
+        public ActionResult SaveACESType(int id = 0, string name = null) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AcesType type = new AcesType();
+            string error = "";
+            try {
+                type = new ACES().SaveACESType(id, name);
+            } catch (Exception e) {
+                error = e.Message;
+            }
+            if (type != null && id != type.ID) {
+                return RedirectToAction("SaveACESType", new { id = type.ID });
+            }
+            ViewBag.type = type;
+            ViewBag.error = error;
+            return View();
+        }
+
+        public ActionResult RemoveACESType(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                AcesType t = db.AcesTypes.Where(x => x.ID.Equals(id)).First<AcesType>();
+                db.AcesTypes.DeleteOnSubmit(t);
+                db.SubmitChanges();
+            } catch { }
+            return RedirectToAction("AcesTypes");
+        }
+        
         public string GetModels(int id) {
             List<vcdb_Model> models = new ACES().GetModels(id);
             return JsonConvert.SerializeObject(models);
