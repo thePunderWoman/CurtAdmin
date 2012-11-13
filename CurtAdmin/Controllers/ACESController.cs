@@ -31,21 +31,11 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        /*Aces Type methods */
+
         public ActionResult AcesTypes() {
             List<AcesType> types = new ACES().GetACESTypes();
             ViewBag.types = types;
-            return View();
-        }
-
-        public ActionResult ConfigTypes() {
-            List<ConfigAttributeType> types = new ACES().GetConfigTypes();
-            ViewBag.types = types;
-            return View();
-        }
-
-        public ActionResult ConfigAttributes() {
-            List<ConfigAttribute> attributes = new ACES().GetConfigAttributes();
-            ViewBag.attributes = attributes;
             return View();
         }
 
@@ -75,7 +65,85 @@ namespace CurtAdmin.Controllers {
             } catch { }
             return RedirectToAction("AcesTypes");
         }
-        
+
+        /* Configuration Type Methods */
+
+        public ActionResult ConfigTypes() {
+            List<ConfigAttributeType> types = new ACES().GetConfigTypes();
+            ViewBag.types = types;
+            return View();
+        }
+
+        public ActionResult SaveConfigurationType(int id = 0, string name = null, int? acestypeid = null) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ConfigAttributeType type = new ConfigAttributeType();
+            string error = "";
+            try {
+                type = new ACES().SaveConfigurationType(id, name, acestypeid);
+            } catch (Exception e) {
+                error = e.Message;
+            }
+            if (type != null && id != type.ID) {
+                return RedirectToAction("SaveConfigurationType", new { id = type.ID });
+            }
+            List<AcesType> acestypes = new ACES().GetACESTypes();
+            ViewBag.acestypes = acestypes;
+            ViewBag.type = type;
+            ViewBag.error = error;
+            return View();
+        }
+
+        public ActionResult RemoveConfigurationType(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                if (db.ConfigAttributes.Where(x => x.ConfigAttributeTypeID.Equals(id)).Count() == 0) {
+                    ConfigAttributeType t = db.ConfigAttributeTypes.Where(x => x.ID.Equals(id)).First<ConfigAttributeType>();
+                    db.ConfigAttributeTypes.DeleteOnSubmit(t);
+                    db.SubmitChanges();
+                }
+            } catch { }
+            return RedirectToAction("ConfigTypes");
+        }
+
+        /* Configuration Attribute Methods */
+
+        public ActionResult ConfigAttributes() {
+            List<ConfigAttribute> attributes = new ACES().GetConfigAttributes();
+            ViewBag.attributes = attributes;
+            return View();
+        }
+
+        public ActionResult SaveConfigurationAttribute(int id = 0, string value = null, int configtypeid = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ConfigAttribute attribute = new ConfigAttribute();
+            string error = "";
+            try {
+                attribute = new ACES().SaveConfigurationAttr(id, value, configtypeid);
+            } catch (Exception e) {
+                error = e.Message;
+            }
+            if (attribute != null && id != attribute.ID) {
+                return RedirectToAction("SaveConfigurationAttribute", new { id = attribute.ID });
+            }
+            List<ConfigAttributeType> configtypes = new ACES().GetConfigTypes();
+            ViewBag.configtypes = configtypes;
+            ViewBag.attribute = attribute;
+            ViewBag.error = error;
+            return View();
+        }
+
+        public ActionResult RemoveConfigurationAttribute(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                if (db.vcdb_Vehicles.Where(x => x.VehicleConfig.VehicleConfigAttributes.Any(y => y.AttributeID.Equals(id))).Count() == 0) {
+                    ConfigAttribute attr = db.ConfigAttributes.Where(x => x.ID.Equals(id)).First<ConfigAttribute>();
+                    db.ConfigAttributes.DeleteOnSubmit(attr);
+                    db.SubmitChanges();
+                }
+            } catch { }
+            return RedirectToAction("ConfigAttributes");
+        }
+
         public string GetModels(int id) {
             List<vcdb_Model> models = new ACES().GetModels(id);
             return JsonConvert.SerializeObject(models);

@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Sales Representatives";
+    ViewBag.navigation = "_SalesRepNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.SalesRepresentative> reps = ViewBag.reps ?? new List<CurtAdmin.SalesRepresentative>();
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/SalesRep/Add")">Add Rep</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2 id="index_title">Sales Reps</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>MAPICS Code</th>
+                <th>Customers</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.SalesRepresentative rep in reps) {
+                <tr>
+                    <td>@rep.name</td>
+                    <td>@rep.code</td>
+                    <td>@rep.count</td>
+                    <td>
+                        <a href="/Customers/ViewBySalesRep?salesRepID=@rep.salesRepID" title="View Customers">Customers</a> | 
+                        <a href="/SalesRep/Edit/@rep.salesRepID" title="Edit">Edit</a>
+                        @((rep.count == 0) ? Html.Raw(" | <a href=\"/SalesRep/Delete/" + rep.salesRepID + "\" title=\"Delete\" data-id=\"" + rep.salesRepID + "\" class=\"delete\">Delete</a>") : null)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="/Scripts/admin/salesReps.js" type="text/javascript"></script>

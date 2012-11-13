@@ -18,12 +18,12 @@
         <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/ACES/AddVehicle")">Add New</a>
+        <a href="@Url.Content("~/ACES/SaveConfigurationType")">Add New</a>
     </li>
 </ul>
 <div id="content_container">
     <h2>Manage Configuration Attribute Types</h2>
-    <table id="AcesTypes">
+    <table id="ConfigAttributeTypes">
         <thead>
             <tr>
                 <th>sort</th>
@@ -38,10 +38,10 @@
                     <td>@type.sort</td>
                     <td>@type.name</td>
                     <td>@((type.AcesTypeID != null) ? type.AcesType.name : "")</td>
-                    <td><a href="#" class="edit" data-id="@type.ID">Edit</a> | <a href="#" class="remove" data-id="@type.ID">Remove</a></td>
+                    <td><a href="/ACES/SaveConfigurationType/@type.ID" class="edit" data-id="@type.ID">Edit</a>@((type.count == 0) ? Html.Raw("| <a href=\"/ACES/RemoveConfigurationType\" class=\"remove\" data-id=\"" + type.ID + "\">Remove</a>") : null)</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-<script src="/Scripts/admin/ACES/AcesTypes.js"></script>
+<script src="/Scripts/admin/ACES/ConfigAttributeTypes.js"></script>

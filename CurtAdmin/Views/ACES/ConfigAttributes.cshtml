@@ -18,17 +18,18 @@
         <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/ACES/AddVehicle")">Add New</a>
+        <a href="@Url.Content("~/ACES/SaveConfigurationAttribute")">Add New</a>
     </li>
 </ul>
 <div id="content_container">
     <h2>Manage Configuration Attributes</h2>
-    <table id="AcesTypes">
+    <table id="ConfigAttributes">
         <thead>
             <tr>
                 <th>Value</th>
                 <th>Configuration Type</th>
                 <th>ACES Type</th>
+                <th>Vehicles w/attr</th>
                 <th></th>
             </tr>
         </thead>
@@ -38,10 +39,11 @@
                     <td>@attribute.value</td>
                     <td>@attribute.ConfigAttributeType.name</td>
                     <td>@((attribute.ConfigAttributeType.AcesTypeID != null) ? attribute.ConfigAttributeType.AcesType.name : "")</td>
-                    <td><a href="#" class="edit" data-id="@attribute.ID">Edit</a> | <a href="#" class="remove" data-id="@attribute.ID">Remove</a></td>
+                    <td>@attribute.count</td>
+                    <td><a href="/ACES/SaveConfigurationAttribute/@attribute.ID" class="edit" data-id="@attribute.ID">Edit</a>@((attribute.count == 0) ? Html.Raw(" | <a href=\"/ACES/SaveConfigurationAttribute/" + attribute.ID + "\" class=\"remove\" data-id=\"" + attribute.ID + "\">Remove</a>") : null)</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-<script src="/Scripts/admin/ACES/AcesTypes.js"></script>
+<script src="/Scripts/admin/ACES/ConfigAttributes.js"></script>

@@ -147,6 +147,7 @@
     <Compile Include="ActiveResults\ExcelResult.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ACESController.cs" />
+    <Compile Include="Controllers\SalesRepController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\B2BController.cs" />
@@ -192,6 +193,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ACES\AcesType.cs" />
+    <Compile Include="Models\ACES\ConfigAttributeType.cs" />
+    <Compile Include="Models\ACES\ConfigAttribute.cs" />
     <Compile Include="Models\API.cs" />
     <Compile Include="Models\AuthenticateModels.cs" />
     <Compile Include="B2B.designer.cs">
@@ -229,7 +232,7 @@
     <Compile Include="Models\ProductCatModels.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\ReviewModel.cs" />
-    <Compile Include="Models\SalesRep.cs" />
+    <Compile Include="Models\SalesRepresentative.cs" />
     <Compile Include="Models\SiteContentModel.cs" />
     <Compile Include="Models\TestimonialModel.cs" />
     <Compile Include="Models\TrailerModel.cs" />
@@ -388,8 +391,11 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\admin\aces.js" />
     <Content Include="Scripts\admin\ACES\AcesTypes.js" />
+    <Content Include="Scripts\admin\ACES\ConfigAttributeTypes.js" />
+    <Content Include="Scripts\admin\ACES\ConfigAttributes.js" />
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
     <Content Include="Scripts\admin\admin.js" />
+    <Content Include="Scripts\admin\salesReps.js" />
     <Content Include="Scripts\admin\Product\EditACESVehicles.js" />
     <Content Include="Scripts\admin\Product\Edit.js" />
     <Content Include="Scripts\admin\Product\EditAttributes.js" />
@@ -504,6 +510,11 @@
     <Content Include="Views\ACES\ConfigTypes.cshtml" />
     <Content Include="Views\ACES\ConfigAttributes.cshtml" />
     <Content Include="Views\ACES\SaveACESType.cshtml" />
+    <Content Include="Views\ACES\SaveConfigurationType.cshtml" />
+    <Content Include="Views\ACES\SaveConfigurationAttribute.cshtml" />
+    <Content Include="Views\SalesRep\Index.cshtml" />
+    <Content Include="Views\SalesRep\Edit.cshtml" />
+    <Content Include="Views\Shared\Navigation\_SalesRepNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

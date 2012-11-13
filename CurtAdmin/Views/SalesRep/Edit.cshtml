@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Manage Sales Representatives";
+    ViewBag.navigation = "_SalesRepNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.SalesRepresentative rep = ViewBag.rep ?? new CurtAdmin.SalesRepresentative();
+}
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/SalesRep/Add")" class="active">Add Rep</a>
+    </li>
+</ul>
+<div id="content_container">
+    
+    <h2>@((rep != null && rep.salesRepID > 0) ? "Edit" : "Add") News Item</h2>
+
+    <p id="err">@ViewBag.err</p>
+    <form class="form_left" id="add_form" method="post" action="/SalesRep/Save/@((rep != null && rep.salesRepID > 0) ? rep.salesRepID : 0)">
+        <label for="name">
+            Name
+            <input type="text" id="name" name="name" placeholder="Enter the rep's name..." value="@((rep != null) ? rep.name : "")" />
+        </label>
+        <label for="code">
+            MAPICS Code
+            <input type="text" id="code" name="code" placeholder="Enter the rep's code in MAPICS..." value="@((rep != null) ? rep.code : "")" />
+        </label>
+        <div id="buttons">
+            <input type="submit" id="btnSave" name="btnSave" value="Save" />
+        </div>
+    </form>
+</div>

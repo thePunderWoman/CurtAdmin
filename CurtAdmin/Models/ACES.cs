@@ -98,20 +98,6 @@ namespace CurtAdmin.Models {
             return types;
         }
 
-        public List<ConfigAttributeType> GetConfigTypes() {
-            CurtDevDataContext db = new CurtDevDataContext();
-            List<ConfigAttributeType> types = new List<ConfigAttributeType>();
-            types = db.ConfigAttributeTypes.OrderBy(x => x.name).ToList<ConfigAttributeType>();
-            return types;
-        }
-
-        public List<ConfigAttribute> GetConfigAttributes() {
-            CurtDevDataContext db = new CurtDevDataContext();
-            List<ConfigAttribute> attributes = new List<ConfigAttribute>();
-            attributes = db.ConfigAttributes.OrderBy(x => x.value).ToList<ConfigAttribute>();
-            return attributes;
-        }
-
         public AcesType SaveACESType(int id = 0, string name = null) {
             AcesType type = new AcesType();
             CurtDevDataContext db = new CurtDevDataContext();
@@ -139,6 +125,90 @@ namespace CurtAdmin.Models {
                 }
             }
             return type;
+        }
+
+        public List<ConfigAttributeType> GetConfigTypes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ConfigAttributeType> types = new List<ConfigAttributeType>();
+            types = db.ConfigAttributeTypes.OrderBy(x => x.name).ToList<ConfigAttributeType>();
+            foreach (ConfigAttributeType t in types) {
+                t.count = t.ConfigAttributes.Count;
+            }
+            return types;
+        }
+
+        public ConfigAttributeType SaveConfigurationType(int id = 0, string name = null, int? acestypeid = null) {
+            ConfigAttributeType type = new ConfigAttributeType();
+            CurtDevDataContext db = new CurtDevDataContext();
+            if (String.IsNullOrWhiteSpace(name)) {
+                throw new Exception("You must enter a name.");
+            }
+            try {
+                type = db.ConfigAttributeTypes.Where(x => x.ID.Equals(id)).First<ConfigAttributeType>();
+                if (name != null) {
+                    try {
+                        ConfigAttributeType t = db.ConfigAttributeTypes.Where(x => x.name.Trim().Equals(name.Trim()) && !x.ID.Equals(id)).First<ConfigAttributeType>();
+                    } catch {
+                        type.name = name.Trim();
+                        type.AcesTypeID = acestypeid;
+                        db.SubmitChanges();
+                    }
+                }
+            } catch {
+                try {
+                    ConfigAttributeType t = db.ConfigAttributeTypes.Where(x => x.name.Trim().Equals(name.Trim())).First<ConfigAttributeType>();
+                } catch {
+                    type.name = name.Trim();
+                    type.AcesTypeID = acestypeid;
+                    type.sort = db.ConfigAttributeTypes.OrderByDescending(x => x.sort).Select(x => x.sort).FirstOrDefault<int>() + 1;
+                    db.ConfigAttributeTypes.InsertOnSubmit(type);
+                    db.SubmitChanges();
+                }
+            }
+            return type;
+        }
+
+        public List<ConfigAttribute> GetConfigAttributes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ConfigAttribute> attributes = new List<ConfigAttribute>();
+            attributes = db.ConfigAttributes.OrderBy(x => x.value).ToList<ConfigAttribute>();
+            foreach (ConfigAttribute attr in attributes) {
+                attr.count = db.vcdb_Vehicles.Where(x => x.VehicleConfig.VehicleConfigAttributes.Any(y => y.AttributeID.Equals(attr.ID))).Distinct().Count();
+            }
+            return attributes;
+        }
+
+        public ConfigAttribute SaveConfigurationAttr(int id = 0, string value = null, int configtypeid = 0, int? vcdbID = null) {
+            ConfigAttribute attr = new ConfigAttribute();
+            CurtDevDataContext db = new CurtDevDataContext();
+            if (configtypeid == 0) {
+                throw new Exception("You must choose a configuration type");
+            }
+            if (String.IsNullOrWhiteSpace(value)) {
+                throw new Exception("You must enter a name.");
+            }
+            try {
+                attr = db.ConfigAttributes.Where(x => x.ID.Equals(id)).First<ConfigAttribute>();
+                try {
+                    ConfigAttribute a = db.ConfigAttributes.Where(x => x.value.Trim().Equals(value.Trim()) && x.vcdbID.Equals(vcdbID) && !x.ID.Equals(id)).First<ConfigAttribute>();
+                } catch {
+                    attr.value = value.Trim();
+                    attr.ConfigAttributeTypeID = configtypeid;
+                    attr.vcdbID = vcdbID;
+                    db.SubmitChanges();
+                }
+            } catch {
+                try {
+                    ConfigAttribute a = db.ConfigAttributes.Where(x => x.value.Trim().Equals(value.Trim()) && x.vcdbID.Equals(vcdbID)).First<ConfigAttribute>();
+                } catch {
+                    attr.value = value.Trim();
+                    attr.ConfigAttributeTypeID = configtypeid;
+                    attr.vcdbID = vcdbID;
+                    db.ConfigAttributes.InsertOnSubmit(attr);
+                    db.SubmitChanges();
+                }
+            }
+            return attr;
         }
 
         public string SearchPartTypes(string keyword = "") {

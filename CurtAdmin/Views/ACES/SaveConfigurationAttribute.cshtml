@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Add Configuration Attribute Type";
+    ViewBag.navigation = "_VehicleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.ConfigAttribute attribute = ViewBag.attribute ?? new CurtAdmin.ConfigAttribute();
+    List<CurtAdmin.ConfigAttributeType> configtypes = ViewBag.configtypes ?? new List<CurtAdmin.ConfigAttributeType>();
+    string error = ViewBag.error ?? "";
+}
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/ACES/Vehicles")">View Vehicles</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigAttributes")">View Configuration Attributes</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigTypes")">View Configuration Types</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/ACES/SaveConfigurationAttribute")" class="active">Add New</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>@((attribute != null & attribute.ID > 0) ? "Save" : "Add") Configuration Attribute</h2>
+    @if (error != "") {
+        <p>@error</p>
+    }
+    <form method="post" action="/ACES/SaveConfigurationAttribute/@((attribute != null) ? attribute.ID : 0)"  class="form">
+        <div class="form_left">
+            <label for="value">
+                Value
+                <input type="text" name="value" id="value" placeholder="Enter the value for this Attribute" value="@((attribute != null) ? attribute.value:"")" required />
+            </label>
+
+            <label for="configtypeid">
+                Configuration Type
+                <select name="configtypeid">
+                    @foreach (CurtAdmin.ConfigAttributeType type in configtypes) {
+                        <option value="@type.ID" @((attribute.ConfigAttributeTypeID == type.ID) ? "selected" : "")>@type.name</option>
+                    }
+                </select>
+            </label>
+
+            <label for="vcdbID">
+                VCDB Value
+                <input type="text" name="vcdbID" id="vcdbID" placeholder="What value does this match in the VCDB" value="@((attribute != null && attribute.vcdbID != null) ? attribute.vcdbID:"")" />
+            </label>
+
+            <div id="buttons">
+                <input type="submit" id="btnSubmit" name="btnSubmit" value="Save" />
+            </div>
+        </div>
+    </form>
+</div>

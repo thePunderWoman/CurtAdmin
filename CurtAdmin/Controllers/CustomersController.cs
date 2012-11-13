@@ -15,7 +15,7 @@ namespace CurtAdmin.Controllers {
         // GET: /Customers/
 
         public ActionResult Index(string msg = "") {
-            List<SalesRepresentative> salesreps = SalesRepModel.GetAll();
+            List<SalesRepresentative> salesreps = new SalesRepresentative().GetAll();
             ViewBag.salesreps = salesreps;
             ViewBag.msg = msg;
             return View();
@@ -62,7 +62,7 @@ namespace CurtAdmin.Controllers {
         }
 
         public ActionResult ViewBySalesRep(int salesRepID = 0) {
-            SalesRepresentative rep = SalesRepModel.Get(salesRepID);
+            SalesRepresentative rep = new SalesRepresentative().Get(salesRepID);
             ViewBag.H2 = rep.name + "'s Customers";
             List<Customer> customers = new List<Customer>();
             customers = CustomerModel.GetCustomersByRep(salesRepID);

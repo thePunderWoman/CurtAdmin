@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Add Configuration Type";
+    ViewBag.navigation = "_VehicleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.ConfigAttributeType type = ViewBag.type ?? new CurtAdmin.ConfigAttributeType();
+    List<CurtAdmin.AcesType> acestypes = ViewBag.acestypes ?? new List<CurtAdmin.AcesType>();
+    string error = ViewBag.error ?? "";
+    int acestype = 0;
+    if(type != null && type.AcesTypeID != null) {
+        acestype = (int)type.AcesTypeID;
+    }
+}
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/ACES/Vehicles")">View Vehicles</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigAttributes")">View Configuration Attributes</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigTypes")">View Configuration Types</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/ACES/SaveConfigurationType")" class="active">Add New</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>@((type != null & type.ID > 0) ? "Save" : "Add") Configuration Type</h2>
+    @if (error != "") {
+        <p>@error</p>
+    }
+    <form method="post" action="/ACES/SaveConfigurationType/@((type != null) ? type.ID : 0)"  class="form">
+        <div class="form_left">
+            <label for="name">
+                Name
+                <input type="text" name="name" id="name" placeholder="Enter the name for this Configuration Type" value="@((type != null) ? type.name:"")" required />
+            </label>
+
+            <label for="acestypeid">
+                ACES Type
+                <select name="acestypeid">
+                    <option value="" @((acestype == 0) ? "selected" : "")>Non-ACES Configuration</option>
+                    @foreach (CurtAdmin.AcesType atype in acestypes) {
+                        <option value="@atype.ID" @((acestype == atype.ID) ? "selected" : "")>@atype.name</option>
+                    }
+                </select>
+            </label>
+
+            <div id="buttons">
+                <input type="submit" id="btnSubmit" name="btnSubmit" value="Save" />
+            </div>
+        </div>
+    </form>
+</div>
