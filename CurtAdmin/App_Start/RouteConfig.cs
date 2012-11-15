@@ -30,8 +30,8 @@ namespace CurtAdmin {
 
             routes.MapRoute(
                 name: "ContentEdit",
-                url: "Website/Content/Edit/{id}",
-                defaults: new { controller = "Website", action = "EditContent", id = 0 }
+                url: "Website/Content/Edit/{id}/{revisionID}",
+                defaults: new { controller = "Website", action = "EditContent", id = 0, revisionID = 0 }
             );
 
             routes.MapRoute(

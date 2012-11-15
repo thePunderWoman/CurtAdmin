@@ -281,7 +281,7 @@ namespace CurtAdmin.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult EditContent(int id = 0) {
+        public ActionResult EditContent(int id = 0, int revisionID = 0) {
             string error = "";
             CurtDevDataContext db = new CurtDevDataContext();
 
@@ -312,9 +312,14 @@ namespace CurtAdmin.Controllers
                     }
                     content.lastModified = DateTime.Now;
                     content.requireAuthentication = requireAuthentication;
-
-                    SiteContentRevision revision = db.SiteContentRevisions.Where(x => x.contentID == content.contentID)
+                    SiteContentRevision revision = new SiteContentRevision();
+                    try {
+                        revision = db.SiteContentRevisions.Where(x => x.contentID == content.contentID)
+                                                    .Where(x => x.revisionID == revisionID).First<SiteContentRevision>();
+                    } catch {
+                        revision = db.SiteContentRevisions.Where(x => x.contentID == content.contentID)
                                                     .Where(x => x.active == true).First<SiteContentRevision>();
+                    }
                     revision.content_text = Request.Form["page_content"];
                     db.SubmitChanges();
                     ViewBag.message = "Content Page Updated Successfully!";
@@ -326,8 +331,26 @@ namespace CurtAdmin.Controllers
 
             ViewBag.error = error;
             ViewBag.content = SiteContentModel.GetPage(id); ;
-
+            ViewBag.revisionID = revisionID;
             return View();
+        }
+
+        public ActionResult CopyRevision(int id = 0) {
+            // Remove content page from menu
+            int contentid = SiteContentModel.CopyRevision(id);
+            return RedirectToRoute("ContentEdit", new { id = contentid });
+        }
+
+        public ActionResult ActivateRevision(int id = 0) {
+            // Remove content page from menu
+            int contentid = SiteContentModel.ActivateRevision(id);
+            return RedirectToRoute("ContentEdit", new { id = contentid });
+        }
+
+        public ActionResult DeleteRevision(int id = 0) {
+            // Remove content page from menu
+            int contentid = SiteContentModel.DeleteRevision(id);
+            return RedirectToRoute("ContentEdit", new { id = contentid });
         }
 
         public ActionResult RemoveContent(int id = 0) {

@@ -108,6 +108,51 @@ namespace CurtAdmin.Models {
             } catch { return false; }
         }
 
+        public static int CopyRevision(int id = 0) {
+            try {
+                CurtDevDataContext db = new CurtDevDataContext();
+                SiteContentRevision revision = db.SiteContentRevisions.Where(x => x.revisionID == id).First<SiteContentRevision>();
+                SiteContentRevision revcopy = new SiteContentRevision {
+                    active = false,
+                    createdOn = DateTime.Now,
+                    content_text = revision.content_text,
+                    contentID = revision.contentID
+                };
+                db.SiteContentRevisions.InsertOnSubmit(revcopy);
+                db.SubmitChanges();
+                return revcopy.contentID;
+            } catch { return 0; }
+        }
+
+        public static int ActivateRevision(int id = 0) {
+            try {
+                CurtDevDataContext db = new CurtDevDataContext();
+                int contentID = db.SiteContentRevisions.Where(x => x.revisionID == id).Select(x => x.contentID).First();
+                List<SiteContentRevision> revisions = db.SiteContentRevisions.Where(x => x.contentID.Equals(contentID)).ToList<SiteContentRevision>();
+                foreach (SiteContentRevision r in revisions) {
+                    if (r.revisionID != id) {
+                        r.active = false;
+                    } else {
+                        r.active = true;
+                    }
+                }
+                db.SubmitChanges();
+                return contentID;
+            } catch { return 0; }
+        }
+
+        public static int DeleteRevision(int id = 0) {
+            try {
+                CurtDevDataContext db = new CurtDevDataContext();
+                SiteContentRevision revision = db.SiteContentRevisions.Where(x => x.revisionID == id).First<SiteContentRevision>();
+                int contentID = revision.contentID;
+                if (!(bool)revision.active) {
+                    db.SiteContentRevisions.DeleteOnSubmit(revision);
+                    db.SubmitChanges();
+                }
+                return contentID;
+            } catch { return 0; }
+        }
     }
 
     public class ContentPage : SiteContent {

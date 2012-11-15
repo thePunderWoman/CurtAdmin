@@ -395,6 +395,7 @@
     <Content Include="Scripts\admin\ACES\ConfigAttributes.js" />
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
     <Content Include="Scripts\admin\admin.js" />
+    <Content Include="Scripts\admin\editcontent.js" />
     <Content Include="Scripts\admin\salesReps.js" />
     <Content Include="Scripts\admin\Product\EditACESVehicles.js" />
     <Content Include="Scripts\admin\Product\Edit.js" />
