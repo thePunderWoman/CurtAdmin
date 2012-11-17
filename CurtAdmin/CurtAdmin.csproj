@@ -192,6 +192,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Website.cs" />
     <Compile Include="Models\ACES\AcesType.cs" />
     <Compile Include="Models\ACES\ConfigAttributeType.cs" />
     <Compile Include="Models\ACES\ConfigAttribute.cs" />
@@ -516,6 +517,7 @@
     <Content Include="Views\SalesRep\Index.cshtml" />
     <Content Include="Views\SalesRep\Edit.cshtml" />
     <Content Include="Views\Shared\Navigation\_SalesRepNavigation.cshtml" />
+    <Content Include="Views\Website\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -698,7 +700,7 @@
     <Content Include="Views\Website\EditContent.cshtml" />
     <Content Include="Views\Website\EditLink.cshtml" />
     <Content Include="Views\Website\EditMenu.cshtml" />
-    <Content Include="Views\Website\Index.cshtml" />
+    <Content Include="Views\Website\Contents.cshtml" />
     <Content Include="Views\Website\Menus.cshtml" />
     <Content Include="Views\Authenticate\Forgot.cshtml" />
     <Content Include="Views\Authenticate\Index.cshtml" />

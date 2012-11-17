@@ -16,12 +16,12 @@ namespace CurtAdmin.Models {
             return menu;
         }
 
-        public static menuWithContent GetPrimary() {
+        public static menuWithContent GetPrimary(int websiteID = 0) {
             menuWithContent menu = new menuWithContent();
             try {
                 CurtDevDataContext db = new CurtDevDataContext();
                 menu = (from m in db.Menus
-                        where m.isPrimary == true
+                        where m.isPrimary == true && m.websiteID.Equals(websiteID)
                         select new menuWithContent {
                             menuID = m.menuID,
                             menu_name = m.menu_name,
@@ -61,12 +61,12 @@ namespace CurtAdmin.Models {
             } catch { return menu; }
         }
 
-        public static menuWithContent GetMenu(int id = 0) {
+        public static menuWithContent GetMenu(int id = 0, int websiteID = 0) {
             menuWithContent menu = new menuWithContent();
             try {
                 CurtDevDataContext db = new CurtDevDataContext();
                 menu = (from m in db.Menus
-                        where m.menuID == id
+                        where m.menuID == id && m.websiteID.Equals(websiteID)
                         select new menuWithContent {
                             menuID = m.menuID,
                             menu_name = m.menu_name,
@@ -107,7 +107,7 @@ namespace CurtAdmin.Models {
             } catch { return menu; }
         }
         
-        public static Menu SetPrimary(int id = 0) {
+        public static Menu SetPrimary(int id = 0, int websiteID = 0) {
             CurtDevDataContext db = new CurtDevDataContext();
             Menu menu = db.Menus.Where(x => x.menuID == id).FirstOrDefault<Menu>();
             if (menu != null) {
@@ -115,7 +115,7 @@ namespace CurtAdmin.Models {
                     menu.isPrimary = false;
                     db.SubmitChanges();
                 } else {
-                    Menu primarymenu = db.Menus.Where(x => x.isPrimary == true).FirstOrDefault<Menu>();
+                    Menu primarymenu = db.Menus.Where(x => x.isPrimary == true && x.websiteID.Equals(websiteID)).FirstOrDefault<Menu>();
                     if (primarymenu != null) {
                         primarymenu.isPrimary = false;
                     }
@@ -154,7 +154,7 @@ namespace CurtAdmin.Models {
             } catch { return false; }
         }
 
-        public static Menu_SiteContent AddContent(int menuid, int contentid) {
+        public static Menu_SiteContent AddContent(int menuid, int contentid, int websiteID) {
             CurtDevDataContext db = new CurtDevDataContext();
             Menu_SiteContent menuitem = new Menu_SiteContent {
                 menuID = menuid,

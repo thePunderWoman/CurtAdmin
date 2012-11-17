@@ -6,23 +6,53 @@ using System.Web.Mvc;
 using CurtAdmin.Models;
 using System.Web.Script.Serialization;
 
-namespace CurtAdmin.Controllers
-{
-    public class WebsiteController : BaseController
-    {
+namespace CurtAdmin.Controllers {
+    public class WebsiteController : BaseController {
         //
         // GET: /Website/
+        protected override void OnActionExecuting(ActionExecutingContext filterContext) {
+            ViewBag.activeModule = "Website Management";
+            List<Website> websites = new Website().GetAll();
+            ViewBag.websites = websites;
+            HttpCookie websiteCookie = new HttpCookie("");
+            websiteCookie = Request.Cookies.Get("websiteID");
+            int websiteID = 0;
+            try {
+                websiteID = Convert.ToInt32(websiteCookie.Value);
+            } catch { }
+            ViewBag.websiteID = websiteID;
+        }
 
-        public ActionResult Index(int id = 0)
-        {
+        public ActionResult Index() {
+            return View();
+        }
+
+        public ActionResult ChooseWebsite(int id = 0) {
+            if (id > 0) {
+                HttpCookie websiteID = new HttpCookie("websiteID");
+                websiteID.Value = id.ToString();
+                websiteID.Expires = DateTime.Now.AddYears(2);
+                Response.Cookies.Add(websiteID);
+            }
+            return RedirectToAction("Contents");
+        }
+
+        public ActionResult Contents(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             CurtDevDataContext db = new CurtDevDataContext();
-            List<SiteContent> contents = SiteContentModel.GetAll();
+            List<SiteContent> contents = SiteContentModel.GetAll(websiteID);
             ViewBag.contents = contents;
             if (id == 0) {
-                menuWithContent menu = MenuModel.GetPrimary();
+                menuWithContent menu = MenuModel.GetPrimary(websiteID);
                 ViewBag.menu = menu;
             } else {
-                menuWithContent menu = MenuModel.GetMenu(id);
+                menuWithContent menu = MenuModel.GetMenu(id, websiteID);
+                if (menu == null || menu.menuID == 0) {
+                    return RedirectToRoute("Contents");
+                }
                 ViewBag.menu = menu;
             }
 
@@ -30,21 +60,33 @@ namespace CurtAdmin.Controllers
         }
 
         public ActionResult Menus() {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
 
             List<Menu> menus = new List<Menu>();
             CurtDevDataContext db = new CurtDevDataContext();
-            menus = (db.Menus.Where(x => x.active == true).OrderBy(x => x.isPrimary).ThenBy(x => x.showOnSitemap).ThenBy(x => x.sort).ToList<Menu>());
+            menus = (db.Menus.Where(x => x.active == true && x.websiteID.Equals(websiteID)).OrderBy(x => x.isPrimary).ThenBy(x => x.showOnSitemap).ThenBy(x => x.sort).ToList<Menu>());
             ViewBag.menus = menus;
 
             return View();
         }
 
         public ActionResult SetPrimaryMenu(int id = 0) {
-            MenuModel.SetPrimary(id);
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
+            MenuModel.SetPrimary(id, websiteID);
             return RedirectToAction("Menus");
         }
 
         public ActionResult AddMenu() {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             string error = "";
             CurtDevDataContext db = new CurtDevDataContext();
 
@@ -69,7 +111,8 @@ namespace CurtAdmin.Controllers
                         requireAuthentication = requireAuthentication,
                         showOnSitemap = showOnSitemap,
                         sort = ((showOnSitemap) ? (db.Menus.Where(x => x.showOnSitemap == true).OrderByDescending(x => x.sort).Select(x => x.sort).FirstOrDefault() + 1) : 1),
-                        active = true
+                        active = true,
+                        websiteID = websiteID
                     };
 
                     db.Menus.InsertOnSubmit(new_menu);
@@ -87,12 +130,18 @@ namespace CurtAdmin.Controllers
         }
 
         public ActionResult EditMenu(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             string error = "";
             string message = "";
             CurtDevDataContext db = new CurtDevDataContext();
 
-            Menu menu = db.Menus.Where(x => x.menuID == id).FirstOrDefault<Menu>();
-
+            Menu menu = db.Menus.Where(x => x.menuID == id && x.websiteID.Equals(websiteID)).FirstOrDefault<Menu>();
+            if (menu == null) {
+                return RedirectToAction("Menus");
+            }
             #region Form Submission
             try {
                 if (Request.Form["btnSave"] != null) {
@@ -130,8 +179,16 @@ namespace CurtAdmin.Controllers
         }
 
         public ActionResult AddLink(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             string error = "";
             CurtDevDataContext db = new CurtDevDataContext();
+            Menu m = db.Menus.Where(x => x.menuID.Equals(id) && x.websiteID.Equals(websiteID)).FirstOrDefault<Menu>();
+            if (m == null || m.menuID == 0) {
+                return RedirectToAction("Menus");
+            }
 
             #region Form Submission
             try {
@@ -148,10 +205,10 @@ namespace CurtAdmin.Controllers
 
                     // Create the new customer and save
                     Menu_SiteContent new_item = new Menu_SiteContent {
-                        menuID = id,
+                        menuID = m.menuID,
                         menuTitle = name,
                         menuLink = value,
-                        menuSort = (db.Menu_SiteContents.Where(x => x.menuID == id).Where(x => x.parentID == null).Count()) + 1
+                        menuSort = (db.Menu_SiteContents.Where(x => x.menuID == m.menuID).Where(x => x.parentID == null).Count()) + 1
                     };
 
                     db.Menu_SiteContents.InsertOnSubmit(new_item);
@@ -170,12 +227,18 @@ namespace CurtAdmin.Controllers
         }
 
         public ActionResult EditLink(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             string error = "";
             string message = "";
             CurtDevDataContext db = new CurtDevDataContext();
 
-            Menu_SiteContent item = db.Menu_SiteContents.Where(x => x.menuContentID == id).FirstOrDefault<Menu_SiteContent>();
-
+            Menu_SiteContent item = db.Menu_SiteContents.Where(x => x.menuContentID == id && x.Menu.websiteID.Equals(websiteID)).FirstOrDefault<Menu_SiteContent>();
+            if (item == null || item.menuContentID == 0) {
+                return RedirectToAction("Menus");
+            }
             #region Form Submission
             try {
                 if (Request.Form["btnSave"] != null) {
@@ -207,25 +270,37 @@ namespace CurtAdmin.Controllers
 
             return View();
         }
-        
+
         public ActionResult SetPrimaryContent(int id = 0, int menuid = 0) {
-            SiteContentModel.SetPrimary(id);
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
+            SiteContentModel.SetPrimary(id, websiteID);
             return RedirectToRoute("ContentMenu", new { id = menuid });
         }
 
         [ValidateInput(false)]
         public ActionResult AddContent(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             string error = "";
             CurtDevDataContext db = new CurtDevDataContext();
+            Menu m = db.Menus.Where(x => x.menuID.Equals(id) && x.websiteID.Equals(websiteID)).FirstOrDefault<Menu>();
+            if (m == null || m.menuID == 0) {
+                return RedirectToAction("Contents");
+            }
 
             #region Form Submission
-                if (Request.Form.Count > 0) {
+            if (Request.Form.Count > 0) {
                 try {
 
                     // Save form values
                     string title = (Request.Form["page_title"] != null) ? Request.Form["page_title"] : "";
                     bool addtomenu = (Request.Form["addtomenu"] != null) ? true : false;
-                    bool requireAuthentication = (Request.Form["requireAuthentication"] != null) ? true : false; 
+                    bool requireAuthentication = (Request.Form["requireAuthentication"] != null) ? true : false;
                     // Validate the form fields
                     if (title.Length == 0) throw new Exception("Page Title is required.");
 
@@ -242,7 +317,8 @@ namespace CurtAdmin.Controllers
                         active = true,
                         isPrimary = false,
                         slug = UDF.GenerateSlug(title),
-                        requireAuthentication = requireAuthentication
+                        requireAuthentication = requireAuthentication,
+                        websiteID = websiteID
                     };
 
                     db.SiteContents.InsertOnSubmit(new_page);
@@ -257,9 +333,9 @@ namespace CurtAdmin.Controllers
 
                     if (addtomenu) {
                         Menu_SiteContent menuitem = new Menu_SiteContent {
-                            menuID = id,
+                            menuID = m.menuID,
                             contentID = new_page.contentID,
-                            menuSort = (db.Menu_SiteContents.Where(x => x.menuID == id).Where(x => x.parentID == null).Count()) + 1
+                            menuSort = (db.Menu_SiteContents.Where(x => x.menuID == m.menuID).Where(x => x.parentID == null).Count()) + 1
                         };
                         db.Menu_SiteContents.InsertOnSubmit(menuitem);
                     }
@@ -271,7 +347,7 @@ namespace CurtAdmin.Controllers
                 } catch (Exception e) {
                     error = e.Message;
                 }
-                }
+            }
             #endregion
 
             ViewBag.error = error;
@@ -282,10 +358,17 @@ namespace CurtAdmin.Controllers
 
         [ValidateInput(false)]
         public ActionResult EditContent(int id = 0, int revisionID = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             string error = "";
             CurtDevDataContext db = new CurtDevDataContext();
 
-            SiteContent content = db.SiteContents.Where(x => x.contentID == id).First<SiteContent>();
+            SiteContent content = db.SiteContents.Where(x => x.contentID == id && x.websiteID.Equals(websiteID)).FirstOrDefault<SiteContent>();
+            if (content == null || content.contentID == 0) {
+                return RedirectToAction("Contents");
+            }
 
             #region Form Submission
             if (Request.Form.Count > 0) {
@@ -293,7 +376,7 @@ namespace CurtAdmin.Controllers
 
                     // Save form values
                     string title = (Request.Form["page_title"] != null) ? Request.Form["page_title"] : "";
-                    bool requireAuthentication = (Request.Form["requireAuthentication"] != null) ? true : false; 
+                    bool requireAuthentication = (Request.Form["requireAuthentication"] != null) ? true : false;
 
                     // Validate the form fields
                     if (title.Length == 0) throw new Exception("Page Title is required.");
@@ -336,24 +419,40 @@ namespace CurtAdmin.Controllers
         }
 
         public ActionResult CopyRevision(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             // Remove content page from menu
             int contentid = SiteContentModel.CopyRevision(id);
             return RedirectToRoute("ContentEdit", new { id = contentid });
         }
 
         public ActionResult ActivateRevision(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             // Remove content page from menu
             int contentid = SiteContentModel.ActivateRevision(id);
             return RedirectToRoute("ContentEdit", new { id = contentid });
         }
 
         public ActionResult DeleteRevision(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             // Remove content page from menu
             int contentid = SiteContentModel.DeleteRevision(id);
             return RedirectToRoute("ContentEdit", new { id = contentid });
         }
 
         public ActionResult RemoveContent(int id = 0) {
+            int websiteID = ViewBag.websiteID ?? 0;
+            if (websiteID == 0) {
+                return RedirectToAction("Index");
+            }
             // Remove content page from menu
             int menu = MenuModel.RemoveContent(id);
             return RedirectToRoute("ContentMenu", new { id = menu });
@@ -376,9 +475,10 @@ namespace CurtAdmin.Controllers
         public string AddContentToMenu() {
             // Add content page to menu
             JavaScriptSerializer js = new JavaScriptSerializer();
+            int websiteID = ViewBag.websiteID;
             int menuid = Convert.ToInt16(Request.QueryString["menuid"]);
             int pageid = Convert.ToInt16(Request.QueryString["contentid"]);
-            Menu_SiteContent menupage = MenuModel.AddContent(menuid, pageid);
+            Menu_SiteContent menupage = MenuModel.AddContent(menuid, pageid, websiteID);
             var menustuff = new {
                 menuContentID = menupage.menuContentID,
                 menuSort = menupage.menuSort,

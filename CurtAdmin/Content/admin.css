@@ -257,7 +257,17 @@ img{
     margin-bottom: 20px;
 }
 
-#websiteNav {margin-bottom: 0; border-bottom: 2px solid #2e2c2b;}
+#websiteNav {
+    margin-bottom: 0; 
+    border-bottom: 2px solid #2e2c2b;
+    position: relative;
+}
+
+#websiteNav #websiteID {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
 
 #usersNav ul, #pageNav ul, #websiteNav ul {
     margin: 0px;

@@ -17,15 +17,15 @@ namespace CurtAdmin {
             );
 
             routes.MapRoute(
-                name: "Content",
-                url: "Website/Content",
-                defaults: new { controller = "Website", action = "Index" }
+                name: "Contents",
+                url: "Website/Contents",
+                defaults: new { controller = "Website", action = "Contents", id = 0 }
             );
 
             routes.MapRoute(
                 name: "ContentMenu",
                 url: "Website/Content/Menu/{id}",
-                defaults: new { controller = "Website", action = "Index", id = 0 }
+                defaults: new { controller = "Website", action = "Contents", id = 0 }
             );
 
             routes.MapRoute(

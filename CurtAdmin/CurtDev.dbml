@@ -101,7 +101,9 @@
       <Column Name="requireAuthentication" AutoSync="OnInsert" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="showOnSitemap" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="sort" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="websiteID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Menu_Menu_SiteContent" Member="Menu_SiteContents" ThisKey="menuID" OtherKey="menuID" Type="Menu_SiteContent" />
+      <Association Name="Website_Menu" Member="Website" ThisKey="websiteID" OtherKey="ID" Type="Website" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Menu_SiteContent" Member="Menu_SiteContents">
@@ -259,8 +261,10 @@
       <Column Name="slug" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="requireAuthentication" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="canonical" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="websiteID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="SiteContent_Menu_SiteContent" Member="Menu_SiteContents" ThisKey="contentID" OtherKey="contentID" Type="Menu_SiteContent" />
       <Association Name="SiteContent_SiteContentRevision" Member="SiteContentRevisions" ThisKey="contentID" OtherKey="contentID" Type="SiteContentRevision" />
+      <Association Name="Website_SiteContent" Member="Website" ThisKey="websiteID" OtherKey="ID" Type="Website" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.BusinessClass" Member="BusinessClasses">
@@ -981,6 +985,15 @@
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="customerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Website" Member="Websites">
+    <Type Name="Website">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="description" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="Website_Menu" Member="Menus" ThisKey="ID" OtherKey="websiteID" Type="Menu" />
+      <Association Name="Website_SiteContent" Member="SiteContents" ThisKey="ID" OtherKey="websiteID" Type="SiteContent" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

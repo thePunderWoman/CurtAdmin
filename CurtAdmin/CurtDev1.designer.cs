@@ -303,6 +303,9 @@ namespace CurtAdmin
     partial void InsertCustomerReportPart(CustomerReportPart instance);
     partial void UpdateCustomerReportPart(CustomerReportPart instance);
     partial void DeleteCustomerReportPart(CustomerReportPart instance);
+    partial void InsertWebsite(Website instance);
+    partial void UpdateWebsite(Website instance);
+    partial void DeleteWebsite(Website instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1068,6 +1071,14 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<CustomerReportPart>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Website> Websites
+		{
+			get
+			{
+				return this.GetTable<Website>();
 			}
 		}
 		
@@ -2692,7 +2703,11 @@ namespace CurtAdmin
 		
 		private int _sort;
 		
+		private int _websiteID;
+		
 		private EntitySet<Menu_SiteContent> _Menu_SiteContents;
+		
+		private EntityRef<Website> _Website;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2714,11 +2729,14 @@ namespace CurtAdmin
     partial void OnshowOnSitemapChanged();
     partial void OnsortChanging(int value);
     partial void OnsortChanged();
+    partial void OnwebsiteIDChanging(int value);
+    partial void OnwebsiteIDChanged();
     #endregion
 		
 		public Menu()
 		{
 			this._Menu_SiteContents = new EntitySet<Menu_SiteContent>(new Action<Menu_SiteContent>(this.attach_Menu_SiteContents), new Action<Menu_SiteContent>(this.detach_Menu_SiteContents));
+			this._Website = default(EntityRef<Website>);
 			OnCreated();
 		}
 		
@@ -2882,6 +2900,30 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_websiteID", DbType="Int NOT NULL")]
+		public int websiteID
+		{
+			get
+			{
+				return this._websiteID;
+			}
+			set
+			{
+				if ((this._websiteID != value))
+				{
+					if (this._Website.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnwebsiteIDChanging(value);
+					this.SendPropertyChanging();
+					this._websiteID = value;
+					this.SendPropertyChanged("websiteID");
+					this.OnwebsiteIDChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Menu_Menu_SiteContent", Storage="_Menu_SiteContents", ThisKey="menuID", OtherKey="menuID")]
 		public EntitySet<Menu_SiteContent> Menu_SiteContents
 		{
@@ -2892,6 +2934,40 @@ namespace CurtAdmin
 			set
 			{
 				this._Menu_SiteContents.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Website_Menu", Storage="_Website", ThisKey="websiteID", OtherKey="ID", IsForeignKey=true)]
+		public Website Website
+		{
+			get
+			{
+				return this._Website.Entity;
+			}
+			set
+			{
+				Website previousValue = this._Website.Entity;
+				if (((previousValue != value) 
+							|| (this._Website.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Website.Entity = null;
+						previousValue.Menus.Remove(this);
+					}
+					this._Website.Entity = value;
+					if ((value != null))
+					{
+						value.Menus.Add(this);
+						this._websiteID = value.ID;
+					}
+					else
+					{
+						this._websiteID = default(int);
+					}
+					this.SendPropertyChanged("Website");
+				}
 			}
 		}
 		
@@ -5792,9 +5868,13 @@ namespace CurtAdmin
 		
 		private string _canonical;
 		
+		private int _websiteID;
+		
 		private EntitySet<Menu_SiteContent> _Menu_SiteContents;
 		
 		private EntitySet<SiteContentRevision> _SiteContentRevisions;
+		
+		private EntityRef<Website> _Website;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -5828,12 +5908,15 @@ namespace CurtAdmin
     partial void OnrequireAuthenticationChanged();
     partial void OncanonicalChanging(string value);
     partial void OncanonicalChanged();
+    partial void OnwebsiteIDChanging(int value);
+    partial void OnwebsiteIDChanged();
     #endregion
 		
 		public SiteContent()
 		{
 			this._Menu_SiteContents = new EntitySet<Menu_SiteContent>(new Action<Menu_SiteContent>(this.attach_Menu_SiteContents), new Action<Menu_SiteContent>(this.detach_Menu_SiteContents));
 			this._SiteContentRevisions = new EntitySet<SiteContentRevision>(new Action<SiteContentRevision>(this.attach_SiteContentRevisions), new Action<SiteContentRevision>(this.detach_SiteContentRevisions));
+			this._Website = default(EntityRef<Website>);
 			OnCreated();
 		}
 		
@@ -6117,6 +6200,30 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_websiteID", DbType="Int NOT NULL")]
+		public int websiteID
+		{
+			get
+			{
+				return this._websiteID;
+			}
+			set
+			{
+				if ((this._websiteID != value))
+				{
+					if (this._Website.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnwebsiteIDChanging(value);
+					this.SendPropertyChanging();
+					this._websiteID = value;
+					this.SendPropertyChanged("websiteID");
+					this.OnwebsiteIDChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SiteContent_Menu_SiteContent", Storage="_Menu_SiteContents", ThisKey="contentID", OtherKey="contentID")]
 		public EntitySet<Menu_SiteContent> Menu_SiteContents
 		{
@@ -6140,6 +6247,40 @@ namespace CurtAdmin
 			set
 			{
 				this._SiteContentRevisions.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Website_SiteContent", Storage="_Website", ThisKey="websiteID", OtherKey="ID", IsForeignKey=true)]
+		public Website Website
+		{
+			get
+			{
+				return this._Website.Entity;
+			}
+			set
+			{
+				Website previousValue = this._Website.Entity;
+				if (((previousValue != value) 
+							|| (this._Website.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Website.Entity = null;
+						previousValue.SiteContents.Remove(this);
+					}
+					this._Website.Entity = value;
+					if ((value != null))
+					{
+						value.SiteContents.Add(this);
+						this._websiteID = value.ID;
+					}
+					else
+					{
+						this._websiteID = default(int);
+					}
+					this.SendPropertyChanged("Website");
+				}
 			}
 		}
 		
@@ -20770,6 +20911,172 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Website")]
+	public partial class Website : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _url;
+		
+		private string _description;
+		
+		private EntitySet<Menu> _Menus;
+		
+		private EntitySet<SiteContent> _SiteContents;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnurlChanging(string value);
+    partial void OnurlChanged();
+    partial void OndescriptionChanging(string value);
+    partial void OndescriptionChanged();
+    #endregion
+		
+		public Website()
+		{
+			this._Menus = new EntitySet<Menu>(new Action<Menu>(this.attach_Menus), new Action<Menu>(this.detach_Menus));
+			this._SiteContents = new EntitySet<SiteContent>(new Action<SiteContent>(this.attach_SiteContents), new Action<SiteContent>(this.detach_SiteContents));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_url", DbType="VarChar(255)")]
+		public string url
+		{
+			get
+			{
+				return this._url;
+			}
+			set
+			{
+				if ((this._url != value))
+				{
+					this.OnurlChanging(value);
+					this.SendPropertyChanging();
+					this._url = value;
+					this.SendPropertyChanged("url");
+					this.OnurlChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_description", DbType="VarChar(255)")]
+		public string description
+		{
+			get
+			{
+				return this._description;
+			}
+			set
+			{
+				if ((this._description != value))
+				{
+					this.OndescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._description = value;
+					this.SendPropertyChanged("description");
+					this.OndescriptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Website_Menu", Storage="_Menus", ThisKey="ID", OtherKey="websiteID")]
+		public EntitySet<Menu> Menus
+		{
+			get
+			{
+				return this._Menus;
+			}
+			set
+			{
+				this._Menus.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Website_SiteContent", Storage="_SiteContents", ThisKey="ID", OtherKey="websiteID")]
+		public EntitySet<SiteContent> SiteContents
+		{
+			get
+			{
+				return this._SiteContents;
+			}
+			set
+			{
+				this._SiteContents.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Menus(Menu entity)
+		{
+			this.SendPropertyChanging();
+			entity.Website = this;
+		}
+		
+		private void detach_Menus(Menu entity)
+		{
+			this.SendPropertyChanging();
+			entity.Website = null;
+		}
+		
+		private void attach_SiteContents(SiteContent entity)
+		{
+			this.SendPropertyChanging();
+			entity.Website = this;
+		}
+		
+		private void detach_SiteContents(SiteContent entity)
+		{
+			this.SendPropertyChanging();
+			entity.Website = null;
 		}
 	}
 }
