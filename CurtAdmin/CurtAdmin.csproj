@@ -257,6 +257,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VCDB.dbml</DependentUpon>
     </Compile>
+    <Compile Include="TowAmericaTemp.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TowAmericaTemp.dbml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -518,6 +523,11 @@
     <Content Include="Views\SalesRep\Edit.cshtml" />
     <Content Include="Views\Shared\Navigation\_SalesRepNavigation.cshtml" />
     <Content Include="Views\Website\Index.cshtml" />
+    <Content Include="TowAmericaTemp.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>TowAmericaTemp.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -756,6 +766,11 @@
   <ItemGroup>
     <None Include="AAIA\qdb.dbml.layout">
       <DependentUpon>qdb.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TowAmericaTemp.dbml.layout">
+      <DependentUpon>TowAmericaTemp.dbml</DependentUpon>
     </None>
   </ItemGroup>
   <PropertyGroup>
