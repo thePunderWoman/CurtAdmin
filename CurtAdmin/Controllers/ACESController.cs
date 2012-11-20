@@ -25,16 +25,123 @@ namespace CurtAdmin.Controllers {
             ViewBag.activeModule = "ACES Vehicle Data";
         }
 
-        public ActionResult Index() {
-            return View();
-        }
-        
         public ActionResult Vehicles() {
-
             List<vcdb_Make> makes = new ACES().GetMakes();
             ViewBag.makes = makes;
-
             return View();
+        }
+
+        /*Aces Type methods */
+
+        public ActionResult AcesTypes() {
+            List<AcesType> types = new ACES().GetACESTypes();
+            ViewBag.types = types;
+            return View();
+        }
+
+        public ActionResult SaveACESType(int id = 0, string name = null) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AcesType type = new AcesType();
+            string error = "";
+            try {
+                type = new ACES().SaveACESType(id, name);
+            } catch (Exception e) {
+                error = e.Message;
+            }
+            if (type != null && id != type.ID) {
+                return RedirectToAction("SaveACESType", new { id = type.ID });
+            }
+            ViewBag.type = type;
+            ViewBag.error = error;
+            return View();
+        }
+
+        public ActionResult RemoveACESType(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                AcesType t = db.AcesTypes.Where(x => x.ID.Equals(id)).First<AcesType>();
+                db.AcesTypes.DeleteOnSubmit(t);
+                db.SubmitChanges();
+            } catch { }
+            return RedirectToAction("AcesTypes");
+        }
+
+        /* Configuration Type Methods */
+
+        public ActionResult ConfigTypes() {
+            List<ConfigAttributeType> types = new ACES().GetConfigTypes();
+            ViewBag.types = types;
+            return View();
+        }
+
+        public ActionResult SaveConfigurationType(int id = 0, string name = null, int? acestypeid = null) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ConfigAttributeType type = new ConfigAttributeType();
+            string error = "";
+            try {
+                type = new ACES().SaveConfigurationType(id, name, acestypeid);
+            } catch (Exception e) {
+                error = e.Message;
+            }
+            if (type != null && id != type.ID) {
+                return RedirectToAction("SaveConfigurationType", new { id = type.ID });
+            }
+            List<AcesType> acestypes = new ACES().GetACESTypes();
+            ViewBag.acestypes = acestypes;
+            ViewBag.type = type;
+            ViewBag.error = error;
+            return View();
+        }
+
+        public ActionResult RemoveConfigurationType(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                if (db.ConfigAttributes.Where(x => x.ConfigAttributeTypeID.Equals(id)).Count() == 0) {
+                    ConfigAttributeType t = db.ConfigAttributeTypes.Where(x => x.ID.Equals(id)).First<ConfigAttributeType>();
+                    db.ConfigAttributeTypes.DeleteOnSubmit(t);
+                    db.SubmitChanges();
+                }
+            } catch { }
+            return RedirectToAction("ConfigTypes");
+        }
+
+        /* Configuration Attribute Methods */
+
+        public ActionResult ConfigAttributes() {
+            List<ConfigAttribute> attributes = new ACES().GetConfigAttributes();
+            ViewBag.attributes = attributes;
+            return View();
+        }
+
+        public ActionResult SaveConfigurationAttribute(int id = 0, string value = null, int configtypeid = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ConfigAttribute attribute = new ConfigAttribute();
+            string error = "";
+            try {
+                attribute = new ACES().SaveConfigurationAttr(id, value, configtypeid);
+            } catch (Exception e) {
+                error = e.Message;
+            }
+            if (attribute != null && id != attribute.ID) {
+                return RedirectToAction("SaveConfigurationAttribute", new { id = attribute.ID });
+            }
+            List<ConfigAttributeType> configtypes = new ACES().GetConfigTypes();
+            ViewBag.configtypes = configtypes;
+            ViewBag.attribute = attribute;
+            ViewBag.error = error;
+            return View();
+        }
+
+        public ActionResult RemoveConfigurationAttribute(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                if (db.vcdb_Vehicles.Where(x => x.VehicleConfig.VehicleConfigAttributes.Any(y => y.AttributeID.Equals(id))).Count() == 0) {
+                    ConfigAttribute attr = db.ConfigAttributes.Where(x => x.ID.Equals(id)).First<ConfigAttribute>();
+                    db.ConfigAttributes.DeleteOnSubmit(attr);
+                    db.SubmitChanges();
+                }
+            } catch { }
+            return RedirectToAction("ConfigAttributes");
         }
 
         public string GetModels(int id) {
@@ -43,72 +150,15 @@ namespace CurtAdmin.Controllers {
         }
 
         public string GetVehicles(int makeid, int modelid) {
-            List<vcdb_Vehicle> vehicles = new List<vcdb_Vehicle>();
+            List<BaseVehicle> vehicles = new List<BaseVehicle>();
             vehicles = new ACES().GetVehicles(makeid, modelid);
             return JsonConvert.SerializeObject(vehicles);
         }
 
         public string GetVCDBVehicles(int makeid, int modelid) {
-            return "";
-        }
-
-        public void GenerateReport() {
-            
-            CurtDevDataContext db = new CurtDevDataContext();
-            AAIA.pcdbDataContext pcdb = new AAIA.pcdbDataContext();
-            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
-            AAIA.qdbDataContext qdb = new AAIA.qdbDataContext();
-            string name = ViewBag.name;
-            XDocument report = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
-
-            XElement xdoc = new XElement("ACES",
-                            new XAttribute("version", "3.0"),
-                            new XElement("Header",
-                                new XElement("Company", "CURT Manufacturing"),
-                                new XElement("SenderName", name),
-                                new XElement("SenderPhone", "877-287-8634"),
-                                new XElement("TransferDate", String.Format("{0:yyyy-MM-dd}", DateTime.Now)),
-                                new XElement("MfrCode", "BKDK"),
-                                new XElement("DocumentTitle", "Trailer Hitches"),
-                                new XElement("EffectiveDate", String.Format("{0:yyyy-MM-dd}", DateTime.Now)),
-                                new XElement("SubmissionType", "FULL"),
-                                new XElement("VcdbVersionDate", String.Format("{0:yyyy-MM-dd}", vcdb.VCDBVersions.Select(x => x.VersionDate).FirstOrDefault())),
-                                new XElement("QdbVersionDate", String.Format("{0:yyyy-MM-dd}", qdb.QDBVersions.Select(x => x.VersionDate).FirstOrDefault())),
-                                new XElement("PcdbVersionDate", String.Format("{0:yyyy-MM-dd}", pcdb.PCDBVersions.Select(x => x.VersionDate).FirstOrDefault()))),
-                            (from vp in db.vcdb_VehicleParts
-                             select new XElement("App",
-                                 new XAttribute("action", "A"),
-                                 new XAttribute("id", vp.ID),
-                                 new XElement("BaseVehicle",
-                                     new XAttribute("id", vp.vcdb_Vehicle.BaseVehicle.AAIABaseVehicleID)),
-                                 new XElement("Part", vp.PartNumber),
-                                 new XElement("MfrLabel", vp.Part.shortDesc),
-                                 new XElement("Qty", 1),
-                                 new XElement("PartType",
-                                     new XAttribute("id", vp.Part.ACESPartTypeID)),
-                                 (from n in vp.Notes
-                                  select new XElement("Note", n.note1)
-                                     ).ToList<XElement>(),
-                                 ((vp.vcdb_Vehicle.SubModelID != null) ? new XElement("SubModel", new XAttribute("id", vp.vcdb_Vehicle.Submodel.AAIASubmodelID)) : null),
-                                 ((vp.vcdb_Vehicle.ConfigID != null) ? (from ca in vp.vcdb_Vehicle.VehicleConfig.VehicleConfigAttributes
-                                                                        select new XElement(((ca.ConfigAttribute.vcdbID == null) ? "Note" : ca.ConfigAttribute.ConfigAttributeType.AcesType.name), ((ca.ConfigAttribute.vcdbID == null) ? ca.ConfigAttribute.value : null),
-                                                                            ((ca.ConfigAttribute.vcdbID == null) ? null : new XAttribute("id", ca.ConfigAttribute.vcdbID.ToString())))).ToList<XElement>() : null)
-                             )).AsParallel<XElement>().WithDegreeOfParallelism(12),
-                            new XElement("Footer", new XElement("RecordCount", db.vcdb_VehicleParts.Count())));
-            report.Add(xdoc);
-            
-            StringWriter wr = new StringWriter();
-            report.Save(wr);
-
-            string attachment = "attachment; filename=ACESreport-" + String.Format("{0:yyyyMMddhhmmss}",DateTime.Now) + ".xml";
-            HttpContext.Response.Clear();
-            HttpContext.Response.ClearHeaders();
-            HttpContext.Response.ClearContent();
-            HttpContext.Response.AddHeader("content-disposition", attachment);
-            HttpContext.Response.ContentType = "text/xml";
-            HttpContext.Response.AddHeader("Pragma", "public");
-            HttpContext.Response.Write(wr.GetStringBuilder().ToString());
-            HttpContext.Response.End();
+            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
+            vehicles = new ACES().GetVCDBVehicles(makeid, modelid);
+            return JsonConvert.SerializeObject(vehicles);
         }
 
         public string SearchPartTypes(string keyword = "") {

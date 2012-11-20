@@ -140,7 +140,7 @@
             <!-- Admin modules -->
             <div id="adminModules" class="moduleContainer">
                 <h4>Modules</h4>
-                @foreach (CurtAdmin.module m in ViewBag.modules) {
+                @foreach (CurtAdmin.module m in ViewBag.allmodules) {
                     <label for="module:@m.moduleID">
                         @m.module1
                         <input type="checkbox" name="module" id="module:@m.moduleID" value="@m.moduleID" @((users_modules.Contains(m.moduleID.ToString())) ? "checked" : "") />

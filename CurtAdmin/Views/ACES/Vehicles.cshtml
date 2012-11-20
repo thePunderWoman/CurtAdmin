@@ -4,14 +4,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CurtAdmin.vcdb_Make> makes = ViewBag.makes ?? new List<CurtAdmin.vcdb_Make>();
 }
-<style type="text/css">
-    #partTable_wrapper{
-        display:none;
-    }
-</style>
 <ul id="subNav">
     <li>
         <a href="@Url.Content("~/ACES/Vehicles")" class="active">View Vehicles</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigAttributes")">View Configuration Attributes</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigTypes")" class="active">View Configuration Types</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
     </li>
     <li class="add">
         <a href="@Url.Content("~/ACES/AddVehicle")">Add New</a>
@@ -31,9 +35,16 @@
     </select>
     <button id="find">Find</button>
     <div class="clear"></div>
-    <div id="vData">
-        <img id="loading" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
-        <ul id="vehicleData"></ul>
+    <div id="tabs">
+        <ul class="tabs"><li><a href="#CurtDev">CurtDev</a></li><li><a href="#vcdb">VCDB</a></li></ul>
+        <div id="CurtDev">
+            <img id="loadingCurtDev" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+            <ul class="vehicles" id="vehicleData"></ul>
+        </div>
+        <div id="vcdb">
+            <img id="loadingVCDB" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+            <ul class="vehicles" id="vcdbData"></ul>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="/Scripts/admin/aces.js"></script>

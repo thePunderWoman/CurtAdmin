@@ -564,6 +564,25 @@ namespace CurtAdmin.Controllers
             return View();
         }
 
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult EditACESVehicles(int partID = 0) {
+            // Get the part
+            ConvertedPart part = ProductModels.GetPart(partID);
+            ViewBag.part = part;
+
+            List<ConfigAttributeType> configs = new List<ConfigAttributeType>();
+            configs = new ACES().GetConfigAttributeTypes();
+            ViewBag.configs = configs;
+            
+            // Get the vehicles that are tied to this part
+            List<BaseVehicle> part_vehicles = new List<BaseVehicle>();
+            part_vehicles = new ACES().GetVehiclesByPart(partID);
+            ViewBag.part_vehicles = part_vehicles;
+
+            ViewBag.active_tab = "vehicles";
+            return View();
+        }
+        
         public ActionResult EditPricing(int partID = 0) {
             CurtDevDataContext db = new CurtDevDataContext();
 

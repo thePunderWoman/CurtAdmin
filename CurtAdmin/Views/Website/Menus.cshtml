@@ -3,12 +3,15 @@
     ViewBag.navigation = "_WebsiteNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CurtAdmin.Menu> menus = ViewBag.menus;
+    List<CurtAdmin.Website> websites = ViewBag.websites ?? new List<CurtAdmin.Website>();
+    int websiteID = ViewBag.websiteID ?? 0;
+    CurtAdmin.Website website = websites.Where(x => x.ID.Equals(websiteID)).FirstOrDefault<CurtAdmin.Website>();
 }
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/admin/website_menus.js")"></script>
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Website/Content")">Manage Content</a>
+        <a href="@Url.Content("~/Website/Contents")">Manage Content</a>
     </li>
     <li>
         <a href="@Url.Content("~/Website/Menus")" class="active">Manage Menus</a>
@@ -18,7 +21,7 @@
     </li>
 </ul>
 <div id="content_container">
-    <h2>Manage Website Menus</h2>
+    <h2>Manage @website.description Menus</h2>
     <table style="width: 100% !important">
         <thead>
             <tr>

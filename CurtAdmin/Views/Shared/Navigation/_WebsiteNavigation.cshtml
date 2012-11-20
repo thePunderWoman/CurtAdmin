@@ -1,7 +1,11 @@
-﻿<div id="websiteNav">
+﻿@{
+    List<CurtAdmin.Website> websites = ViewBag.websites ?? new List<CurtAdmin.Website>();
+    int websiteID = ViewBag.websiteID ?? 0;
+}
+<div id="websiteNav">
     <ul>
         <li>
-            <a href="@Url.Content("~/Website/")">Content Manager</a>
+            <a href="@Url.Content("~/Website/Contents")">Content Manager</a>
         </li>
         <li>
             <a href="@Url.Content("~/Contact/")">Contacts</a>
@@ -19,4 +23,11 @@
             <a href="@Url.Content("~/Testimonial/")">Testimonials</a>
         </li>
     </ul>
+    @if (websiteID != 0) {
+        <select id="websiteID">
+            @foreach (CurtAdmin.Website site in websites) {
+                <option value="@site.ID" @((site.ID == websiteID) ? "selected" : "")>@site.url</option>
+            }
+        </select>
+    }
 </div>

@@ -1,0 +1,13 @@
+﻿#allpiesparts {
+    display: block;
+}
+
+span.orspan {
+    display: block;
+    font-weight: bold;
+    padding: 10px 0;
+}
+
+#piesdatepicker {
+    clear: both;
+}

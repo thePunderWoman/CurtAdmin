@@ -3,14 +3,8 @@
 <head>
     @Html.Partial("_Head")
 </head>
-
 <body>
     @Html.Partial("_Header")
-
-    @if (ViewBag.Modules != null && ViewBag.Modules.Count > 0) {
-        @Html.Partial("_SideBar")
-    }
-    
     <div id="adminContent" @((ViewBag.Modules == null || ViewBag.Modules.Count == 0) ? "style='margin-left:2%;width: 100%'" : "") >
         @if (ViewBag.navigation != null && ViewBag.navigation != "") {
             string nav = "Navigation/" + ViewBag.navigation;

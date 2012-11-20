@@ -101,7 +101,9 @@
       <Column Name="requireAuthentication" AutoSync="OnInsert" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="showOnSitemap" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="sort" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="websiteID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Menu_Menu_SiteContent" Member="Menu_SiteContents" ThisKey="menuID" OtherKey="menuID" Type="Menu_SiteContent" />
+      <Association Name="Website_Menu" Member="Website" ThisKey="websiteID" OtherKey="ID" Type="Website" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Menu_SiteContent" Member="Menu_SiteContents">
@@ -259,8 +261,10 @@
       <Column Name="slug" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="requireAuthentication" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="canonical" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="websiteID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="SiteContent_Menu_SiteContent" Member="Menu_SiteContents" ThisKey="contentID" OtherKey="contentID" Type="Menu_SiteContent" />
       <Association Name="SiteContent_SiteContentRevision" Member="SiteContentRevisions" ThisKey="contentID" OtherKey="contentID" Type="SiteContentRevision" />
+      <Association Name="Website_SiteContent" Member="Website" ThisKey="websiteID" OtherKey="ID" Type="Website" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.BusinessClass" Member="BusinessClasses">
@@ -851,7 +855,7 @@
       <Column Name="ConfigID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="vcdb_Vehicle_vcdb_VehiclePart" Member="vcdb_VehicleParts" ThisKey="ID" OtherKey="VehicleID" Type="vcdb_VehiclePart" />
       <Association Name="Submodel_vcdb_Vehicle" Member="Submodel" ThisKey="SubModelID" OtherKey="ID" Type="Submodel" IsForeignKey="true" />
-      <Association Name="BaseVehicle_vcdb_Vehicle" Member="BaseVehicle" ThisKey="BaseVehicleID" OtherKey="ID" Type="BaseVehicle" IsForeignKey="true" />
+      <Association Name="BaseVehicle_vcdb_Vehicle" Member="BaseVehicle" AccessModifier="Internal" ThisKey="BaseVehicleID" OtherKey="ID" Type="BaseVehicle" IsForeignKey="true" />
       <Association Name="VehicleConfig_vcdb_Vehicle" Member="VehicleConfig" ThisKey="ConfigID" OtherKey="ID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
@@ -901,7 +905,7 @@
       <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="ModelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="BaseVehicle_vcdb_Vehicle" Member="vcdb_Vehicles" AccessModifier="Internal" ThisKey="ID" OtherKey="BaseVehicleID" Type="vcdb_Vehicle" />
+      <Association Name="BaseVehicle_vcdb_Vehicle" Member="vcdb_Vehicles" ThisKey="ID" OtherKey="BaseVehicleID" Type="vcdb_Vehicle" />
       <Association Name="vcdb_Make_BaseVehicle" Member="vcdb_Make" ThisKey="MakeID" OtherKey="ID" Type="vcdb_Make" IsForeignKey="true" />
       <Association Name="vcdb_Model_BaseVehicle" Member="vcdb_Model" ThisKey="ModelID" OtherKey="ID" Type="vcdb_Model" IsForeignKey="true" />
       <Association Name="vcdb_Year_BaseVehicle" Member="vcdb_Year" ThisKey="YearID" OtherKey="YearID" Type="vcdb_Year" IsForeignKey="true" />
@@ -958,6 +962,38 @@
       <Column Name="vehiclePartID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="note" Member="note1" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Association Name="vcdb_VehiclePart_Note" Member="vcdb_VehiclePart" AccessModifier="Internal" ThisKey="vehiclePartID" OtherKey="ID" Type="vcdb_VehiclePart" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ReportType" Member="ReportTypes">
+    <Type Name="ReportType">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Association Name="ReportType_CustomerReport" Member="CustomerReports" ThisKey="ID" OtherKey="ReportTypeID" Type="CustomerReport" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustomerReport" Member="CustomerReports">
+    <Type Name="CustomerReport">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="customerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ReportTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="ReportType_CustomerReport" Member="ReportType" ThisKey="ReportTypeID" OtherKey="ID" Type="ReportType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustomerReportPart" Member="CustomerReportParts">
+    <Type Name="CustomerReportPart">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="customerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Website" Member="Websites">
+    <Type Name="Website">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="description" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="Website_Menu" Member="Menus" ThisKey="ID" OtherKey="websiteID" Type="Menu" />
+      <Association Name="Website_SiteContent" Member="SiteContents" ThisKey="ID" OtherKey="websiteID" Type="SiteContent" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

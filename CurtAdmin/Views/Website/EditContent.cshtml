@@ -7,21 +7,62 @@
     string message = ViewBag.message;
     ContentPage content = ViewBag.content;
     List<CurtAdmin.SiteContentRevision> revisions = content.revisions;
-    CurtAdmin.SiteContentRevision revision = revisions.Find(x => x.active == true);
+    int revisionID = ViewBag.revisionID ?? 0;
+    CurtAdmin.SiteContentRevision revision = new CurtAdmin.SiteContentRevision();
+    try {
+        revision = revisions.Where(x => x.revisionID.Equals(revisionID)).First<CurtAdmin.SiteContentRevision>();
+    } catch {
+        revision = revisions.Find(x => x.active == true);
+    }
 }
 
-<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+<style type="text/css">
+    div#revisions {
+        display: block;
+        width: 600px;
+        padding-bottom: 10px;
+    }
 
+    #revisions .dataTables_wrapper {
+        min-height: 0;
+    }
+
+    #revisions table {
+        border-collapse: collapse;
+    }
+
+    #revisions table td {
+        padding: 4px 10px;
+    }
+
+    #revisions table tr.active {
+        background-color: #dedede;
+    }
+
+    #revisions table tr td:nth-child(3), table#revisions tr td:nth-child(2) {
+        text-align: center;
+    }
+
+    span.active {
+        color: Green;
+    }
+    span.inactive {
+        color: red;
+    }
+</style>
+
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+<input type="hidden" id="revID" value="@revision.revisionID" />
 <ul id="subNav">
     <li>
-        <a href="@Url.Content("~/Website/Content")">Manage Content</a>
+        <a href="@Url.Content("~/Website/Contents")">Manage Content</a>
     </li>
     <li>
         <a href="@Url.Content("~/Website/Menus")">Manage Menus</a>
     </li>
 </ul>
 <div id="content_container">
-    <h2>Add a Content Page</h2>
+    <h2>Edit Page: @content.page_title</h2>
 
     @if (error.Length != 0) {
         <p style="font-weight: bold; color: Red;">@error</p>
@@ -29,7 +70,34 @@
     @if (message != null && message.Length != 0) {
         <p style="font-weight: bold; color: Green;">@message</p>
     }
-    <form action="/Website/Content/Edit/@content.contentID" Method="post" id="saveform" class="form_left">
+
+    <h3>Revisions</h3>
+    <div id="revisions">
+        <table>
+            <thead><tr><th>Revision Date</th><th>Active</th><th></th></tr></thead>
+            <tbody>
+            @foreach (CurtAdmin.SiteContentRevision r in revisions) {
+                <tr @(((bool)r.active) ? " class=active" : "") id="rev@(r.revisionID)">
+                    <td>@String.Format("{0:M/d/yyyy h:mm tt}",r.createdOn)</td>
+                    <td>
+                        @if ((bool)r.active) {
+                            <text>Active</text>
+                        } else {
+                            <a class="activate" href="/Website/ActivateRevision/@r.revisionID">Make Active</a>
+                        }
+                    </td>
+                    <td>
+                        <a href="/Website/Content/Edit/@r.contentID/@r.revisionID" data-id="@r.revisionID" class="edit">Edit</a> <span class="editafter">|</span>
+                        <a href="/Website/CopyRevision/@r.revisionID" data-id="@r.revisionID" class="copy">Copy</a> <span class="delbefore">|</span>
+                        <a href="/Website/DeleteRevision/@r.revisionID" data-id="@r.revisionID" class="delete">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <form action="/Website/Content/Edit/@content.contentID/@revision.revisionID" Method="post" id="saveform" class="form_left">
 
         <!-- Item Name -->
         <label for="page_title">
@@ -38,7 +106,7 @@
         </label>
 
         <label for="page_content" id="label_page_content">
-            Content
+            Content: Revision <span id="revisionDate">@String.Format("{0:M/d/yyyy h:mm tt}",revision.createdOn) <span class="@(((bool)revision.active) ? "active" : "inactive")">@(((bool)revision.active) ? "ACTIVE" : "NOT ACTIVE")</span></span>
             <br />
             <textarea name="page_content" class="page_content" rows="10" cols="50" id="page_content" placeholder="Enter the Page Content">@((Request.QueryString["page_content"] != null && Request.QueryString["page_content"].Length > 0) ? Request.QueryString["page_content"] : revision.content_text)</textarea>
         </label>
@@ -86,21 +154,4 @@
         </div>
     </form>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        CKEDITOR.replace('page_content', {
-            filebrowserImageUploadUrl: '/File/CKUpload',
-            filebrowserImageBrowseUrl: '/File/CKIndex',
-            filebrowserImageWindowWidth: '640',
-            filebrowserImageWindowHeight: '480'
-        });
-
-        $('#btnSubmitPublish').click(function () {
-            $('#publish').val("true");
-            $('#saveform').submit();
-        });
-
-    });
-</script>
+<script src="/Scripts/admin/editcontent.js"></script>

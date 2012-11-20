@@ -22,12 +22,62 @@ namespace CurtAdmin.Models {
             return models;
         }
 
-        public List<vcdb_Vehicle> GetVehicles(int makeid, int modelid) {
+        public List<BaseVehicle> GetVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
-            List<vcdb_Vehicle> vehicles = new List<vcdb_Vehicle>();
-            vehicles = (from v in db.vcdb_Vehicles
-                        where v.BaseVehicle.MakeID.Equals(makeid) && v.BaseVehicle.ModelID.Equals(modelid)
-                        select v).Distinct().OrderBy(x => x.BaseVehicle.YearID).ThenBy(x => x.Submodel.SubmodelName).ToList<vcdb_Vehicle>();
+            List<BaseVehicle> vehicles = new List<BaseVehicle>();
+            vehicles = (from bv in db.BaseVehicles
+                        where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid)
+                        select bv).Distinct().OrderBy(x => x.YearID).ToList<BaseVehicle>();
+            return vehicles;
+        }
+
+        public List<ACESBaseVehicle> GetVCDBVehicles(int makeid, int modelid) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            vcdb_Make make = db.vcdb_Makes.Where(x => x.ID.Equals(makeid)).First<vcdb_Make>();
+            vcdb_Model model = db.vcdb_Models.Where(x => x.ID.Equals(modelid)).First<vcdb_Model>();
+            List<int> regions = new List<int> {1,2};
+
+            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
+            vehicles = (from bv in vcdb.BaseVehicles
+                        where bv.MakeID.Equals(make.AAIAMakeID) && bv.ModelID.Equals(model.AAIAModelID)
+                        && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                        select new ACESBaseVehicle {
+                            BaseVehicleID = bv.BaseVehicleID,
+                            Year = bv.YearID,
+                            Make = bv.Make,
+                            Model = bv.Model,
+                            Vehicles = (from v in bv.Vehicles
+                                        where regions.Contains(v.RegionID)
+                                        select new ACESVehicle {
+                                            Submodel = v.Submodel,
+                                            Region = v.Region,
+                                            Configs = v.VehicleConfigs.Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>()
+                                        }).Distinct().OrderBy(x => x.Region.RegionID).ThenBy(x => x.Submodel.SubmodelID).ToList<ACESVehicle>()
+                        }).OrderBy(x => x.Year).ToList<ACESBaseVehicle>();
+            return vehicles;
+        }
+
+        internal List<AAIA.VehicleConfig> getVehicleConfigs(int BaseVehicleID, int SubmodelID) {
+            AAIA.VCDBDataContext db = new AAIA.VCDBDataContext();
+            List<int> regions = new List<int> {1,2};
+            List<AAIA.VehicleConfig> configs = db.VehicleConfigs.Where(x => x.Vehicle.BaseVehicleID.Equals(BaseVehicleID) && x.Vehicle.SubmodelID.Equals(SubmodelID) && regions.Contains(x.Vehicle.RegionID)).Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>();
+            return configs;
+        }
+
+        public List<ConfigAttributeType> GetConfigAttributeTypes() {
+            List<ConfigAttributeType> configs = new List<ConfigAttributeType>();
+            CurtDevDataContext db = new CurtDevDataContext();
+            configs = db.ConfigAttributeTypes.OrderBy(x => x.sort).ToList<ConfigAttributeType>();
+            return configs;
+        }
+
+        public List<BaseVehicle> GetVehiclesByPart(int partid) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<BaseVehicle> vehicles = new List<BaseVehicle>();
+            vehicles = (from vp in db.vcdb_VehicleParts
+                        where vp.PartNumber.Equals(partid)
+                        select vp.vcdb_Vehicle.BaseVehicle).Distinct().OrderBy(x => x.YearID).ToList<BaseVehicle>();
             return vehicles;
         }
 
@@ -36,6 +86,129 @@ namespace CurtAdmin.Models {
             List<AAIA.PartTerminology> parttypes = new List<AAIA.PartTerminology>();
             parttypes = db.PartTerminologies.OrderBy(x => x.PartTerminologyName).ToList<AAIA.PartTerminology>();
             return parttypes;
+        }
+
+        public List<AcesType> GetACESTypes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<AcesType> types = new List<AcesType>();
+            types = db.AcesTypes.OrderBy(x => x.name).ToList<AcesType>();
+            foreach (AcesType t in types) {
+                t.count = t.ConfigAttributeTypes.Count;
+            }
+            return types;
+        }
+
+        public AcesType SaveACESType(int id = 0, string name = null) {
+            AcesType type = new AcesType();
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                type = db.AcesTypes.Where(x => x.ID.Equals(id)).First<AcesType>();
+                if (name != null) {
+                    try {
+                        AcesType t = db.AcesTypes.Where(x => x.name.Trim().Equals(name.Trim()) && !x.ID.Equals(id)).First<AcesType>();
+                    } catch {
+                        type.name = name.Trim();
+                        db.SubmitChanges();
+                    }
+                }
+            } catch {
+                if (name != null && name.Trim() != "") {
+                    try {
+                        AcesType t = db.AcesTypes.Where(x => x.name.Trim().Equals(name.Trim())).First<AcesType>();
+                    } catch {
+                        type.name = name.Trim();
+                        db.AcesTypes.InsertOnSubmit(type);
+                        db.SubmitChanges();
+                    }
+                } else {
+                    throw new Exception("You must enter a name.");
+                }
+            }
+            return type;
+        }
+
+        public List<ConfigAttributeType> GetConfigTypes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ConfigAttributeType> types = new List<ConfigAttributeType>();
+            types = db.ConfigAttributeTypes.OrderBy(x => x.name).ToList<ConfigAttributeType>();
+            foreach (ConfigAttributeType t in types) {
+                t.count = t.ConfigAttributes.Count;
+            }
+            return types;
+        }
+
+        public ConfigAttributeType SaveConfigurationType(int id = 0, string name = null, int? acestypeid = null) {
+            ConfigAttributeType type = new ConfigAttributeType();
+            CurtDevDataContext db = new CurtDevDataContext();
+            if (String.IsNullOrWhiteSpace(name)) {
+                throw new Exception("You must enter a name.");
+            }
+            try {
+                type = db.ConfigAttributeTypes.Where(x => x.ID.Equals(id)).First<ConfigAttributeType>();
+                if (name != null) {
+                    try {
+                        ConfigAttributeType t = db.ConfigAttributeTypes.Where(x => x.name.Trim().Equals(name.Trim()) && !x.ID.Equals(id)).First<ConfigAttributeType>();
+                    } catch {
+                        type.name = name.Trim();
+                        type.AcesTypeID = acestypeid;
+                        db.SubmitChanges();
+                    }
+                }
+            } catch {
+                try {
+                    ConfigAttributeType t = db.ConfigAttributeTypes.Where(x => x.name.Trim().Equals(name.Trim())).First<ConfigAttributeType>();
+                } catch {
+                    type.name = name.Trim();
+                    type.AcesTypeID = acestypeid;
+                    type.sort = db.ConfigAttributeTypes.OrderByDescending(x => x.sort).Select(x => x.sort).FirstOrDefault<int>() + 1;
+                    db.ConfigAttributeTypes.InsertOnSubmit(type);
+                    db.SubmitChanges();
+                }
+            }
+            return type;
+        }
+
+        public List<ConfigAttribute> GetConfigAttributes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ConfigAttribute> attributes = new List<ConfigAttribute>();
+            attributes = db.ConfigAttributes.OrderBy(x => x.value).ToList<ConfigAttribute>();
+            foreach (ConfigAttribute attr in attributes) {
+                attr.count = db.vcdb_Vehicles.Where(x => x.VehicleConfig.VehicleConfigAttributes.Any(y => y.AttributeID.Equals(attr.ID))).Distinct().Count();
+            }
+            return attributes;
+        }
+
+        public ConfigAttribute SaveConfigurationAttr(int id = 0, string value = null, int configtypeid = 0, int? vcdbID = null) {
+            ConfigAttribute attr = new ConfigAttribute();
+            CurtDevDataContext db = new CurtDevDataContext();
+            if (configtypeid == 0) {
+                throw new Exception("You must choose a configuration type");
+            }
+            if (String.IsNullOrWhiteSpace(value)) {
+                throw new Exception("You must enter a name.");
+            }
+            try {
+                attr = db.ConfigAttributes.Where(x => x.ID.Equals(id)).First<ConfigAttribute>();
+                try {
+                    ConfigAttribute a = db.ConfigAttributes.Where(x => x.value.Trim().Equals(value.Trim()) && x.vcdbID.Equals(vcdbID) && !x.ID.Equals(id)).First<ConfigAttribute>();
+                } catch {
+                    attr.value = value.Trim();
+                    attr.ConfigAttributeTypeID = configtypeid;
+                    attr.vcdbID = vcdbID;
+                    db.SubmitChanges();
+                }
+            } catch {
+                try {
+                    ConfigAttribute a = db.ConfigAttributes.Where(x => x.value.Trim().Equals(value.Trim()) && x.vcdbID.Equals(vcdbID)).First<ConfigAttribute>();
+                } catch {
+                    attr.value = value.Trim();
+                    attr.ConfigAttributeTypeID = configtypeid;
+                    attr.vcdbID = vcdbID;
+                    db.ConfigAttributes.InsertOnSubmit(attr);
+                    db.SubmitChanges();
+                }
+            }
+            return attr;
         }
 
         public string SearchPartTypes(string keyword = "") {
@@ -64,36 +237,72 @@ namespace CurtAdmin.Models {
         }
     }
 
+    /*public class AAIAVehicleComparer : IEqualityComparer<ACESVehicle> {
+        bool IEqualityComparer<ACESVehicle>.Equals(ACESVehicle x, ACESVehicle y) {
+            // Check whether the compared objects reference the same data.
+            if (x.BaseVehicle.BaseVehicleID.Equals(y.BaseVehicle.BaseVehicleID) && x.Submodel.SubmodelID.Equals(y.Submodel.SubmodelID)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        int IEqualityComparer<ACESVehicle>.GetHashCode(ACESVehicle obj) {
+            return obj.BaseVehicle.GetHashCode();
+        }
+    }
+
+    public class AAIAVehicleConfigComparer : IEqualityComparer<AAIA.VehicleConfig> {
+        bool IEqualityComparer<AAIA.VehicleConfig>.Equals(AAIA.VehicleConfig x, AAIA.VehicleConfig y) {
+            // Check whether the compared objects reference the same data.
+            if (x.BedConfig.BedLengthID.Equals(y.BedConfig.BedLengthID) && x.BedConfig.BedTypeID.Equals(y.BedConfig.BedTypeID)
+                && x.BodyStyleConfig.BodyTypeID.Equals(y.BodyStyleConfig.BodyTypeID) && x.BodyStyleConfig.BodyNumDoorsID.Equals(y.BodyStyleConfig.BodyNumDoorsID)
+                && x.BrakeConfig.BrakeABSID.Equals(y.BrakeConfig.BrakeABSID)  && x.BrakeConfig.BrakeSystemID.Equals(y.BrakeConfig.BrakeSystemID)
+                && x.BrakeConfig.FrontBrakeTypeID.Equals(y.BrakeConfig.FrontBrakeTypeID) && x.BrakeConfig.RearBrakeTypeID.Equals(y.BrakeConfig.RearBrakeTypeID)
+                && x.DriveTypeID.Equals(y.DriveTypeID) && x.WheelbaseID.Equals(y.WheelbaseID) && x.MfrBodyCodeID.Equals(y.MfrBodyCodeID) 
+                && x.EngineConfig.EngineBaseID.Equals(y.EngineConfig.EngineBaseID) && x.EngineConfig.FuelDeliveryConfigID.Equals(y.EngineConfig.FuelDeliveryConfigID)
+                && x.EngineConfig.FuelTypeID.Equals(y.EngineConfig.FuelTypeID) && x.EngineConfig.ValvesID.Equals(y.EngineConfig.ValvesID)
+                && x.EngineConfig.IgnitionSystemTypeID.Equals(y.EngineConfig.IgnitionSystemTypeID) && x.EngineConfig.EngineVINID.Equals(y.EngineConfig.EngineVINID)
+                && x.EngineConfig.EngineVersionID.Equals(y.EngineConfig.EngineVersionID) && x.EngineConfig.EngineMfrID.Equals(y.EngineConfig.EngineMfrID)
+                && x.EngineConfig.EngineDesignationID.Equals(y.EngineConfig.EngineDesignationID) && x.EngineConfig.CylinderHeadTypeID.Equals(y.EngineConfig.CylinderHeadTypeID)
+                && x.EngineConfig.AspirationID.Equals(y.EngineConfig.AspirationID) && x.SpringTypeConfig.RearSpringTypeID.Equals(y.SpringTypeConfig.RearSpringTypeID)
+                && x.SpringTypeConfig.FrontSpringTypeID.Equals(y.SpringTypeConfig.FrontSpringTypeID) && x.SteeringConfig.SteeringSystemID.Equals(y.SteeringConfig.SteeringSystemID)
+                && x.SteeringConfig.SteeringTypeID.Equals(y.SteeringConfig.SteeringTypeID) && x.SpringTypeConfigID.Equals(y.SpringTypeConfigID) && x.SteeringConfigID.Equals(y.SteeringConfigID)
+                && x.Transmission.TransmissionElecControlledID.Equals(y.Transmission.TransmissionElecControlledID)
+                && x.Transmission.TransmissionMfrCodeID.Equals(y.Transmission.TransmissionMfrCodeID)
+                && x.Transmission.TransmissionMfrID.Equals(y.Transmission.TransmissionMfrID) && x.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(y.Transmission.TransmissionBase.TransmissionControlTypeID)
+                && x.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(y.Transmission.TransmissionBase.TransmissionNumSpeedsID)
+                && x.Transmission.TransmissionBase.TransmissionTypeID.Equals(x.Transmission.TransmissionBase.TransmissionTypeID)
+                ) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        int IEqualityComparer<AAIA.VehicleConfig>.GetHashCode(AAIA.VehicleConfig obj) {
+            return obj.BedConfig.GetHashCode();
+        }
+    }*/
     public class ACESModel {
         public int ID { get; set; }
         public string name { get; set; }
     }
 
-    public class ACESVehiclePart {
-        public int ID { get; set; }
-        public int vehicleID { get; set; }
-        public int PartNumber { get; set; }
-        public string PartDescription { get; set; }
-        public int PartTypeID { get; set; }
-        public List<Note> Notes { get; set; }
-        public ACESVehicle Vehicle { get; set; }
+    public class ACESBaseVehicle {
+        public int BaseVehicleID { get; set; }
+        public int Year { get; set; }
+        public AAIA.Make Make { get; set; }
+        public AAIA.Model Model { get; set; }
+        public List<ACESVehicle> Vehicles { get; set; }
     }
 
     public class ACESVehicle {
-        public int ID { get; set; }
-        public int BaseVehicleID { get; set; }
-        public int? SubmodelID { get; set; }
-        public int? ConfigID { get; set; }
-        public ACESConfig Config { get; set; }
+        public AAIA.Submodel Submodel { get; set; }
+        public AAIA.Region Region { get; set; }
+        public List<AAIA.VehicleConfig> Configs { get; set; }
     }
 
-    public class ACESConfig {
-        public List<ACESAttribute> Notes { get; set; }
-        public List<ACESAttribute> attributes { get; set; }
-    }
-
-    public class ACESAttribute {
-        public string name { get; set; }
-        public string value { get; set; }
-    }
 }

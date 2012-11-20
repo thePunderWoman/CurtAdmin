@@ -10,14 +10,14 @@
   <Table Name="dbo.Year" Member="Years">
     <Type Name="Year">
       <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="Year_BaseVehicle" Member="BaseVehicles" ThisKey="YearID" OtherKey="YearID" Type="BaseVehicle" />
+      <Association Name="Year_BaseVehicle" Member="BaseVehicles" AccessModifier="Internal" ThisKey="YearID" OtherKey="YearID" Type="BaseVehicle" />
     </Type>
   </Table>
   <Table Name="dbo.Aspiration" Member="Aspirations">
     <Type Name="Aspiration">
       <Column Name="AspirationID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="AspirationName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="Aspiration_EngineConfig" Member="EngineConfigs" ThisKey="AspirationID" OtherKey="AspirationID" Type="EngineConfig" />
+      <Association Name="Aspiration_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="AspirationID" OtherKey="AspirationID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.Attachment" Member="Attachments">
@@ -57,6 +57,7 @@
       <Column Name="BedTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="BedLength_BedConfig" Member="BedLength" ThisKey="BedLengthID" OtherKey="BedLengthID" Type="BedLength" IsForeignKey="true" />
       <Association Name="BedType_BedConfig" Member="BedType" ThisKey="BedTypeID" OtherKey="BedTypeID" Type="BedType" IsForeignKey="true" />
+      <Association Name="VehicleConfig_BedConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="BedConfigID" OtherKey="BedConfigID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.BedLength" Member="BedLengths">
@@ -64,21 +65,21 @@
       <Column Name="BedLengthID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="BedLength" Member="BedLength1" Type="System.String" DbType="Char(10) NOT NULL" CanBeNull="false" />
       <Column Name="BedLengthMetric" Type="System.String" DbType="Char(10) NOT NULL" CanBeNull="false" />
-      <Association Name="BedLength_BedConfig" Member="BedConfigs" ThisKey="BedLengthID" OtherKey="BedLengthID" Type="BedConfig" />
+      <Association Name="BedLength_BedConfig" Member="BedConfigs" AccessModifier="Internal" ThisKey="BedLengthID" OtherKey="BedLengthID" Type="BedConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.BedType" Member="BedTypes">
     <Type Name="BedType">
       <Column Name="BedTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="BedTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="BedType_BedConfig" Member="BedConfigs" ThisKey="BedTypeID" OtherKey="BedTypeID" Type="BedConfig" />
+      <Association Name="BedType_BedConfig" Member="BedConfigs" AccessModifier="Internal" ThisKey="BedTypeID" OtherKey="BedTypeID" Type="BedConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.BodyNumDoors" Member="BodyNumDoors">
     <Type Name="BodyNumDoor">
       <Column Name="BodyNumDoorsID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="BodyNumDoors" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
-      <Association Name="BodyNumDoor_BodyStyleConfig" Member="BodyStyleConfigs" ThisKey="BodyNumDoorsID" OtherKey="BodyNumDoorsID" Type="BodyStyleConfig" />
+      <Association Name="BodyNumDoor_BodyStyleConfig" Member="BodyStyleConfigs" AccessModifier="Internal" ThisKey="BodyNumDoorsID" OtherKey="BodyNumDoorsID" Type="BodyStyleConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.BodyStyleConfig" Member="BodyStyleConfigs">
@@ -88,20 +89,21 @@
       <Column Name="BodyTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="BodyNumDoor_BodyStyleConfig" Member="BodyNumDoor" ThisKey="BodyNumDoorsID" OtherKey="BodyNumDoorsID" Type="BodyNumDoor" IsForeignKey="true" />
       <Association Name="BodyType_BodyStyleConfig" Member="BodyType" ThisKey="BodyTypeID" OtherKey="BodyTypeID" Type="BodyType" IsForeignKey="true" />
+      <Association Name="VehicleConfig_BodyStyleConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="BodyStyleConfigID" OtherKey="BodyStyleConfigID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.BodyType" Member="BodyTypes">
     <Type Name="BodyType">
       <Column Name="BodyTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="BodyTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="BodyType_BodyStyleConfig" Member="BodyStyleConfigs" ThisKey="BodyTypeID" OtherKey="BodyTypeID" Type="BodyStyleConfig" />
+      <Association Name="BodyType_BodyStyleConfig" Member="BodyStyleConfigs" AccessModifier="Internal" ThisKey="BodyTypeID" OtherKey="BodyTypeID" Type="BodyStyleConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.BrakeABS" Member="BrakeABs">
     <Type Name="BrakeAB">
       <Column Name="BrakeABSID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="BrakeABSName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="BrakeAB_BrakeConfig" Member="BrakeConfigs" ThisKey="BrakeABSID" OtherKey="BrakeABSID" Type="BrakeConfig" />
+      <Association Name="BrakeAB_BrakeConfig" Member="BrakeConfigs" AccessModifier="Internal" ThisKey="BrakeABSID" OtherKey="BrakeABSID" Type="BrakeConfig" />
     </Type>
   </Table>
   <Table Name="dbo.BrakeConfig" Member="BrakeConfigs">
@@ -113,43 +115,45 @@
       <Column Name="BrakeABSID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="BrakeAB_BrakeConfig" Member="BrakeAB" ThisKey="BrakeABSID" OtherKey="BrakeABSID" Type="BrakeAB" IsForeignKey="true" />
       <Association Name="BrakeSystem_BrakeConfig" Member="BrakeSystem" ThisKey="BrakeSystemID" OtherKey="BrakeSystemID" Type="BrakeSystem" IsForeignKey="true" />
-      <Association Name="BrakeType_BrakeConfig" Member="BrakeType" ThisKey="FrontBrakeTypeID" OtherKey="BrakeTypeID" Type="BrakeType" IsForeignKey="true" />
-      <Association Name="BrakeType_BrakeConfig1" Member="BrakeType1" ThisKey="RearBrakeTypeID" OtherKey="BrakeTypeID" Type="BrakeType" IsForeignKey="true" />
+      <Association Name="BrakeType_BrakeConfig" Member="FrontBrakeType" Storage="_BrakeType" ThisKey="FrontBrakeTypeID" OtherKey="BrakeTypeID" Type="BrakeType" IsForeignKey="true" />
+      <Association Name="BrakeType_BrakeConfig1" Member="RearBrakeType" Storage="_BrakeType1" ThisKey="RearBrakeTypeID" OtherKey="BrakeTypeID" Type="BrakeType" IsForeignKey="true" />
+      <Association Name="VehicleConfig_BrakeConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="BrakeConfigID" OtherKey="BrakeConfigID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.BrakeSystem" Member="BrakeSystems">
     <Type Name="BrakeSystem">
       <Column Name="BrakeSystemID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="BrakeSystemName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="BrakeSystem_BrakeConfig" Member="BrakeConfigs" ThisKey="BrakeSystemID" OtherKey="BrakeSystemID" Type="BrakeConfig" />
+      <Association Name="BrakeSystem_BrakeConfig" Member="BrakeConfigs" AccessModifier="Internal" ThisKey="BrakeSystemID" OtherKey="BrakeSystemID" Type="BrakeConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.BrakeType" Member="BrakeTypes">
     <Type Name="BrakeType">
       <Column Name="BrakeTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="BrakeTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="BrakeType_BrakeConfig" Member="BrakeConfigs" ThisKey="BrakeTypeID" OtherKey="FrontBrakeTypeID" Type="BrakeConfig" />
-      <Association Name="BrakeType_BrakeConfig1" Member="BrakeConfigs1" ThisKey="BrakeTypeID" OtherKey="RearBrakeTypeID" Type="BrakeConfig" />
+      <Association Name="BrakeType_BrakeConfig" Member="BrakeConfigs" AccessModifier="Internal" ThisKey="BrakeTypeID" OtherKey="FrontBrakeTypeID" Type="BrakeConfig" Cardinality="One" />
+      <Association Name="BrakeType_BrakeConfig1" Member="BrakeConfigs1" AccessModifier="Internal" ThisKey="BrakeTypeID" OtherKey="RearBrakeTypeID" Type="BrakeConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.CylinderHeadType" Member="CylinderHeadTypes">
     <Type Name="CylinderHeadType">
       <Column Name="CylinderHeadTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="CylinderHeadTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="CylinderHeadType_EngineConfig" Member="EngineConfigs" ThisKey="CylinderHeadTypeID" OtherKey="CylinderHeadTypeID" Type="EngineConfig" />
+      <Association Name="CylinderHeadType_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="CylinderHeadTypeID" OtherKey="CylinderHeadTypeID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.DriveType" Member="DriveTypes">
     <Type Name="DriveType">
       <Column Name="DriveTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="DriveTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="VehicleConfig_DriveType" Member="VehicleConfig" AccessModifier="Internal" ThisKey="DriveTypeID" OtherKey="DriveTypeID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ElecControlled" Member="ElecControlleds">
     <Type Name="ElecControlled">
       <Column Name="ElecControlledID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="ElecControlled" Member="ElecControlled1" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
-      <Association Name="ElecControlled_Transmission" Member="Transmissions" ThisKey="ElecControlledID" OtherKey="TransmissionElecControlledID" Type="Transmission" />
+      <Association Name="ElecControlled_Transmission" Member="Transmissions" AccessModifier="Internal" ThisKey="ElecControlledID" OtherKey="TransmissionElecControlledID" Type="Transmission" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.EngineBase" Member="EngineBases">
@@ -164,7 +168,7 @@
       <Column Name="EngBoreMetric" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
       <Column Name="EngStrokeIn" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
       <Column Name="EngStrokeMetric" Type="System.String" DbType="Char(6) NOT NULL" CanBeNull="false" />
-      <Association Name="EngineBase_EngineConfig" Member="EngineConfigs" ThisKey="EngineBaseID" OtherKey="EngineBaseID" Type="EngineConfig" />
+      <Association Name="EngineBase_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="EngineBaseID" OtherKey="EngineBaseID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.EngineConfig" Member="EngineConfigs">
@@ -194,13 +198,14 @@
       <Association Name="Mfr_EngineConfig" Member="Mfr" ThisKey="EngineMfrID" OtherKey="MfrID" Type="Mfr" IsForeignKey="true" />
       <Association Name="Valve_EngineConfig" Member="Valve" ThisKey="ValvesID" OtherKey="ValvesID" Type="Valve" IsForeignKey="true" />
       <Association Name="Valve_EngineConfig1" Member="Valve1" ThisKey="ValvesID" OtherKey="ValvesID" Type="Valve" IsForeignKey="true" />
+      <Association Name="VehicleConfig_EngineConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="EngineConfigID" OtherKey="EngineConfigID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.EngineDesignation" Member="EngineDesignations">
     <Type Name="EngineDesignation">
       <Column Name="EngineDesignationID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="EngineDesignationName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="EngineDesignation_EngineConfig" Member="EngineConfigs" ThisKey="EngineDesignationID" OtherKey="EngineDesignationID" Type="EngineConfig" />
+      <Association Name="EngineDesignation_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="EngineDesignationID" OtherKey="EngineDesignationID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.EngineLegacy" Member="EngineLegacies">
@@ -221,14 +226,14 @@
     <Type Name="EngineVersion">
       <Column Name="EngineVersionID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="EngineVersion" Member="EngineVersion1" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
-      <Association Name="EngineVersion_EngineConfig" Member="EngineConfigs" ThisKey="EngineVersionID" OtherKey="EngineVersionID" Type="EngineConfig" />
+      <Association Name="EngineVersion_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="EngineVersionID" OtherKey="EngineVersionID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.EngineVIN" Member="EngineVINs">
     <Type Name="EngineVIN">
       <Column Name="EngineVINID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="EngineVINName" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
-      <Association Name="EngineVIN_EngineConfig" Member="EngineConfigs" ThisKey="EngineVINID" OtherKey="EngineVINID" Type="EngineConfig" />
+      <Association Name="EngineVIN_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="EngineVINID" OtherKey="EngineVINID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.EnglishPhrase" Member="EnglishPhrases">
@@ -245,7 +250,7 @@
       <Column Name="FuelDeliverySubTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="FuelSystemControlTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="FuelSystemDesignID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="FuelDeliveryConfig_EngineConfig" Member="EngineConfigs" ThisKey="FuelDeliveryConfigID" OtherKey="FuelDeliveryConfigID" Type="EngineConfig" />
+      <Association Name="FuelDeliveryConfig_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="FuelDeliveryConfigID" OtherKey="FuelDeliveryConfigID" Type="EngineConfig" Cardinality="One" />
       <Association Name="FuelDeliverySubType_FuelDeliveryConfig" Member="FuelDeliverySubType" ThisKey="FuelDeliverySubTypeID" OtherKey="FuelDeliverySubTypeID" Type="FuelDeliverySubType" IsForeignKey="true" />
       <Association Name="FuelDeliveryType_FuelDeliveryConfig" Member="FuelDeliveryType" ThisKey="FuelDeliveryTypeID" OtherKey="FuelDeliveryTypeID" Type="FuelDeliveryType" IsForeignKey="true" />
       <Association Name="FuelSystemControlType_FuelDeliveryConfig" Member="FuelSystemControlType" ThisKey="FuelSystemControlTypeID" OtherKey="FuelSystemControlTypeID" Type="FuelSystemControlType" IsForeignKey="true" />
@@ -256,42 +261,42 @@
     <Type Name="FuelDeliverySubType">
       <Column Name="FuelDeliverySubTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="FuelDeliverySubTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="FuelDeliverySubType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelDeliverySubTypeID" OtherKey="FuelDeliverySubTypeID" Type="FuelDeliveryConfig" />
+      <Association Name="FuelDeliverySubType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" AccessModifier="Internal" ThisKey="FuelDeliverySubTypeID" OtherKey="FuelDeliverySubTypeID" Type="FuelDeliveryConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.FuelDeliveryType" Member="FuelDeliveryTypes">
     <Type Name="FuelDeliveryType">
       <Column Name="FuelDeliveryTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="FuelDeliveryTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="FuelDeliveryType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelDeliveryTypeID" OtherKey="FuelDeliveryTypeID" Type="FuelDeliveryConfig" />
+      <Association Name="FuelDeliveryType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" AccessModifier="Internal" ThisKey="FuelDeliveryTypeID" OtherKey="FuelDeliveryTypeID" Type="FuelDeliveryConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.FuelSystemControlType" Member="FuelSystemControlTypes">
     <Type Name="FuelSystemControlType">
       <Column Name="FuelSystemControlTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="FuelSystemControlTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="FuelSystemControlType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelSystemControlTypeID" OtherKey="FuelSystemControlTypeID" Type="FuelDeliveryConfig" />
+      <Association Name="FuelSystemControlType_FuelDeliveryConfig" Member="FuelDeliveryConfigs" AccessModifier="Internal" ThisKey="FuelSystemControlTypeID" OtherKey="FuelSystemControlTypeID" Type="FuelDeliveryConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.FuelSystemDesign" Member="FuelSystemDesigns">
     <Type Name="FuelSystemDesign">
       <Column Name="FuelSystemDesignID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="FuelSystemDesignName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="FuelSystemDesign_FuelDeliveryConfig" Member="FuelDeliveryConfigs" ThisKey="FuelSystemDesignID" OtherKey="FuelSystemDesignID" Type="FuelDeliveryConfig" />
+      <Association Name="FuelSystemDesign_FuelDeliveryConfig" Member="FuelDeliveryConfigs" AccessModifier="Internal" ThisKey="FuelSystemDesignID" OtherKey="FuelSystemDesignID" Type="FuelDeliveryConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.FuelType" Member="FuelTypes">
     <Type Name="FuelType">
       <Column Name="FuelTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="FuelTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="FuelType_EngineConfig" Member="EngineConfigs" ThisKey="FuelTypeID" OtherKey="FuelTypeID" Type="EngineConfig" />
+      <Association Name="FuelType_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="FuelTypeID" OtherKey="FuelTypeID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.IgnitionSystemType" Member="IgnitionSystemTypes">
     <Type Name="IgnitionSystemType">
       <Column Name="IgnitionSystemTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="IgnitionSystemTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="IgnitionSystemType_EngineConfig" Member="EngineConfigs" ThisKey="IgnitionSystemTypeID" OtherKey="IgnitionSystemTypeID" Type="EngineConfig" />
+      <Association Name="IgnitionSystemType_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="IgnitionSystemTypeID" OtherKey="IgnitionSystemTypeID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.Language" Member="Languages">
@@ -338,21 +343,22 @@
     <Type Name="Make">
       <Column Name="MakeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="MakeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="Make_BaseVehicle" Member="BaseVehicles" ThisKey="MakeID" OtherKey="MakeID" Type="BaseVehicle" />
+      <Association Name="Make_BaseVehicle" Member="BaseVehicles" AccessModifier="Internal" ThisKey="MakeID" OtherKey="MakeID" Type="BaseVehicle" />
     </Type>
   </Table>
   <Table Name="dbo.Mfr" Member="Mfrs">
     <Type Name="Mfr">
       <Column Name="MfrID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="MfrName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="Mfr_EngineConfig" Member="EngineConfigs" ThisKey="MfrID" OtherKey="EngineMfrID" Type="EngineConfig" />
-      <Association Name="Mfr_Transmission" Member="Transmissions" ThisKey="MfrID" OtherKey="TransmissionMfrID" Type="Transmission" />
+      <Association Name="Mfr_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="MfrID" OtherKey="EngineMfrID" Type="EngineConfig" Cardinality="One" />
+      <Association Name="Mfr_Transmission" Member="Transmissions" AccessModifier="Internal" ThisKey="MfrID" OtherKey="TransmissionMfrID" Type="Transmission" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.MfrBodyCode" Member="MfrBodyCodes">
     <Type Name="MfrBodyCode">
       <Column Name="MfrBodyCodeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="MfrBodyCodeName" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="VehicleConfig_MfrBodyCode" Member="VehicleConfig" AccessModifier="Internal" ThisKey="MfrBodyCodeID" OtherKey="MfrBodyCodeID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Model" Member="Models">
@@ -360,7 +366,7 @@
       <Column Name="ModelID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="ModelName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="VehicleTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Model_BaseVehicle" Member="BaseVehicles" ThisKey="ModelID" OtherKey="ModelID" Type="BaseVehicle" />
+      <Association Name="Model_BaseVehicle" Member="BaseVehicles" AccessModifier="Internal" ThisKey="ModelID" OtherKey="ModelID" Type="BaseVehicle" />
       <Association Name="VehicleType_Model" Member="VehicleType" ThisKey="VehicleTypeID" OtherKey="VehicleTypeID" Type="VehicleType" IsForeignKey="true" />
     </Type>
   </Table>
@@ -375,7 +381,7 @@
     <Type Name="PublicationStage">
       <Column Name="PublicationStageID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="PublicationStageName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Association Name="PublicationStage_Vehicle" Member="Vehicles" ThisKey="PublicationStageID" OtherKey="PublicationStageID" Type="Vehicle" />
+      <Association Name="PublicationStage_Vehicle" Member="Vehicles" AccessModifier="Internal" ThisKey="PublicationStageID" OtherKey="PublicationStageID" Type="Vehicle" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.Region" Member="Regions">
@@ -385,7 +391,7 @@
       <Column Name="RegionAbbr" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
       <Column Name="RegionName" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
       <Association Name="Region_Region" Member="Regions" ThisKey="RegionID" OtherKey="ParentID" Type="Region" />
-      <Association Name="Region_Vehicle" Member="Vehicles" ThisKey="RegionID" OtherKey="RegionID" Type="Vehicle" />
+      <Association Name="Region_Vehicle" Member="Vehicles" AccessModifier="Internal" ThisKey="RegionID" OtherKey="RegionID" Type="Vehicle" Cardinality="One" />
       <Association Name="Region_Region" Member="Region1" ThisKey="ParentID" OtherKey="RegionID" Type="Region" IsForeignKey="true" />
     </Type>
   </Table>
@@ -393,8 +399,8 @@
     <Type Name="SpringType">
       <Column Name="SpringTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="SpringTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="SpringType_SpringTypeConfig" Member="SpringTypeConfigs" ThisKey="SpringTypeID" OtherKey="FrontSpringTypeID" Type="SpringTypeConfig" />
-      <Association Name="SpringType_SpringTypeConfig1" Member="SpringTypeConfigs1" ThisKey="SpringTypeID" OtherKey="RearSpringTypeID" Type="SpringTypeConfig" />
+      <Association Name="SpringType_SpringTypeConfig" Member="SpringTypeConfigs" AccessModifier="Internal" ThisKey="SpringTypeID" OtherKey="FrontSpringTypeID" Type="SpringTypeConfig" Cardinality="One" />
+      <Association Name="SpringType_SpringTypeConfig1" Member="SpringTypeConfigs1" AccessModifier="Internal" ThisKey="SpringTypeID" OtherKey="RearSpringTypeID" Type="SpringTypeConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.SpringTypeConfig" Member="SpringTypeConfigs">
@@ -402,8 +408,9 @@
       <Column Name="SpringTypeConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="FrontSpringTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="RearSpringTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="SpringType_SpringTypeConfig" Member="SpringType" ThisKey="FrontSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
-      <Association Name="SpringType_SpringTypeConfig1" Member="SpringType1" ThisKey="RearSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
+      <Association Name="SpringType_SpringTypeConfig" Member="FrontSprintType" Storage="_SpringType" ThisKey="FrontSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
+      <Association Name="SpringType_SpringTypeConfig1" Member="RearSpringType" Storage="_SpringType1" ThisKey="RearSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
+      <Association Name="VehicleConfig_SpringTypeConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="SpringTypeConfigID" OtherKey="SpringTypeConfigID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.SteeringConfig" Member="SteeringConfigs">
@@ -413,27 +420,28 @@
       <Column Name="SteeringSystemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="SteeringSystem_SteeringConfig" Member="SteeringSystem" ThisKey="SteeringSystemID" OtherKey="SteeringSystemID" Type="SteeringSystem" IsForeignKey="true" />
       <Association Name="SteeringType_SteeringConfig" Member="SteeringType" ThisKey="SteeringTypeID" OtherKey="SteeringTypeID" Type="SteeringType" IsForeignKey="true" />
+      <Association Name="VehicleConfig_SteeringConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="SteeringConfigID" OtherKey="SteeringConfigID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.SteeringSystem" Member="SteeringSystems">
     <Type Name="SteeringSystem">
       <Column Name="SteeringSystemID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="SteeringSystemName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="SteeringSystem_SteeringConfig" Member="SteeringConfigs" ThisKey="SteeringSystemID" OtherKey="SteeringSystemID" Type="SteeringConfig" />
+      <Association Name="SteeringSystem_SteeringConfig" Member="SteeringConfigs" AccessModifier="Internal" ThisKey="SteeringSystemID" OtherKey="SteeringSystemID" Type="SteeringConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.SteeringType" Member="SteeringTypes">
     <Type Name="SteeringType">
       <Column Name="SteeringTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="SteeringTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="SteeringType_SteeringConfig" Member="SteeringConfigs" ThisKey="SteeringTypeID" OtherKey="SteeringTypeID" Type="SteeringConfig" />
+      <Association Name="SteeringType_SteeringConfig" Member="SteeringConfigs" AccessModifier="Internal" ThisKey="SteeringTypeID" OtherKey="SteeringTypeID" Type="SteeringConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.Submodel" Member="Submodels">
     <Type Name="Submodel">
       <Column Name="SubmodelID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="SubmodelName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="Submodel_Vehicle" Member="Vehicles" ThisKey="SubmodelID" OtherKey="SubmodelID" Type="Vehicle" />
+      <Association Name="Submodel_Vehicle" Member="Vehicles" AccessModifier="Internal" ThisKey="SubmodelID" OtherKey="SubmodelID" Type="Vehicle" />
     </Type>
   </Table>
   <Table Name="dbo.Transmission" Member="Transmissions">
@@ -447,6 +455,7 @@
       <Association Name="ElecControlled_Transmission" Member="ElecControlled" ThisKey="TransmissionElecControlledID" OtherKey="ElecControlledID" Type="ElecControlled" IsForeignKey="true" />
       <Association Name="TransmissionBase_Transmission" Member="TransmissionBase" ThisKey="TransmissionBaseID" OtherKey="TransmissionBaseID" Type="TransmissionBase" IsForeignKey="true" />
       <Association Name="TransmissionMfrCode_Transmission" Member="TransmissionMfrCode" ThisKey="TransmissionMfrCodeID" OtherKey="TransmissionMfrCodeID" Type="TransmissionMfrCode" IsForeignKey="true" />
+      <Association Name="VehicleConfig_Transmission" Member="VehicleConfig" AccessModifier="Internal" ThisKey="TransmissionID" OtherKey="TransmissionID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.TransmissionBase" Member="TransmissionBases">
@@ -455,7 +464,7 @@
       <Column Name="TransmissionTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="TransmissionNumSpeedsID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="TransmissionControlTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="TransmissionBase_Transmission" Member="Transmissions" ThisKey="TransmissionBaseID" OtherKey="TransmissionBaseID" Type="Transmission" />
+      <Association Name="TransmissionBase_Transmission" Member="Transmissions" AccessModifier="Internal" ThisKey="TransmissionBaseID" OtherKey="TransmissionBaseID" Type="Transmission" Cardinality="One" />
       <Association Name="TransmissionControlType_TransmissionBase" Member="TransmissionControlType" ThisKey="TransmissionControlTypeID" OtherKey="TransmissionControlTypeID" Type="TransmissionControlType" IsForeignKey="true" />
       <Association Name="TransmissionNumSpeed_TransmissionBase" Member="TransmissionNumSpeed" ThisKey="TransmissionNumSpeedsID" OtherKey="TransmissionNumSpeedsID" Type="TransmissionNumSpeed" IsForeignKey="true" />
       <Association Name="TransmissionType_TransmissionBase" Member="TransmissionType" ThisKey="TransmissionTypeID" OtherKey="TransmissionTypeID" Type="TransmissionType" IsForeignKey="true" />
@@ -465,36 +474,36 @@
     <Type Name="TransmissionControlType">
       <Column Name="TransmissionControlTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="TransmissionControlTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="TransmissionControlType_TransmissionBase" Member="TransmissionBases" ThisKey="TransmissionControlTypeID" OtherKey="TransmissionControlTypeID" Type="TransmissionBase" />
+      <Association Name="TransmissionControlType_TransmissionBase" Member="TransmissionBases" AccessModifier="Internal" ThisKey="TransmissionControlTypeID" OtherKey="TransmissionControlTypeID" Type="TransmissionBase" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.TransmissionMfrCode" Member="TransmissionMfrCodes">
     <Type Name="TransmissionMfrCode">
       <Column Name="TransmissionMfrCodeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="TransmissionMfrCode" Member="TransmissionMfrCode1" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="TransmissionMfrCode_Transmission" Member="Transmissions" ThisKey="TransmissionMfrCodeID" OtherKey="TransmissionMfrCodeID" Type="Transmission" />
+      <Association Name="TransmissionMfrCode_Transmission" Member="Transmissions" AccessModifier="Internal" ThisKey="TransmissionMfrCodeID" OtherKey="TransmissionMfrCodeID" Type="Transmission" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.TransmissionNumSpeeds" Member="TransmissionNumSpeeds">
     <Type Name="TransmissionNumSpeed">
       <Column Name="TransmissionNumSpeedsID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="TransmissionNumSpeeds" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
-      <Association Name="TransmissionNumSpeed_TransmissionBase" Member="TransmissionBases" ThisKey="TransmissionNumSpeedsID" OtherKey="TransmissionNumSpeedsID" Type="TransmissionBase" />
+      <Association Name="TransmissionNumSpeed_TransmissionBase" Member="TransmissionBases" AccessModifier="Internal" ThisKey="TransmissionNumSpeedsID" OtherKey="TransmissionNumSpeedsID" Type="TransmissionBase" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.TransmissionType" Member="TransmissionTypes">
     <Type Name="TransmissionType">
       <Column Name="TransmissionTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="TransmissionTypeName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="TransmissionType_TransmissionBase" Member="TransmissionBases" ThisKey="TransmissionTypeID" OtherKey="TransmissionTypeID" Type="TransmissionBase" />
+      <Association Name="TransmissionType_TransmissionBase" Member="TransmissionBases" AccessModifier="Internal" ThisKey="TransmissionTypeID" OtherKey="TransmissionTypeID" Type="TransmissionBase" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.Valves" Member="Valves">
     <Type Name="Valve">
       <Column Name="ValvesID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="ValvesPerEngine" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
-      <Association Name="Valve_EngineConfig" Member="EngineConfigs" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" />
-      <Association Name="Valve_EngineConfig1" Member="EngineConfigs1" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" />
+      <Association Name="Valve_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" Cardinality="One" />
+      <Association Name="Valve_EngineConfig1" Member="EngineConfigs1" AccessModifier="Internal" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.vcdbchanges" Member="vcdbchanges">
@@ -524,9 +533,10 @@
       <Column Name="PublicationStageID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PublicationStageSource" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="PublicationStageDate" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
-      <Association Name="BaseVehicle_Vehicle" Member="BaseVehicle" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="BaseVehicle" IsForeignKey="true" />
+      <Association Name="Vehicle_VehicleConfig" Member="VehicleConfigs" ThisKey="VehicleID" OtherKey="VehicleID" Type="VehicleConfig" />
+      <Association Name="BaseVehicle_Vehicle" Member="BaseVehicle" AccessModifier="Internal" ThisKey="BaseVehicleID" OtherKey="BaseVehicleID" Type="BaseVehicle" IsForeignKey="true" />
       <Association Name="PublicationStage_Vehicle" Member="PublicationStage" ThisKey="PublicationStageID" OtherKey="PublicationStageID" Type="PublicationStage" IsForeignKey="true" />
-      <Association Name="Region_Vehicle" Member="Region" ThisKey="RegionID" OtherKey="RegionID" Type="Region" IsForeignKey="true" />
+      <Association Name="Region_Vehicle" Member="Region" AccessModifier="Internal" ThisKey="RegionID" OtherKey="RegionID" Type="Region" IsForeignKey="true" />
       <Association Name="Submodel_Vehicle" Member="Submodel" ThisKey="SubmodelID" OtherKey="SubmodelID" Type="Submodel" IsForeignKey="true" />
     </Type>
   </Table>
@@ -544,6 +554,17 @@
       <Column Name="SteeringConfigID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="TransmissionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="WheelbaseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="VehicleConfig_BedConfig" Member="BedConfig" ThisKey="BedConfigID" OtherKey="BedConfigID" Type="BedConfig" Cardinality="One" />
+      <Association Name="VehicleConfig_BodyStyleConfig" Member="BodyStyleConfig" ThisKey="BodyStyleConfigID" OtherKey="BodyStyleConfigID" Type="BodyStyleConfig" Cardinality="One" />
+      <Association Name="VehicleConfig_BrakeConfig" Member="BrakeConfig" ThisKey="BrakeConfigID" OtherKey="BrakeConfigID" Type="BrakeConfig" Cardinality="One" />
+      <Association Name="VehicleConfig_DriveType" Member="DriveType" ThisKey="DriveTypeID" OtherKey="DriveTypeID" Type="DriveType" Cardinality="One" />
+      <Association Name="VehicleConfig_EngineConfig" Member="EngineConfig" ThisKey="EngineConfigID" OtherKey="EngineConfigID" Type="EngineConfig" Cardinality="One" />
+      <Association Name="VehicleConfig_MfrBodyCode" Member="MfrBodyCode" ThisKey="MfrBodyCodeID" OtherKey="MfrBodyCodeID" Type="MfrBodyCode" Cardinality="One" />
+      <Association Name="VehicleConfig_SpringTypeConfig" Member="SpringTypeConfig" ThisKey="SpringTypeConfigID" OtherKey="SpringTypeConfigID" Type="SpringTypeConfig" Cardinality="One" />
+      <Association Name="VehicleConfig_SteeringConfig" Member="SteeringConfig" ThisKey="SteeringConfigID" OtherKey="SteeringConfigID" Type="SteeringConfig" Cardinality="One" />
+      <Association Name="VehicleConfig_Transmission" Member="Transmission" ThisKey="TransmissionID" OtherKey="TransmissionID" Type="Transmission" Cardinality="One" />
+      <Association Name="VehicleConfig_WheelBase" Member="WheelBase" ThisKey="WheelbaseID" OtherKey="WheelBaseID" Type="WheelBase" Cardinality="One" />
+      <Association Name="Vehicle_VehicleConfig" Member="Vehicle" AccessModifier="Internal" ThisKey="VehicleID" OtherKey="VehicleID" Type="Vehicle" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.VehicleToBedConfig" Member="VehicleToBedConfigs">
@@ -632,7 +653,7 @@
       <Column Name="VehicleTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="VehicleTypeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="VehicleTypeGroupID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="VehicleType_Model" Member="Models" ThisKey="VehicleTypeID" OtherKey="VehicleTypeID" Type="Model" />
+      <Association Name="VehicleType_Model" Member="Models" AccessModifier="Internal" ThisKey="VehicleTypeID" OtherKey="VehicleTypeID" Type="Model" />
     </Type>
   </Table>
   <Table Name="dbo.VehicleTypeGroup" Member="VehicleTypeGroups">
@@ -651,6 +672,7 @@
       <Column Name="WheelBaseID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="WheelBase" Member="WheelBase1" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
       <Column Name="WheelBaseMetric" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="VehicleConfig_WheelBase" Member="VehicleConfig" AccessModifier="Internal" ThisKey="WheelBaseID" OtherKey="WheelbaseID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>
