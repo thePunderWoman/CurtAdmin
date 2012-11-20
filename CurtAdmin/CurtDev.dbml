@@ -347,7 +347,8 @@
       <Association Name="Customer_CustomerPricing" Member="CustomerPricings" ThisKey="cust_id" OtherKey="cust_id" Type="CustomerPricing" />
       <Association Name="Customer_PartStates" Member="PartStates" ThisKey="stateID" OtherKey="stateID" Type="PartStates" />
       <Association Name="Customer_CustomerLocation" Member="CustomerLocations" ThisKey="cust_id" OtherKey="cust_id" Type="CustomerLocation" />
-      <Association Name="Customer_CustomerUser" Member="CustomerUsers" ThisKey="customerID" OtherKey="customerID" Type="CustomerUser" />
+      <Association Name="Customer_CustomerUser" Member="CustomerUsers" ThisKey="cust_id" OtherKey="cust_id" Type="CustomerUser" />
+      <Association Name="Customer_WebProperty" Member="WebProperties" ThisKey="customerID" OtherKey="customerID" Type="WebProperty" />
       <Association Name="DealerTier_Customer" Member="DealerTier" ThisKey="tier" OtherKey="ID" Type="DealerTier" IsForeignKey="true" />
       <Association Name="DealerType_Customer" Member="DealerType" ThisKey="dealer_type" OtherKey="dealer_type" Type="DealerType" IsForeignKey="true" />
     </Type>
@@ -783,7 +784,12 @@
       <Column Name="customerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Customer_CustomerUser" Member="Customer" AccessModifier="Internal" ThisKey="customerID" OtherKey="customerID" Type="Customer" IsForeignKey="true" />
+      <Column Name="locationID" Type="System.Int32" CanBeNull="false" />
+      <Column Name="isSudo" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="cust_id" Type="System.Int32" CanBeNull="false" />
+      <Column Name="notCustomer" Type="System.Boolean" CanBeNull="false" />
+      <Association Name="CustomerUser_CustUserWebProperty" Member="CustUserWebProperties" ThisKey="id" OtherKey="userID" Type="CustUserWebProperty" />
+      <Association Name="Customer_CustomerUser" Member="Customer" AccessModifier="Internal" ThisKey="cust_id" OtherKey="cust_id" Type="Customer" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.MapPolygon" Member="MapPolygons">
@@ -994,6 +1000,47 @@
       <Column Name="description" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Association Name="Website_Menu" Member="Menus" ThisKey="ID" OtherKey="websiteID" Type="Menu" />
       <Association Name="Website_SiteContent" Member="SiteContents" ThisKey="ID" OtherKey="websiteID" Type="SiteContent" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustUserWebProperties" Member="CustUserWebProperties">
+    <Type Name="CustUserWebProperty">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="webPropID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="CustUserWebProperty_WebProperty" Member="WebProperties" ThisKey="webPropID" OtherKey="id" Type="WebProperty" />
+      <Association Name="CustomerUser_CustUserWebProperty" Member="CustomerUser" ThisKey="userID" OtherKey="id" Type="CustomerUser" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.WebProperties" Member="WebProperties">
+    <Type Name="WebProperty">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(75) NOT NULL" CanBeNull="false" />
+      <Column Name="customerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="badgeID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="isEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="sellerID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="typeID" Type="System.Int32" DbType="Int" CanBeNull="false" />
+      <Association Name="WebProperty_WebPropertyType" Member="WebPropertyTypes" ThisKey="typeID" OtherKey="typeID" Type="WebPropertyType" />
+      <Association Name="CustUserWebProperty_WebProperty" Member="CustUserWebProperty" ThisKey="id" OtherKey="webPropID" Type="CustUserWebProperty" IsForeignKey="true" />
+      <Association Name="Customer_WebProperty" Member="Customer" ThisKey="customerID" OtherKey="customerID" Type="Customer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.WebPropertyTypes" Member="WebPropertyTypes">
+    <Type Name="WebPropertyType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="typeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="type" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="WebProperty_WebPropertyType" Member="WebProperty" ThisKey="typeID" OtherKey="typeID" Type="WebProperty" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserProfiles" Member="UserProfiles">
+    <Type Name="UserProfile">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="customerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="custID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="email" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="IP" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

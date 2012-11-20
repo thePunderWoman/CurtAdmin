@@ -518,6 +518,8 @@
     <Content Include="Views\SalesRep\Edit.cshtml" />
     <Content Include="Views\Shared\Navigation\_SalesRepNavigation.cshtml" />
     <Content Include="Views\Website\Index.cshtml" />
+    <Content Include="Views\Customers\ViewCustomerUsers.cshtml" />
+    <Content Include="Views\Customers\EditCustomerUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

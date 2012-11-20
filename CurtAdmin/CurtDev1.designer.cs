@@ -306,6 +306,18 @@ namespace CurtAdmin
     partial void InsertWebsite(Website instance);
     partial void UpdateWebsite(Website instance);
     partial void DeleteWebsite(Website instance);
+    partial void InsertCustUserWebProperty(CustUserWebProperty instance);
+    partial void UpdateCustUserWebProperty(CustUserWebProperty instance);
+    partial void DeleteCustUserWebProperty(CustUserWebProperty instance);
+    partial void InsertWebProperty(WebProperty instance);
+    partial void UpdateWebProperty(WebProperty instance);
+    partial void DeleteWebProperty(WebProperty instance);
+    partial void InsertWebPropertyType(WebPropertyType instance);
+    partial void UpdateWebPropertyType(WebPropertyType instance);
+    partial void DeleteWebPropertyType(WebPropertyType instance);
+    partial void InsertUserProfile(UserProfile instance);
+    partial void UpdateUserProfile(UserProfile instance);
+    partial void DeleteUserProfile(UserProfile instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1079,6 +1091,38 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<Website>();
+			}
+		}
+		
+		public System.Data.Linq.Table<CustUserWebProperty> CustUserWebProperties
+		{
+			get
+			{
+				return this.GetTable<CustUserWebProperty>();
+			}
+		}
+		
+		public System.Data.Linq.Table<WebProperty> WebProperties
+		{
+			get
+			{
+				return this.GetTable<WebProperty>();
+			}
+		}
+		
+		public System.Data.Linq.Table<WebPropertyType> WebPropertyTypes
+		{
+			get
+			{
+				return this.GetTable<WebPropertyType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<UserProfile> UserProfiles
+		{
+			get
+			{
+				return this.GetTable<UserProfile>();
 			}
 		}
 		
@@ -7301,6 +7345,8 @@ namespace CurtAdmin
 		
 		private EntitySet<CustomerUser> _CustomerUsers;
 		
+		private EntitySet<WebProperty> _WebProperties;
+		
 		private EntityRef<DealerTier> _DealerTier;
 		
 		private EntityRef<DealerType> _DealerType;
@@ -7371,6 +7417,7 @@ namespace CurtAdmin
 			this._PartStates = new EntitySet<PartStates>(new Action<PartStates>(this.attach_PartStates), new Action<PartStates>(this.detach_PartStates));
 			this._CustomerLocations = new EntitySet<CustomerLocation>(new Action<CustomerLocation>(this.attach_CustomerLocations), new Action<CustomerLocation>(this.detach_CustomerLocations));
 			this._CustomerUsers = new EntitySet<CustomerUser>(new Action<CustomerUser>(this.attach_CustomerUsers), new Action<CustomerUser>(this.detach_CustomerUsers));
+			this._WebProperties = new EntitySet<WebProperty>(new Action<WebProperty>(this.attach_WebProperties), new Action<WebProperty>(this.detach_WebProperties));
 			this._DealerTier = default(EntityRef<DealerTier>);
 			this._DealerType = default(EntityRef<DealerType>);
 			OnCreated();
@@ -7963,7 +8010,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_CustomerUser", Storage="_CustomerUsers", ThisKey="customerID", OtherKey="customerID")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_CustomerUser", Storage="_CustomerUsers", ThisKey="cust_id", OtherKey="cust_id")]
 		public EntitySet<CustomerUser> CustomerUsers
 		{
 			get
@@ -7973,6 +8020,19 @@ namespace CurtAdmin
 			set
 			{
 				this._CustomerUsers.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_WebProperty", Storage="_WebProperties", ThisKey="customerID", OtherKey="customerID")]
+		public EntitySet<WebProperty> WebProperties
+		{
+			get
+			{
+				return this._WebProperties;
+			}
+			set
+			{
+				this._WebProperties.Assign(value);
 			}
 		}
 		
@@ -8107,6 +8167,18 @@ namespace CurtAdmin
 		}
 		
 		private void detach_CustomerUsers(CustomerUser entity)
+		{
+			this.SendPropertyChanging();
+			entity.Customer = null;
+		}
+		
+		private void attach_WebProperties(WebProperty entity)
+		{
+			this.SendPropertyChanging();
+			entity.Customer = this;
+		}
+		
+		private void detach_WebProperties(WebProperty entity)
 		{
 			this.SendPropertyChanging();
 			entity.Customer = null;
@@ -16722,6 +16794,16 @@ namespace CurtAdmin
 		
 		private bool _active;
 		
+		private int _locationID;
+		
+		private bool _isSudo;
+		
+		private int _cust_id;
+		
+		private bool _notCustomer;
+		
+		private EntitySet<CustUserWebProperty> _CustUserWebProperties;
+		
 		private EntityRef<Customer> _Customer;
 		
     #region Extensibility Method Definitions
@@ -16742,10 +16824,19 @@ namespace CurtAdmin
     partial void Ondate_addedChanged();
     partial void OnactiveChanging(bool value);
     partial void OnactiveChanged();
+    partial void OnlocationIDChanging(int value);
+    partial void OnlocationIDChanged();
+    partial void OnisSudoChanging(bool value);
+    partial void OnisSudoChanged();
+    partial void Oncust_idChanging(int value);
+    partial void Oncust_idChanged();
+    partial void OnnotCustomerChanging(bool value);
+    partial void OnnotCustomerChanged();
     #endregion
 		
 		public CustomerUser()
 		{
+			this._CustUserWebProperties = new EntitySet<CustUserWebProperty>(new Action<CustUserWebProperty>(this.attach_CustUserWebProperties), new Action<CustUserWebProperty>(this.detach_CustUserWebProperties));
 			this._Customer = default(EntityRef<Customer>);
 			OnCreated();
 		}
@@ -16841,10 +16932,6 @@ namespace CurtAdmin
 			{
 				if ((this._customerID != value))
 				{
-					if (this._Customer.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OncustomerIDChanging(value);
 					this.SendPropertyChanging();
 					this._customerID = value;
@@ -16894,7 +16981,104 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_CustomerUser", Storage="_Customer", ThisKey="customerID", OtherKey="customerID", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_locationID")]
+		public int locationID
+		{
+			get
+			{
+				return this._locationID;
+			}
+			set
+			{
+				if ((this._locationID != value))
+				{
+					this.OnlocationIDChanging(value);
+					this.SendPropertyChanging();
+					this._locationID = value;
+					this.SendPropertyChanged("locationID");
+					this.OnlocationIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_isSudo")]
+		public bool isSudo
+		{
+			get
+			{
+				return this._isSudo;
+			}
+			set
+			{
+				if ((this._isSudo != value))
+				{
+					this.OnisSudoChanging(value);
+					this.SendPropertyChanging();
+					this._isSudo = value;
+					this.SendPropertyChanged("isSudo");
+					this.OnisSudoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_cust_id")]
+		public int cust_id
+		{
+			get
+			{
+				return this._cust_id;
+			}
+			set
+			{
+				if ((this._cust_id != value))
+				{
+					if (this._Customer.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Oncust_idChanging(value);
+					this.SendPropertyChanging();
+					this._cust_id = value;
+					this.SendPropertyChanged("cust_id");
+					this.Oncust_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_notCustomer")]
+		public bool notCustomer
+		{
+			get
+			{
+				return this._notCustomer;
+			}
+			set
+			{
+				if ((this._notCustomer != value))
+				{
+					this.OnnotCustomerChanging(value);
+					this.SendPropertyChanging();
+					this._notCustomer = value;
+					this.SendPropertyChanged("notCustomer");
+					this.OnnotCustomerChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustomerUser_CustUserWebProperty", Storage="_CustUserWebProperties", ThisKey="id", OtherKey="userID")]
+		public EntitySet<CustUserWebProperty> CustUserWebProperties
+		{
+			get
+			{
+				return this._CustUserWebProperties;
+			}
+			set
+			{
+				this._CustUserWebProperties.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_CustomerUser", Storage="_Customer", ThisKey="cust_id", OtherKey="cust_id", IsForeignKey=true)]
 		internal Customer Customer
 		{
 			get
@@ -16917,11 +17101,11 @@ namespace CurtAdmin
 					if ((value != null))
 					{
 						value.CustomerUsers.Add(this);
-						this._customerID = value.customerID;
+						this._cust_id = value.cust_id;
 					}
 					else
 					{
-						this._customerID = default(Nullable<int>);
+						this._cust_id = default(int);
 					}
 					this.SendPropertyChanged("Customer");
 				}
@@ -16946,6 +17130,18 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_CustUserWebProperties(CustUserWebProperty entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustomerUser = this;
+		}
+		
+		private void detach_CustUserWebProperties(CustUserWebProperty entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustomerUser = null;
 		}
 	}
 	
@@ -21077,6 +21273,834 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.Website = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CustUserWebProperties")]
+	public partial class CustUserWebProperty : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Guid _userID;
+		
+		private int _webPropID;
+		
+		private EntitySet<WebProperty> _WebProperties;
+		
+		private EntityRef<CustomerUser> _CustomerUser;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnuserIDChanging(System.Guid value);
+    partial void OnuserIDChanged();
+    partial void OnwebPropIDChanging(int value);
+    partial void OnwebPropIDChanged();
+    #endregion
+		
+		public CustUserWebProperty()
+		{
+			this._WebProperties = new EntitySet<WebProperty>(new Action<WebProperty>(this.attach_WebProperties), new Action<WebProperty>(this.detach_WebProperties));
+			this._CustomerUser = default(EntityRef<CustomerUser>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid userID
+		{
+			get
+			{
+				return this._userID;
+			}
+			set
+			{
+				if ((this._userID != value))
+				{
+					if (this._CustomerUser.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnuserIDChanging(value);
+					this.SendPropertyChanging();
+					this._userID = value;
+					this.SendPropertyChanged("userID");
+					this.OnuserIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_webPropID", DbType="Int NOT NULL")]
+		public int webPropID
+		{
+			get
+			{
+				return this._webPropID;
+			}
+			set
+			{
+				if ((this._webPropID != value))
+				{
+					this.OnwebPropIDChanging(value);
+					this.SendPropertyChanging();
+					this._webPropID = value;
+					this.SendPropertyChanged("webPropID");
+					this.OnwebPropIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustUserWebProperty_WebProperty", Storage="_WebProperties", ThisKey="webPropID", OtherKey="id")]
+		public EntitySet<WebProperty> WebProperties
+		{
+			get
+			{
+				return this._WebProperties;
+			}
+			set
+			{
+				this._WebProperties.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustomerUser_CustUserWebProperty", Storage="_CustomerUser", ThisKey="userID", OtherKey="id", IsForeignKey=true)]
+		public CustomerUser CustomerUser
+		{
+			get
+			{
+				return this._CustomerUser.Entity;
+			}
+			set
+			{
+				CustomerUser previousValue = this._CustomerUser.Entity;
+				if (((previousValue != value) 
+							|| (this._CustomerUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CustomerUser.Entity = null;
+						previousValue.CustUserWebProperties.Remove(this);
+					}
+					this._CustomerUser.Entity = value;
+					if ((value != null))
+					{
+						value.CustUserWebProperties.Add(this);
+						this._userID = value.id;
+					}
+					else
+					{
+						this._userID = default(System.Guid);
+					}
+					this.SendPropertyChanged("CustomerUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_WebProperties(WebProperty entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustUserWebProperty = this;
+		}
+		
+		private void detach_WebProperties(WebProperty entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustUserWebProperty = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.WebProperties")]
+	public partial class WebProperty : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private System.Nullable<int> _customerID;
+		
+		private System.Guid _badgeID;
+		
+		private string _url;
+		
+		private bool _isEnabled;
+		
+		private string _sellerID;
+		
+		private int _typeID;
+		
+		private EntitySet<WebPropertyType> _WebPropertyTypes;
+		
+		private EntityRef<CustUserWebProperty> _CustUserWebProperty;
+		
+		private EntityRef<Customer> _Customer;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void OncustomerIDChanging(System.Nullable<int> value);
+    partial void OncustomerIDChanged();
+    partial void OnbadgeIDChanging(System.Guid value);
+    partial void OnbadgeIDChanged();
+    partial void OnurlChanging(string value);
+    partial void OnurlChanged();
+    partial void OnisEnabledChanging(bool value);
+    partial void OnisEnabledChanged();
+    partial void OnsellerIDChanging(string value);
+    partial void OnsellerIDChanged();
+    partial void OntypeIDChanging(int value);
+    partial void OntypeIDChanged();
+    #endregion
+		
+		public WebProperty()
+		{
+			this._WebPropertyTypes = new EntitySet<WebPropertyType>(new Action<WebPropertyType>(this.attach_WebPropertyTypes), new Action<WebPropertyType>(this.detach_WebPropertyTypes));
+			this._CustUserWebProperty = default(EntityRef<CustUserWebProperty>);
+			this._Customer = default(EntityRef<Customer>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					if (this._CustUserWebProperty.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(75) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerID", DbType="Int")]
+		public System.Nullable<int> customerID
+		{
+			get
+			{
+				return this._customerID;
+			}
+			set
+			{
+				if ((this._customerID != value))
+				{
+					if (this._Customer.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OncustomerIDChanging(value);
+					this.SendPropertyChanging();
+					this._customerID = value;
+					this.SendPropertyChanged("customerID");
+					this.OncustomerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_badgeID", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid badgeID
+		{
+			get
+			{
+				return this._badgeID;
+			}
+			set
+			{
+				if ((this._badgeID != value))
+				{
+					this.OnbadgeIDChanging(value);
+					this.SendPropertyChanging();
+					this._badgeID = value;
+					this.SendPropertyChanged("badgeID");
+					this.OnbadgeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_url", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string url
+		{
+			get
+			{
+				return this._url;
+			}
+			set
+			{
+				if ((this._url != value))
+				{
+					this.OnurlChanging(value);
+					this.SendPropertyChanging();
+					this._url = value;
+					this.SendPropertyChanged("url");
+					this.OnurlChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_isEnabled", DbType="Bit NOT NULL")]
+		public bool isEnabled
+		{
+			get
+			{
+				return this._isEnabled;
+			}
+			set
+			{
+				if ((this._isEnabled != value))
+				{
+					this.OnisEnabledChanging(value);
+					this.SendPropertyChanging();
+					this._isEnabled = value;
+					this.SendPropertyChanged("isEnabled");
+					this.OnisEnabledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sellerID", DbType="VarChar(50)")]
+		public string sellerID
+		{
+			get
+			{
+				return this._sellerID;
+			}
+			set
+			{
+				if ((this._sellerID != value))
+				{
+					this.OnsellerIDChanging(value);
+					this.SendPropertyChanging();
+					this._sellerID = value;
+					this.SendPropertyChanged("sellerID");
+					this.OnsellerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_typeID", DbType="Int")]
+		public int typeID
+		{
+			get
+			{
+				return this._typeID;
+			}
+			set
+			{
+				if ((this._typeID != value))
+				{
+					this.OntypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._typeID = value;
+					this.SendPropertyChanged("typeID");
+					this.OntypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropertyType", Storage="_WebPropertyTypes", ThisKey="typeID", OtherKey="typeID")]
+		public EntitySet<WebPropertyType> WebPropertyTypes
+		{
+			get
+			{
+				return this._WebPropertyTypes;
+			}
+			set
+			{
+				this._WebPropertyTypes.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustUserWebProperty_WebProperty", Storage="_CustUserWebProperty", ThisKey="id", OtherKey="webPropID", IsForeignKey=true)]
+		public CustUserWebProperty CustUserWebProperty
+		{
+			get
+			{
+				return this._CustUserWebProperty.Entity;
+			}
+			set
+			{
+				CustUserWebProperty previousValue = this._CustUserWebProperty.Entity;
+				if (((previousValue != value) 
+							|| (this._CustUserWebProperty.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CustUserWebProperty.Entity = null;
+						previousValue.WebProperties.Remove(this);
+					}
+					this._CustUserWebProperty.Entity = value;
+					if ((value != null))
+					{
+						value.WebProperties.Add(this);
+						this._id = value.webPropID;
+					}
+					else
+					{
+						this._id = default(int);
+					}
+					this.SendPropertyChanged("CustUserWebProperty");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_WebProperty", Storage="_Customer", ThisKey="customerID", OtherKey="customerID", IsForeignKey=true)]
+		public Customer Customer
+		{
+			get
+			{
+				return this._Customer.Entity;
+			}
+			set
+			{
+				Customer previousValue = this._Customer.Entity;
+				if (((previousValue != value) 
+							|| (this._Customer.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Customer.Entity = null;
+						previousValue.WebProperties.Remove(this);
+					}
+					this._Customer.Entity = value;
+					if ((value != null))
+					{
+						value.WebProperties.Add(this);
+						this._customerID = value.customerID;
+					}
+					else
+					{
+						this._customerID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Customer");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_WebPropertyTypes(WebPropertyType entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebProperty = this;
+		}
+		
+		private void detach_WebPropertyTypes(WebPropertyType entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebProperty = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.WebPropertyTypes")]
+	public partial class WebPropertyType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _typeID;
+		
+		private string _type;
+		
+		private EntityRef<WebProperty> _WebProperty;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OntypeIDChanging(int value);
+    partial void OntypeIDChanged();
+    partial void OntypeChanging(string value);
+    partial void OntypeChanged();
+    #endregion
+		
+		public WebPropertyType()
+		{
+			this._WebProperty = default(EntityRef<WebProperty>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_typeID", DbType="Int NOT NULL")]
+		public int typeID
+		{
+			get
+			{
+				return this._typeID;
+			}
+			set
+			{
+				if ((this._typeID != value))
+				{
+					if (this._WebProperty.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OntypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._typeID = value;
+					this.SendPropertyChanged("typeID");
+					this.OntypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string type
+		{
+			get
+			{
+				return this._type;
+			}
+			set
+			{
+				if ((this._type != value))
+				{
+					this.OntypeChanging(value);
+					this.SendPropertyChanging();
+					this._type = value;
+					this.SendPropertyChanged("type");
+					this.OntypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropertyType", Storage="_WebProperty", ThisKey="typeID", OtherKey="typeID", IsForeignKey=true)]
+		public WebProperty WebProperty
+		{
+			get
+			{
+				return this._WebProperty.Entity;
+			}
+			set
+			{
+				WebProperty previousValue = this._WebProperty.Entity;
+				if (((previousValue != value) 
+							|| (this._WebProperty.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._WebProperty.Entity = null;
+						previousValue.WebPropertyTypes.Remove(this);
+					}
+					this._WebProperty.Entity = value;
+					if ((value != null))
+					{
+						value.WebPropertyTypes.Add(this);
+						this._typeID = value.typeID;
+					}
+					else
+					{
+						this._typeID = default(int);
+					}
+					this.SendPropertyChanged("WebProperty");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserProfiles")]
+	public partial class UserProfile : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<int> _customerID;
+		
+		private System.Nullable<int> _custID;
+		
+		private string _email;
+		
+		private string _IP;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OncustomerIDChanging(System.Nullable<int> value);
+    partial void OncustomerIDChanged();
+    partial void OncustIDChanging(System.Nullable<int> value);
+    partial void OncustIDChanged();
+    partial void OnemailChanging(string value);
+    partial void OnemailChanged();
+    partial void OnIPChanging(string value);
+    partial void OnIPChanged();
+    #endregion
+		
+		public UserProfile()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerID", DbType="Int")]
+		public System.Nullable<int> customerID
+		{
+			get
+			{
+				return this._customerID;
+			}
+			set
+			{
+				if ((this._customerID != value))
+				{
+					this.OncustomerIDChanging(value);
+					this.SendPropertyChanging();
+					this._customerID = value;
+					this.SendPropertyChanged("customerID");
+					this.OncustomerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_custID", DbType="Int")]
+		public System.Nullable<int> custID
+		{
+			get
+			{
+				return this._custID;
+			}
+			set
+			{
+				if ((this._custID != value))
+				{
+					this.OncustIDChanging(value);
+					this.SendPropertyChanging();
+					this._custID = value;
+					this.SendPropertyChanged("custID");
+					this.OncustIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(255)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this.OnemailChanging(value);
+					this.SendPropertyChanging();
+					this._email = value;
+					this.SendPropertyChanged("email");
+					this.OnemailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IP", DbType="VarChar(25)")]
+		public string IP
+		{
+			get
+			{
+				return this._IP;
+			}
+			set
+			{
+				if ((this._IP != value))
+				{
+					this.OnIPChanging(value);
+					this.SendPropertyChanging();
+					this._IP = value;
+					this.SendPropertyChanged("IP");
+					this.OnIPChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

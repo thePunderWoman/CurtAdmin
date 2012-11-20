@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "EditCustomerUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    CurtAdmin.CustomerUser user = ViewBag.user ?? new CurtAdmin.CustomerUser();
+    string msg = ViewBag.msg ?? "";
+    string error = ViewBag.error ?? "";
+}
+
+<div id="content_container">
+<h2>Edit Customer User - @user.name</h2>
+    @if (error.Length > 0)
+    {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    @if (msg.Length > 0)
+    {
+        <p style="font-weight: bold; color: Green;">@msg</p>
+    }
+    <form action="/Customers/EditCustomerUser?user_id=@user.id" method="post" class="form_left">
+        <label for="name">
+            Name
+            <input type="text" name="name" id="name" value="@user.name" />
+        </label>
+
+        <label for="email">
+            Email
+            <input type="text" name="email" id="email" value="@user.email" />
+        </label>
+
+        <label for="customerID">
+            Customer ID
+            <input type="text" name="customerID" id="customerID" value="@user.customerID" />
+        </label>
+
+        <label for="isActive">
+            Is Active:
+            @if (user.active)
+            {
+                <input type="checkbox" name="isActive" id="isActive" checked="checked" />
+            }else{
+                <input type="checkbox" name="isActive" id="isActive" />
+            }
+        </label>
+
+        <label for="notCustomer">
+            Not a Customer:
+            @if (user.notCustomer)
+            {
+                <input type="checkbox" name="notCustomer" id="notCustomer" checked="checked" />
+            }else{
+                <input type="checkbox" name="notCustomer" id="notCustomer" />
+            }
+        </label>
+
+        <label for="cust_id">
+            cust_id
+            <input type="text" name="cust_id" id="cust_id" value="@user.cust_id" />
+        </label>
+
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>
