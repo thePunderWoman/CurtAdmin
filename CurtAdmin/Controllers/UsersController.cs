@@ -36,19 +36,6 @@ namespace CurtAdmin.Controllers
         }
 
         /// <summary>
-        /// List all the users in the database. Always easy access to basic CRUD tools.
-        /// </summary>
-        /// <returns>View</returns>
-        public ActionResult Customers() {
-
-            // Get a list of all the users in the database
-            List<CustomerUser> users = CustomerUser.GetAll();
-            ViewBag.users = users;
-
-            return View();
-        }
-
-        /// <summary>
         /// Loads the needed elements for the default Add User page.
         /// </summary>
         /// <returns>View</returns>
@@ -440,18 +427,6 @@ namespace CurtAdmin.Controllers
         }
 
         /// <summary>
-        /// Removes the given Customer user from the database.
-        /// </summary>
-        /// <param name="userID">Primary Key to identify the user.</param>
-        /// <returns>Blank string on success::::Error message if an issue is encountered.</returns>
-        [AcceptVerbs(HttpVerbs.Get)]
-        public string RemoveCustomerUser(Guid userID) {
-            CustomerUser u = new CustomerUser().Get(userID);
-            u.Delete();
-            return "";
-        }
-
-        /// <summary>
         /// Update the entered user's record to be either active or inactive.
         /// </summary>
         /// <param name="userID">Primary Key of user.</param>
@@ -470,17 +445,6 @@ namespace CurtAdmin.Controllers
             return "";
         }
 
-        /// <summary>
-        /// Update the entered user's record to be either active or inactive.
-        /// </summary>
-        /// <param name="userID">Primary Key of user.</param>
-        /// <returns>String representing the success/errors encountered.</returns>
-        [AcceptVerbs(HttpVerbs.Get)]
-        public string SetCustomerUserStatus(Guid userID) {
-            CustomerUser u = new CustomerUser().Get(userID);
-            u.activate();
-            return "";
-        }
 
     }
 }

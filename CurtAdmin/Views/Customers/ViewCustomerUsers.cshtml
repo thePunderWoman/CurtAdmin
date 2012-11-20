@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "View Customer Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    #user_container{
+        width: 90%;
+        margin: auto;
+        border: 2px solid #343434;
+        border-radius: 4px 4px 4px;
+        display: none;
+    }
+    
+    #user_container #user_name{
+       min-height: 40px;
+       padding: 5px;
+       border-bottom: 1px solid black;
+       background: #343434;
+       color: White;
+       padding-left: 25px;
+    }
+    
+    #user_container #user_name h4{
+        margin: 0px;
+        line-height: 40px;
+    }
+    
+    #user_info span:nth-child(odd){
+        float:left;
+        margin: 3px 0px;
+        clear:left;
+    }
+    #user_info span:nth-child(even){
+        float: right;
+        margin: 3px 0px;
+        margin-right: 20%;
+    }
+</style>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+
+<div id="content_container">
+    <h2>All Customer Users (@ViewBag.users.Count)</h2>
+
+    <div style="width: 90%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-Mail</th>
+                    <th>Customer #</th>
+                    <th>Date Added</th>
+                    <th>Is Customer</th>
+                    <th>Is Active?</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.CustomerUser u in ViewBag.users) {
+                    <tr id="user:@u.id">
+                        <td>@u.name</td>
+                        <td>@u.email</td>
+                        <td>@u.customerID</td>
+                        <td>@u.date_added.ToShortDateString()</td>
+                        @if(u.notCustomer == false){
+                        <td>Yes</td>
+                        }else{
+                         <td>No</td>   
+                        }
+                        <td class="center">
+                            <input type="checkbox" name="isActive" id="isActive:@u.id" class="isActive" value="1" @((u.active) ? "checked" : "") />
+                        </td>
+                        <td class="center">
+                            <select id="action:@u.id" class="user_action">
+                                <option value="0">Select Action</option>
+                                <option value="edit">Edit</option>
+                                <option value="delete">Remove</option>
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/custusers_home.js")"></script>

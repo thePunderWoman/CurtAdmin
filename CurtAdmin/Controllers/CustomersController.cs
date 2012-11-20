@@ -70,6 +70,109 @@ namespace CurtAdmin.Controllers {
             return View("ViewCustomers");
         }
 
+
+
+
+        public ActionResult ViewCustomerUsers()
+        {
+            // Get a list of all the customer users in the database
+            List<CustomerUser> users = CustomerUser.GetAll();
+            ViewBag.users = users;
+
+            return View();
+        }
+
+        public ActionResult EditCustomerUser(Guid user_id)
+        {
+            // edits a particular customer user.
+            CustomerUser user = new CustomerUser();
+            user = user.Get(user_id);
+            ViewBag.user = user;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditCustomerUser(Guid user_id, string name, string email, string customerID, string isActive, string notCustomer, string cust_id )
+        {
+            ViewBag.error = "";
+            ViewBag.msg = "";
+            Boolean blnIsActive = false;
+            blnIsActive = (isActive == "on") ? true : false;
+            Boolean blnNotCustomer = false;
+            blnNotCustomer = (notCustomer == "on") ? true : false;
+            if (user_id.ToString().Length > 0)
+            {
+                if (name != "" && email != "" && customerID != "" && cust_id != "") // 0 is an acceptable value for customerID and cust_id since we use that temporarely for non customer customer users.
+                {
+                    try
+                    {
+                        // save results
+                        CurtDevDataContext db = new CurtDevDataContext();
+                        CustomerUser user = db.CustomerUsers.Where(x => x.id.ToString() == user_id.ToString()).FirstOrDefault<CustomerUser>();
+                        user.name = name;
+                        user.email = email;
+                        user.customerID = Convert.ToInt32(customerID);
+                        user.active = blnIsActive;
+                        user.notCustomer = blnNotCustomer;
+                        user.cust_id = Convert.ToInt32(cust_id);
+
+                        db.SubmitChanges();
+
+                        ViewBag.user = user;
+                        ViewBag.msg = "Your changes have been saved.";
+
+                    }
+                    catch (Exception e)
+                    {
+                        ViewBag.error = e.Message;
+                    }
+                }
+                else
+                {
+                    ViewBag.error = "Please make sure none of the fields are left blank. CustomerID and cust_id can be set to 0.";
+                }
+            }
+            else
+            {
+
+                ViewBag.error = "Please specify a correct ID.";
+            }
+
+
+
+            return View();
+        }
+
+        /// <summary>
+        /// Removes the given Customer user from the database.
+        /// </summary>
+        /// <param name="userID">Primary Key to identify the user.</param>
+        /// <returns>Blank string on success::::Error message if an issue is encountered.</returns>
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string RemoveCustomerUser(Guid userID)
+        {
+            CustomerUser u = new CustomerUser().Get(userID);
+            u.Delete();
+            return "";
+        }
+
+        /// <summary>
+        /// Update the entered user's record to be either active or inactive.
+        /// </summary>
+        /// <param name="userID">Primary Key of user.</param>
+        /// <returns>String representing the success/errors encountered.</returns>
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string SetCustomerUserStatus(Guid userID)
+        {
+            CustomerUser u = new CustomerUser().Get(userID);
+            u.activate();
+            return "";
+        }
+
+
+
+
         public ActionResult Add() {
             string error = "";
 

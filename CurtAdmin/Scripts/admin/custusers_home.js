@@ -10,11 +10,14 @@
         switch (action) {
             case 'delete':
                 if (confirm('Are you sure you want to remove this user?')) {
-                    $.get('/Users/RemoveCustomerUser', { 'userID': user_id }, function (data) {
+                    $.get('/Customers/RemoveCustomerUser', { 'userID': user_id }, function (data) {
                         deleteUser(data, user_id);
                     });
                 }
 
+                break;
+            case 'edit':
+                window.location.href = "/Customers/EditCustomerUser?user_id=" + user_id;
                 break;
             default:
 
@@ -35,7 +38,7 @@
 * @param userID: Primary Key for user
 */
 function set_isActive(userID) {
-    $.get('/Users/SetCustomerUserStatus',{'userID':userID},function(response){
+    $.get('/Customers/SetCustomerUserStatus',{'userID':userID},function(response){
         if (response != '') {
             showMessage(response);
         }else{

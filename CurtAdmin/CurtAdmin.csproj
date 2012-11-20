@@ -528,6 +528,8 @@
       <LastGenOutput>TowAmericaTemp.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Customers\ViewCustomerUsers.cshtml" />
+    <Content Include="Views\Customers\EditCustomerUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
