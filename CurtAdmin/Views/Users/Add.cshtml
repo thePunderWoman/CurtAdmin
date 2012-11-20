@@ -136,10 +136,9 @@
             <div id="adminModules" class="moduleContainer">
                 <h4>Modules</h4>
                 @foreach (CurtAdmin.module m in ViewBag.allmodules) {
-                    List<string> these_modules = ViewBag.selected_modules;
                     <label for="module:@m.moduleID">
                         @m.module1
-                        <input type="checkbox" name="module" id="module:@m.moduleID" value="@m.moduleID" @((these_modules.Contains(m.moduleID.ToString()))?"checked":"") />
+                        <input type="checkbox" name="module" id="module:@m.moduleID" value="@m.moduleID" />
                     </label>
                 }
             </div>
