@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Modify ACES Types";
+    ViewBag.Title = "Modify Configuration Types";
     ViewBag.navigation = "_VehicleNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CurtAdmin.ConfigAttributeType> types = ViewBag.types ?? new List<CurtAdmin.ConfigAttributeType>();
@@ -18,7 +18,7 @@
         <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/ACES/SaveConfigurationType")">Add New</a>
+        <a href="@Url.Content("~/ACES/AddConfigurationType")">Add New</a>
     </li>
 </ul>
 <div id="content_container">
@@ -38,7 +38,7 @@
                     <td>@type.sort</td>
                     <td>@type.name</td>
                     <td>@((type.AcesTypeID != null) ? type.AcesType.name : "")</td>
-                    <td><a href="/ACES/SaveConfigurationType/@type.ID" class="edit" data-id="@type.ID">Edit</a>@((type.count == 0) ? Html.Raw("| <a href=\"/ACES/RemoveConfigurationType\" class=\"remove\" data-id=\"" + type.ID + "\">Remove</a>") : null)</td>
+                    <td><a href="/ACES/EditConfigurationType/@type.ID" class="edit" data-id="@type.ID">Edit</a>@((type.count == 0) ? Html.Raw("| <a href=\"/ACES/RemoveConfigurationType\" class=\"remove\" data-id=\"" + type.ID + "\">Remove</a>") : null)</td>
                 </tr>
             }
         </tbody>

@@ -257,11 +257,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VCDB.dbml</DependentUpon>
     </Compile>
-    <Compile Include="TowAmericaTemp.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TowAmericaTemp.dbml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -516,18 +511,13 @@
     <Content Include="Views\ACES\ACESTypes.cshtml" />
     <Content Include="Views\ACES\ConfigTypes.cshtml" />
     <Content Include="Views\ACES\ConfigAttributes.cshtml" />
-    <Content Include="Views\ACES\SaveACESType.cshtml" />
-    <Content Include="Views\ACES\SaveConfigurationType.cshtml" />
-    <Content Include="Views\ACES\SaveConfigurationAttribute.cshtml" />
+    <Content Include="Views\ACES\EditACESType.cshtml" />
+    <Content Include="Views\ACES\EditConfigurationType.cshtml" />
+    <Content Include="Views\ACES\EditConfigurationAttribute.cshtml" />
     <Content Include="Views\SalesRep\Index.cshtml" />
     <Content Include="Views\SalesRep\Edit.cshtml" />
     <Content Include="Views\Shared\Navigation\_SalesRepNavigation.cshtml" />
     <Content Include="Views\Website\Index.cshtml" />
-    <Content Include="TowAmericaTemp.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>TowAmericaTemp.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Views\Customers\ViewCustomerUsers.cshtml" />
     <Content Include="Views\Customers\EditCustomerUser.cshtml" />
   </ItemGroup>
@@ -768,11 +758,6 @@
   <ItemGroup>
     <None Include="AAIA\qdb.dbml.layout">
       <DependentUpon>qdb.dbml</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TowAmericaTemp.dbml.layout">
-      <DependentUpon>TowAmericaTemp.dbml</DependentUpon>
     </None>
   </ItemGroup>
   <PropertyGroup>

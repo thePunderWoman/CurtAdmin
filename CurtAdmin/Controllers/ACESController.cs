@@ -39,6 +39,19 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public ActionResult AddACESType(string error = "") {
+            ViewBag.error = error;
+            return View("EditACESType");
+        }
+
+        public ActionResult EditACESType(int id = 0, string error = "") {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AcesType type = new ACES().GetACESType(id);
+            ViewBag.type = type;
+            ViewBag.error = error;
+            return View();
+        }
+
         public ActionResult SaveACESType(int id = 0, string name = null) {
             CurtDevDataContext db = new CurtDevDataContext();
             AcesType type = new AcesType();
@@ -47,13 +60,13 @@ namespace CurtAdmin.Controllers {
                 type = new ACES().SaveACESType(id, name);
             } catch (Exception e) {
                 error = e.Message;
+                if (id == 0) {
+                    return RedirectToAction("AddACESType", new { error = error });
+                } else {
+                    return RedirectToAction("EditACESType", new { id = id, error = error });
+                }
             }
-            if (type != null && id != type.ID) {
-                return RedirectToAction("SaveACESType", new { id = type.ID });
-            }
-            ViewBag.type = type;
-            ViewBag.error = error;
-            return View();
+            return RedirectToAction("AcesTypes");
         }
 
         public ActionResult RemoveACESType(int id = 0) {
@@ -74,23 +87,40 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public ActionResult AddConfigurationType(string error = "") {
+            ViewBag.error = error;
+            List<AcesType> acestypes = new ACES().GetACESTypes();
+            ViewBag.acestypes = acestypes;
+
+            return View("EditConfigurationType");
+        }
+
+        public ActionResult EditConfigurationType(int id = 0, string error = "") {
+            ACES aces = new ACES();
+            ConfigAttributeType type = aces.GetConfigType(id);
+            ViewBag.type = type;
+
+            List<AcesType> acestypes = aces.GetACESTypes();
+            ViewBag.acestypes = acestypes;
+            
+            ViewBag.error = error;
+            return View();
+        }
+        
         public ActionResult SaveConfigurationType(int id = 0, string name = null, int? acestypeid = null) {
-            CurtDevDataContext db = new CurtDevDataContext();
             ConfigAttributeType type = new ConfigAttributeType();
             string error = "";
             try {
                 type = new ACES().SaveConfigurationType(id, name, acestypeid);
             } catch (Exception e) {
                 error = e.Message;
+                if (id == 0) {
+                    return RedirectToAction("AddConfigurationType", new { error = error });
+                } else {
+                    return RedirectToAction("EditConfigurationType", new { id = id, error = error });
+                }
             }
-            if (type != null && id != type.ID) {
-                return RedirectToAction("SaveConfigurationType", new { id = type.ID });
-            }
-            List<AcesType> acestypes = new ACES().GetACESTypes();
-            ViewBag.acestypes = acestypes;
-            ViewBag.type = type;
-            ViewBag.error = error;
-            return View();
+            return RedirectToAction("ConfigTypes");
         }
 
         public ActionResult RemoveConfigurationType(int id = 0) {
@@ -113,23 +143,40 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public ActionResult AddConfigurationAttribute(string error = "") {
+            List<ConfigAttributeType> configtypes = new ACES().GetConfigTypes();
+            ViewBag.configtypes = configtypes;
+            ViewBag.error = error;
+            return View("EditConfigurationAttribute");
+        }
+
+        public ActionResult EditConfigurationAttribute(int id = 0, string error = "") {
+            ACES aces = new ACES();
+
+            ConfigAttribute attribute = aces.GetConfigAttribute(id);
+            ViewBag.attribute = attribute;
+
+            List<ConfigAttributeType> configtypes = aces.GetConfigTypes();
+            ViewBag.configtypes = configtypes;
+            ViewBag.error = error;
+    
+            return View();
+        }
+
         public ActionResult SaveConfigurationAttribute(int id = 0, string value = null, int configtypeid = 0) {
-            CurtDevDataContext db = new CurtDevDataContext();
             ConfigAttribute attribute = new ConfigAttribute();
             string error = "";
             try {
                 attribute = new ACES().SaveConfigurationAttr(id, value, configtypeid);
             } catch (Exception e) {
                 error = e.Message;
+                if (id == 0) {
+                    return RedirectToAction("AddConfigurationAttribute", new { error = error });
+                } else {
+                    return RedirectToAction("EditConfigurationAttribute", new { id = id, error = error });
+                }
             }
-            if (attribute != null && id != attribute.ID) {
-                return RedirectToAction("SaveConfigurationAttribute", new { id = attribute.ID });
-            }
-            List<ConfigAttributeType> configtypes = new ACES().GetConfigTypes();
-            ViewBag.configtypes = configtypes;
-            ViewBag.attribute = attribute;
-            ViewBag.error = error;
-            return View();
+            return RedirectToAction("ConfigAttributes");
         }
 
         public ActionResult RemoveConfigurationAttribute(int id = 0) {

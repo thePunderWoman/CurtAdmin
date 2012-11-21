@@ -18,7 +18,7 @@
         <a href="@Url.Content("~/ACES/ACESTypes")" class="active">View ACES Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/ACES/SaveACESType")">Add New</a>
+        <a href="@Url.Content("~/ACES/AddACESType")">Add New</a>
     </li>
 </ul>
 <div id="content_container">
@@ -34,7 +34,7 @@
             @foreach (CurtAdmin.AcesType type in types) {
                 <tr id="typeRow:@type.ID">
                     <td>@type.name</td>
-                    <td><a href="/ACES/SaveACESType/@type.ID" class="edit" data-id="@type.ID">Edit</a>@((type.count == 0) ?  Html.Raw(" | <a href=\"/Aces/RemoveACESType/" + type.ID + "\" class=\"removeACESType\" data-id=\"" + type.ID + "\">Remove</a>") : null)</td>
+                    <td><a href="/ACES/EditACESType/@type.ID" class="edit" data-id="@type.ID">Edit</a>@((type.count == 0) ?  Html.Raw(" | <a href=\"/Aces/RemoveACESType/" + type.ID + "\" class=\"removeACESType\" data-id=\"" + type.ID + "\">Remove</a>") : null)</td>
                 </tr>
             }
         </tbody>

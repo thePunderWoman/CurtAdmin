@@ -98,6 +98,14 @@ namespace CurtAdmin.Models {
             return types;
         }
 
+        public AcesType GetACESType(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AcesType type = new AcesType();
+            type = db.AcesTypes.Where(x => x.ID.Equals(id)).FirstOrDefault<AcesType>();
+            type.count = type.ConfigAttributeTypes.Count;
+            return type;
+        }
+
         public AcesType SaveACESType(int id = 0, string name = null) {
             AcesType type = new AcesType();
             CurtDevDataContext db = new CurtDevDataContext();
@@ -135,6 +143,14 @@ namespace CurtAdmin.Models {
                 t.count = t.ConfigAttributes.Count;
             }
             return types;
+        }
+
+        public ConfigAttributeType GetConfigType(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ConfigAttributeType type = new ConfigAttributeType();
+            type = db.ConfigAttributeTypes.Where(x => x.ID.Equals(id)).FirstOrDefault<ConfigAttributeType>();
+            type.count = type.ConfigAttributes.Count;
+            return type;
         }
 
         public ConfigAttributeType SaveConfigurationType(int id = 0, string name = null, int? acestypeid = null) {
@@ -176,6 +192,14 @@ namespace CurtAdmin.Models {
                 attr.count = db.vcdb_Vehicles.Where(x => x.VehicleConfig.VehicleConfigAttributes.Any(y => y.AttributeID.Equals(attr.ID))).Distinct().Count();
             }
             return attributes;
+        }
+
+        public ConfigAttribute GetConfigAttribute(int id = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ConfigAttribute attribute = new ConfigAttribute();
+            attribute = db.ConfigAttributes.Where(x => x.ID.Equals(id)).FirstOrDefault<ConfigAttribute>();
+            attribute.count = db.vcdb_Vehicles.Where(x => x.VehicleConfig.VehicleConfigAttributes.Any(y => y.AttributeID.Equals(attribute.ID))).Distinct().Count();
+            return attribute;
         }
 
         public ConfigAttribute SaveConfigurationAttr(int id = 0, string value = null, int configtypeid = 0, int? vcdbID = null) {
