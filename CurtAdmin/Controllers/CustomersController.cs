@@ -178,7 +178,27 @@ namespace CurtAdmin.Controllers {
             ViewBag.webProperties = webProperties;
             
             return View();
+        }
+        public ActionResult ViewUserWebProperties(Guid userID)
+        {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<WebProperty> webProperties = new List<WebProperty>();
+            CustomerUser user = new CustomerUser();
+            user = user.Get(userID);
 
+            List<int> listOfWebPropIDs = db.CustUserWebProperties.Where(x => x.userID.Equals(userID)).Select(x => x.webPropID).ToList<int>();
+
+            foreach (int webPropID in listOfWebPropIDs)
+            {
+                WebProperty webProp = db.WebProperties.Where(x => x.id == webPropID).FirstOrDefault<WebProperty>();
+                if (webProp != null)
+                {
+                    webProperties.Add(webProp);
+                }
+            }// end foreach
+            ViewBag.user = user;
+            ViewBag.webProperties = webProperties;
+            return View();
         }
 
         [HttpGet]

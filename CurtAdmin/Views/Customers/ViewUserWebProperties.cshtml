@@ -1,14 +1,23 @@
 ﻿@{
-    ViewBag.Title = "View Web Properties";
+    ViewBag.Title = "View User's Web Properties";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     List<CurtAdmin.WebProperty> webProperties = ViewBag.webProperties ?? new List<CurtAdmin.WebProperty>();
-}
+    CurtAdmin.CustomerUser user = ViewBag.user ?? new CurtAdmin.CustomerUser();
+    }
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 
 <div id="content_container">
-    <h2>All Web Properties (@webProperties.Count)</h2>
+    @if (user.notCustomer == true)
+    {
+        <h2>Non-Customer User: @(user.name)'s Web Properties (@webProperties.Count)</h2>
+    }
+    else
+    {
+        <h2>Customer User: @(user.name)'s Web Properties (@webProperties.Count)</h2>
+    }
+    
 
     <div style="width: 90%;margin:auto">
         <table style="width: 100% !important">
@@ -18,9 +27,6 @@
                     <th>URL</th>
                     <th>Seller ID</th>
                     <th>Type</th>
-                    <th>Email</th>
-                    <th>CustomerID</th>
-                    <th>Is Customer</th>
                     <th>Badge ID</th>
                     <th>Is Approved</th>
                 </tr>
@@ -32,13 +38,6 @@
                         <td>@wp.url</td>
                         <td>@wp.sellerID</td>
                         <td>@wp.WebPropertyTypes.type</td>
-                        <td>@wp.CustUserWebProperty.CustomerUser.email</td>
-                        <td>@wp.CustUserWebProperty.CustomerUser.customerID</td>
-                        @if(wp.CustUserWebProperty.CustomerUser.notCustomer == false){
-                        <td>Yes</td>
-                        }else{
-                        <td>No</td>   
-                        }
                         <td>@wp.badgeID</td>
                         <td class="center">
                             <input type="checkbox" name="isEnabled" id="isEnabled:@wp.id" class="isEnabled" value="1" @((wp.isEnabled) ? "checked" : "") />
