@@ -1021,7 +1021,7 @@
       <Column Name="isEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="sellerID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="typeID" Type="System.Int32" DbType="Int" CanBeNull="false" />
-      <Association Name="WebProperty_WebPropertyType" Member="WebPropertyTypes" ThisKey="typeID" OtherKey="typeID" Type="WebPropertyType" />
+      <Association Name="WebProperty_WebPropertyType" Member="WebPropertyTypes" ThisKey="typeID" OtherKey="typeID" Type="WebPropertyType" Cardinality="One" />
       <Association Name="CustUserWebProperty_WebProperty" Member="CustUserWebProperty" ThisKey="id" OtherKey="webPropID" Type="CustUserWebProperty" IsForeignKey="true" />
       <Association Name="Customer_WebProperty" Member="Customer" ThisKey="customerID" OtherKey="customerID" Type="Customer" IsForeignKey="true" />
     </Type>
