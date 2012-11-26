@@ -25,12 +25,12 @@
         <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/ACES/SaveConfigurationType")" class="active">Add New</a>
+        <a href="@Url.Content("~/ACES/EditConfigurationType")" class="active">Add New</a>
     </li>
 </ul>
 
 <div id="content_container">
-    <h2>@((type != null & type.ID > 0) ? "Save" : "Add") Configuration Type</h2>
+    <h2>@((type != null & type.ID > 0) ? "Edit" : "Add") Configuration Type</h2>
     @if (error != "") {
         <p>@error</p>
     }

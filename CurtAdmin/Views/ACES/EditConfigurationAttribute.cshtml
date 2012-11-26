@@ -21,12 +21,12 @@
         <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
     </li>
     <li class="add">
-        <a href="@Url.Content("~/ACES/SaveConfigurationAttribute")" class="active">Add New</a>
+        <a href="@Url.Content("~/ACES/AddConfigurationAttribute")" class="active">Add New</a>
     </li>
 </ul>
 
 <div id="content_container">
-    <h2>@((attribute != null & attribute.ID > 0) ? "Save" : "Add") Configuration Attribute</h2>
+    <h2>@((attribute != null & attribute.ID > 0) ? "Edit" : "Add") Configuration Attribute</h2>
     @if (error != "") {
         <p>@error</p>
     }
@@ -48,7 +48,7 @@
 
             <label for="vcdbID">
                 VCDB Value
-                <input type="text" name="vcdbID" id="vcdbID" placeholder="What value does this match in the VCDB" value="@((attribute != null && attribute.vcdbID != null) ? attribute.vcdbID:"")" />
+                <input type="text" name="vcdbID" id="vcdbID" placeholder="What value does this match in the VCDB" value="@((attribute != null && attribute.vcdbID != null) ? attribute.vcdbID.ToString():"")" />
             </label>
 
             <div id="buttons">

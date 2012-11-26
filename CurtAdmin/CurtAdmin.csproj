@@ -513,9 +513,9 @@
     <Content Include="Views\ACES\ACESTypes.cshtml" />
     <Content Include="Views\ACES\ConfigTypes.cshtml" />
     <Content Include="Views\ACES\ConfigAttributes.cshtml" />
-    <Content Include="Views\ACES\SaveACESType.cshtml" />
-    <Content Include="Views\ACES\SaveConfigurationType.cshtml" />
-    <Content Include="Views\ACES\SaveConfigurationAttribute.cshtml" />
+    <Content Include="Views\ACES\EditACESType.cshtml" />
+    <Content Include="Views\ACES\EditConfigurationType.cshtml" />
+    <Content Include="Views\ACES\EditConfigurationAttribute.cshtml" />
     <Content Include="Views\SalesRep\Index.cshtml" />
     <Content Include="Views\SalesRep\Edit.cshtml" />
     <Content Include="Views\Shared\Navigation\_SalesRepNavigation.cshtml" />
