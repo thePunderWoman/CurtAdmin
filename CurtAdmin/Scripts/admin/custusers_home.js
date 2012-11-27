@@ -14,7 +14,6 @@
                         deleteUser(data, user_id);
                     });
                 }
-
                 break;
             case 'edit':
                 window.location.href = "/Customers/EditCustomerUser?user_id=" + user_id;
