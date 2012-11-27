@@ -13,6 +13,19 @@ namespace CurtAdmin.Models {
             return makes;
         }
 
+        public List<AAIA.Make> GetVCDBMakes() {
+            AAIA.VCDBDataContext db = new AAIA.VCDBDataContext();
+            List<AAIA.Make> makes = new List<AAIA.Make>();
+            List<int> regions = new List<int> {1,2};
+            List<int> vtypes = new List<int> { 5, 6, 7 };
+            makes = (from m in db.Makes
+                     join bv in db.BaseVehicles on m.MakeID equals bv.MakeID
+                     where bv.YearID >= 1962 && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                     && vtypes.Contains(bv.Model.VehicleTypeID)
+                     select m).Distinct().OrderBy(x => x.MakeName).ToList<AAIA.Make>();
+            return makes;
+        }
+
         public List<vcdb_Model> GetModels(int makeid) {
             CurtDevDataContext db = new CurtDevDataContext();
             List<vcdb_Model> models = new List<vcdb_Model>();
@@ -22,11 +35,70 @@ namespace CurtAdmin.Models {
             return models;
         }
 
+        public List<AAIA.Model> GetVCDBModels(int id = 0) {
+            AAIA.VCDBDataContext db = new AAIA.VCDBDataContext();
+            List<AAIA.Model> models = new List<AAIA.Model>();
+            List<int> regions = new List<int> { 1, 2 };
+            List<int> vtypes = new List<int> { 5, 6, 7 };
+            models = (from m in db.Models
+                      join bv in db.BaseVehicles on m.ModelID equals bv.ModelID
+                      where bv.YearID >= 1962 && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                      && vtypes.Contains(m.VehicleTypeID) && bv.MakeID.Equals(id)
+                      select m).Distinct().OrderBy(x => x.ModelName).ToList<AAIA.Model>();
+            return models;
+        }
+
+        public List<AAIA.BaseVehicle> GetBaseVehicles(int makeid, int modelid) {
+            CurtDevDataContext cddb = new CurtDevDataContext();
+            List<int> bvids = cddb.BaseVehicles.Where(x => x.vcdb_Make.AAIAMakeID.Equals(makeid) && x.vcdb_Model.AAIAModelID.Equals(modelid) && x.AAIABaseVehicleID != null && x.vcdb_Vehicles.Count > 0).Select(x => (int)x.AAIABaseVehicleID).ToList<int>();
+            
+            AAIA.VCDBDataContext db = new AAIA.VCDBDataContext();
+            List<AAIA.BaseVehicle> basevehicles = new List<AAIA.BaseVehicle>();
+            List<int> regions = new List<int> { 1, 2 };
+            basevehicles = (from bv in db.BaseVehicles
+                            where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid) && bv.YearID >= 1962 && !bvids.Contains(bv.BaseVehicleID)
+                            orderby bv.YearID descending
+                            select bv).ToList<AAIA.BaseVehicle>();
+            return basevehicles;
+        }
+
+        public vcdb_Vehicle AddBaseVehicle(int bvid) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            try {
+                BaseVehicle bv = new BaseVehicle();
+                try {
+                    bv = db.BaseVehicles.Where(x => x.AAIABaseVehicleID.Equals(bvid)).First<BaseVehicle>();
+                } catch {
+                    // The Base Vehicle doesn't exist in CurtDev.  We need to create it first.
+                    AAIA.BaseVehicle acesbv = vcdb.BaseVehicles.Where(x => x.BaseVehicleID.Equals(bvid)).First<AAIA.BaseVehicle>();
+                    vcdb_Make make = db.vcdb_Makes.Where(x => x.AAIAMakeID.Equals(acesbv.MakeID)).First<vcdb_Make>();
+                    vcdb_Model model = db.vcdb_Models.Where(x => x.AAIAModelID.Equals(acesbv.ModelID)).First<vcdb_Model>();
+                    bv.YearID = acesbv.YearID;
+                    bv.MakeID = make.ID;
+                    bv.ModelID = model.ID;
+                    bv.AAIABaseVehicleID = acesbv.BaseVehicleID;
+                    db.BaseVehicles.InsertOnSubmit(bv);
+                    db.SubmitChanges();
+                }
+
+                //Create a vehicle with just the BaseVehicle
+
+                vehicle = new vcdb_Vehicle {
+                    BaseVehicleID = bv.ID
+                };
+                db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                db.SubmitChanges();
+            } catch { }
+            return vehicle;
+        }
+
         public List<BaseVehicle> GetVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
             List<BaseVehicle> vehicles = new List<BaseVehicle>();
             vehicles = (from bv in db.BaseVehicles
-                        where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid)
+                        where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid) && bv.vcdb_Vehicles.Count > 0
                         select bv).Distinct().OrderBy(x => x.YearID).ToList<BaseVehicle>();
             return vehicles;
         }

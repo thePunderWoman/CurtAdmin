@@ -31,6 +31,22 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public ActionResult AddVehicle() {
+            List<AAIA.Make> makes = new ACES().GetVCDBMakes();
+            ViewBag.makes = makes;
+            return View();
+        }
+
+        public string GetVCDBModels(int id = 0) {
+            List<AAIA.Model> models = new ACES().GetVCDBModels(id);
+            return JsonConvert.SerializeObject(models);
+        }
+
+        public string GetBaseVehicles(int makeid, int modelid) {
+            List<AAIA.BaseVehicle> basevehicles = new ACES().GetBaseVehicles(makeid, modelid);
+            return JsonConvert.SerializeObject(basevehicles);
+        }
+
         /*Aces Type methods */
 
         public ActionResult AcesTypes() {
@@ -206,6 +222,12 @@ namespace CurtAdmin.Controllers {
             List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
             vehicles = new ACES().GetVCDBVehicles(makeid, modelid);
             return JsonConvert.SerializeObject(vehicles);
+        }
+
+        public string AddBaseVehicle(int id) {
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            vehicle = new ACES().AddBaseVehicle(id);
+            return JsonConvert.SerializeObject(vehicle);
         }
 
         public string SearchPartTypes(string keyword = "") {

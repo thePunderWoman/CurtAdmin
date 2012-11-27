@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Add ACES Vehicle";
+    ViewBag.navigation = "_VehicleNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.AAIA.Make> makes = ViewBag.makes ?? new List<CurtAdmin.AAIA.Make>();
+    string error = ViewBag.error ?? "";
+}
+
+<ul id="subNav">
+    <li>
+        <a href="@Url.Content("~/ACES/Vehicles")">View Vehicles</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigAttributes")">View Configuration Attributes</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ConfigTypes")">View Configuration Types</a>
+    </li>
+    <li>
+        <a href="@Url.Content("~/ACES/ACESTypes")">View ACES Types</a>
+    </li>
+    <li class="add">
+        <a href="@Url.Content("~/ACES/AddVehicle")" class="active">Add New</a>
+    </li>
+</ul>
+
+<div id="content_container">
+    <h2>Add Vehicle</h2>
+    @if (error != "") {
+        <p>@error</p>
+    }
+    <select id="make" name="make">
+        <option value="">Select a Make</option>
+        @foreach (CurtAdmin.AAIA.Make make in makes) {
+            <option value="@make.MakeID">@make.MakeName</option>
+        }
+    </select>
+
+    <select id="model" name="model" disabled="disabled">
+        <option value="">Select a Model</option>
+    </select>
+    <button id="find">Find</button>
+    <img id="loading" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+    <ul class="vehicles" id="vehicleData"></ul>
+</div>
+
+<script src="/Scripts/admin/ACES/addvehicle.js"></script>
