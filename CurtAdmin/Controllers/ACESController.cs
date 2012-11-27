@@ -213,13 +213,13 @@ namespace CurtAdmin.Controllers {
         }
 
         public string GetVehicles(int makeid, int modelid) {
-            List<BaseVehicle> vehicles = new List<BaseVehicle>();
+            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
             vehicles = new ACES().GetVehicles(makeid, modelid);
             return JsonConvert.SerializeObject(vehicles);
         }
 
         public string GetVCDBVehicles(int makeid, int modelid) {
-            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
+            List<VCDBBaseVehicle> vehicles = new List<VCDBBaseVehicle>();
             vehicles = new ACES().GetVCDBVehicles(makeid, modelid);
             return JsonConvert.SerializeObject(vehicles);
         }
@@ -228,6 +228,15 @@ namespace CurtAdmin.Controllers {
             vcdb_Vehicle vehicle = new vcdb_Vehicle();
             vehicle = new ACES().AddBaseVehicle(id);
             return JsonConvert.SerializeObject(vehicle);
+        }
+
+        public string RemoveBaseVehicle(int id) {
+            try {
+                new ACES().RemoveBaseVehicle(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
         }
 
         public string SearchPartTypes(string keyword = "") {

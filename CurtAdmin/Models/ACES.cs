@@ -94,39 +94,102 @@ namespace CurtAdmin.Models {
             return vehicle;
         }
 
-        public List<BaseVehicle> GetVehicles(int makeid, int modelid) {
+        public void RemoveBaseVehicle(int bvid) {
             CurtDevDataContext db = new CurtDevDataContext();
-            List<BaseVehicle> vehicles = new List<BaseVehicle>();
+            List<Note> notes = db.Notes.Where(x => x.vcdb_VehiclePart.vcdb_Vehicle.BaseVehicleID.Equals(bvid)).ToList<Note>();
+            db.Notes.DeleteAllOnSubmit(notes);
+            db.SubmitChanges();
+
+            List<vcdb_VehiclePart> vehicleParts = db.vcdb_VehicleParts.Where(x => x.vcdb_Vehicle.BaseVehicleID.Equals(bvid)).ToList<vcdb_VehiclePart>();
+            db.vcdb_VehicleParts.DeleteAllOnSubmit(vehicleParts);
+            db.SubmitChanges();
+
+            List<vcdb_Vehicle> vehicles = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(bvid)).ToList<vcdb_Vehicle>();
+            List<VehicleConfig> configs = vehicles.Where(x => x.ConfigID != null).Select(x => x.VehicleConfig).ToList<VehicleConfig>();
+            db.vcdb_Vehicles.DeleteAllOnSubmit(vehicles);
+            db.SubmitChanges();
+
+            List<VehicleConfig> deleteables = new List<VehicleConfig>();
+            foreach (VehicleConfig config in configs) {
+                if (db.VehicleConfigs.Where(x => x.ID.Equals(config.ID)).Select(x => x.vcdb_Vehicles).Count() == 0) {
+                    deleteables.Add(config);
+                }
+            }
+            if (deleteables.Count > 0) {
+                db.VehicleConfigs.DeleteAllOnSubmit(deleteables);
+            }
+            
+            BaseVehicle bv = db.BaseVehicles.Where(x => x.ID.Equals(bvid)).First<BaseVehicle>();
+            db.BaseVehicles.DeleteOnSubmit(bv);
+            db.SubmitChanges();
+        }
+
+        public List<ACESBaseVehicle> GetVehicles(int makeid, int modelid) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
             vehicles = (from bv in db.BaseVehicles
                         where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid) && bv.vcdb_Vehicles.Count > 0
-                        select bv).Distinct().OrderBy(x => x.YearID).ToList<BaseVehicle>();
+                        select new ACESBaseVehicle {
+                            ID = bv.ID,
+                            AAIABaseVehicleID = bv.AAIABaseVehicleID,
+                            YearID = bv.YearID,
+                            Make = bv.vcdb_Make,
+                            Model = bv.vcdb_Model,
+                            Submodels = (from v in bv.vcdb_Vehicles
+                                         where v.SubModelID != null
+                                         group v by v.Submodel into s
+                                         select new ACESSubmodel {
+                                             SubmodelID = s.Key.ID,
+                                             submodel = s.Key,
+                                             vehicles = (from ve in bv.vcdb_Vehicles
+                                                         where ve.SubModelID.Equals(s.Key.ID)
+                                                         select new ACESVehicle {
+                                                             ID = ve.ID,
+                                                             configs = ve.VehicleConfig.VehicleConfigAttributes.Select(x => x.ConfigAttribute).OrderBy(x => x.ConfigAttributeType.name).ToList<ConfigAttribute>()
+                                                         }).ToList<ACESVehicle>(),
+                                             configlist = (from c in bv.vcdb_Vehicles
+                                                           join vc in db.VehicleConfigAttributes on c.ConfigID equals vc.VehicleConfigID
+                                                           where c.SubModelID.Equals(s.Key.ID)
+                                                           select vc.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.name).ToList<ConfigAttributeType>()
+                                         }).OrderBy(x => x.submodel.SubmodelName).ToList<ACESSubmodel>(),
+                        }).Distinct().OrderByDescending(x => x.YearID).ToList<ACESBaseVehicle>();
             return vehicles;
         }
 
-        public List<ACESBaseVehicle> GetVCDBVehicles(int makeid, int modelid) {
+        public List<VCDBBaseVehicle> GetVCDBVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             vcdb_Make make = db.vcdb_Makes.Where(x => x.ID.Equals(makeid)).First<vcdb_Make>();
             vcdb_Model model = db.vcdb_Models.Where(x => x.ID.Equals(modelid)).First<vcdb_Model>();
             List<int> regions = new List<int> {1,2};
-
-            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
+            List<BaseVehicle> basevehicles = (from bv in db.BaseVehicles
+                                              where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid) && bv.vcdb_Vehicles.Count > 0 && bv.AAIABaseVehicleID != null
+                                              select bv).Distinct().ToList<BaseVehicle>();
+            List<VCDBBaseVehicle> vehicles = new List<VCDBBaseVehicle>();
             vehicles = (from bv in vcdb.BaseVehicles
                         where bv.MakeID.Equals(make.AAIAMakeID) && bv.ModelID.Equals(model.AAIAModelID)
                         && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
-                        select new ACESBaseVehicle {
+                        select new VCDBBaseVehicle {
                             BaseVehicleID = bv.BaseVehicleID,
                             Year = bv.YearID,
                             Make = bv.Make,
                             Model = bv.Model,
                             Vehicles = (from v in bv.Vehicles
                                         where regions.Contains(v.RegionID)
-                                        select new ACESVehicle {
+                                        select new VCDBVehicle {
                                             Submodel = v.Submodel,
                                             Region = v.Region,
                                             Configs = v.VehicleConfigs.Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>()
-                                        }).Distinct().OrderBy(x => x.Region.RegionID).ThenBy(x => x.Submodel.SubmodelID).ToList<ACESVehicle>()
-                        }).OrderBy(x => x.Year).ToList<ACESBaseVehicle>();
+                                        }).Distinct().OrderBy(x => x.Region.RegionID).ThenBy(x => x.Submodel.SubmodelID).ToList<VCDBVehicle>()
+                        }).OrderByDescending(x => x.Year).ToList<VCDBBaseVehicle>();
+            
+            // linq won't let me do this comparison in the query itself. Iteration is the only solution...F#*&ing Linq
+            foreach (VCDBBaseVehicle abv in vehicles) {
+                abv.exists = basevehicles.Any(x => x.AAIABaseVehicleID.Equals(abv.BaseVehicleID));
+                foreach (VCDBVehicle vehicle in abv.Vehicles) {
+                    vehicle.exists = basevehicles.Any(x => x.vcdb_Vehicles.Any(y => y.SubModelID != null && y.Submodel.AAIASubmodelID.Equals(vehicle.Submodel.SubmodelID)));
+                }
+            }
             return vehicles;
         }
 
@@ -387,18 +450,41 @@ namespace CurtAdmin.Models {
         public string name { get; set; }
     }
 
-    public class ACESBaseVehicle {
+    public class VCDBBaseVehicle {
         public int BaseVehicleID { get; set; }
         public int Year { get; set; }
         public AAIA.Make Make { get; set; }
         public AAIA.Model Model { get; set; }
-        public List<ACESVehicle> Vehicles { get; set; }
+        public List<VCDBVehicle> Vehicles { get; set; }
+        public bool exists { get; set; }
     }
 
-    public class ACESVehicle {
+    public class VCDBVehicle {
         public AAIA.Submodel Submodel { get; set; }
         public AAIA.Region Region { get; set; }
         public List<AAIA.VehicleConfig> Configs { get; set; }
+        public bool exists { get; set; }
+    }
+
+    public class ACESBaseVehicle {
+        public int ID { get; set; }
+        public int? AAIABaseVehicleID { get; set; }
+        public int YearID { get; set; }
+        public vcdb_Make Make { get; set; }
+        public vcdb_Model Model { get; set; }
+        public List<ACESSubmodel> Submodels { get; set; }
+    }
+
+    public class ACESSubmodel {
+        public int? SubmodelID { get; set; }
+        public Submodel submodel { get; set; }
+        public List<ConfigAttributeType> configlist { get; set; }
+        public List<ACESVehicle> vehicles { get; set; }
+    }
+
+    public class ACESVehicle {
+        public int ID { get; set; }
+        public List<ConfigAttribute> configs { get; set; }
     }
 
 }

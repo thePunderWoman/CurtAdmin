@@ -391,7 +391,7 @@
       <LastGenOutput>CurtDev1.designer.cs</LastGenOutput>
     </Content>
     <Content Include="Global.asax" />
-    <Content Include="Scripts\admin\aces.js" />
+    <Content Include="Scripts\admin\ACES\vehicles.js" />
     <Content Include="Scripts\admin\ACES\addvehicle.js" />
     <Content Include="Scripts\admin\ACES\AcesTypes.js" />
     <Content Include="Scripts\admin\ACES\ConfigAttributeTypes.js" />

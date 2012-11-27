@@ -1477,6 +1477,10 @@ ul.vehicles li.added {
     opacity: .3;
 }
 
+ul.vehicles li a.remove {
+    float: right;
+}
+
 ul.submodels li {
     border: 1px solid #000;
     background-color: #ddd;
