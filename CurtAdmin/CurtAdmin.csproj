@@ -192,6 +192,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\helpers.cs" />
     <Compile Include="Models\Website.cs" />
     <Compile Include="Models\ACES\AcesType.cs" />
     <Compile Include="Models\ACES\ConfigAttributeType.cs" />
@@ -438,6 +439,7 @@
     <Content Include="Scripts\admin\trailers.js" />
     <Content Include="Scripts\admin\users_home.js" />
     <Content Include="Scripts\admin\video.js" />
+    <Content Include="Scripts\admin\webPropertiesEnabled.js" />
     <Content Include="Scripts\admin\website_menus.js" />
     <Content Include="Scripts\fileiframe.js" />
     <Content Include="Scripts\fileuploader.js" />
@@ -522,6 +524,8 @@
     <Content Include="Views\Customers\ViewCustomerUsers.cshtml" />
     <Content Include="Views\Customers\EditCustomerUser.cshtml" />
     <Content Include="Views\ACES\AddVehicle.cshtml" />
+    <Content Include="Views\Customers\ViewWebProperties.cshtml" />
+    <Content Include="Views\Customers\ViewUserWebProperties.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

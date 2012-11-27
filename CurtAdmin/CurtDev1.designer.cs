@@ -21477,7 +21477,7 @@ namespace CurtAdmin
 		
 		private int _typeID;
 		
-		private EntitySet<WebPropertyType> _WebPropertyTypes;
+		private EntityRef<WebPropertyType> _WebPropertyTypes;
 		
 		private EntityRef<CustUserWebProperty> _CustUserWebProperty;
 		
@@ -21507,7 +21507,7 @@ namespace CurtAdmin
 		
 		public WebProperty()
 		{
-			this._WebPropertyTypes = new EntitySet<WebPropertyType>(new Action<WebPropertyType>(this.attach_WebPropertyTypes), new Action<WebPropertyType>(this.detach_WebPropertyTypes));
+			this._WebPropertyTypes = default(EntityRef<WebPropertyType>);
 			this._CustUserWebProperty = default(EntityRef<CustUserWebProperty>);
 			this._Customer = default(EntityRef<Customer>);
 			OnCreated();
@@ -21681,16 +21681,32 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropertyType", Storage="_WebPropertyTypes", ThisKey="typeID", OtherKey="typeID")]
-		public EntitySet<WebPropertyType> WebPropertyTypes
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropertyType", Storage="_WebPropertyTypes", ThisKey="typeID", OtherKey="typeID", IsUnique=true, IsForeignKey=false)]
+		public WebPropertyType WebPropertyTypes
 		{
 			get
 			{
-				return this._WebPropertyTypes;
+				return this._WebPropertyTypes.Entity;
 			}
 			set
 			{
-				this._WebPropertyTypes.Assign(value);
+				WebPropertyType previousValue = this._WebPropertyTypes.Entity;
+				if (((previousValue != value) 
+							|| (this._WebPropertyTypes.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._WebPropertyTypes.Entity = null;
+						previousValue.WebProperty = null;
+					}
+					this._WebPropertyTypes.Entity = value;
+					if ((value != null))
+					{
+						value.WebProperty = this;
+					}
+					this.SendPropertyChanged("WebPropertyTypes");
+				}
 			}
 		}
 		
@@ -21780,18 +21796,6 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_WebPropertyTypes(WebPropertyType entity)
-		{
-			this.SendPropertyChanging();
-			entity.WebProperty = this;
-		}
-		
-		private void detach_WebPropertyTypes(WebPropertyType entity)
-		{
-			this.SendPropertyChanging();
-			entity.WebProperty = null;
 		}
 	}
 	
@@ -21908,12 +21912,12 @@ namespace CurtAdmin
 					if ((previousValue != null))
 					{
 						this._WebProperty.Entity = null;
-						previousValue.WebPropertyTypes.Remove(this);
+						previousValue.WebPropertyTypes = null;
 					}
 					this._WebProperty.Entity = value;
 					if ((value != null))
 					{
-						value.WebPropertyTypes.Add(this);
+						value.WebPropertyTypes = this;
 						this._typeID = value.typeID;
 					}
 					else

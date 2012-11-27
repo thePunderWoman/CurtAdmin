@@ -170,7 +170,85 @@ namespace CurtAdmin.Controllers {
             return "";
         }
 
+        public ActionResult ViewWebProperties()
+        {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<WebProperty> webProperties = new List<WebProperty>();
+            webProperties = db.WebProperties.ToList<WebProperty>();
+            ViewBag.webProperties = webProperties;
+            
+            return View();
+        }
+        public ActionResult ViewUserWebProperties(Guid userID)
+        {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<WebProperty> webProperties = new List<WebProperty>();
+            CustomerUser user = new CustomerUser();
+            user = user.Get(userID);
 
+            List<int> listOfWebPropIDs = db.CustUserWebProperties.Where(x => x.userID.Equals(userID)).Select(x => x.webPropID).ToList<int>();
+
+            foreach (int webPropID in listOfWebPropIDs)
+            {
+                WebProperty webProp = db.WebProperties.Where(x => x.id == webPropID).FirstOrDefault<WebProperty>();
+                if (webProp != null)
+                {
+                    webProperties.Add(webProp);
+                }
+            }// end foreach
+            ViewBag.user = user;
+            ViewBag.webProperties = webProperties;
+            return View();
+        }
+
+        [HttpGet]
+        public string SetWebPropertyStatus(int record_id)
+        {
+            try 
+	        {	        
+		         CurtDevDataContext db = new CurtDevDataContext();
+
+                    WebProperty wp = db.WebProperties.Where(x => x.id == record_id).FirstOrDefault<WebProperty>();
+                    if (wp.isEnabled == false)
+                    {
+                        wp.isEnabled = true;
+                        try
+                        {
+                            string subject = "Your Web Property has been authorized!";
+                            string htmlBody = "<p>The following Web Property has been authorized:</p>";
+                            htmlBody += "<hr />";
+                            htmlBody += "<span>Name: <strong>" + wp.name + "</strong></span><br />";
+                            htmlBody += "<span>Website Address: <strong>" + wp.url + "</strong></span><br />";
+                            htmlBody += "<span>Type: <strong>" + wp.WebPropertyTypes.type + "</strong></span><br />";
+                            htmlBody += "<span>Seller ID: <strong>" + wp.sellerID + "</strong></span><br />";
+                            htmlBody += "<hr /><br />";
+                            htmlBody += "<p>You can generate your badge code for your Web Property by clicking the link below:<br /><a href='http://dealers.curtmfg.com/AuthorizedDealer/WebProperties'>http://dealers.curtmfg.com/AuthorizedDealer/WebProperties</a></p>";
+                            helpers.SendEmail(wp.CustUserWebProperty.CustomerUser.email, subject, htmlBody, true);
+                        }
+                        catch (Exception e)
+                        {
+                            return e.Message;
+                        }
+
+                    }
+                    else
+                    {
+                        wp.isEnabled = false;
+                    }
+                    db.SubmitChanges();
+                    // email user of property to let them know that it has been updated
+
+
+
+
+
+                    return "";
+	        }
+	        catch (Exception e)
+	        {
+                return "Could not update record: " + e.Message;
+	        }
+        }
 
 
         public ActionResult Add() {

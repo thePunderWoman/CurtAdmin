@@ -14,10 +14,12 @@
                         deleteUser(data, user_id);
                     });
                 }
-
                 break;
             case 'edit':
                 window.location.href = "/Customers/EditCustomerUser?user_id=" + user_id;
+                break;
+            case 'webProp':
+                window.location.href = "/Customers/ViewUserWebProperties?userID=" + user_id;
                 break;
             default:
 

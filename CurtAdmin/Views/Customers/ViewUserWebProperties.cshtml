@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "View User's Web Properties";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<CurtAdmin.WebProperty> webProperties = ViewBag.webProperties ?? new List<CurtAdmin.WebProperty>();
+    CurtAdmin.CustomerUser user = ViewBag.user ?? new CurtAdmin.CustomerUser();
+    }
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+
+<div id="content_container">
+    @if (user.notCustomer == true)
+    {
+        <h2>Non-Customer User: @(user.name)'s Web Properties (@webProperties.Count)</h2>
+    }
+    else
+    {
+        <h2>Customer User: @(user.name)'s Web Properties (@webProperties.Count)</h2>
+    }
+    
+
+    <div style="width: 90%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>URL</th>
+                    <th>Seller ID</th>
+                    <th>Type</th>
+                    <th>Badge ID</th>
+                    <th>Is Approved</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.WebProperty wp in webProperties) {
+                    <tr id="webProperty:@wp.id">
+                        <td>@wp.name</td>
+                        <td>@wp.url</td>
+                        <td>@wp.sellerID</td>
+                        <td>@wp.WebPropertyTypes.type</td>
+                        <td>@wp.badgeID</td>
+                        <td class="center">
+                            <input type="checkbox" name="isEnabled" id="isEnabled:@wp.id" class="isEnabled" value="1" @((wp.isEnabled) ? "checked" : "") />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/webPropertiesEnabled.js")"></script>
