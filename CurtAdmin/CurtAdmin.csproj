@@ -391,7 +391,8 @@
       <LastGenOutput>CurtDev1.designer.cs</LastGenOutput>
     </Content>
     <Content Include="Global.asax" />
-    <Content Include="Scripts\admin\aces.js" />
+    <Content Include="Scripts\admin\ACES\vehicles.js" />
+    <Content Include="Scripts\admin\ACES\addvehicle.js" />
     <Content Include="Scripts\admin\ACES\AcesTypes.js" />
     <Content Include="Scripts\admin\ACES\ConfigAttributeTypes.js" />
     <Content Include="Scripts\admin\ACES\ConfigAttributes.js" />
@@ -522,6 +523,7 @@
     <Content Include="Views\Website\Index.cshtml" />
     <Content Include="Views\Customers\ViewCustomerUsers.cshtml" />
     <Content Include="Views\Customers\EditCustomerUser.cshtml" />
+    <Content Include="Views\ACES\AddVehicle.cshtml" />
     <Content Include="Views\Customers\ViewWebProperties.cshtml" />
     <Content Include="Views\Customers\ViewUserWebProperties.cshtml" />
   </ItemGroup>

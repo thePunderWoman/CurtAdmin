@@ -579,7 +579,7 @@ namespace CurtAdmin.Controllers
             part_vehicles = new ACES().GetVehiclesByPart(partID);
             ViewBag.part_vehicles = part_vehicles;
 
-            ViewBag.active_tab = "vehicles";
+            ViewBag.active_tab = "acesvehicles";
             return View();
         }
         
