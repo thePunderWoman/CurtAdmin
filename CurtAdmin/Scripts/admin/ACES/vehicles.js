@@ -88,27 +88,29 @@ getCurtDevVehicles = function () {
     $('#vehicleData').empty();
     $('#loadingCurtDev').show();
     $.getJSON('/ACES/GetVehicles', { makeid: makeid, modelid: modelid }, function (vData) {
-        //console.log(vData);
+        console.log(vData);
         $('#loadingCurtDev').hide();
         if (vData.length > 0) {
             $(vData).each(function (y, BaseVehicle) {
-                var opt = '<li>' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + '<span class="tools"><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '">Remove</a></span><ul class="submodels">';
+                var opt = '<li>' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools"><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '">Remove</a></span><ul class="submodels">';
                 $(BaseVehicle.Submodels).each(function (i, submodel) {
-                    opt += '<li>' + submodel.submodel.SubmodelName.trim() + '<span class="tools">';
+                    opt += '<li>' + submodel.submodel.SubmodelName.trim() + ((submodel.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">';
                     opt += '<a href="/ACES/RemoveSubmodel?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="removesubmodel">Remove</a>';
                     if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
                         opt += ' <a href="#" class="showConfig">' + submodel.vehicles.length + ' Config' + ((submodel.vehicles.length > 1) ? 's' : '') + '</a>';
                     }
                     opt += '</span>';
-                    if (submodel.vehicles.length > 0) {
+                    if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
                         opt += '<table class="configs">';
                         opt += '<thead><tr>';
+                        opt += '<th>VCDB</th>'
                         $(submodel.configlist).each(function (z, config) {
                             opt += '<th>' + config.name + '</th>';
                         });
                         opt += '</tr></thead><tbody>';
                         $(submodel.vehicles).each(function (x, vehicle) {
                             opt += '<tr>';
+                            opt += '<td>' + ((vehicle.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '</td>';
                             $(submodel.configlist).each(function (z, config) {
                                 opt += '<td>';
                                 $(vehicle.configs).each(function (q, attr) {

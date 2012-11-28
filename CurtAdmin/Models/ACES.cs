@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
+using LinqKit;
 
 namespace CurtAdmin.Models {
     public class ACES {
@@ -216,6 +217,7 @@ namespace CurtAdmin.Models {
         
         public List<ACESBaseVehicle> GetVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
             vehicles = (from bv in db.BaseVehicles
                         where bv.MakeID.Equals(makeid) && bv.ModelID.Equals(modelid) && bv.vcdb_Vehicles.Count > 0
@@ -243,6 +245,54 @@ namespace CurtAdmin.Models {
                                                            select vc.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.name).ToList<ConfigAttributeType>()
                                          }).OrderBy(x => x.submodel.SubmodelName).ToList<ACESSubmodel>(),
                         }).Distinct().OrderByDescending(x => x.YearID).ToList<ACESBaseVehicle>();
+            foreach (ACESBaseVehicle abv in vehicles) {
+                foreach (ACESSubmodel sm in abv.Submodels) {
+                    sm.vcdb = vcdb.Vehicles.Where(x => x.BaseVehicleID.Equals(abv.AAIABaseVehicleID) && x.SubmodelID.Equals(sm.submodel.AAIASubmodelID)).ToList<AAIA.Vehicle>().Count > 0;
+                    foreach (ACESVehicle v in sm.vehicles) {
+                        if (v.configs.Any(x => x.vcdbID == null)) {
+                            v.vcdb = false;
+                        } else {
+                            v.vcdb = true;
+                            List<int> vehicleIDs = vcdb.Vehicles.Where(x => x.SubmodelID.Equals(sm.submodel.AAIASubmodelID) && x.BaseVehicleID.Equals(abv.AAIABaseVehicleID)).Select(x => x.VehicleID).ToList<int>();
+                            var predicate = PredicateBuilder.True<AAIA.VehicleConfig>();
+                            predicate = predicate.And(p => vehicleIDs.Contains(p.VehicleID));
+                            foreach (ConfigAttribute ca in v.configs) {
+                                switch (ca.ConfigAttributeType.AcesType.name) {
+                                    case "WheelBase":
+                                        predicate = predicate.And(p => p.WheelbaseID.Equals(ca.vcdbID));
+                                        break;
+                                    case "BodyType":
+                                        predicate = predicate.And(p => p.BodyStyleConfig.BodyTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "DriveType":
+                                        predicate = predicate.And(p => p.DriveTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "BodyNumDoors":
+                                        predicate = predicate.And(p => p.BodyStyleConfig.BodyNumDoorsID.Equals(ca.vcdbID));
+                                        break;
+                                    case "BedLength":
+                                        predicate = predicate.And(p => p.BedConfig.BedLengthID.Equals(ca.vcdbID));
+                                        break;
+                                    case "FuelType":
+                                        predicate = predicate.And(p => p.EngineConfig.FuelTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "EngineBase":
+                                        predicate = predicate.And(p => p.EngineConfig.EngineBaseID.Equals(ca.vcdbID));
+                                        break;
+                                    default:
+                                        v.vcdb = false;
+                                        break;
+                                }
+                                if (v.vcdb) {
+                                    // run query
+                                    List<AAIA.VehicleConfig> vconfigs = vcdb.VehicleConfigs.Where(predicate).ToList<AAIA.VehicleConfig>();
+                                    v.vcdb = vconfigs.Count > 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             return vehicles;
         }
 
@@ -570,11 +620,13 @@ namespace CurtAdmin.Models {
         public Submodel submodel { get; set; }
         public List<ConfigAttributeType> configlist { get; set; }
         public List<ACESVehicle> vehicles { get; set; }
+        public bool vcdb { get; set; }
     }
 
     public class ACESVehicle {
         public int ID { get; set; }
         public List<ConfigAttribute> configs { get; set; }
+        public bool vcdb { get; set; }
     }
 
 }

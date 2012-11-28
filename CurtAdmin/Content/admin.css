@@ -1486,6 +1486,38 @@ ul.submodels li {
     margin-bottom: 0;
 }
 
+span.vcdb {
+    border-radius: 100%;
+    background-color: #B3ECB3;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px;
+    font-size: 10px;
+    line-height: 10px;
+    display: inline-block;
+    text-align: center;
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+span.notvcdb {
+    border-radius: 100%;
+    background-color: #800000;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px;
+    font-size: 10px;
+    line-height: 10px;
+    display: inline-block;
+    text-align: center;
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
 ul.vehicles li span.tools {
     float: right;
 }
