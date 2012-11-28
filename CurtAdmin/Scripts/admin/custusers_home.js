@@ -46,7 +46,7 @@ function set_isActive(userID) {
         }else{
             showMessage("User's status has been updated.");
         }
-    });
+    },"html");
 }
 
 
