@@ -9,7 +9,9 @@ namespace CurtAdmin.Models {
         public List<vcdb_Make> GetMakes() {
             CurtDevDataContext db = new CurtDevDataContext();
             List<vcdb_Make> makes = new List<vcdb_Make>();
-            makes = db.vcdb_Makes.OrderBy(x => x.MakeName).ToList<vcdb_Make>();
+            makes = (from m in db.vcdb_Makes
+                     join bv in db.BaseVehicles on m.ID equals bv.MakeID
+                     select m).Distinct().OrderBy(x => x.MakeName).ToList<vcdb_Make>();
             return makes;
         }
 
@@ -73,8 +75,31 @@ namespace CurtAdmin.Models {
                 } catch {
                     // The Base Vehicle doesn't exist in CurtDev.  We need to create it first.
                     AAIA.BaseVehicle acesbv = vcdb.BaseVehicles.Where(x => x.BaseVehicleID.Equals(bvid)).First<AAIA.BaseVehicle>();
-                    vcdb_Make make = db.vcdb_Makes.Where(x => x.AAIAMakeID.Equals(acesbv.MakeID)).First<vcdb_Make>();
-                    vcdb_Model model = db.vcdb_Models.Where(x => x.AAIAModelID.Equals(acesbv.ModelID)).First<vcdb_Model>();
+                    vcdb_Make make = new vcdb_Make();
+                    vcdb_Model model = new vcdb_Model();
+                    try {
+                        make = db.vcdb_Makes.Where(x => x.AAIAMakeID.Equals(acesbv.MakeID)).First<vcdb_Make>();
+                    } catch {
+                        AAIA.Make vcdbmake = vcdb.BaseVehicles.Where(x => x.BaseVehicleID.Equals(bvid)).Select(x => x.Make).First<AAIA.Make>();
+                        make = new vcdb_Make {
+                            MakeName = vcdbmake.MakeName.Trim(),
+                            AAIAMakeID = vcdbmake.MakeID
+                        };
+                        db.vcdb_Makes.InsertOnSubmit(make);
+                        db.SubmitChanges();
+                    }
+                    try {
+                        model = db.vcdb_Models.Where(x => x.AAIAModelID.Equals(acesbv.ModelID)).First<vcdb_Model>();
+                    } catch {
+                        AAIA.Model vcdbmodel = vcdb.BaseVehicles.Where(x => x.BaseVehicleID.Equals(bvid)).Select(x => x.Model).First<AAIA.Model>();
+                        model = new vcdb_Model {
+                            ModelName = vcdbmodel.ModelName.Trim(),
+                            AAIAModelID = vcdbmodel.ModelID,
+                            VehicleTypeID = vcdbmodel.VehicleTypeID
+                        };
+                        db.vcdb_Models.InsertOnSubmit(model);
+                        db.SubmitChanges();
+                    }
                     bv.YearID = acesbv.YearID;
                     bv.MakeID = make.ID;
                     bv.ModelID = model.ID;
@@ -124,6 +149,71 @@ namespace CurtAdmin.Models {
             db.SubmitChanges();
         }
 
+        public vcdb_Vehicle AddSubmodel(int bvid, int submodelID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            try {
+                BaseVehicle bv = new BaseVehicle();
+                try {
+                    bv = db.BaseVehicles.Where(x => x.AAIABaseVehicleID.Equals(bvid)).First<BaseVehicle>();
+                } catch {
+                    vcdb_Vehicle newvehicle = AddBaseVehicle(bvid);
+                    bv = newvehicle.BaseVehicle;
+                }
+
+                Submodel submodel = new Submodel();
+                try {
+                    submodel = db.Submodels.Where(x => x.AAIASubmodelID.Equals(submodelID)).First<Submodel>();
+                } catch {
+                    AAIA.Submodel vcdbsubmodel = vcdb.Submodels.Where(x => x.SubmodelID.Equals(submodelID)).First<AAIA.Submodel>();
+                    submodel = new Submodel {
+                        AAIASubmodelID = vcdbsubmodel.SubmodelID,
+                        SubmodelName = vcdbsubmodel.SubmodelName
+                    };
+                    db.Submodels.InsertOnSubmit(submodel);
+                    db.SubmitChanges();
+                }
+
+                //Create a vehicle with the BaseVehicle and Submodel
+
+                vehicle = new vcdb_Vehicle {
+                    BaseVehicleID = bv.ID,
+                    SubModelID = submodel.ID
+                };
+                db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                db.SubmitChanges();
+            } catch { }
+            return vehicle;
+        }
+
+        public void RemoveSubmodel(int bvid, int submodelID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<Note> notes = db.Notes.Where(x => x.vcdb_VehiclePart.vcdb_Vehicle.BaseVehicleID.Equals(bvid) && x.vcdb_VehiclePart.vcdb_Vehicle.SubModelID.Equals(submodelID)).ToList<Note>();
+            db.Notes.DeleteAllOnSubmit(notes);
+            db.SubmitChanges();
+
+            List<vcdb_VehiclePart> vehicleParts = db.vcdb_VehicleParts.Where(x => x.vcdb_Vehicle.BaseVehicleID.Equals(bvid) && x.vcdb_Vehicle.SubModelID.Equals(submodelID)).ToList<vcdb_VehiclePart>();
+            db.vcdb_VehicleParts.DeleteAllOnSubmit(vehicleParts);
+            db.SubmitChanges();
+
+            List<vcdb_Vehicle> vehicles = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(bvid) && x.SubModelID.Equals(submodelID)).ToList<vcdb_Vehicle>();
+            List<VehicleConfig> configs = vehicles.Where(x => x.ConfigID != null).Select(x => x.VehicleConfig).ToList<VehicleConfig>();
+            db.vcdb_Vehicles.DeleteAllOnSubmit(vehicles);
+            db.SubmitChanges();
+
+            List<VehicleConfig> deleteables = new List<VehicleConfig>();
+            foreach (VehicleConfig config in configs) {
+                if (db.VehicleConfigs.Where(x => x.ID.Equals(config.ID)).Select(x => x.vcdb_Vehicles).Count() == 0) {
+                    deleteables.Add(config);
+                }
+            }
+            if (deleteables.Count > 0) {
+                db.VehicleConfigs.DeleteAllOnSubmit(deleteables);
+                db.SubmitChanges();
+            }
+        }
+        
         public List<ACESBaseVehicle> GetVehicles(int makeid, int modelid) {
             CurtDevDataContext db = new CurtDevDataContext();
             List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
@@ -185,9 +275,9 @@ namespace CurtAdmin.Models {
             
             // linq won't let me do this comparison in the query itself. Iteration is the only solution...F#*&ing Linq
             foreach (VCDBBaseVehicle abv in vehicles) {
-                abv.exists = basevehicles.Any(x => x.AAIABaseVehicleID.Equals(abv.BaseVehicleID));
+                abv.exists = basevehicles.Any(x => x.AAIABaseVehicleID.Equals(abv.BaseVehicleID) && x.vcdb_Vehicles.Count > 0);
                 foreach (VCDBVehicle vehicle in abv.Vehicles) {
-                    vehicle.exists = basevehicles.Any(x => x.vcdb_Vehicles.Any(y => y.SubModelID != null && y.Submodel.AAIASubmodelID.Equals(vehicle.Submodel.SubmodelID)));
+                    vehicle.exists = basevehicles.Where(x => x.AAIABaseVehicleID.Equals(abv.BaseVehicleID)).Any(x => x.vcdb_Vehicles.Any(y => y.SubModelID != null && y.Submodel.AAIASubmodelID.Equals(vehicle.Submodel.SubmodelID)));
                 }
             }
             return vehicles;
