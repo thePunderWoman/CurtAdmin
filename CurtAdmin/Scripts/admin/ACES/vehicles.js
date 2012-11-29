@@ -45,7 +45,7 @@ $(function () {
         if (confirm('Are you sure you want to remove this vehicle? It will remove all submodels, configurations and part associations as well.')) {
             $.getJSON(href, function (data) {
                 if (data.success) {
-                    $(aobj).parent().remove();
+                    $(aobj).parent().parent().remove();
                     getVCDBVehicles();
                 } else {
                     showMessage("There was a problem removing the vehicle.")
@@ -54,10 +54,27 @@ $(function () {
         }
     });
 
+    $(document).on('click', 'a.removesubmodel', function (e) {
+        e.preventDefault();
+        var aobj = $(this);
+        var href = $(aobj).attr('href');
+        if (confirm('Are you sure you want to remove this vehicle submodel? It will remove all of the submodel\'s configurations and part associations as well.')) {
+            $.getJSON(href, function (data) {
+                if (data.success) {
+                    $(aobj).parent().parent().remove();
+                    getVCDBVehicles();
+                } else {
+                    showMessage("There was a problem removing the submodel.")
+                }
+            })
+        }
+    });
+
     $(document).on('click', 'a.showConfig', function (e) {
         e.preventDefault();
-        $(this).parent().find('table.configs').slideToggle('fast');
+        $(this).parent().parent().find('table.configs').slideToggle();
     });
+
     $('#find').on('click', function () {
         getCurtDevVehicles();
         getVCDBVehicles();
@@ -71,23 +88,29 @@ getCurtDevVehicles = function () {
     $('#vehicleData').empty();
     $('#loadingCurtDev').show();
     $.getJSON('/ACES/GetVehicles', { makeid: makeid, modelid: modelid }, function (vData) {
-        //console.log(vData);
+        console.log(vData);
         $('#loadingCurtDev').hide();
         if (vData.length > 0) {
             $(vData).each(function (y, BaseVehicle) {
-                var opt = '<li>' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + '<a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '">Remove</a><ul class="submodels">';
+                var opt = '<li>' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools"><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '">Remove</a></span><ul class="submodels">';
                 $(BaseVehicle.Submodels).each(function (i, submodel) {
-                    opt += '<li>' + submodel.submodel.SubmodelName.trim();
-                    if (submodel.vehicles.length > 0) {
+                    opt += '<li>' + submodel.submodel.SubmodelName.trim() + ((submodel.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">';
+                    opt += '<a href="/ACES/RemoveSubmodel?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="removesubmodel">Remove</a>';
+                    if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
                         opt += ' <a href="#" class="showConfig">' + submodel.vehicles.length + ' Config' + ((submodel.vehicles.length > 1) ? 's' : '') + '</a>';
+                    }
+                    opt += '</span>';
+                    if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
                         opt += '<table class="configs">';
                         opt += '<thead><tr>';
+                        opt += '<th>VCDB</th>'
                         $(submodel.configlist).each(function (z, config) {
                             opt += '<th>' + config.name + '</th>';
                         });
                         opt += '</tr></thead><tbody>';
                         $(submodel.vehicles).each(function (x, vehicle) {
                             opt += '<tr>';
+                            opt += '<td>' + ((vehicle.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '</td>';
                             $(submodel.configlist).each(function (z, config) {
                                 opt += '<td>';
                                 $(vehicle.configs).each(function (q, attr) {
@@ -122,13 +145,20 @@ getVCDBVehicles = function () {
             $(vcdbData).each(function (i, obj) {
                 var opt = '<li>' + obj.Year + ' ' + obj.Make.MakeName + ' ' + obj.Model.ModelName;
                 if (!obj.exists) {
-                    opt += '<a href="/ACES/AddBaseVehicle/' + obj.BaseVehicleID + '" data-id="' + obj.BaseVehicleID + '" class="add">Add</a>';
+                    opt += '<span class="tools"><a href="/ACES/AddBaseVehicle/' + obj.BaseVehicleID + '" data-id="' + obj.BaseVehicleID + '" class="add">Add</a></span>';
                 }
                 opt += '<ul class="submodels">';
                 $(obj.Vehicles).each(function (y, vehicle) {
                     opt += '<li>' + vehicle.Submodel.SubmodelName.trim() + ' (' + vehicle.Region.RegionAbbr + ')'
+                    opt += '<span class="tools">';
+                    if (!vehicle.exists) {
+                        opt += '<a href="/ACES/AddSubmodel?basevehicleid=' + obj.BaseVehicleID + '&submodelid=' + vehicle.Submodel.SubmodelID + '" class="add">Add</a>';
+                    }
                     if (vehicle.Configs.length > 0) {
                         opt += ' <a href="#" class="showConfig">' + vehicle.Configs.length + ' Config' + ((vehicle.Configs.length > 1) ? 's' : '') + '</a>';
+                    }
+                    opt += '</span>';
+                    if (vehicle.Configs.length > 0) {
                         opt += '<table class="configs">';
                         opt += '<thead><tr><th>Body Type</th><th>Doors</th><th>Engine</th><th>Engine Version</th><th>Valves</th><th>Drive Type</th><th>Fuel Type</th><th>Transmission</th><th>Bed Config</th><th>ABS</th><th>Brake System</th><th>Front Brakes</th><th>Rear Brakes</th><th>Wheel Base</th><th>MFR Body Code</th></tr></thead><tbody>';
                         $(vehicle.Configs).each(function (x, config) {

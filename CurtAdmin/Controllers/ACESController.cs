@@ -239,6 +239,21 @@ namespace CurtAdmin.Controllers {
             }
         }
 
+        public string AddSubmodel(int BaseVehicleID, int SubmodelID) {
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            vehicle = new ACES().AddSubmodel(BaseVehicleID, SubmodelID);
+            return JsonConvert.SerializeObject(vehicle);
+        }
+
+        public string RemoveSubmodel(int BaseVehicleID, int SubmodelID) {
+            try {
+                new ACES().RemoveSubmodel(BaseVehicleID, SubmodelID);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
         public string SearchPartTypes(string keyword = "") {
             return new ACES().SearchPartTypes(keyword);
         }
