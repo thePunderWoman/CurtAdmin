@@ -24,5 +24,5 @@ function set_isEnabled(record_id) {
         } else {
             showMessage("The Web Property's status has been updated.");
         }
-    });
+    },"html");
 }

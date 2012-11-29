@@ -7345,8 +7345,6 @@ namespace CurtAdmin
 		
 		private EntitySet<CustomerUser> _CustomerUsers;
 		
-		private EntitySet<WebProperty> _WebProperties;
-		
 		private EntityRef<DealerTier> _DealerTier;
 		
 		private EntityRef<DealerType> _DealerType;
@@ -7417,7 +7415,6 @@ namespace CurtAdmin
 			this._PartStates = new EntitySet<PartStates>(new Action<PartStates>(this.attach_PartStates), new Action<PartStates>(this.detach_PartStates));
 			this._CustomerLocations = new EntitySet<CustomerLocation>(new Action<CustomerLocation>(this.attach_CustomerLocations), new Action<CustomerLocation>(this.detach_CustomerLocations));
 			this._CustomerUsers = new EntitySet<CustomerUser>(new Action<CustomerUser>(this.attach_CustomerUsers), new Action<CustomerUser>(this.detach_CustomerUsers));
-			this._WebProperties = new EntitySet<WebProperty>(new Action<WebProperty>(this.attach_WebProperties), new Action<WebProperty>(this.detach_WebProperties));
 			this._DealerTier = default(EntityRef<DealerTier>);
 			this._DealerType = default(EntityRef<DealerType>);
 			OnCreated();
@@ -8023,19 +8020,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_WebProperty", Storage="_WebProperties", ThisKey="customerID", OtherKey="customerID")]
-		public EntitySet<WebProperty> WebProperties
-		{
-			get
-			{
-				return this._WebProperties;
-			}
-			set
-			{
-				this._WebProperties.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DealerTier_Customer", Storage="_DealerTier", ThisKey="tier", OtherKey="ID", IsForeignKey=true)]
 		public DealerTier DealerTier
 		{
@@ -8167,18 +8151,6 @@ namespace CurtAdmin
 		}
 		
 		private void detach_CustomerUsers(CustomerUser entity)
-		{
-			this.SendPropertyChanging();
-			entity.Customer = null;
-		}
-		
-		private void attach_WebProperties(WebProperty entity)
-		{
-			this.SendPropertyChanging();
-			entity.Customer = this;
-		}
-		
-		private void detach_WebProperties(WebProperty entity)
 		{
 			this.SendPropertyChanging();
 			entity.Customer = null;
@@ -21465,7 +21437,7 @@ namespace CurtAdmin
 		
 		private string _name;
 		
-		private System.Nullable<int> _customerID;
+		private int _customerID;
 		
 		private System.Guid _badgeID;
 		
@@ -21481,8 +21453,6 @@ namespace CurtAdmin
 		
 		private EntityRef<CustUserWebProperty> _CustUserWebProperty;
 		
-		private EntityRef<Customer> _Customer;
-		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -21491,8 +21461,8 @@ namespace CurtAdmin
     partial void OnidChanged();
     partial void OnnameChanging(string value);
     partial void OnnameChanged();
-    partial void OncustomerIDChanging(System.Nullable<int> value);
-    partial void OncustomerIDChanged();
+    partial void Oncust_IDChanging(int value);
+    partial void Oncust_IDChanged();
     partial void OnbadgeIDChanging(System.Guid value);
     partial void OnbadgeIDChanged();
     partial void OnurlChanging(string value);
@@ -21509,7 +21479,6 @@ namespace CurtAdmin
 		{
 			this._WebPropertyTypes = default(EntityRef<WebPropertyType>);
 			this._CustUserWebProperty = default(EntityRef<CustUserWebProperty>);
-			this._Customer = default(EntityRef<Customer>);
 			OnCreated();
 		}
 		
@@ -21558,7 +21527,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerID", DbType="Int")]
-		public System.Nullable<int> customerID
+		public int cust_ID
 		{
 			get
 			{
@@ -21568,15 +21537,11 @@ namespace CurtAdmin
 			{
 				if ((this._customerID != value))
 				{
-					if (this._Customer.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OncustomerIDChanging(value);
+					this.Oncust_IDChanging(value);
 					this.SendPropertyChanging();
 					this._customerID = value;
-					this.SendPropertyChanged("customerID");
-					this.OncustomerIDChanged();
+					this.SendPropertyChanged("cust_ID");
+					this.Oncust_IDChanged();
 				}
 			}
 		}
@@ -21740,40 +21705,6 @@ namespace CurtAdmin
 						this._id = default(int);
 					}
 					this.SendPropertyChanged("CustUserWebProperty");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_WebProperty", Storage="_Customer", ThisKey="customerID", OtherKey="customerID", IsForeignKey=true)]
-		public Customer Customer
-		{
-			get
-			{
-				return this._Customer.Entity;
-			}
-			set
-			{
-				Customer previousValue = this._Customer.Entity;
-				if (((previousValue != value) 
-							|| (this._Customer.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Customer.Entity = null;
-						previousValue.WebProperties.Remove(this);
-					}
-					this._Customer.Entity = value;
-					if ((value != null))
-					{
-						value.WebProperties.Add(this);
-						this._customerID = value.customerID;
-					}
-					else
-					{
-						this._customerID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Customer");
 				}
 			}
 		}

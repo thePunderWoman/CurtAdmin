@@ -348,7 +348,6 @@
       <Association Name="Customer_PartStates" Member="PartStates" ThisKey="stateID" OtherKey="stateID" Type="PartStates" />
       <Association Name="Customer_CustomerLocation" Member="CustomerLocations" ThisKey="cust_id" OtherKey="cust_id" Type="CustomerLocation" />
       <Association Name="Customer_CustomerUser" Member="CustomerUsers" ThisKey="cust_id" OtherKey="cust_id" Type="CustomerUser" />
-      <Association Name="Customer_WebProperty" Member="WebProperties" ThisKey="customerID" OtherKey="customerID" Type="WebProperty" />
       <Association Name="DealerTier_Customer" Member="DealerTier" ThisKey="tier" OtherKey="ID" Type="DealerTier" IsForeignKey="true" />
       <Association Name="DealerType_Customer" Member="DealerType" ThisKey="dealer_type" OtherKey="dealer_type" Type="DealerType" IsForeignKey="true" />
     </Type>
@@ -1015,7 +1014,7 @@
     <Type Name="WebProperty">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="VarChar(75) NOT NULL" CanBeNull="false" />
-      <Column Name="customerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="cust_ID" Storage="_customerID" Type="System.Int32" DbType="Int" CanBeNull="false" />
       <Column Name="badgeID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="url" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="isEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
@@ -1023,7 +1022,6 @@
       <Column Name="typeID" Type="System.Int32" DbType="Int" CanBeNull="false" />
       <Association Name="WebProperty_WebPropertyType" Member="WebPropertyTypes" ThisKey="typeID" OtherKey="typeID" Type="WebPropertyType" Cardinality="One" />
       <Association Name="CustUserWebProperty_WebProperty" Member="CustUserWebProperty" ThisKey="id" OtherKey="webPropID" Type="CustUserWebProperty" IsForeignKey="true" />
-      <Association Name="Customer_WebProperty" Member="Customer" ThisKey="customerID" OtherKey="customerID" Type="Customer" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.WebPropertyTypes" Member="WebPropertyTypes">

@@ -82,6 +82,28 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public ActionResult ViewCustomersOwnUsers(int cust_id)
+        {
+            if (cust_id != 0)
+            {
+                try
+                {
+                    Customer customer = CustomerModel.Get(cust_id);
+                    List<CustomerUser> users = customer.CustomerUsers.ToList<CustomerUser>();
+                    ViewBag.users = users;
+                }
+                catch (Exception e)
+                {
+                    ViewBag.error = e.Message;
+                }
+            }
+            else
+            {
+                ViewBag.error = "That cust_id doesnt exist.";
+            }
+            return View("ViewCustomerUsers");
+        }
+
         public ActionResult EditCustomerUser(Guid user_id)
         {
             // edits a particular customer user.
@@ -138,9 +160,6 @@ namespace CurtAdmin.Controllers {
 
                 ViewBag.error = "Please specify a correct ID.";
             }
-
-
-
             return View();
         }
 
