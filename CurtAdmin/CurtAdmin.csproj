@@ -526,6 +526,7 @@
     <Content Include="Views\ACES\AddVehicle.cshtml" />
     <Content Include="Views\Customers\ViewWebProperties.cshtml" />
     <Content Include="Views\Customers\ViewUserWebProperties.cshtml" />
+    <Content Include="Views\Customers\ViewCustomersOwnUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
