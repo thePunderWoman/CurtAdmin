@@ -279,6 +279,96 @@ namespace CurtAdmin.Models {
                                     case "EngineBase":
                                         predicate = predicate.And(p => p.EngineConfig.EngineBaseID.Equals(ca.vcdbID));
                                         break;
+                                    case "Aspiration":
+                                        predicate = predicate.And(p => p.EngineConfig.AspirationID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Bed Type":
+                                        predicate = predicate.And(p => p.BedConfig.BedTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Brake ABS":
+                                        predicate = predicate.And(p => p.BrakeConfig.BrakeABSID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Brake System":
+                                        predicate = predicate.And(p => p.BrakeConfig.BrakeSystemID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Cylinder Head Type":
+                                        predicate = predicate.And(p => p.EngineConfig.CylinderHeadTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Engine Designation":
+                                        predicate = predicate.And(p => p.EngineConfig.EngineDesignationID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Engine Manufacturer":
+                                        predicate = predicate.And(p => p.EngineConfig.EngineMfrID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Engine Version":
+                                        predicate = predicate.And(p => p.EngineConfig.EngineVersionID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Engine VIN":
+                                        predicate = predicate.And(p => p.EngineConfig.EngineVINID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Front Brake Type":
+                                        predicate = predicate.And(p => p.BrakeConfig.FrontBrakeTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Front Spring Type":
+                                        predicate = predicate.And(p => p.SpringTypeConfig.FrontSpringTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Fuel Delivery Sub-Type":
+                                        predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Fuel Delivery Type":
+                                        predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Fuel System Control Type":
+                                        predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Fuel System Design":
+                                        predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Ignition System Type":
+                                        predicate = predicate.And(p => p.EngineConfig.IgnitionSystemTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Manufacturer Body Code":
+                                        predicate = predicate.And(p => p.MfrBodyCodeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Power Output":
+                                        predicate = predicate.And(p => p.EngineConfig.PowerOutputID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Rear Brake Type":
+                                        predicate = predicate.And(p => p.BrakeConfig.RearBrakeTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Rear Spring Type":
+                                        predicate = predicate.And(p => p.SpringTypeConfig.RearSpringTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Steering System":
+                                        predicate = predicate.And(p => p.SteeringConfig.SteeringSystemID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Steering Type":
+                                        predicate = predicate.And(p => p.SteeringConfig.SteeringTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Tranmission Electronic Controlled":
+                                        predicate = predicate.And(p => p.Transmission.ElecControlled.ElecControlledID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Transmission":
+                                        predicate = predicate.And(p => p.TransmissionID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Transmission Base":
+                                        predicate = predicate.And(p => p.Transmission.TransmissionBaseID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Transmission Control Type":
+                                        predicate = predicate.And(p => p.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Tranmission Manufacturer Code":
+                                        predicate = predicate.And(p => p.Transmission.TransmissionMfrCodeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Transmission Number of Speeds":
+                                        predicate = predicate.And(p => p.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Transmission Type":
+                                        predicate = predicate.And(p => p.Transmission.TransmissionBase.TransmissionTypeID.Equals(ca.vcdbID));
+                                        break;
+                                    case "Valves Per Engine":
+                                        predicate = predicate.And(p => p.EngineConfig.ValvesID.Equals(ca.vcdbID));
+                                        break;
                                     default:
                                         v.vcdb = false;
                                         break;

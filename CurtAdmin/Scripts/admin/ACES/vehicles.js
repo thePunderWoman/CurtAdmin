@@ -72,7 +72,14 @@ $(function () {
 
     $(document).on('click', 'a.showConfig', function (e) {
         e.preventDefault();
-        $(this).parent().parent().find('table.configs').slideToggle();
+        if ($(this).parent().parent().find('div.configs').css('display') == 'none') {
+            $(this).find('span').css({ WebkitTransform: 'rotate(90deg)' });
+            $(this).find('span').css({ '-moz-transform': 'rotate(90deg)' });
+        } else {
+            $(this).find('span').css({ WebkitTransform: 'rotate(0deg)' });
+            $(this).find('span').css({ '-moz-transform': 'rotate(0deg)' });
+        }
+        $(this).parent().parent().find('div.configs').slideToggle();
     });
 
     $('#find').on('click', function () {
@@ -92,21 +99,23 @@ getCurtDevVehicles = function () {
         $('#loadingCurtDev').hide();
         if (vData.length > 0) {
             $(vData).each(function (y, BaseVehicle) {
-                var opt = '<li>' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools"><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '">Remove</a></span><ul class="submodels">';
+                var opt = '<li>' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools"><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '" title="Remove Base Vehicle">&times;</a></span><ul class="submodels">';
                 $(BaseVehicle.Submodels).each(function (i, submodel) {
                     opt += '<li>' + submodel.submodel.SubmodelName.trim() + ((submodel.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">';
-                    opt += '<a href="/ACES/RemoveSubmodel?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="removesubmodel">Remove</a>';
+                    opt += '<a href="/ACES/RemoveSubmodel?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="removesubmodel" title="Remove Submodel Vehicle">&times;</a>';
+                    opt += '<a href="/ACES/AddConfig?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="addconfig" title="Add Configuration">+</a>';
                     if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
-                        opt += ' <a href="#" class="showConfig">' + submodel.vehicles.length + ' Config' + ((submodel.vehicles.length > 1) ? 's' : '') + '</a>';
+                        opt += ' <a href="#" class="showConfig" title="Show / Hide Configurations">' + submodel.vehicles.length + '<span class="arrow"></span></a>';
                     }
-                    opt += '</span>';
+                    opt += '</span><span class="clear"></span>';
                     if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
-                        opt += '<table class="configs">';
+                        opt += '<div class="configs"><table>';
                         opt += '<thead><tr>';
                         opt += '<th>VCDB</th>'
                         $(submodel.configlist).each(function (z, config) {
                             opt += '<th>' + config.name + '</th>';
                         });
+                        opt += '<th></th>';
                         opt += '</tr></thead><tbody>';
                         $(submodel.vehicles).each(function (x, vehicle) {
                             opt += '<tr>';
@@ -120,9 +129,9 @@ getCurtDevVehicles = function () {
                                 });
                                 opt += '</td>';
                             });
-                            opt += '</tr>'
+                            opt += '<td><a href="#" class="alter" data-id="' + vehicle.ID + '" title="Change Configuration">Change</a> | <a href="/ACES/RemoveConfig?vehicleID=' + vehicle.ID + ' class="removeconfig" title="Remove Configuration">&times;</a></td></tr>'
                         });
-                        opt += '</tbody></table>'
+                        opt += '</tbody></table></div>'
                     }
                 });
                 opt += '</ul></li>';
@@ -145,21 +154,21 @@ getVCDBVehicles = function () {
             $(vcdbData).each(function (i, obj) {
                 var opt = '<li>' + obj.Year + ' ' + obj.Make.MakeName + ' ' + obj.Model.ModelName;
                 if (!obj.exists) {
-                    opt += '<span class="tools"><a href="/ACES/AddBaseVehicle/' + obj.BaseVehicleID + '" data-id="' + obj.BaseVehicleID + '" class="add">Add</a></span>';
+                    opt += '<span class="tools"><a href="/ACES/AddBaseVehicle/' + obj.BaseVehicleID + '" data-id="' + obj.BaseVehicleID + '" class="add" title="Add Base Vehicle">+</a></span>';
                 }
                 opt += '<ul class="submodels">';
                 $(obj.Vehicles).each(function (y, vehicle) {
                     opt += '<li>' + vehicle.Submodel.SubmodelName.trim() + ' (' + vehicle.Region.RegionAbbr + ')'
                     opt += '<span class="tools">';
                     if (!vehicle.exists) {
-                        opt += '<a href="/ACES/AddSubmodel?basevehicleid=' + obj.BaseVehicleID + '&submodelid=' + vehicle.Submodel.SubmodelID + '" class="add">Add</a>';
+                        opt += '<a href="/ACES/AddSubmodel?basevehicleid=' + obj.BaseVehicleID + '&submodelid=' + vehicle.Submodel.SubmodelID + '" class="add" title="Add Submodel">+</a>';
                     }
                     if (vehicle.Configs.length > 0) {
-                        opt += ' <a href="#" class="showConfig">' + vehicle.Configs.length + ' Config' + ((vehicle.Configs.length > 1) ? 's' : '') + '</a>';
+                        opt += ' <a href="#" class="showConfig" title="Show / Hide Configurations">' + vehicle.Configs.length + '<span class="arrow"></span></a>';
                     }
-                    opt += '</span>';
+                    opt += '</span><span class="clear"></span>';
                     if (vehicle.Configs.length > 0) {
-                        opt += '<table class="configs">';
+                        opt += '<div class="configs"><table>';
                         opt += '<thead><tr><th>Body Type</th><th>Doors</th><th>Engine</th><th>Engine Version</th><th>Valves</th><th>Drive Type</th><th>Fuel Type</th><th>Transmission</th><th>Bed Config</th><th>ABS</th><th>Brake System</th><th>Front Brakes</th><th>Rear Brakes</th><th>Wheel Base</th><th>MFR Body Code</th></tr></thead><tbody>';
                         $(vehicle.Configs).each(function (x, config) {
                             opt += '<tr>';
@@ -181,7 +190,7 @@ getVCDBVehicles = function () {
                             opt += '<td>' + config.MfrBodyCode.MfrBodyCodeName.trim() + '</td>';
                             opt += '</tr>';
                         });
-                        opt += '</tbody></table>'
+                        opt += '</tbody></table></div>'
                     }
                 });
                 opt += '</ul></li>';
