@@ -82,6 +82,54 @@ $(function () {
         $(this).parent().parent().find('div.configs').slideToggle();
     });
 
+    $(document).on('click', '.addconfig', function (e) {
+        e.preventDefault();
+        var bvid = $(this).data('bvid');
+        var submodelID = $(this).data('submodelid');
+        $("#config-dialog").empty();
+        $.getJSON('/ACES/GetConfigs?BaseVehicleID=' + bvid + '&submodelID=' + submodelID, function (data) {
+            //console.log(data);
+            if (data != null && data.configs.length > 0) {
+                if (data.configs.length == 1) {
+                    $("#config-dialog").append("<p>There is only one configuration for this vehicle available</p>");
+                } else {
+                    var configtable = '<div class="configs" style="display:block;"><table><thead><tr>';
+                    $(data.types).each(function (i, type) {
+                        if (type.count > 1) {
+                            configtable += '<th>' + type.name + '</th>';
+                        }
+                    });
+                    configtable += '</tr></thead><tbody>';
+                    $(data.configs).each(function (i, config) {
+                        configtable += '<tr>';
+                        $(config.attributes).each(function (x, attr) {
+                            if (attr.ConfigAttributeType.count > 1) {
+                                configtable += '<td data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                            }
+                        });
+
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                $("#config-dialog").append(configtable);
+                $("#config-dialog").dialog({
+                    modal: true,
+                    title: "Add Vehicle Configuration",
+                    width: 'auto',
+                    height: 'auto',
+                    buttons: {
+                        "Done": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            } else {
+                showMessage("There are no configurations for this vehicle");
+            }
+        })
+    });
+
     $('#find').on('click', function () {
         getCurtDevVehicles();
         getVCDBVehicles();
@@ -95,7 +143,7 @@ getCurtDevVehicles = function () {
     $('#vehicleData').empty();
     $('#loadingCurtDev').show();
     $.getJSON('/ACES/GetVehicles', { makeid: makeid, modelid: modelid }, function (vData) {
-        console.log(vData);
+        //console.log(vData);
         $('#loadingCurtDev').hide();
         if (vData.length > 0) {
             $(vData).each(function (y, BaseVehicle) {
@@ -103,7 +151,7 @@ getCurtDevVehicles = function () {
                 $(BaseVehicle.Submodels).each(function (i, submodel) {
                     opt += '<li>' + submodel.submodel.SubmodelName.trim() + ((submodel.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">';
                     opt += '<a href="/ACES/RemoveSubmodel?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="removesubmodel" title="Remove Submodel Vehicle">&times;</a>';
-                    opt += '<a href="/ACES/AddConfig?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="addconfig" title="Add Configuration">+</a>';
+                    opt += '<a href="/ACES/AddConfig?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" data-bvid="' + BaseVehicle.ID + '" data-submodelID="' + submodel.SubmodelID + '"  class="addconfig" title="Add Configuration">+</a>';
                     if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
                         opt += ' <a href="#" class="showConfig" title="Show / Hide Configurations">' + submodel.vehicles.length + '<span class="arrow"></span></a>';
                     }

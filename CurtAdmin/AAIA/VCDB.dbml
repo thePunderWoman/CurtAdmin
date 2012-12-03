@@ -197,8 +197,8 @@
       <Association Name="IgnitionSystemType_EngineConfig" Member="IgnitionSystemType" ThisKey="IgnitionSystemTypeID" OtherKey="IgnitionSystemTypeID" Type="IgnitionSystemType" IsForeignKey="true" />
       <Association Name="Mfr_EngineConfig" Member="Mfr" ThisKey="EngineMfrID" OtherKey="MfrID" Type="Mfr" IsForeignKey="true" />
       <Association Name="Valve_EngineConfig" Member="Valve" ThisKey="ValvesID" OtherKey="ValvesID" Type="Valve" IsForeignKey="true" />
-      <Association Name="Valve_EngineConfig1" Member="Valve1" ThisKey="ValvesID" OtherKey="ValvesID" Type="Valve" IsForeignKey="true" />
       <Association Name="VehicleConfig_EngineConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="EngineConfigID" OtherKey="EngineConfigID" Type="VehicleConfig" IsForeignKey="true" />
+      <Association Name="PowerOutput_EngineConfig" Member="PowerOutput" ThisKey="PowerOutputID" OtherKey="PowerOutputID" Type="PowerOutput" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.EngineDesignation" Member="EngineDesignations">
@@ -370,13 +370,6 @@
       <Association Name="VehicleType_Model" Member="VehicleType" ThisKey="VehicleTypeID" OtherKey="VehicleTypeID" Type="VehicleType" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.PowerOutput" Member="PowerOutputs">
-    <Type Name="PowerOutput">
-      <Column Name="PowerOutputID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="HorsePower" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="KilowattPower" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
   <Table Name="dbo.PublicationStage" Member="PublicationStages">
     <Type Name="PublicationStage">
       <Column Name="PublicationStageID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -408,7 +401,7 @@
       <Column Name="SpringTypeConfigID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="FrontSpringTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="RearSpringTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="SpringType_SpringTypeConfig" Member="FrontSprintType" Storage="_SpringType" ThisKey="FrontSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
+      <Association Name="SpringType_SpringTypeConfig" Member="FrontSpringType" Storage="_SpringType" ThisKey="FrontSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
       <Association Name="SpringType_SpringTypeConfig1" Member="RearSpringType" Storage="_SpringType1" ThisKey="RearSpringTypeID" OtherKey="SpringTypeID" Type="SpringType" IsForeignKey="true" />
       <Association Name="VehicleConfig_SpringTypeConfig" Member="VehicleConfig" AccessModifier="Internal" ThisKey="SpringTypeConfigID" OtherKey="SpringTypeConfigID" Type="VehicleConfig" IsForeignKey="true" />
     </Type>
@@ -503,7 +496,6 @@
       <Column Name="ValvesID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="ValvesPerEngine" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
       <Association Name="Valve_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" Cardinality="One" />
-      <Association Name="Valve_EngineConfig1" Member="EngineConfigs1" AccessModifier="Internal" ThisKey="ValvesID" OtherKey="ValvesID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.vcdbchanges" Member="vcdbchanges">
@@ -673,6 +665,14 @@
       <Column Name="WheelBase" Member="WheelBase1" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
       <Column Name="WheelBaseMetric" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
       <Association Name="VehicleConfig_WheelBase" Member="VehicleConfig" AccessModifier="Internal" ThisKey="WheelBaseID" OtherKey="WheelbaseID" Type="VehicleConfig" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PowerOutput" Member="PowerOutputs">
+    <Type Name="PowerOutput">
+      <Column Name="PowerOutputID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="HorsePower" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="KilowattPower" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="PowerOutput_EngineConfig" Member="EngineConfigs" AccessModifier="Internal" ThisKey="PowerOutputID" OtherKey="PowerOutputID" Type="EngineConfig" Cardinality="One" />
     </Type>
   </Table>
 </Database>
