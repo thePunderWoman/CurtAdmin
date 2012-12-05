@@ -260,6 +260,28 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(configs);
         }
 
+        public string checkVehicle(int id) {
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            vehicle = new ACES().GetVehicle(id);
+            return JsonConvert.SerializeObject(vehicle);
+        }
+
+        public string addConfig(int BaseVehicleID, int SubmodelID, string configs) {
+            List<int> configids = configs.Split(',').Select(s => int.Parse(s)).ToList();
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            basevehicle = new ACES().addConfig(BaseVehicleID, SubmodelID, configids);
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
+        public string removeVehicle(int id) {
+            try {
+                new ACES().RemoveVehicle(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
         public string SearchPartTypes(string keyword = "") {
             return new ACES().SearchPartTypes(keyword);
         }

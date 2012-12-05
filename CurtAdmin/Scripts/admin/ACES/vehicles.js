@@ -73,11 +73,11 @@ $(function () {
     $(document).on('click', 'a.showConfig', function (e) {
         e.preventDefault();
         if ($(this).parent().parent().find('div.configs').css('display') == 'none') {
-            $(this).find('span').css({ WebkitTransform: 'rotate(90deg)' });
-            $(this).find('span').css({ '-moz-transform': 'rotate(90deg)' });
+            $(this).find('span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+            $(this).find('span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
         } else {
-            $(this).find('span').css({ WebkitTransform: 'rotate(0deg)' });
-            $(this).find('span').css({ '-moz-transform': 'rotate(0deg)' });
+            $(this).find('span.arrow').css({ WebkitTransform: 'rotate(0deg)' });
+            $(this).find('span.arrow').css({ '-moz-transform': 'rotate(0deg)' });
         }
         $(this).parent().parent().find('div.configs').slideToggle();
     });
@@ -93,18 +93,25 @@ $(function () {
                 if (data.configs.length == 1) {
                     $("#config-dialog").append("<p>There is only one configuration for this vehicle available</p>");
                 } else {
-                    var configtable = '<div class="configs" style="display:block;"><table><thead><tr>';
+                    var configtable = '<div class="configs" style="display:block;" data-bvid="' + bvid + '" data-submodelid="' + submodelID + '"><table><thead>';
+                    var checkrow = '<tr>';
+                    var typerow = '<tr>';
                     $(data.types).each(function (i, type) {
                         if (type.count > 1) {
-                            configtable += '<th>' + type.name + '</th>';
+                            checkrow += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                            typerow += '<th>' + type.name + '</th>';
                         }
                     });
-                    configtable += '</tr></thead><tbody>';
+                    checkrow += '</tr>';
+                    typerow += '</tr>';
+                    configtable += typerow;
+                    configtable += checkrow;
+                    configtable += '</thead><tbody>';
                     $(data.configs).each(function (i, config) {
                         configtable += '<tr>';
                         $(config.attributes).each(function (x, attr) {
                             if (attr.ConfigAttributeType.count > 1) {
-                                configtable += '<td data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                                configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
                             }
                         });
 
@@ -119,13 +126,66 @@ $(function () {
                     width: 'auto',
                     height: 'auto',
                     buttons: {
-                        "Done": function () {
+                        "Add": function () {
+                            var bvid = $('#config-dialog').find('div.configs').data('bvid');
+                            var submodelID = $('#config-dialog').find('div.configs').data('submodelid');
+                            var configs = new Array();
+                            $('input.configattributes').each(function (i, obj) {
+                                if ($(obj).is(':checked')) {
+                                    configs.push($(obj).val());
+                                }
+                            });
+                            $.getJSON('/ACES/AddConfig', { BaseVehicleID: bvid, SubmodelID: submodelID, configs: configs.join(",") }, function (data) {
+                                $(data.Submodels).each(function (i, submodel) {
+                                    var submodelli = $('#bv' + data.ID + 's' + submodel.SubmodelID);
+                                    $(submodelli).find('div.configs').remove();
+                                    var configtable = generateConfigTable(submodel);
+                                    $(submodelli).append(configtable);
+                                    $(submodelli).find('div.configs').show();
+                                    var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                    $(submodelli).find('a.showConfig').empty().append(ccount);
+                                    $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                    $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                                });
+                            });
+                            $(this).dialog("close");
+                        },
+                        "Close": function () {
                             $(this).dialog("close");
                         }
                     }
                 });
             } else {
                 showMessage("There are no configurations for this vehicle");
+            }
+        })
+    });
+
+    $(document).on('click', '.removeconfig', function (e) {
+        e.preventDefault();
+        var aobj = $(this);
+        var vid = $(this).data('id');
+        var href = $(this).attr('href');
+        $.getJSON('/ACES/checkVehicle/' + vid, function (data) {
+            //console.log(data);
+            var confirmmessage = '';
+            var count = data.vcdb_VehicleParts.length;
+            if (count > 0) {
+                confirmmessage = 'This vehicle is associated with ' + count + ' parts. Are you sure you want to delete this vehicle?';
+            } else {
+                confirmmessage = 'There are no parts associated with this vehicle. Click ok to delete.';
+            }
+            if (confirm(confirmmessage)) {
+                $.getJSON(href, function (data) {
+                    if (data.success) {
+                        var liobj = $(aobj).closest('li');
+                        var count = $(liobj).find('table tbody tr').length;
+                        $(liobj).find('a.showConfig span.vehicleCount').html(count - 1);
+                        $(aobj).parent().parent().remove();
+                    } else {
+                        showMessage("There was a problem removing the vehicle.")
+                    }
+                })
             }
         })
     });
@@ -147,39 +207,19 @@ getCurtDevVehicles = function () {
         $('#loadingCurtDev').hide();
         if (vData.length > 0) {
             $(vData).each(function (y, BaseVehicle) {
-                var opt = '<li>' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools"><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '" title="Remove Base Vehicle">&times;</a></span><ul class="submodels">';
+                var opt = '<li id="bv-' + BaseVehicle.ID + '">' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools"><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '" title="Remove Base Vehicle">&times;</a></span><ul class="submodels">';
                 $(BaseVehicle.Submodels).each(function (i, submodel) {
-                    opt += '<li>' + submodel.submodel.SubmodelName.trim() + ((submodel.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">';
+                    opt += '<li id="bv' + BaseVehicle.ID + 's' + submodel.SubmodelID + '">' + submodel.submodel.SubmodelName.trim() + ((submodel.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">';
                     opt += '<a href="/ACES/RemoveSubmodel?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="removesubmodel" title="Remove Submodel Vehicle">&times;</a>';
                     opt += '<a href="/ACES/AddConfig?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" data-bvid="' + BaseVehicle.ID + '" data-submodelID="' + submodel.SubmodelID + '"  class="addconfig" title="Add Configuration">+</a>';
+                    opt += ' <a href="#" class="showConfig" title="Show / Hide Configurations">';
                     if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
-                        opt += ' <a href="#" class="showConfig" title="Show / Hide Configurations">' + submodel.vehicles.length + '<span class="arrow"></span></a>';
+                        opt += '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
                     }
+                    opt += '</a>';
                     opt += '</span><span class="clear"></span>';
                     if (submodel.vehicles.length > 0 && submodel.configlist.length > 0) {
-                        opt += '<div class="configs"><table>';
-                        opt += '<thead><tr>';
-                        opt += '<th>VCDB</th>'
-                        $(submodel.configlist).each(function (z, config) {
-                            opt += '<th>' + config.name + '</th>';
-                        });
-                        opt += '<th></th>';
-                        opt += '</tr></thead><tbody>';
-                        $(submodel.vehicles).each(function (x, vehicle) {
-                            opt += '<tr>';
-                            opt += '<td>' + ((vehicle.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '</td>';
-                            $(submodel.configlist).each(function (z, config) {
-                                opt += '<td>';
-                                $(vehicle.configs).each(function (q, attr) {
-                                    if (attr.ConfigAttributeType.name == config.name) {
-                                        opt += attr.value;
-                                    }
-                                });
-                                opt += '</td>';
-                            });
-                            opt += '<td><a href="#" class="alter" data-id="' + vehicle.ID + '" title="Change Configuration">Change</a> | <a href="/ACES/RemoveConfig?vehicleID=' + vehicle.ID + ' class="removeconfig" title="Remove Configuration">&times;</a></td></tr>'
-                        });
-                        opt += '</tbody></table></div>'
+                        opt += generateConfigTable(submodel);
                     }
                 });
                 opt += '</ul></li>';
@@ -248,6 +288,34 @@ getVCDBVehicles = function () {
             $('#vcdbData').append('<p>No Vehicles</p>');
         }
     });
+};
+
+generateConfigTable = function (submodel) {
+    var configTable = "";
+    configTable += '<div class="configs"><table>';
+    configTable += '<thead><tr>';
+    configTable += '<th>VCDB</th>'
+    $(submodel.configlist).each(function (z, config) {
+        configTable += '<th>' + config.name + '</th>';
+    });
+    configTable += '<th></th>';
+    configTable += '</tr></thead><tbody>';
+    $(submodel.vehicles).each(function (x, vehicle) {
+        configTable += '<tr>';
+        configTable += '<td>' + ((vehicle.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '</td>';
+        $(submodel.configlist).each(function (z, config) {
+            configTable += '<td>';
+            $(vehicle.configs).each(function (q, attr) {
+                if (attr.ConfigAttributeType.name == config.name) {
+                    configTable += attr.value;
+                }
+            });
+            configTable += '</td>';
+        });
+        configTable += '<td><a href="#" class="alter" data-id="' + vehicle.ID + '" title="Change Configuration">Change</a> | <a href="/ACES/removeVehicle/' + vehicle.ID + '" data-id="' + vehicle.ID + '" class="removeconfig" title="Remove Configuration">&times;</a></td></tr>'
+    });
+    configTable += '</tbody></table></div>';
+    return configTable;
 };
 
 String.prototype.trim = function() {
