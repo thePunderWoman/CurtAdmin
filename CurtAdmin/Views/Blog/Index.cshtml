@@ -36,7 +36,7 @@
                     <td>
                         @if (post.publishedDate != null)
                         {
-                            <a href="http://beta.curtmfg.com/Blog/Post/@(String.Format("{0:M-dd-yyyy}", post.publishedDate))/@(Server.UrlEncode(post.slug))" title="View">View</a> <text>|</text>
+                            <a href="http://www.curtmfg.com/Blog/Post/@(String.Format("{0:M-dd-yyyy}", post.publishedDate))/@(Server.UrlEncode(post.slug))" title="View">View</a> <text>|</text>
                         }
                         <a href="/Blog/Edit/@post.blogPostID" title="Edit">Edit</a> | 
                         <a href="/Blog/Delete/@post.blogPostID" title="Delete" class="delete_post">Delete</a>

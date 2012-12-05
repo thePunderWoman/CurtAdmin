@@ -603,14 +603,6 @@ namespace CurtAdmin.AAIA
 			}
 		}
 		
-		public System.Data.Linq.Table<PowerOutput> PowerOutputs
-		{
-			get
-			{
-				return this.GetTable<PowerOutput>();
-			}
-		}
-		
 		public System.Data.Linq.Table<PublicationStage> PublicationStages
 		{
 			get
@@ -872,6 +864,14 @@ namespace CurtAdmin.AAIA
 			get
 			{
 				return this.GetTable<WheelBase>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PowerOutput> PowerOutputs
+		{
+			get
+			{
+				return this.GetTable<PowerOutput>();
 			}
 		}
 	}
@@ -4254,8 +4254,6 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<Valve> _Valve;
 		
-		private EntityRef<Valve> _Valve1;
-		
 		private EntityRef<VehicleConfig> _VehicleConfig;
 		
     #region Extensibility Method Definitions
@@ -4303,7 +4301,6 @@ namespace CurtAdmin.AAIA
 			this._IgnitionSystemType = default(EntityRef<IgnitionSystemType>);
 			this._Mfr = default(EntityRef<Mfr>);
 			this._Valve = default(EntityRef<Valve>);
-			this._Valve1 = default(EntityRef<Valve>);
 			this._VehicleConfig = default(EntityRef<VehicleConfig>);
 			OnCreated();
 		}
@@ -4391,7 +4388,7 @@ namespace CurtAdmin.AAIA
 			{
 				if ((this._ValvesID != value))
 				{
-					if ((this._Valve.HasLoadedOrAssignedValue || this._Valve1.HasLoadedOrAssignedValue))
+					if (this._Valve.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -4986,40 +4983,6 @@ namespace CurtAdmin.AAIA
 						this._ValvesID = default(int);
 					}
 					this.SendPropertyChanged("Valve");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Valve_EngineConfig1", Storage="_Valve1", ThisKey="ValvesID", OtherKey="ValvesID", IsForeignKey=true)]
-		public Valve Valve1
-		{
-			get
-			{
-				return this._Valve1.Entity;
-			}
-			set
-			{
-				Valve previousValue = this._Valve1.Entity;
-				if (((previousValue != value) 
-							|| (this._Valve1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Valve1.Entity = null;
-						previousValue.EngineConfigs1 = null;
-					}
-					this._Valve1.Entity = value;
-					if ((value != null))
-					{
-						value.EngineConfigs1 = this;
-						this._ValvesID = value.ValvesID;
-					}
-					else
-					{
-						this._ValvesID = default(int);
-					}
-					this.SendPropertyChanged("Valve1");
 				}
 			}
 		}
@@ -8265,69 +8228,6 @@ namespace CurtAdmin.AAIA
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PowerOutput")]
-	public partial class PowerOutput
-	{
-		
-		private int _PowerOutputID;
-		
-		private string _HorsePower;
-		
-		private string _KilowattPower;
-		
-		public PowerOutput()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PowerOutputID", DbType="Int NOT NULL")]
-		public int PowerOutputID
-		{
-			get
-			{
-				return this._PowerOutputID;
-			}
-			set
-			{
-				if ((this._PowerOutputID != value))
-				{
-					this._PowerOutputID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HorsePower", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
-		public string HorsePower
-		{
-			get
-			{
-				return this._HorsePower;
-			}
-			set
-			{
-				if ((this._HorsePower != value))
-				{
-					this._HorsePower = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_KilowattPower", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
-		public string KilowattPower
-		{
-			get
-			{
-				return this._KilowattPower;
-			}
-			set
-			{
-				if ((this._KilowattPower != value))
-				{
-					this._KilowattPower = value;
-				}
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PublicationStage")]
 	public partial class PublicationStage : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -8769,12 +8669,12 @@ namespace CurtAdmin.AAIA
 					if ((previousValue != null))
 					{
 						this._SpringTypeConfigs.Entity = null;
-						previousValue.FrontSprintType = null;
+						previousValue.FrontSpringType = null;
 					}
 					this._SpringTypeConfigs.Entity = value;
 					if ((value != null))
 					{
-						value.FrontSprintType = this;
+						value.FrontSpringType = this;
 					}
 					this.SendPropertyChanged("SpringTypeConfigs");
 				}
@@ -8942,7 +8842,7 @@ namespace CurtAdmin.AAIA
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SpringType_SpringTypeConfig", Storage="_SpringType", ThisKey="FrontSpringTypeID", OtherKey="SpringTypeID", IsForeignKey=true)]
-		public SpringType FrontSprintType
+		public SpringType FrontSpringType
 		{
 			get
 			{
@@ -8970,7 +8870,7 @@ namespace CurtAdmin.AAIA
 					{
 						this._FrontSpringTypeID = default(int);
 					}
-					this.SendPropertyChanged("FrontSprintType");
+					this.SendPropertyChanged("FrontSpringType");
 				}
 			}
 		}
@@ -10783,8 +10683,6 @@ namespace CurtAdmin.AAIA
 		
 		private EntityRef<EngineConfig> _EngineConfigs;
 		
-		private EntityRef<EngineConfig> _EngineConfigs1;
-		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -10798,7 +10696,6 @@ namespace CurtAdmin.AAIA
 		public Valve()
 		{
 			this._EngineConfigs = default(EntityRef<EngineConfig>);
-			this._EngineConfigs1 = default(EntityRef<EngineConfig>);
 			OnCreated();
 		}
 		
@@ -10867,35 +10764,6 @@ namespace CurtAdmin.AAIA
 						value.Valve = this;
 					}
 					this.SendPropertyChanged("EngineConfigs");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Valve_EngineConfig1", Storage="_EngineConfigs1", ThisKey="ValvesID", OtherKey="ValvesID", IsUnique=true, IsForeignKey=false)]
-		internal EngineConfig EngineConfigs1
-		{
-			get
-			{
-				return this._EngineConfigs1.Entity;
-			}
-			set
-			{
-				EngineConfig previousValue = this._EngineConfigs1.Entity;
-				if (((previousValue != value) 
-							|| (this._EngineConfigs1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._EngineConfigs1.Entity = null;
-						previousValue.Valve1 = null;
-					}
-					this._EngineConfigs1.Entity = value;
-					if ((value != null))
-					{
-						value.Valve1 = this;
-					}
-					this.SendPropertyChanged("EngineConfigs1");
 				}
 			}
 		}
@@ -14028,6 +13896,69 @@ namespace CurtAdmin.AAIA
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PowerOutput")]
+	public partial class PowerOutput
+	{
+		
+		private int _PowerOutputID;
+		
+		private string _HorsePower;
+		
+		private string _KilowattPower;
+		
+		public PowerOutput()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PowerOutputID", DbType="Int NOT NULL")]
+		public int PowerOutputID
+		{
+			get
+			{
+				return this._PowerOutputID;
+			}
+			set
+			{
+				if ((this._PowerOutputID != value))
+				{
+					this._PowerOutputID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HorsePower", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string HorsePower
+		{
+			get
+			{
+				return this._HorsePower;
+			}
+			set
+			{
+				if ((this._HorsePower != value))
+				{
+					this._HorsePower = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_KilowattPower", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string KilowattPower
+		{
+			get
+			{
+				return this._KilowattPower;
+			}
+			set
+			{
+				if ((this._KilowattPower != value))
+				{
+					this._KilowattPower = value;
+				}
 			}
 		}
 	}

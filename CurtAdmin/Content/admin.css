@@ -1469,6 +1469,37 @@ ul.vehicles li {
     margin-bottom: 10px;
 }
 
+ul.vehicles a.remove, ul.vehicles li ul.submodels li .tools a.removesubmodel {
+    color: #800000;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+ul.vehicles a.addconfig, ul.vehicles a.add {
+    color: #008000;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+ul.vehicles a.showConfig {
+    text-decoration: none;
+}
+
+ul.vehicles a.showConfig span {
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border: 6px solid transparent;
+    border-right: none;
+    border-left-color: black;
+    transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -webkit-transition-duration: 0.3s;
+    margin-left: 4px;
+}
+
 ul.vehicles li span.added {
     text-decoration: underline;
 }
@@ -1526,25 +1557,28 @@ ul.vehicles li span.tools a {
     margin: 0 2px;
 }
 
-table.configs {
+div.configs {
     display: none;
+}
+
+div.configs table {
     font-size: 12px;
     list-style: none;
     border-collapse: collapse;
 }
 
-table.configs th {
+div.configs table th {
     border: 1px solid #ccc;
     padding: 3px 8px;
     background-color: #999;
 }
 
-table.configs td {
+div.configs table td {
     padding: 3px 8px;
     background-color: #eee;
     font-size: 11px;
 }
 
-table.configs tr:nth-child(odd) td {
+div.configs table tr:nth-child(odd) td {
     background-color: #fff;
 }
