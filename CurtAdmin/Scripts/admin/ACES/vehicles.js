@@ -1,4 +1,4 @@
-﻿var getVCDBVehicles, getCurtDevVehicles;
+﻿var getVCDBVehicles, getCurtDevVehicles, generateConfigTable, removeConfig;
 $(function () {
     $("#tabs").tabs();
     $('#find').hide();
@@ -171,21 +171,11 @@ $(function () {
             var confirmmessage = '';
             var count = data.vcdb_VehicleParts.length;
             if (count > 0) {
-                confirmmessage = 'This vehicle is associated with ' + count + ' parts. Are you sure you want to delete this vehicle?';
+                if (confirm('This vehicle is associated with ' + count + ' parts. Are you sure you want to delete this vehicle?')) {
+                    removeConfig(href, aobj)
+                }
             } else {
-                confirmmessage = 'There are no parts associated with this vehicle. Click ok to delete.';
-            }
-            if (confirm(confirmmessage)) {
-                $.getJSON(href, function (data) {
-                    if (data.success) {
-                        var liobj = $(aobj).closest('li');
-                        var count = $(liobj).find('table tbody tr').length;
-                        $(liobj).find('a.showConfig span.vehicleCount').html(count - 1);
-                        $(aobj).parent().parent().remove();
-                    } else {
-                        showMessage("There was a problem removing the vehicle.")
-                    }
-                })
+                removeConfig(href, aobj)
             }
         })
     });
@@ -196,6 +186,19 @@ $(function () {
     });
 
 });
+
+removeConfig = function (href,aobj) {
+    $.getJSON(href, function (data) {
+        if (data.success) {
+            var liobj = $(aobj).closest('li');
+            var count = $(liobj).find('table tbody tr').length;
+            $(liobj).find('a.showConfig span.vehicleCount').html(count - 1);
+            $(aobj).parent().parent().remove();
+        } else {
+            showMessage("There was a problem removing the vehicle.")
+        }
+    })
+};
 
 getCurtDevVehicles = function () {
     var makeid = $('#make').val();

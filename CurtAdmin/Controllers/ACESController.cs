@@ -241,7 +241,7 @@ namespace CurtAdmin.Controllers {
 
         public string AddSubmodel(int BaseVehicleID, int SubmodelID) {
             vcdb_Vehicle vehicle = new vcdb_Vehicle();
-            vehicle = new ACES().AddSubmodel(BaseVehicleID, SubmodelID);
+            vehicle = new ACES().AddVCDBSubmodel(BaseVehicleID, SubmodelID);
             return JsonConvert.SerializeObject(vehicle);
         }
 
@@ -266,10 +266,16 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(vehicle);
         }
 
-        public string addConfig(int BaseVehicleID, int SubmodelID, string configs) {
-            List<int> configids = configs.Split(',').Select(s => int.Parse(s)).ToList();
+        public string addConfig(int BaseVehicleID, int SubmodelID, string configs = "") {
             ACESBaseVehicle basevehicle = new ACESBaseVehicle();
-            basevehicle = new ACES().addConfig(BaseVehicleID, SubmodelID, configids);
+            List<int> configids = new List<int>();
+            if (configs != "") {
+                configids = configs.Split(',').Select(s => int.Parse(s)).ToList();
+                basevehicle = new ACES().addConfig(BaseVehicleID, SubmodelID, configids);
+            } else {
+                new ACES().AddSubmodel(BaseVehicleID, SubmodelID);
+                basevehicle = new ACES().GetVehicle(BaseVehicleID,SubmodelID);
+            }
             return JsonConvert.SerializeObject(basevehicle);
         }
 

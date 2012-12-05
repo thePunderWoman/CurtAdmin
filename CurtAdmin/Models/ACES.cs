@@ -154,7 +154,7 @@ namespace CurtAdmin.Models {
             db.SubmitChanges();
         }
 
-        public vcdb_Vehicle AddSubmodel(int bvid, int submodelID) {
+        public vcdb_Vehicle AddVCDBSubmodel(int bvid, int submodelID) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             vcdb_Vehicle vehicle = new vcdb_Vehicle();
@@ -181,13 +181,38 @@ namespace CurtAdmin.Models {
                 }
 
                 //Create a vehicle with the BaseVehicle and Submodel
+                try {
+                    vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(bv.ID) && x.SubModelID.Equals(submodel.ID) && x.ConfigID == null).First();
+                } catch {
+                    vehicle = new vcdb_Vehicle {
+                        BaseVehicleID = bv.ID,
+                        SubModelID = submodel.ID
+                    };
+                    db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                    db.SubmitChanges();
+                }
+            } catch { }
+            return vehicle;
+        }
 
-                vehicle = new vcdb_Vehicle {
-                    BaseVehicleID = bv.ID,
-                    SubModelID = submodel.ID
-                };
-                db.vcdb_Vehicles.InsertOnSubmit(vehicle);
-                db.SubmitChanges();
+        public vcdb_Vehicle AddSubmodel(int bvid, int submodelID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            try {
+                BaseVehicle bv = db.BaseVehicles.Where(x => x.ID.Equals(bvid)).First<BaseVehicle>();
+                Submodel submodel = db.Submodels.Where(x => x.ID.Equals(submodelID)).First<Submodel>();
+
+                //Create a vehicle with the BaseVehicle and Submodel
+                try {
+                    vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(bv.ID) && x.SubModelID.Equals(submodel.ID) && x.ConfigID == null).First();
+                } catch {
+                    vehicle = new vcdb_Vehicle {
+                        BaseVehicleID = bv.ID,
+                        SubModelID = submodel.ID
+                    };
+                    db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                    db.SubmitChanges();
+                }
             } catch { }
             return vehicle;
         }
@@ -281,7 +306,7 @@ namespace CurtAdmin.Models {
                                                          select new ACESVehicle {
                                                              ID = ve.ID,
                                                              configs = ve.VehicleConfig.VehicleConfigAttributes.Select(x => x.ConfigAttribute).OrderBy(x => x.ConfigAttributeType.name).ToList<ConfigAttribute>()
-                                                         }).ToList<ACESVehicle>(),
+                                                         }).OrderBy(x => x.configs.Count).ToList<ACESVehicle>(),
                                              configlist = (from c in bv.vcdb_Vehicles
                                                            join vc in db.VehicleConfigAttributes on c.ConfigID equals vc.VehicleConfigID
                                                            where c.SubModelID.Equals(s.Key.ID)
@@ -326,7 +351,7 @@ namespace CurtAdmin.Models {
                                                          select new ACESVehicle {
                                                              ID = ve.ID,
                                                              configs = ve.VehicleConfig.VehicleConfigAttributes.Select(x => x.ConfigAttribute).OrderBy(x => x.ConfigAttributeType.name).ToList<ConfigAttribute>()
-                                                         }).ToList<ACESVehicle>(),
+                                                         }).OrderBy(x => x.configs.Count).ToList<ACESVehicle>(),
                                              configlist = (from c in bv.vcdb_Vehicles
                                                            join vc in db.VehicleConfigAttributes on c.ConfigID equals vc.VehicleConfigID
                                                            where c.SubModelID.Equals(s.Key.ID)
@@ -1049,7 +1074,16 @@ namespace CurtAdmin.Models {
                 // Add Config
                 try {
                     List<int> attrIDs = config.attributes.Select(x => x.ID).ToList();
-                    vconfig = db.VehicleConfigs.Where(x => x.VehicleConfigAttributes.Count.Equals(config.attributes.Count) && attrIDs.Except(x.VehicleConfigAttributes.Select(y => y.AttributeID)).Equals(0)).First();
+                    List<VehicleConfig> configlist = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(BaseVehicleID) && x.SubModelID.Equals(SubmodelID) && x.ConfigID != null).Select(x => x.VehicleConfig).ToList<VehicleConfig>();
+                    foreach (VehicleConfig cl in configlist) {
+                        List<int> vattrIDs = cl.VehicleConfigAttributes.Select(x => x.AttributeID).ToList();
+                        if (attrIDs.Except(vattrIDs).Count() == 0 && vattrIDs.Except(attrIDs).Count() == 0) {
+                            vconfig = cl;
+                        }
+                    }
+                    if (vconfig == null || vconfig.ID == 0) {
+                        throw new Exception("No Vehicle");
+                    }
                 } catch {
                     db.VehicleConfigs.InsertOnSubmit(vconfig);
                     db.SubmitChanges();
