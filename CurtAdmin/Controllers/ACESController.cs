@@ -288,6 +288,30 @@ namespace CurtAdmin.Controllers {
             }
         }
 
+        public string getNonACESConfigurationTypes(int id) {
+            List<ConfigAttributeType> types = new List<ConfigAttributeType>();
+            types = new ACES().getNonACESConfigurationTypes(id);
+            return JsonConvert.SerializeObject(types);
+        }
+
+        public string GetAttributesByType(int id) {
+            List<ConfigAttribute> attributes = new List<ConfigAttribute>();
+            attributes = new ACES().GetAttributesByType(id);
+            return JsonConvert.SerializeObject(attributes);
+        }
+
+        public string AddCustomConfigToVehicle(int vehicleID, int attrID) {
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            basevehicle = new ACES().addCustomConfigToVehicle(vehicleID, attrID);
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
+        public string AddCustomConfig(int vehicleID, int attrID) {
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            basevehicle = new ACES().addCustomConfig(vehicleID, attrID);
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
         public string SearchPartTypes(string keyword = "") {
             return new ACES().SearchPartTypes(keyword);
         }
