@@ -1485,9 +1485,10 @@ ul.vehicles a.addconfig, ul.vehicles a.add {
 
 ul.vehicles a.showConfig {
     text-decoration: none;
+    display: inline-block;
 }
 
-ul.vehicles a.showConfig span {
+ul.vehicles a.showConfig span.arrow {
     width: 0;
     height: 0;
     display: inline-block;
@@ -1577,6 +1578,10 @@ div.configs table td {
     padding: 3px 8px;
     background-color: #eee;
     font-size: 11px;
+}
+
+div.configs table td.configattr {
+    cursor: pointer;
 }
 
 div.configs table tr:nth-child(odd) td {

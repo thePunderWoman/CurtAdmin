@@ -241,7 +241,7 @@ namespace CurtAdmin.Controllers {
 
         public string AddSubmodel(int BaseVehicleID, int SubmodelID) {
             vcdb_Vehicle vehicle = new vcdb_Vehicle();
-            vehicle = new ACES().AddSubmodel(BaseVehicleID, SubmodelID);
+            vehicle = new ACES().AddVCDBSubmodel(BaseVehicleID, SubmodelID);
             return JsonConvert.SerializeObject(vehicle);
         }
 
@@ -258,6 +258,34 @@ namespace CurtAdmin.Controllers {
             ACESConfigs configs = new ACESConfigs();
             configs = new ACES().getVehicleConfigs(BaseVehicleID, SubmodelID);
             return JsonConvert.SerializeObject(configs);
+        }
+
+        public string checkVehicle(int id) {
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            vehicle = new ACES().GetVehicle(id);
+            return JsonConvert.SerializeObject(vehicle);
+        }
+
+        public string addConfig(int BaseVehicleID, int SubmodelID, string configs = "") {
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            List<int> configids = new List<int>();
+            if (configs != "") {
+                configids = configs.Split(',').Select(s => int.Parse(s)).ToList();
+                basevehicle = new ACES().addConfig(BaseVehicleID, SubmodelID, configids);
+            } else {
+                new ACES().AddSubmodel(BaseVehicleID, SubmodelID);
+                basevehicle = new ACES().GetVehicle(BaseVehicleID,SubmodelID);
+            }
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
+        public string removeVehicle(int id) {
+            try {
+                new ACES().RemoveVehicle(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
         }
 
         public string SearchPartTypes(string keyword = "") {
