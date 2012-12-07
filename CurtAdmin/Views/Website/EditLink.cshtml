@@ -38,6 +38,11 @@
             <input type="text" name="link_value" id="link_value" placeholder="Enter the value of the link..." value="@((Request.QueryString["link_value"] != null && Request.QueryString["link_value"].Length > 0) ? Request.QueryString["link_value"] : item.menuLink)" />
         </label>
 
+        <label for="link_target">
+            Open in a New Window?
+            <input type="checkbox" name="link_target" id="link_target" value="1" @((item.linkTarget) ? "checked" : "") />
+        </label>
+
         <div id="buttons">
             <input type="submit" name="btnSave" id="btnSave" value="Save" />
             <input type="reset" name="btnReset" id="btnReset" value="Reset" />

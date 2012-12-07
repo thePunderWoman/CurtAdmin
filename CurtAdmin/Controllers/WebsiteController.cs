@@ -198,6 +198,7 @@ namespace CurtAdmin.Controllers {
                     // Save form values
                     string name = (Request.Form["link_name"] != null) ? Request.Form["link_name"] : "";
                     string value = (Request.Form["link_value"] != null) ? Request.Form["link_value"] : "";
+                    bool linkTarget = (Request.Form["link_target"] == null) ? false : true;
 
                     // Validate the form fields
                     if (name.Length == 0) throw new Exception("Link name is required.");
@@ -208,7 +209,8 @@ namespace CurtAdmin.Controllers {
                         menuID = m.menuID,
                         menuTitle = name,
                         menuLink = value,
-                        menuSort = (db.Menu_SiteContents.Where(x => x.menuID == m.menuID).Where(x => x.parentID == null).Count()) + 1
+                        menuSort = (db.Menu_SiteContents.Where(x => x.menuID == m.menuID).Where(x => x.parentID == null).Count()) + 1,
+                        linkTarget = linkTarget
                     };
 
                     db.Menu_SiteContents.InsertOnSubmit(new_item);
@@ -247,6 +249,7 @@ namespace CurtAdmin.Controllers {
                     // Save form values
                     string name = (Request.Form["link_name"] != null) ? Request.Form["link_name"] : "";
                     string value = (Request.Form["link_value"] != null) ? Request.Form["link_value"] : "";
+                    bool linkTarget = (Request.Form["link_target"] == null) ? false : true;
 
                     // Validate the form fields
                     if (name.Length == 0) throw new Exception("Link name is required.");
@@ -255,6 +258,7 @@ namespace CurtAdmin.Controllers {
                     // Create the new customer and save
                     item.menuTitle = name;
                     item.menuLink = value;
+                    item.linkTarget = linkTarget;
 
                     db.SubmitChanges();
                     message = "Changes saved successfully";
@@ -335,7 +339,8 @@ namespace CurtAdmin.Controllers {
                         Menu_SiteContent menuitem = new Menu_SiteContent {
                             menuID = m.menuID,
                             contentID = new_page.contentID,
-                            menuSort = (db.Menu_SiteContents.Where(x => x.menuID == m.menuID).Where(x => x.parentID == null).Count()) + 1
+                            menuSort = (db.Menu_SiteContents.Where(x => x.menuID == m.menuID).Where(x => x.parentID == null).Count()) + 1,
+                            linkTarget = false
                         };
                         db.Menu_SiteContents.InsertOnSubmit(menuitem);
                     }

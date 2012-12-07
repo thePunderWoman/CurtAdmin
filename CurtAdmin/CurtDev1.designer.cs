@@ -3068,6 +3068,8 @@ namespace CurtAdmin
 		
 		private System.Nullable<int> _parentID;
 		
+		private bool _linkTarget;
+		
 		private EntitySet<Menu_SiteContent> _Menu_SiteContents;
 		
 		private EntityRef<Menu> _Menu;
@@ -3094,6 +3096,8 @@ namespace CurtAdmin
     partial void OnmenuLinkChanged();
     partial void OnparentIDChanging(System.Nullable<int> value);
     partial void OnparentIDChanged();
+    partial void OnlinkTargetChanging(bool value);
+    partial void OnlinkTargetChanged();
     #endregion
 		
 		public Menu_SiteContent()
@@ -3253,6 +3257,26 @@ namespace CurtAdmin
 					this._parentID = value;
 					this.SendPropertyChanged("parentID");
 					this.OnparentIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_linkTarget", DbType="Bit NOT NULL")]
+		public bool linkTarget
+		{
+			get
+			{
+				return this._linkTarget;
+			}
+			set
+			{
+				if ((this._linkTarget != value))
+				{
+					this.OnlinkTargetChanging(value);
+					this.SendPropertyChanging();
+					this._linkTarget = value;
+					this.SendPropertyChanged("linkTarget");
+					this.OnlinkTargetChanged();
 				}
 			}
 		}

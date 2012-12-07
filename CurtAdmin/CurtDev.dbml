@@ -115,6 +115,7 @@
       <Column Name="menuTitle" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="menuLink" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="parentID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="linkTarget" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="Menu_SiteContent_Menu_SiteContent" Member="Menu_SiteContents" ThisKey="menuContentID" OtherKey="parentID" Type="Menu_SiteContent" />
       <Association Name="Menu_Menu_SiteContent" Member="Menu" ThisKey="menuID" OtherKey="menuID" Type="Menu" IsForeignKey="true" />
       <Association Name="Menu_SiteContent_Menu_SiteContent" Member="Menu_SiteContent1" ThisKey="parentID" OtherKey="menuContentID" Type="Menu_SiteContent" IsForeignKey="true" />

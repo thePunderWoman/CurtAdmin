@@ -84,6 +84,7 @@ namespace CurtAdmin.Models {
                                                   menuTitle = msc.menuTitle,
                                                   menuLink = msc.menuLink,
                                                   parentID = msc.parentID,
+                                                  linkTarget = msc.linkTarget,
                                                   contentID = msc.contentID,
                                                   content = (from sc in db.SiteContents
                                                                  where sc.contentID.Equals(msc.contentID)
@@ -159,7 +160,8 @@ namespace CurtAdmin.Models {
             Menu_SiteContent menuitem = new Menu_SiteContent {
                 menuID = menuid,
                 contentID = contentid,
-                menuSort = (db.Menu_SiteContents.Where(x => x.menuID == menuid).Where(x => x.parentID == null).Count()) + 1
+                menuSort = (db.Menu_SiteContents.Where(x => x.menuID == menuid).Where(x => x.parentID == null).Count()) + 1,
+                linkTarget = false
             };
 
             db.Menu_SiteContents.InsertOnSubmit(menuitem);
