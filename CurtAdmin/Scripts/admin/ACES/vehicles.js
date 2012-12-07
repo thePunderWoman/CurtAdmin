@@ -180,6 +180,88 @@ $(function () {
         })
     });
 
+    $(document).on('click', '.custom', function (e) {
+        e.preventDefault();
+        var vid = $(this).data('id');
+        $.getJSON('/ACES/getNonACESConfigurationTypes/' + vid, function (data) {
+            $("#config-dialog").empty();
+            var selectbox = '<select name="configtype" id="configtype">';
+            selectbox += '<option value="">Choose a Type</option>';
+            $(data).each(function (i, type) {
+                selectbox += '<option value="' + type.ID + '">' + type.name + '</option>';
+            });
+            selectbox += '</select>';
+            var resultbox = '<ul id="configresults"></ul>';
+            $('#config-dialog').append(selectbox);
+            $('#config-dialog').append(resultbox);
+            $("#config-dialog").dialog({
+                modal: true,
+                title: "Add Non-ACES Custom Vehicle Configuration Attribute",
+                width: 'auto',
+                height: 'auto',
+                buttons: {
+                    "Add": function () {
+                        var selectedAttr = $("#configresults input:radio[name='cattribute']:checked").val();
+                        if (selectedAttr != undefined) {
+                            $.getJSON('/ACES/AddCustomConfigToVehicle', { vehicleID: vid, attrID: selectedAttr }, function (response) {
+                                $(response.Submodels).each(function (i, submodel) {
+                                    var submodelli = $('#bv' + response.ID + 's' + submodel.SubmodelID);
+                                    $(submodelli).find('div.configs').remove();
+                                    var configtable = generateConfigTable(submodel);
+                                    $(submodelli).append(configtable);
+                                    $(submodelli).find('div.configs').show();
+                                    var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                    $(submodelli).find('a.showConfig').empty().append(ccount);
+                                    $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                    $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                                });
+                            });
+                        } else {
+                            showMessage("Select an attribute")
+                        }
+                    },
+                    "Add As New": function () {
+                        var selectedAttr = $("#configresults input:radio[name='cattribute']:checked").val();
+                        if (selectedAttr != undefined) {
+                            $.getJSON('/ACES/AddCustomConfig', { vehicleID: vid, attrID: selectedAttr }, function (response) {
+                                $(response.Submodels).each(function (i, submodel) {
+                                    var submodelli = $('#bv' + response.ID + 's' + submodel.SubmodelID);
+                                    $(submodelli).find('div.configs').remove();
+                                    var configtable = generateConfigTable(submodel);
+                                    $(submodelli).append(configtable);
+                                    $(submodelli).find('div.configs').show();
+                                    var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                    $(submodelli).find('a.showConfig').empty().append(ccount);
+                                    $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                    $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                                });
+                            });
+                        } else {
+                            showMessage("Select an attribute")
+                        }
+                    },
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+    });
+
+    $(document).on('change', '#configtype', function () {
+        var typeid = $(this).val();
+        if (typeid != "") {
+            $.getJSON('/ACES/GetAttributesByType/' + typeid, function (data) {
+                $('#configresults').empty();
+                var attribs = "";
+                $(data).each(function (i, obj) {
+                    attribs += '<li><input type="radio" name="cattribute" value="' + obj.ID + '" /> ' + obj.value + '</li>';
+                });
+                $('#configresults').append(attribs);
+            });
+        }
+    });
+
     $('#find').on('click', function () {
         getCurtDevVehicles();
         getVCDBVehicles();
@@ -315,7 +397,7 @@ generateConfigTable = function (submodel) {
             });
             configTable += '</td>';
         });
-        configTable += '<td><a href="#" class="alter" data-id="' + vehicle.ID + '" title="Change Configuration">Change</a> | <a href="/ACES/removeVehicle/' + vehicle.ID + '" data-id="' + vehicle.ID + '" class="removeconfig" title="Remove Configuration">&times;</a></td></tr>'
+        configTable += '<td><a href="#" class="custom" data-id="' + vehicle.ID + '" title="Custom Configuration">Custom</a> | <a href="/ACES/removeVehicle/' + vehicle.ID + '" data-id="' + vehicle.ID + '" class="removeconfig" title="Remove Configuration">&times;</a></td></tr>'
     });
     configTable += '</tbody></table></div>';
     return configTable;

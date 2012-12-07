@@ -1587,3 +1587,11 @@ div.configs table td.configattr {
 div.configs table tr:nth-child(odd) td {
     background-color: #fff;
 }
+
+div#config-dialog ul#configresults {
+    padding: 10px;
+    display: block;
+    min-height: 100px;
+    min-width: 200px;
+    list-style: none;
+}
