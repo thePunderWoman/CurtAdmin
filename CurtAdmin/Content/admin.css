@@ -1578,6 +1578,23 @@ div.configs table td {
     padding: 3px 8px;
     background-color: #eee;
     font-size: 11px;
+    position: relative;
+}
+
+div.configs table td a.removeattribute {
+    display: none;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 8px;
+    text-decoration: none;
+    color: #880000;
+    padding: 0;
+    margin: 0;
+} 
+
+div.configs table td:hover a.removeattribute {
+    display: block;
 }
 
 div.configs table td.configattr {

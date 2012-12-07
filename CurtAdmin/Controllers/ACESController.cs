@@ -266,6 +266,28 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(vehicle);
         }
 
+        public string checkVehicleExists(int vehicleID, int attributeID, string method = "remove") {
+            int duplicateID = new ACES().checkVehicleExists(vehicleID, attributeID, method);
+            return JsonConvert.SerializeObject(duplicateID);
+        }
+
+        public string checkVehicleAndAttributeExists(int vehicleID, int attributeID) {
+            int duplicateID = new ACES().checkVehicleExists(vehicleID, attributeID);
+            return JsonConvert.SerializeObject(duplicateID);
+        }
+
+        public string mergeVehicles(int targetID, int currentID, bool deleteCurrent = true) {
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            basevehicle = new ACES().mergeVehicles(targetID, currentID, deleteCurrent);
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
+        public string removeAttribute(int vehicleID, int attributeID) {
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            basevehicle = new ACES().removeAttribute(vehicleID, attributeID);
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
         public string addConfig(int BaseVehicleID, int SubmodelID, string configs = "") {
             ACESBaseVehicle basevehicle = new ACESBaseVehicle();
             List<int> configids = new List<int>();

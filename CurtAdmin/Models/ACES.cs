@@ -1274,6 +1274,84 @@ namespace CurtAdmin.Models {
             List<ConfigAttribute> attributes = db.ConfigAttributes.Where(x => x.ConfigAttributeTypeID.Equals(typeID)).OrderBy(x => x.value).ToList();
             return attributes;
         }
+
+        public int checkVehicleExists(int vehicleID, int attributeID, string method = "remove") {
+            int duplicateID = 0;
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            vehicle = new ACES().GetVehicle(vehicleID);
+            List<ConfigAttribute> attributelist = attributelist = vehicle.VehicleConfig.VehicleConfigAttributes.Where(x => x.AttributeID != attributeID).Select(x => x.ConfigAttribute).ToList<ConfigAttribute>();
+            if (method != "remove") {
+                ConfigAttribute ca = db.ConfigAttributes.Where(x => x.ID.Equals(attributeID)).First();
+                attributelist.Add(ca);
+            }
+            List<vcdb_Vehicle> vehicles = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(vehicle.BaseVehicleID) && x.SubModelID.Equals(vehicle.SubModelID)).ToList<vcdb_Vehicle>();
+            if (attributelist.Count == 0) {
+                // check for a vehicle with no configuration
+                try {
+                    duplicateID = vehicles.Where(x => x.ConfigID == null).Select(x => x.ID).First();
+                } catch { }
+            } else {
+                foreach (vcdb_Vehicle v in vehicles) {
+                    if (v.ConfigID != null) {
+                        List<int> attrIDs = attributelist.Select(x => x.ID).ToList();
+                        List<int> vattrIDs = v.VehicleConfig.VehicleConfigAttributes.Select(x => x.AttributeID).ToList();
+                        if (attrIDs.Count == vattrIDs.Count && attrIDs.Except(vattrIDs).Count().Equals(0)) {
+                            duplicateID = v.ID;
+                        }
+                    }
+                }
+            }
+            return duplicateID;
+        }
+
+        public ACESBaseVehicle mergeVehicles(int targetID, int currentID, bool deleteCurrent = true) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle targetVehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(targetID)).First();
+            vcdb_Vehicle currentVehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(currentID)).First();
+            List<vcdb_VehiclePart> currentParts = currentVehicle.vcdb_VehicleParts.ToList();
+            List<vcdb_VehiclePart> targetParts = targetVehicle.vcdb_VehicleParts.ToList();
+            List<vcdb_VehiclePart> partsToAdd = currentParts.Except(targetParts).ToList();
+            foreach (vcdb_VehiclePart part in partsToAdd) {
+                vcdb_VehiclePart newPart = new vcdb_VehiclePart {
+                    PartNumber = part.PartNumber,
+                    VehicleID = targetID
+                };
+                db.vcdb_VehicleParts.InsertOnSubmit(newPart);
+                db.SubmitChanges();
+
+                List<Note> notes = new List<Note>();
+                foreach (Note note in part.Notes) {
+                    Note newNote = new Note {
+                        note1 = note.note1,
+                        vehiclePartID = newPart.ID
+                    };
+                    notes.Add(newNote);
+                }
+                db.Notes.InsertAllOnSubmit(notes);
+                db.SubmitChanges();
+            }
+            if (deleteCurrent) {
+                RemoveVehicle(currentID);
+            }
+
+            return GetVehicle(targetVehicle.BaseVehicleID, (int)targetVehicle.SubModelID);
+        }
+
+        public ACESBaseVehicle removeAttribute(int vehicleID, int attributeID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+            VehicleConfigAttribute vca = vehicle.VehicleConfig.VehicleConfigAttributes.Where(x => x.AttributeID.Equals(attributeID)).First();
+            int caID = vca.ConfigAttribute.ID;
+            db.VehicleConfigAttributes.DeleteOnSubmit(vca);
+            db.SubmitChanges();
+            ConfigAttribute ca = db.ConfigAttributes.Where(x => x.ID.Equals(caID)).First();
+            if (ca.VehicleConfigAttributes.Count == 0) {
+                db.ConfigAttributes.DeleteOnSubmit(ca);
+                db.SubmitChanges();
+            }
+            return GetVehicle(vehicle.BaseVehicleID, (int)vehicle.SubModelID);
+        }
     }
 
     public class ConfigAttributeComparer : IEqualityComparer<ConfigAttribute> {
