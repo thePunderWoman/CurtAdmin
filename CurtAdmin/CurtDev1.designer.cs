@@ -8195,8 +8195,6 @@ namespace CurtAdmin
 		
 		private int _parentID;
 		
-		private string _test;
-		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -8209,8 +8207,6 @@ namespace CurtAdmin
     partial void OndescriptionChanged();
     partial void OnparentIDChanging(int value);
     partial void OnparentIDChanged();
-    partial void OntestChanging(string value);
-    partial void OntestChanged();
     #endregion
 		
 		public FileGallery()
@@ -8294,26 +8290,6 @@ namespace CurtAdmin
 					this._parentID = value;
 					this.SendPropertyChanged("parentID");
 					this.OnparentIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_test", CanBeNull=false)]
-		public string test
-		{
-			get
-			{
-				return this._test;
-			}
-			set
-			{
-				if ((this._test != value))
-				{
-					this.OntestChanging(value);
-					this.SendPropertyChanging();
-					this._test = value;
-					this.SendPropertyChanged("test");
-					this.OntestChanged();
 				}
 			}
 		}

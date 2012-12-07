@@ -272,10 +272,10 @@
         <classShapeMoniker Id="a5690f94-94ff-491f-b6e3-99e4c7149fe9" />
       </nodes>
     </associationConnector>
-    <classShape Id="17e5f5ac-bd66-41cd-ba7c-3624d8018f64" absoluteBounds="16.875, 19.5, 2, 1.7708968098958344">
+    <classShape Id="17e5f5ac-bd66-41cd-ba7c-3624d8018f64" absoluteBounds="16.875, 19.5, 2, 1.5785953776041701">
       <DataClassMoniker Name="/CurtDevDataContext/FileGallery" />
       <nestedChildShapes>
-        <elementListCompartment Id="6a192b33-21c0-4eab-922f-eaa7c382cdd8" absoluteBounds="16.89, 19.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="6a192b33-21c0-4eab-922f-eaa7c382cdd8" absoluteBounds="16.89, 19.96, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="5e9f81ee-96f8-4503-a552-9c2e21036002" absoluteBounds="14.125, 20.375, 2, 2.5401025390625023">
