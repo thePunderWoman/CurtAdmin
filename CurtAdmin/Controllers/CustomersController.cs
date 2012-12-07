@@ -231,17 +231,24 @@ namespace CurtAdmin.Controllers {
                     if (wp.isEnabled == false)
                     {
                         wp.isEnabled = true;
+                        wp.isEnabledDate = DateTime.Now;
                         try
                         {
-                            string subject = "Your Web Property has been authorized!";
-                            string htmlBody = "<p>The following Web Property has been authorized:</p>";
+                            string subject = "Your Web Property has been approved to receive the CURT Authorized Dealer Badge!";
+                            string htmlBody = "<p>The following web property has been authorized to use the CURT authorized dealer badge. Your website will be audited within 90 days to ensure that you have added the CURT Authorized Dealer Badge to your website, and that your website is following the requirements of the CURT Authorized Dealer Policy.</p>";
                             htmlBody += "<hr />";
                             htmlBody += "<span>Name: <strong>" + wp.name + "</strong></span><br />";
                             htmlBody += "<span>Website Address: <strong>" + wp.url + "</strong></span><br />";
-                            htmlBody += "<span>Type: <strong>" + wp.WebPropertyTypes.type + "</strong></span><br />";
+                            if (wp.typeID != 0)
+                            {
+                                htmlBody += "<span>Type: <strong>" + wp.WebPropertyTypes.type + "</strong></span><br />";
+                            }
                             htmlBody += "<span>Seller ID: <strong>" + wp.sellerID + "</strong></span><br />";
                             htmlBody += "<hr /><br />";
-                            htmlBody += "<p>You can generate your badge code for your Web Property by clicking the link below:<br /><a href='http://dealers.curtmfg.com/AuthorizedDealer/WebProperties'>http://dealers.curtmfg.com/AuthorizedDealer/WebProperties</a></p>";
+                            htmlBody += "";
+                            htmlBody += "<p>Please generate your badge code for your Web Property by clicking the link below:<br /><a href='http://dealers.curtmfg.com/AuthorizedDealer/WebProperties'>http://dealers.curtmfg.com/AuthorizedDealer/WebProperties</a></p>";
+                            htmlBody += "<p>Once you have your Authorized Dealer Badge, please place it on your website, to build trust with your customers and reinforce your brand.</p>";
+                            htmlBody += "<p>If you are experiencing any problems adding the badge to your website, please contact websupport@curtmfg.com and we will be happy to help you.</p>";
                             helpers.SendEmail(wp.CustUserWebProperty.CustomerUser.email, subject, htmlBody, true);
                         }
                         catch (Exception e)
@@ -253,14 +260,11 @@ namespace CurtAdmin.Controllers {
                     else
                     {
                         wp.isEnabled = false;
+                        db.SubmitChanges();
+                        return "The Web Property has been updated.";
                     }
                     db.SubmitChanges();
                     // email user of property to let them know that it has been updated
-
-
-
-
-
                     return "";
 	        }
 	        catch (Exception e)
@@ -268,6 +272,65 @@ namespace CurtAdmin.Controllers {
                 return "Could not update record: " + e.Message;
 	        }
         }
+
+        [HttpGet]
+        public string WPSetIsFinalApproved(int record_id)
+        {
+            try
+            {
+                CurtDevDataContext db = new CurtDevDataContext();
+
+                WebProperty wp = db.WebProperties.Where(x => x.id == record_id).FirstOrDefault<WebProperty>();
+                if (wp.isFinalApproved == false)
+                {
+                    wp.isFinalApproved = true;
+                }
+                else
+                {
+                    wp.isFinalApproved = false;
+                    wp.isEnabledDate = null;
+                    db.SubmitChanges();
+                    return "The Web Property has been updated.";
+                }
+                db.SubmitChanges();
+                return "";
+            }
+            catch (Exception e)
+            {
+                return "Could not update record: " + e.Message;
+            }
+
+        }
+
+
+        [HttpGet]
+        public string WPSetIsDenied(int record_id)
+        {
+            try
+            {
+                CurtDevDataContext db = new CurtDevDataContext();
+
+                WebProperty wp = db.WebProperties.Where(x => x.id == record_id).FirstOrDefault<WebProperty>();
+                if (wp.isDenied == false)
+                {
+                    wp.isDenied = true;
+                }
+                else
+                {
+                    wp.isDenied = false;
+                    db.SubmitChanges();
+                    return "The Web Property has been updated.";
+                }
+                db.SubmitChanges();
+                return "";
+            }
+            catch (Exception e)
+            {
+                return "Could not update record: " + e.Message;
+            }
+
+        }
+
 
 
         public ActionResult Add() {

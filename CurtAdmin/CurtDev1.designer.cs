@@ -21473,6 +21473,12 @@ namespace CurtAdmin
 		
 		private int _typeID;
 		
+		private bool _isFinalApproved;
+		
+		private System.Nullable<System.DateTime> _isEnabledDate;
+		
+		private bool _isDenied;
+		
 		private EntityRef<WebPropertyType> _WebPropertyTypes;
 		
 		private EntityRef<CustUserWebProperty> _CustUserWebProperty;
@@ -21497,6 +21503,12 @@ namespace CurtAdmin
     partial void OnsellerIDChanged();
     partial void OntypeIDChanging(int value);
     partial void OntypeIDChanged();
+    partial void OnisFinalApprovedChanging(bool value);
+    partial void OnisFinalApprovedChanged();
+    partial void OnisEnabledDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnisEnabledDateChanged();
+    partial void OnisDeniedChanging(bool value);
+    partial void OnisDeniedChanged();
     #endregion
 		
 		public WebProperty()
@@ -21666,6 +21678,66 @@ namespace CurtAdmin
 					this._typeID = value;
 					this.SendPropertyChanged("typeID");
 					this.OntypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_isFinalApproved")]
+		public bool isFinalApproved
+		{
+			get
+			{
+				return this._isFinalApproved;
+			}
+			set
+			{
+				if ((this._isFinalApproved != value))
+				{
+					this.OnisFinalApprovedChanging(value);
+					this.SendPropertyChanging();
+					this._isFinalApproved = value;
+					this.SendPropertyChanged("isFinalApproved");
+					this.OnisFinalApprovedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_isEnabledDate")]
+		public System.Nullable<System.DateTime> isEnabledDate
+		{
+			get
+			{
+				return this._isEnabledDate;
+			}
+			set
+			{
+				if ((this._isEnabledDate != value))
+				{
+					this.OnisEnabledDateChanging(value);
+					this.SendPropertyChanging();
+					this._isEnabledDate = value;
+					this.SendPropertyChanged("isEnabledDate");
+					this.OnisEnabledDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_isDenied")]
+		public bool isDenied
+		{
+			get
+			{
+				return this._isDenied;
+			}
+			set
+			{
+				if ((this._isDenied != value))
+				{
+					this.OnisDeniedChanging(value);
+					this.SendPropertyChanging();
+					this._isDenied = value;
+					this.SendPropertyChanged("isDenied");
+					this.OnisDeniedChanged();
 				}
 			}
 		}
