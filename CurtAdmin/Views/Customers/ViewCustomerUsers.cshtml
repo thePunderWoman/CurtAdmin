@@ -40,8 +40,8 @@
 
 <div id="content_container">
     <h2>All Customer Users (@ViewBag.users.Count)</h2>
-
-    <div style="width: 90%;margin:auto">
+    <p><em><strong>Note:</strong> Search for 'not active' to get all non active customer users</em></p>
+    <div style="width: 100%;margin:auto">
         <table style="width: 100% !important">
             <thead>
                 <tr>
@@ -67,7 +67,7 @@
                          <td>No</td>   
                         }
                         <td class="center">
-                            <input type="checkbox" name="isActive" id="isActive:@u.id" class="isActive" value="1" @((u.active) ? "checked" : "") />
+                            <input type="checkbox" name="isActive" id="isActive:@u.id" class="isActive" @((u.active) ? "" : "title='not active'") value="1" @((u.active) ? "checked" : "") />
                         </td>
                         <td class="center">
                             <select id="action:@u.id" class="user_action">

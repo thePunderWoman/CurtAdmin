@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
 
-    $('table').dataTable({
+    var dt = $('table').dataTable({
         "bJQueryUI": true
     });
 
@@ -8,6 +8,21 @@
     $('.isEnabled').live('click', function () {
         var record_id = $(this).attr('id').split(':')[1];
         set_isEnabled(record_id);
+    });
+
+    $('.isFinalApproved').live('click', function () {
+        var record_id = $(this).attr('id').split(':')[1];
+        set_isFinalApproved(record_id);
+    });
+
+    $('.isDenied').live('click', function () {
+        var record_id = $(this).attr('id').split(':')[1];
+        set_isDenied(record_id);
+    });
+
+    $('.searchByColor').click(function () {
+        dt.fnFilter($(this).attr('title'));
+        $('.dataTables_filter').find("input[type=text]").first().attr('value', $(this).attr('title'));
     });
 
 });
@@ -22,7 +37,31 @@ function set_isEnabled(record_id) {
         if (response != '') {
             showMessage(response);
         } else {
-            showMessage("The Web Property's status has been updated.");
+            showMessage("The Web Property's approved pending status has been changed. Refresh page to see pending date.");
         }
     },"html");
 }
+
+
+function set_isFinalApproved(record_id) {
+    $.get('/Customers/WPSetIsFinalApproved', { 'record_id': record_id }, function (response) {
+        if (response != '') {
+            showMessage(response);
+        } else {
+            showMessage("The Web Property has been officially approved.");
+        }
+    }, "html");
+}
+
+
+function set_isDenied(record_id) {
+    $.get('/Customers/WPSetIsDenied', { 'record_id': record_id }, function (response) {
+        if (response != '') {
+            showMessage(response);
+        } else {
+            showMessage("The Web Property has been rejected.");
+        }
+    }, "html");
+}
+
+
