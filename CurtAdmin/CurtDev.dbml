@@ -359,7 +359,6 @@
       <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="description" Type="System.String" DbType="VarChar(4000)" CanBeNull="true" />
       <Column Name="parentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Member="test" Type="System.String" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.[File]" Member="Files">
