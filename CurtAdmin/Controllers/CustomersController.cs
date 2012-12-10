@@ -234,8 +234,8 @@ namespace CurtAdmin.Controllers {
                         wp.isEnabledDate = DateTime.Now;
                         try
                         {
-                            string subject = "Your Web Property has been approved to receive the CURT Authorized Dealer Badge!";
-                            string htmlBody = "<p>The following web property has been authorized to use the CURT authorized dealer badge. Your website will be audited within 90 days to ensure that you have added the CURT Authorized Dealer Badge to your website, and that your website is following the requirements of the CURT Authorized Dealer Policy.</p>";
+                            string subject = "The following Web Property has PROVISIONAL AUTHORIZATION to use the CURT Authorized Dealer badge.";
+                            string htmlBody = "<p>The following Web Property has PROVISIONAL AUTHORIZATION to use the CURT Authorized Dealer badge. This provisional authorization is subject to a CURT review, within 90 days, to determine if the web property adheres to all of the requirements of the CURT Authorized Dealer Policy. Please use this time to add the badge, review the Policy, and make adjustments to your web property as needed. Final approval is subject to complete compliance with all of the Policy criteria. Please note that each web property that you control, will be evaluated separately for authorization. You may only use the badge on the property for which it was authorized</p>";
                             htmlBody += "<hr />";
                             htmlBody += "<span>Name: <strong>" + wp.name + "</strong></span><br />";
                             htmlBody += "<span>Website Address: <strong>" + wp.url + "</strong></span><br />";
@@ -248,6 +248,8 @@ namespace CurtAdmin.Controllers {
                             htmlBody += "";
                             htmlBody += "<p>Please generate your badge code for your Web Property by clicking the link below:<br /><a href='http://dealers.curtmfg.com/AuthorizedDealer/WebProperties'>http://dealers.curtmfg.com/AuthorizedDealer/WebProperties</a></p>";
                             htmlBody += "<p>Once you have your Authorized Dealer Badge, please place it on your website, to build trust with your customers and reinforce your brand.</p>";
+                            htmlBody += "<p><strong>Please respond to this email address when your web property is ready for the second final review.</strong> In that email please provide:</p>";
+                            htmlBody += "<ul><ol>1. The url of the page on your web property that contains the badge.</ol><ol>2. The url of the page on your web property that contains the hyperlink to www.curtmfg.com.</ol></ul>";
                             htmlBody += "<p>If you are experiencing any problems adding the badge to your website, please contact websupport@curtmfg.com and we will be happy to help you.</p>";
                             helpers.SendEmail(wp.CustUserWebProperty.CustomerUser.email, subject, htmlBody, true);
                         }
