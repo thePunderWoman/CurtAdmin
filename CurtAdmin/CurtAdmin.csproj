@@ -147,6 +147,7 @@
     <Compile Include="ActiveResults\ExcelResult.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ACESController.cs" />
+    <Compile Include="Controllers\LandingPagesController.cs" />
     <Compile Include="Controllers\SalesRepController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LandingPage.cs" />
     <Compile Include="Models\helpers.cs" />
     <Compile Include="Models\Website.cs" />
     <Compile Include="Models\ACES\AcesType.cs" />
@@ -399,6 +401,8 @@
     <Content Include="Scripts\admin\add_edit_vehicle.js" />
     <Content Include="Scripts\admin\admin.js" />
     <Content Include="Scripts\admin\editcontent.js" />
+    <Content Include="Scripts\admin\LandingPages\add.js" />
+    <Content Include="Scripts\admin\LandingPages\edit.js" />
     <Content Include="Scripts\admin\salesReps.js" />
     <Content Include="Scripts\admin\Product\EditACESVehicles.js" />
     <Content Include="Scripts\admin\Product\Edit.js" />
@@ -527,6 +531,10 @@
     <Content Include="Views\Customers\ViewWebProperties.cshtml" />
     <Content Include="Views\Customers\ViewUserWebProperties.cshtml" />
     <Content Include="Views\Customers\ViewCustomersOwnUsers.cshtml" />
+    <Content Include="Views\LandingPages\index.cshtml" />
+    <Content Include="Views\LandingPages\past.cshtml" />
+    <Content Include="Views\LandingPages\add.cshtml" />
+    <Content Include="Views\LandingPages\edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

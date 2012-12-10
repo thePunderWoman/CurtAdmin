@@ -1612,3 +1612,32 @@ div#config-dialog ul#configresults {
     min-width: 200px;
     list-style: none;
 }
+
+ul#pageImages li {
+    display: block;
+    clear:both;
+    list-style: none;
+    padding: 5px;
+}
+ul#pageImages li img {
+    float: left;
+    max-height: 300px;
+    max-width: 600px;
+    cursor: move;
+}
+
+ul#pageImages li a.removeimage {
+    display: none;
+    float: left;
+    position: relative;
+    font-size: 11px;
+    text-decoration: none;
+    color: #880000;
+    font-weight: bold;
+    padding: 0;
+    margin: 0 0 0 5px;
+}
+
+ul#pageImages li:hover a.removeimage {
+    display: block;
+}
