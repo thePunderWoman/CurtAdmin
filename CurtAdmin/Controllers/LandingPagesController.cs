@@ -82,6 +82,9 @@ namespace CurtAdmin.Controllers {
             string url = Request.Form["url"] ?? null;
             string content = String.IsNullOrWhiteSpace(Request.Form["page_content"]) ? null : Request.Form["page_content"];
             string linkClasses = String.IsNullOrWhiteSpace(Request.Form["linkClasses"]) ? null : Request.Form["linkClasses"];
+            string conversionID = String.IsNullOrWhiteSpace(Request.Form["conversionID"]) ? null : Request.Form["conversionID"];
+            string conversionLabel = String.IsNullOrWhiteSpace(Request.Form["conversionLabel"]) ? null : Request.Form["conversionLabel"];
+            bool newWindow = (Request.Form["conversionLabel"] == null) ? false : true;
             string error = "";
 
             LandingPage landingPage = new LandingPage();

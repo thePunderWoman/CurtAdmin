@@ -22266,6 +22266,12 @@ namespace CurtAdmin
 		
 		private string _linkClasses;
 		
+		private bool _newWindow;
+		
+		private string _conversionID;
+		
+		private string _conversionLabel;
+		
 		private EntitySet<LandingPageData> _LandingPageDatas;
 		
 		private EntitySet<LandingPageImage> _LandingPageImages;
@@ -22292,6 +22298,12 @@ namespace CurtAdmin
     partial void OnnameChanged();
     partial void OnlinkClassesChanging(string value);
     partial void OnlinkClassesChanged();
+    partial void OnnewWindowChanging(bool value);
+    partial void OnnewWindowChanged();
+    partial void OnconversionIDChanging(string value);
+    partial void OnconversionIDChanged();
+    partial void OnconversionLabelChanging(string value);
+    partial void OnconversionLabelChanged();
     #endregion
 		
 		public LandingPage()
@@ -22462,6 +22474,66 @@ namespace CurtAdmin
 					this._linkClasses = value;
 					this.SendPropertyChanged("linkClasses");
 					this.OnlinkClassesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="new Window", Storage="_newWindow", DbType="Bit NOT NULL")]
+		public bool newWindow
+		{
+			get
+			{
+				return this._newWindow;
+			}
+			set
+			{
+				if ((this._newWindow != value))
+				{
+					this.OnnewWindowChanging(value);
+					this.SendPropertyChanging();
+					this._newWindow = value;
+					this.SendPropertyChanged("newWindow");
+					this.OnnewWindowChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_conversionID", DbType="VarChar(150) NULL")]
+		public string conversionID
+		{
+			get
+			{
+				return this._conversionID;
+			}
+			set
+			{
+				if ((this._conversionID != value))
+				{
+					this.OnconversionIDChanging(value);
+					this.SendPropertyChanging();
+					this._conversionID = value;
+					this.SendPropertyChanged("conversionID");
+					this.OnconversionIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_conversionLabel", DbType="VarChar(150) NULL")]
+		public string conversionLabel
+		{
+			get
+			{
+				return this._conversionLabel;
+			}
+			set
+			{
+				if ((this._conversionLabel != value))
+				{
+					this.OnconversionLabelChanging(value);
+					this.SendPropertyChanging();
+					this._conversionLabel = value;
+					this.SendPropertyChanged("conversionLabel");
+					this.OnconversionLabelChanged();
 				}
 			}
 		}
