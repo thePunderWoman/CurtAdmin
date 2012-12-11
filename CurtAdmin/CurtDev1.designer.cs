@@ -21540,6 +21540,10 @@ namespace CurtAdmin
 		
 		private bool _isDenied;
 		
+		private System.Nullable<System.DateTime> _requestedDate;
+		
+		private System.DateTime _addedDate;
+		
 		private EntityRef<WebPropertyType> _WebPropertyTypes;
 		
 		private EntityRef<CustUserWebProperty> _CustUserWebProperty;
@@ -21570,6 +21574,10 @@ namespace CurtAdmin
     partial void OnisEnabledDateChanged();
     partial void OnisDeniedChanging(bool value);
     partial void OnisDeniedChanged();
+    partial void OnrequestedDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnrequestedDateChanged();
+    partial void OnaddedDateChanging(System.DateTime value);
+    partial void OnaddedDateChanged();
     #endregion
 		
 		public WebProperty()
@@ -21799,6 +21807,46 @@ namespace CurtAdmin
 					this._isDenied = value;
 					this.SendPropertyChanged("isDenied");
 					this.OnisDeniedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_requestedDate")]
+		public System.Nullable<System.DateTime> requestedDate
+		{
+			get
+			{
+				return this._requestedDate;
+			}
+			set
+			{
+				if ((this._requestedDate != value))
+				{
+					this.OnrequestedDateChanging(value);
+					this.SendPropertyChanging();
+					this._requestedDate = value;
+					this.SendPropertyChanged("requestedDate");
+					this.OnrequestedDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_addedDate")]
+		public System.DateTime addedDate
+		{
+			get
+			{
+				return this._addedDate;
+			}
+			set
+			{
+				if ((this._addedDate != value))
+				{
+					this.OnaddedDateChanging(value);
+					this.SendPropertyChanging();
+					this._addedDate = value;
+					this.SendPropertyChanged("addedDate");
+					this.OnaddedDateChanged();
 				}
 			}
 		}

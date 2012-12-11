@@ -29,6 +29,8 @@
                     <th>CustomerID</th>
                     <th>Is Customer</th>
                     <th>Badge ID</th>
+                    <th>Date Added</th>
+                    <th>Date Requested</th>
                     <th>Approved Pending</th>
                     <th>Pending Date</th>
                     <th>Officially Approved</th>
@@ -50,6 +52,8 @@
                         <td>No</td>   
                         }
                         <td>@wp.badgeID</td>
+                        <td>@wp.addedDate</td>
+                        <td>@wp.requestedDate</td>
                         <td class="center">
                             <input type="checkbox" name="isEnabled" @((wp.isEnabled) ? "title='yes'" : "title='no'") id="isEnabled:@wp.id" class="isEnabled" value="1" @((wp.isEnabled) ? "checked" : "") />
                         </td>

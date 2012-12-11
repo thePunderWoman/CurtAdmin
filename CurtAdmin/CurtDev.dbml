@@ -1025,6 +1025,8 @@
       <Column Name="isFinalApproved" Type="System.Boolean" CanBeNull="false" />
       <Column Name="isEnabledDate" Type="System.DateTime" CanBeNull="true" />
       <Column Name="isDenied" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="requestedDate" Type="System.DateTime" CanBeNull="true" />
+      <Column Name="addedDate" Type="System.DateTime" CanBeNull="false" />
       <Association Name="WebProperty_WebPropertyType" Member="WebPropertyTypes" ThisKey="typeID" OtherKey="typeID" Type="WebPropertyType" Cardinality="One" />
       <Association Name="CustUserWebProperty_WebProperty" Member="CustUserWebProperty" ThisKey="id" OtherKey="webPropID" Type="CustUserWebProperty" IsForeignKey="true" />
     </Type>
