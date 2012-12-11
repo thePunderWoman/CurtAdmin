@@ -1000,6 +1000,7 @@
       <Column Name="description" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Association Name="Website_Menu" Member="Menus" ThisKey="ID" OtherKey="websiteID" Type="Menu" />
       <Association Name="Website_SiteContent" Member="SiteContents" ThisKey="ID" OtherKey="websiteID" Type="SiteContent" />
+      <Association Name="Website_LandingPage" Member="LandingPages" ThisKey="ID" OtherKey="websiteID" Type="LandingPage" />
     </Type>
   </Table>
   <Table Name="dbo.CustUserWebProperties" Member="CustUserWebProperties">
@@ -1043,6 +1044,39 @@
       <Column Name="custID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="email" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="IP" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LandingPage" Member="LandingPages">
+    <Type Name="LandingPage">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="websiteID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="startDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="endDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="pageContent" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="true" />
+      <Column Name="linkClasses" Type="System.String" DbType="VarChar(255) NULL" CanBeNull="true" />
+      <Association Name="LandingPage_LandingPageData" Member="LandingPageDatas" ThisKey="id" OtherKey="landingPageID" Type="LandingPageData" />
+      <Association Name="LandingPage_LandingPageImage" Member="LandingPageImages" ThisKey="id" OtherKey="landingPageID" Type="LandingPageImage" />
+      <Association Name="Website_LandingPage" Member="Website" ThisKey="websiteID" OtherKey="ID" Type="Website" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LandingPageData" Member="LandingPageDatas">
+    <Type Name="LandingPageData">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="landingPageID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dataKey" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="dataValue" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="LandingPage_LandingPageData" Member="LandingPage" AccessModifier="Internal" ThisKey="landingPageID" OtherKey="id" Type="LandingPage" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LandingPageImages" Member="LandingPageImages">
+    <Type Name="LandingPageImage">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="landingPageID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="sort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="LandingPage_LandingPageImage" Member="LandingPage" AccessModifier="Internal" ThisKey="landingPageID" OtherKey="id" Type="LandingPage" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

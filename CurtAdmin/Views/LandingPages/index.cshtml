@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Landing Pages";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.LandingPage> landingPages = ViewBag.landingPages ?? new List<CurtAdmin.LandingPage>();
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+<ul id="subNav">
+    <li>
+        <a href="/LandingPages" class="active">Active Pages</a>
+    </li>
+    <li>
+        <a href="/LandingPages/Past">Past Pages</a>
+    </li>
+    <li class="add">
+        <a href="/LandingPages/Add">Add Page</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Manage Landing Pages</h2>
+    <table style="width: 100% !important">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Website</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>url</th>
+                <th>images</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.LandingPage lp in landingPages) {
+                <tr id="page:@lp.id">
+                    <td>@lp.name</td>
+                    <td>@lp.Website.description</td>
+                    <td>@String.Format("{0:M/d/yyyy h:mm tt}",lp.startDate)</td>
+                    <td>@String.Format("{0:M/d/yyyy h:mm tt}",lp.endDate)</td>
+                    <td>@lp.url</td>
+                    <td>@lp.LandingPageImages.Count</td>
+                    <td class="center">
+                        <a href="/LandingPages/edit/@lp.id">Edit</a> | 
+                        <a href="/LandingPages/delete/@lp.id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var pagetable = $('table').dataTable({
+            "bJQueryUI": true,
+            "aoColumns": [
+            null,
+            null,
+            { "sType": "date" },
+            { "sType": "date" },
+            null,
+            null,
+            null
+        ],
+            "aaSorting": [[2, "desc"]]
+        });
+    });
+</script>

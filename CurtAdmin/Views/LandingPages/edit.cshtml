@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "Add New Landing Page";
+    ViewBag.navigation = "_WebsiteNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Website> websites = ViewBag.websites ?? new List<CurtAdmin.Website>();
+    CurtAdmin.LandingPage landingPage = ViewBag.landingPage ?? new CurtAdmin.LandingPage();
+    string error = ViewBag.error ?? "";
+    int websiteID = ViewBag.websiteID;
+}
+<ul id="subNav">
+    <li>
+        <a href="/LandingPages">Active Pages</a>
+    </li>
+    <li>
+        <a href="/LandingPages/Past">Past Pages</a>
+    </li>
+    <li class="add">
+        <a href="/LandingPages/Add">Add Page</a>
+    </li>
+</ul>
+<div id="content_container">
+    <h2>Edit Landing Page</h2>
+
+    @if (error != "") {
+        <p style="font-weight: bold; color: Red;">@error</p>
+    }
+    
+    <form action="/LandingPages/Save/@landingPage.id" method="post" class="form">
+        <input type="hidden" id="pageID" value="@landingPage.id" />
+        <div id="tabs">
+            <ul class="tabs">
+                <li><a href="#Info">Info</a></li>
+                <li><a href="#Content">Content</a></li>
+                <li><a href="#Images">Images</a></li>
+                <li><a href="#Advanced">Advanced</a></li>
+            </ul>
+            <div id="Info">
+                <div class="form_left">
+                    <label for="name">
+                        Name
+                        <input type="text" name="name" id="name" value="@landingPage.name" required placeholder="Enter a name for this page..."/>
+                    </label>
+
+                    <label for="website">
+                        Website
+                        <select name="website" id="website" required>
+                            @foreach (CurtAdmin.Website website in websites) {
+                                <option value="@website.ID" @((website.ID.Equals(landingPage.websiteID)) ? "selected=selected" : "")>@website.description</option>
+                            }
+                        </select>
+                    </label>
+
+                    <label for="startDate">
+                        Start Date
+                        <input type="text" name="startDate" id="startDate" value="@String.Format("{0:M/d/yyyy h:mm tt}",landingPage.startDate)" required placeholder="Choose a start date..." />
+                    </label>
+
+                    <label for="endDate">
+                        End Date
+                        <input type="text" name="endDate" id="endDate" value="@String.Format("{0:M/d/yyyy h:mm tt}",landingPage.endDate)" required placeholder="Choose an end date..." />
+                    </label>
+
+                    <label for="url">
+                        URL
+                        <input type="text" name="url" id="url" value="@landingPage.url" placeholder="Enter a target URL..." required />
+                    </label>
+                </div>
+                <span class="clear"></span>
+            </div>
+            <div id="Content">
+                <label for="page_content" id="label_page_content">
+                    Content
+                    <br />
+                    <textarea name="page_content" class="page_content" rows="10" cols="50" id="page_content" placeholder="Enter the Page Content">@((landingPage.pageContent != null && landingPage.pageContent.Length > 0) ? landingPage.pageContent : "")</textarea>
+                </label>
+            </div>
+            <div id="Images">
+                <button id="addImage" class="button">Add Image</button>
+                <ul id="pageImages">
+                    @foreach (CurtAdmin.LandingPageImage img in landingPage.LandingPageImages.OrderBy(x => x.sort)) {
+                        <li id="img_@(img.id)">
+                            <img src="@img.url" alt="page image" />
+                            <a href="/LandingPages/RemoveImage/@img.id" class="removeimage">&times;</a>
+                            <span class="clear"></span>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div id="Advanced">
+                <div class="form_left">
+                    <label for="linkClasses">
+                        Link CSS Classes (separate with spaces)
+                        <br />
+                        <input type="text" style="float: left;" name="linkClasses" id="linkClasses" value="@(landingPage.linkClasses ?? "")" placeholder="Enter classes to be applied to the link..." />
+                    </label>
+                </div>
+                <span class="clear"></span>
+            </div>
+        </div>
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>
+<div id="file-dialog"></div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/fileiframe.js")"></script>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+<script src="/Scripts/admin/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
+<script src="/Scripts/admin/LandingPages/edit.js"></script>
