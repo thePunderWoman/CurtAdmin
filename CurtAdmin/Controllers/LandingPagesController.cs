@@ -99,7 +99,7 @@ namespace CurtAdmin.Controllers {
                     landingPage = landingPage.Save(id, name, websiteID, startDate, endDate, url, content, linkClasses, newWindow, conversionID, conversionLabel);
                     id = landingPage.id;
                 } catch (Exception e) {
-                    error = e.Message;
+                    error = e.Message + " " + e.StackTrace;
                 }
             }
 
