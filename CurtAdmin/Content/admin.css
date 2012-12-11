@@ -1638,6 +1638,31 @@ ul#pageImages li a.removeimage {
     margin: 0 0 0 5px;
 }
 
+ul#dataList li a.removeData {
+    display: none;
+    position: relative;
+    text-decoration: none;
+    color: #880000;
+    font-weight: bold;
+    padding: 0;
+}
+
 ul#pageImages li:hover a.removeimage {
     display: block;
+}
+
+ul#dataList:hover li a.removeData {
+    display: inline-block;
+}
+
+input#dataKey {
+    width: 100px;
+    float: left;
+    margin-right: 10px;
+}
+
+input#dataValue {
+    width: 200px;
+    float: left;
+    margin-right: 10px;
 }

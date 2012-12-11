@@ -112,5 +112,42 @@ namespace CurtAdmin {
                 db.SubmitChanges();
             }
         }
+
+        public List<LandingPageData> GetData(int pageID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<LandingPageData> datas = new List<LandingPageData>();
+            try {
+                datas = db.LandingPageDatas.Where(x => x.landingPageID.Equals(pageID)).ToList();
+            } catch { }
+            return datas;
+        }
+
+        public List<LandingPageData> AddData(int pageID, string key, string value) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                LandingPageData data = new LandingPageData {
+                    dataKey = key.Trim(),
+                    dataValue = value.Trim(),
+                    landingPageID = pageID
+                };
+                db.LandingPageDatas.InsertOnSubmit(data);
+                db.SubmitChanges();
+            } catch { }
+
+            return GetData(pageID);
+        }
+
+        public List<LandingPageData> RemoveData(int id) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            int pageID = 0;
+            try {
+                LandingPageData data = db.LandingPageDatas.Where(x => x.id.Equals(id)).First();
+                pageID = data.landingPageID;
+                db.LandingPageDatas.DeleteOnSubmit(data);
+                db.SubmitChanges();
+            } catch { }
+
+            return GetData(pageID);
+        }
     }
 }

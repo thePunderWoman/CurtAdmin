@@ -119,5 +119,17 @@ namespace CurtAdmin.Controllers {
         public void UpdateSort(int[] img) {
             new LandingPage().UpdateSort(img);
         }
+
+        public string AddData(int pageID, string key, string value) {
+            List<LandingPageData> datas = new List<LandingPageData>();
+            datas = new LandingPage().AddData(pageID, key, value);
+            return JsonConvert.SerializeObject(datas);
+        }
+
+        public string RemoveData(int id) {
+            List<LandingPageData> datas = new List<LandingPageData>();
+            datas = new LandingPage().RemoveData(id);
+            return JsonConvert.SerializeObject(datas);
+        }
     }
 }

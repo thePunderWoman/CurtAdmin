@@ -92,7 +92,20 @@
                         Link CSS Classes (separate with spaces)
                         <br />
                         <input type="text" style="float: left;" name="linkClasses" id="linkClasses" value="@(landingPage.linkClasses ?? "")" placeholder="Enter classes to be applied to the link..." />
+                        <br />
                     </label>
+                    <label>
+                        Custom Data Attributes
+                        <br />
+                        <input type="text" id="dataKey" placeholder="key" />
+                        <input type="text" id="dataValue" placeholder="Value" />
+                        <button class="button" id="addData">Add</button>
+                    </label>
+                    <ul id="dataList">
+                        @foreach (CurtAdmin.LandingPageData data in landingPage.LandingPageDatas) {
+                            <li>@data.dataKey: @data.dataValue <a href="/LandingPages/RemoveData/@data.id" class="removeData">&times;</a></li>
+                        }
+                    </ul>
                 </div>
                 <span class="clear"></span>
             </div>
