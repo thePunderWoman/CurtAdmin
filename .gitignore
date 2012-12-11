@@ -9,3 +9,5 @@ TestResults
 # web.config files
 *.user
 *.suo
+*.pubxml
+*.user

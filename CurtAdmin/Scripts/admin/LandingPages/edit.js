@@ -12,6 +12,27 @@ $(function () {
         chooseFile();
     });
 
+    $('#addData').on('click', function (e) {
+        e.preventDefault();
+        var pageID = $('#pageID').val();
+        var key = $('#dataKey').val().trim();
+        var value = $('#dataValue').val().trim();
+        if (key == '' || value == '') {
+            showMessage('You must have a key and a value to add a custom data attribute.');
+        } else {
+            $.getJSON('/LandingPages/AddData', { pageID: pageID, key: key, value: value }, function (data) {
+                $('#dataList').empty();
+                var datalist = "";
+                $(data).each(function (i, obj) {
+                    datalist += '<li>' + obj.dataKey + ': ' + obj.dataValue + ' <a href="/LandingPages/RemoveData/' + obj.id + '" class="removeData">&times;</a></li>';
+                });
+                $('#dataList').append(datalist);
+            });
+            $('#dataKey').val('');
+            $('#dataValue').val('');
+        }
+    });
+
     imageSort();
 
     $(document).on('click', 'a.removeimage', function (e) {
@@ -24,6 +45,18 @@ $(function () {
             });
         });
     });
+
+    $(document).on('click', 'a.removeData', function (e) {
+        e.preventDefault();
+        var href = $(this).attr('href');
+        var liobj = $(this).parent();
+        $.getJSON(href, function (data) {
+            $(liobj).fadeOut(400, function () {
+                $(this).remove();
+            });
+        });
+    });
+    
 
     CKEDITOR.replace('page_content', {
         filebrowserImageUploadUrl: '/File/CKUpload',

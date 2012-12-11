@@ -28,7 +28,7 @@ namespace CurtAdmin {
             return landingPage;
         }
 
-        public LandingPage Save(int id, string name, int websiteID, DateTime startDate, DateTime endDate, string url, string content = null, string linkClasses = null) {
+        public LandingPage Save(int id, string name, int websiteID, DateTime startDate, DateTime endDate, string url, string content = null, string linkClasses = null, bool newWindow = false, string conversionID = null, string conversionLabel = null) {
             CurtDevDataContext db = new CurtDevDataContext();
             LandingPage landingPage = new LandingPage();
             try {
@@ -40,7 +40,10 @@ namespace CurtAdmin {
                         endDate = endDate,
                         url = url,
                         pageContent = content,
-                        linkClasses = (linkClasses == null) ? linkClasses : linkClasses.Trim()
+                        linkClasses = (linkClasses == null) ? linkClasses : linkClasses.Trim(),
+                        newWindow = newWindow,
+                        conversionID = conversionID,
+                        conversionLabel = conversionLabel
                     };
                     db.LandingPages.InsertOnSubmit(landingPage);
                 } else {
@@ -52,6 +55,9 @@ namespace CurtAdmin {
                     landingPage.url = url;
                     landingPage.pageContent = content;
                     landingPage.linkClasses = (linkClasses == null) ? linkClasses : linkClasses.Trim();
+                    landingPage.newWindow = newWindow;
+                    landingPage.conversionID = conversionID;
+                    landingPage.conversionLabel = conversionLabel;
                 }
                 db.SubmitChanges();
             } catch {}
@@ -111,6 +117,43 @@ namespace CurtAdmin {
                 image.sort = sort++;
                 db.SubmitChanges();
             }
+        }
+
+        public List<LandingPageData> GetData(int pageID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<LandingPageData> datas = new List<LandingPageData>();
+            try {
+                datas = db.LandingPageDatas.Where(x => x.landingPageID.Equals(pageID)).ToList();
+            } catch { }
+            return datas;
+        }
+
+        public List<LandingPageData> AddData(int pageID, string key, string value) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                LandingPageData data = new LandingPageData {
+                    dataKey = key.Trim(),
+                    dataValue = value.Trim(),
+                    landingPageID = pageID
+                };
+                db.LandingPageDatas.InsertOnSubmit(data);
+                db.SubmitChanges();
+            } catch { }
+
+            return GetData(pageID);
+        }
+
+        public List<LandingPageData> RemoveData(int id) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            int pageID = 0;
+            try {
+                LandingPageData data = db.LandingPageDatas.Where(x => x.id.Equals(id)).First();
+                pageID = data.landingPageID;
+                db.LandingPageDatas.DeleteOnSubmit(data);
+                db.SubmitChanges();
+            } catch { }
+
+            return GetData(pageID);
         }
     }
 }

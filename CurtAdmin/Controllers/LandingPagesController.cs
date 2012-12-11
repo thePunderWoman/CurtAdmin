@@ -82,6 +82,9 @@ namespace CurtAdmin.Controllers {
             string url = Request.Form["url"] ?? null;
             string content = String.IsNullOrWhiteSpace(Request.Form["page_content"]) ? null : Request.Form["page_content"];
             string linkClasses = String.IsNullOrWhiteSpace(Request.Form["linkClasses"]) ? null : Request.Form["linkClasses"];
+            string conversionID = String.IsNullOrWhiteSpace(Request.Form["conversionID"]) ? null : Request.Form["conversionID"];
+            string conversionLabel = String.IsNullOrWhiteSpace(Request.Form["conversionLabel"]) ? null : Request.Form["conversionLabel"];
+            bool newWindow = (Request.Form["newWindow"] == null) ? false : true;
             string error = "";
 
             LandingPage landingPage = new LandingPage();
@@ -93,7 +96,7 @@ namespace CurtAdmin.Controllers {
                 }
             } else {
                 try {
-                    landingPage = landingPage.Save(id, name, websiteID, startDate, endDate, url, content, linkClasses);
+                    landingPage = landingPage.Save(id, name, websiteID, startDate, endDate, url, content, linkClasses, newWindow, conversionID, conversionLabel);
                     id = landingPage.id;
                 } catch (Exception e) {
                     error = e.Message;
@@ -118,6 +121,18 @@ namespace CurtAdmin.Controllers {
         [AcceptVerbs(HttpVerbs.Post)]
         public void UpdateSort(int[] img) {
             new LandingPage().UpdateSort(img);
+        }
+
+        public string AddData(int pageID, string key, string value) {
+            List<LandingPageData> datas = new List<LandingPageData>();
+            datas = new LandingPage().AddData(pageID, key, value);
+            return JsonConvert.SerializeObject(datas);
+        }
+
+        public string RemoveData(int id) {
+            List<LandingPageData> datas = new List<LandingPageData>();
+            datas = new LandingPage().RemoveData(id);
+            return JsonConvert.SerializeObject(datas);
         }
     }
 }
