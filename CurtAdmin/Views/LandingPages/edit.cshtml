@@ -64,6 +64,11 @@
                         URL
                         <input type="text" name="url" id="url" value="@landingPage.url" placeholder="Enter a target URL..." required />
                     </label>
+
+                    <label for="newWindow">
+                        Open Link in New Window?
+                        <input type="checkbox" name="newWindow" id="newWindow" value="true" @((landingPage.newWindow) ? "checked=checked" : "") />
+                    </label>
                 </div>
                 <span class="clear"></span>
             </div>
@@ -92,7 +97,19 @@
                         Link CSS Classes (separate with spaces)
                         <br />
                         <input type="text" style="float: left;" name="linkClasses" id="linkClasses" value="@(landingPage.linkClasses ?? "")" placeholder="Enter classes to be applied to the link..." />
+                        <span class="clear"></span>
+                    </label>
+                    <label for="conversionID">
+                        AdWords ConversionID
                         <br />
+                        <input type="text" style="float: left;" name="conversionID" id="conversionID" value="@(landingPage.conversionID ?? "")" placeholder="Enter Google Adwords ConversionID..." />
+                        <span class="clear"></span>
+                    </label>
+                    <label for="conversionLabel">
+                        AdWords Conversion Label
+                        <br />
+                        <input type="text" style="float: left;" name="conversionLabel" id="conversionLabel" value="@(landingPage.conversionLabel ?? "")" placeholder="Enter Google Adwords Conversion Label..." />
+                        <span class="clear"></span>
                     </label>
                     <label>
                         Custom Data Attributes

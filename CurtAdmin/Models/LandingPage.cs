@@ -28,7 +28,7 @@ namespace CurtAdmin {
             return landingPage;
         }
 
-        public LandingPage Save(int id, string name, int websiteID, DateTime startDate, DateTime endDate, string url, string content = null, string linkClasses = null) {
+        public LandingPage Save(int id, string name, int websiteID, DateTime startDate, DateTime endDate, string url, string content = null, string linkClasses = null, bool newWindow = false, string conversionID = null, string conversionLabel = null) {
             CurtDevDataContext db = new CurtDevDataContext();
             LandingPage landingPage = new LandingPage();
             try {
@@ -40,7 +40,10 @@ namespace CurtAdmin {
                         endDate = endDate,
                         url = url,
                         pageContent = content,
-                        linkClasses = (linkClasses == null) ? linkClasses : linkClasses.Trim()
+                        linkClasses = (linkClasses == null) ? linkClasses : linkClasses.Trim(),
+                        newWindow = newWindow,
+                        conversionID = conversionID,
+                        conversionLabel = conversionLabel
                     };
                     db.LandingPages.InsertOnSubmit(landingPage);
                 } else {
@@ -52,6 +55,9 @@ namespace CurtAdmin {
                     landingPage.url = url;
                     landingPage.pageContent = content;
                     landingPage.linkClasses = (linkClasses == null) ? linkClasses : linkClasses.Trim();
+                    landingPage.newWindow = newWindow;
+                    landingPage.conversionID = conversionID;
+                    landingPage.conversionLabel = conversionLabel;
                 }
                 db.SubmitChanges();
             } catch {}

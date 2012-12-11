@@ -84,7 +84,7 @@ namespace CurtAdmin.Controllers {
             string linkClasses = String.IsNullOrWhiteSpace(Request.Form["linkClasses"]) ? null : Request.Form["linkClasses"];
             string conversionID = String.IsNullOrWhiteSpace(Request.Form["conversionID"]) ? null : Request.Form["conversionID"];
             string conversionLabel = String.IsNullOrWhiteSpace(Request.Form["conversionLabel"]) ? null : Request.Form["conversionLabel"];
-            bool newWindow = (Request.Form["conversionLabel"] == null) ? false : true;
+            bool newWindow = (Request.Form["newWindow"] == null) ? false : true;
             string error = "";
 
             LandingPage landingPage = new LandingPage();
@@ -96,7 +96,7 @@ namespace CurtAdmin.Controllers {
                 }
             } else {
                 try {
-                    landingPage = landingPage.Save(id, name, websiteID, startDate, endDate, url, content, linkClasses);
+                    landingPage = landingPage.Save(id, name, websiteID, startDate, endDate, url, content, linkClasses, newWindow, conversionID, conversionLabel);
                     id = landingPage.id;
                 } catch (Exception e) {
                     error = e.Message;

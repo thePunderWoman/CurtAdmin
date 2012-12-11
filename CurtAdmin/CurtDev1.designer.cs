@@ -22478,7 +22478,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="new Window", Storage="_newWindow", DbType="Bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_newWindow", DbType="Bit NOT NULL")]
 		public bool newWindow
 		{
 			get
