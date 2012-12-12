@@ -69,6 +69,15 @@
                         Open Link in New Window?
                         <input type="checkbox" name="newWindow" id="newWindow" value="true" @((landingPage.newWindow) ? "checked=checked" : "") />
                     </label>
+
+                    <label for="menuPosition">
+                        Chicklet Menu position
+                        <select id="menuPosition" name="menuPosition">
+                            <option value="top" @((landingPage.menuPosition == "top") ? "selected=selected" : "")>top</option>
+                            <option value="middle" @((landingPage.menuPosition == "middle") ? "selected=selected" : "")>middle</option>
+                            <option value="bottom" @((landingPage.menuPosition == "bottom") ? "selected=selected" : "")>bottom</option>
+                        </select>
+                    </label>
                 </div>
                 <span class="clear"></span>
             </div>

@@ -688,6 +688,50 @@ namespace CurtAdmin.Models {
             return acesconfigs;
         }
 
+        internal ACESConfigs getVehicleConfigs(int vehicleID) {
+            ACESConfigs acesconfigs = new ACESConfigs();
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            try {
+                // get vehicle by ID
+                vcdb_Vehicle v = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+                // get all the vehicle configs for the basevehicle and submodel
+                ACESConfigs fullacesconfigs = getVehicleConfigs(v.BaseVehicleID, (int)v.SubModelID);
+                // set the full list of types
+                acesconfigs.types = fullacesconfigs.types;
+                // initialize configs as a new list
+                acesconfigs.configs = new List<ACESVehicleConfig>();
+                List<VehicleConfigAttribute> vattrs = new List<VehicleConfigAttribute>();
+                if (v.ConfigID != null) {
+                    // get the ACES ConfigAttributes for the config of the vehicle if it exists
+                    vattrs = v.VehicleConfig.VehicleConfigAttributes.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesTypeID != null).ToList();
+                }
+                if (vattrs.Count > 0) {
+                    // loop through each of the ACES Vehicle Configs
+                    foreach (ACESVehicleConfig config in fullacesconfigs.configs) {
+                        bool add = true;
+                        // loop through each of the ConfigAttributes to check for matches
+                        foreach (VehicleConfigAttribute attr in vattrs) {
+                            if (config.attributes.Any(x => x.ConfigAttributeTypeID.Equals(attr.ConfigAttribute.ConfigAttributeTypeID) && x.vcdbID.Equals(attr.ConfigAttribute.vcdbID))) {
+                                // if there exists a ConfigAttribute that matches on type and vcdbID, make sure it's not shown
+                                ConfigAttributeType t = acesconfigs.types.Where(x => x.ID.Equals(attr.ConfigAttribute.ConfigAttributeTypeID)).First();
+                                t.count = 0;
+                            } else {
+                                add = false;
+                            }
+                        }
+                        if (add) {
+                            acesconfigs.configs.Add(config);
+                        }
+                    }
+                    acesconfigs.clearDuplicates();
+                } else {
+                    acesconfigs = fullacesconfigs;
+                }
+            } catch { }
+            return acesconfigs;
+        }
+
         public List<ConfigAttributeType> GetConfigAttributeTypes() {
             List<ConfigAttributeType> configs = new List<ConfigAttributeType>();
             CurtDevDataContext db = new CurtDevDataContext();
@@ -1305,6 +1349,32 @@ namespace CurtAdmin.Models {
             return duplicateID;
         }
 
+        public int checkVehicleExists(int vehicleID, int vcdbID, int typeID, string value) {
+            int duplicateID = 0;
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            vehicle = new ACES().GetVehicle(vehicleID);
+            try {
+                // get attribute based on info supplied
+                ConfigAttribute ca = db.ConfigAttributes.Where(x => x.vcdbID.Equals(vcdbID) && x.ConfigAttributeTypeID.Equals(typeID)).First();
+                List<ConfigAttribute> attributelist = attributelist = vehicle.VehicleConfig.VehicleConfigAttributes.Where(x => x.AttributeID != ca.ID).Select(x => x.ConfigAttribute).ToList<ConfigAttribute>();
+                attributelist.Add(ca);
+                List<vcdb_Vehicle> vehicles = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(vehicle.BaseVehicleID) && x.SubModelID.Equals(vehicle.SubModelID)).ToList<vcdb_Vehicle>();
+                foreach (vcdb_Vehicle v in vehicles) {
+                    if (v.ConfigID != null) {
+                        List<int> attrIDs = attributelist.Select(x => x.ID).ToList();
+                        List<int> vattrIDs = v.VehicleConfig.VehicleConfigAttributes.Select(x => x.AttributeID).ToList();
+                        if (attrIDs.Count == vattrIDs.Count && attrIDs.Except(vattrIDs).Count().Equals(0)) {
+                            duplicateID = v.ID;
+                        }
+                    }
+                }
+            } catch {
+                // attribute doesn't exist therefore no duplicate exists
+            }
+            return duplicateID;
+        }
+
         public ACESBaseVehicle mergeVehicles(int targetID, int currentID, bool deleteCurrent = true) {
             CurtDevDataContext db = new CurtDevDataContext();
             vcdb_Vehicle targetVehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(targetID)).First();
@@ -1336,6 +1406,135 @@ namespace CurtAdmin.Models {
             }
 
             return GetVehicle(targetVehicle.BaseVehicleID, (int)targetVehicle.SubModelID);
+        }
+
+        public ACESBaseVehicle addAttributeToVehicle(int vehicleID, int vcdbID, int typeID, string value) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+            ConfigAttribute ca = new ConfigAttribute();
+            try {
+                ca = db.ConfigAttributes.Where(x => x.vcdbID.Equals(vcdbID) && x.ConfigAttributeTypeID.Equals(typeID)).First();
+            } catch {
+                ca = new ConfigAttribute {
+                    ConfigAttributeTypeID = typeID,
+                    vcdbID = vcdbID,
+                    value = value,
+                    parentID = 0
+                };
+                db.ConfigAttributes.InsertOnSubmit(ca);
+                db.SubmitChanges();
+            }
+
+            if (vehicle.ConfigID == null) {
+                VehicleConfig config = new VehicleConfig();
+                db.VehicleConfigs.InsertOnSubmit(config);
+                db.SubmitChanges();
+
+                VehicleConfigAttribute vca = new VehicleConfigAttribute {
+                    AttributeID = ca.ID,
+                    VehicleConfigID = config.ID
+                };
+                db.VehicleConfigAttributes.InsertOnSubmit(vca);
+                vehicle.ConfigID = config.ID;
+                db.SubmitChanges();
+            } else {
+                // config exists
+                VehicleConfig config = vehicle.VehicleConfig;
+                if (config.vcdb_Vehicles.Count == 1) {
+                    // Safe to change
+                    VehicleConfigAttribute vca = new VehicleConfigAttribute {
+                        AttributeID = ca.ID,
+                        VehicleConfigID = config.ID
+                    };
+                    db.VehicleConfigAttributes.InsertOnSubmit(vca);
+                    db.SubmitChanges();
+                } else {
+                    // Config is used by more than one vehicle
+                    VehicleConfig newConfig = new VehicleConfig();
+                    db.VehicleConfigs.InsertOnSubmit(newConfig);
+                    db.SubmitChanges();
+
+                    List<VehicleConfigAttribute> newAttributes = new List<VehicleConfigAttribute>();
+                    foreach (VehicleConfigAttribute attr in config.VehicleConfigAttributes) {
+                        VehicleConfigAttribute vca = new VehicleConfigAttribute {
+                            AttributeID = attr.AttributeID,
+                            VehicleConfigID = newConfig.ID
+                        };
+                        newAttributes.Add(vca);
+                    }
+                    VehicleConfigAttribute newAttribute = new VehicleConfigAttribute {
+                        AttributeID = ca.ID,
+                        VehicleConfigID = newConfig.ID
+                    };
+                    newAttributes.Add(newAttribute);
+                    db.VehicleConfigAttributes.InsertAllOnSubmit(newAttributes);
+                    vehicle.ConfigID = newConfig.ID;
+                    db.SubmitChanges();
+                }
+            }
+            return GetVehicle(vehicle.BaseVehicleID, (int)vehicle.SubModelID);
+        }
+
+        public ACESBaseVehicle addAttribute(int vehicleID, int vcdbID, int typeID, string value) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+            vcdb_Vehicle newVehicle = new vcdb_Vehicle {
+                BaseVehicleID = vehicle.BaseVehicleID,
+                SubModelID = vehicle.SubModelID
+            };
+            ConfigAttribute ca = new ConfigAttribute();
+            try {
+                ca = db.ConfigAttributes.Where(x => x.vcdbID.Equals(vcdbID) && x.ConfigAttributeTypeID.Equals(typeID)).First();
+            } catch {
+                ca = new ConfigAttribute {
+                    ConfigAttributeTypeID = typeID,
+                    vcdbID = vcdbID,
+                    value = value,
+                    parentID = 0
+                };
+                db.ConfigAttributes.InsertOnSubmit(ca);
+                db.SubmitChanges();
+            }
+
+            if (vehicle.ConfigID == null) {
+                VehicleConfig config = new VehicleConfig();
+                db.VehicleConfigs.InsertOnSubmit(config);
+                db.SubmitChanges();
+
+                VehicleConfigAttribute vca = new VehicleConfigAttribute {
+                    AttributeID = ca.ID,
+                    VehicleConfigID = config.ID
+                };
+                db.VehicleConfigAttributes.InsertOnSubmit(vca);
+                newVehicle.ConfigID = config.ID;
+            } else {
+                // config exists
+                VehicleConfig config = vehicle.VehicleConfig;
+
+                VehicleConfig newConfig = new VehicleConfig();
+                db.VehicleConfigs.InsertOnSubmit(newConfig);
+                db.SubmitChanges();
+
+                List<VehicleConfigAttribute> newAttributes = new List<VehicleConfigAttribute>();
+                foreach (VehicleConfigAttribute attr in config.VehicleConfigAttributes) {
+                    VehicleConfigAttribute vca = new VehicleConfigAttribute {
+                        AttributeID = attr.AttributeID,
+                        VehicleConfigID = newConfig.ID
+                    };
+                    newAttributes.Add(vca);
+                }
+                VehicleConfigAttribute newAttribute = new VehicleConfigAttribute {
+                    AttributeID = ca.ID,
+                    VehicleConfigID = newConfig.ID
+                };
+                newAttributes.Add(newAttribute);
+                db.VehicleConfigAttributes.InsertAllOnSubmit(newAttributes);
+                
+                newVehicle.ConfigID = newConfig.ID;
+            }
+            db.vcdb_Vehicles.InsertOnSubmit(newVehicle);
+            db.SubmitChanges();
+            return GetVehicle(vehicle.BaseVehicleID, (int)vehicle.SubModelID);
         }
 
         public ACESBaseVehicle removeAttribute(int vehicleID, int attributeID) {
@@ -1466,6 +1665,27 @@ namespace CurtAdmin.Models {
     public class ACESConfigs {
         public List<ConfigAttributeType> types { get; set; }
         public List<ACESVehicleConfig> configs { get; set; }
+
+        public void clearDuplicates() {
+            List<ACESVehicleConfig> paredlist = new List<ACESVehicleConfig>();
+            List<ConfigAttributeType> typelist = types.Where(x => x.count > 1).ToList();
+            List<int> typeids = typelist.Select(x => x.ID).ToList();
+            for (int i = 0; i < this.configs.Count; i++) {
+                bool exists = false;
+                foreach (ACESVehicleConfig config in paredlist) {
+                    List<ConfigAttribute> attribs = config.attributes.Where(x => typeids.Contains(x.ConfigAttributeTypeID)).OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                    List<ConfigAttribute> masterattribs = this.configs[i].attributes.Where(x => typeids.Contains(x.ConfigAttributeTypeID)).OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                    int exceptCount = attribs.Except(masterattribs,new ConfigAttributeComparer()).Count();
+                    if (exceptCount == 0) {
+                        exists = true;
+                    }
+                }
+                if (!exists) {
+                    paredlist.Add(this.configs[i]);
+                }
+            }
+            this.configs = paredlist;
+        }
     }
 
     public class ACESVehicleConfig {

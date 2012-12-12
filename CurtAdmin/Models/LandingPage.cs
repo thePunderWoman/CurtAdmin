@@ -28,7 +28,18 @@ namespace CurtAdmin {
             return landingPage;
         }
 
-        public LandingPage Save(int id, string name, int websiteID, DateTime startDate, DateTime endDate, string url, string content = null, string linkClasses = null, bool newWindow = false, string conversionID = null, string conversionLabel = null) {
+        public void Remove(int id) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            LandingPage page = db.LandingPages.Where(x => x.id.Equals(id)).First();
+            List<LandingPageData> datas = page.LandingPageDatas.ToList(); ;
+            List<LandingPageImage> images = page.LandingPageImages.ToList();
+            db.LandingPageDatas.DeleteAllOnSubmit(datas);
+            db.LandingPageImages.DeleteAllOnSubmit(images);
+            db.LandingPages.DeleteOnSubmit(page);
+            db.SubmitChanges();
+        }
+
+        public LandingPage Save(int id, string name, int websiteID, DateTime startDate, DateTime endDate, string url, string content = null, string linkClasses = null, bool newWindow = false, string conversionID = null, string conversionLabel = null, string menuPosition = "top") {
             CurtDevDataContext db = new CurtDevDataContext();
             LandingPage landingPage = new LandingPage();
             try {
@@ -43,7 +54,8 @@ namespace CurtAdmin {
                         linkClasses = (linkClasses == null) ? linkClasses : linkClasses.Trim(),
                         newWindow = newWindow,
                         conversionID = conversionID,
-                        conversionLabel = conversionLabel
+                        conversionLabel = conversionLabel,
+                        menuPosition = menuPosition
                     };
                     db.LandingPages.InsertOnSubmit(landingPage);
                 } else {
@@ -58,6 +70,7 @@ namespace CurtAdmin {
                     landingPage.newWindow = newWindow;
                     landingPage.conversionID = conversionID;
                     landingPage.conversionLabel = conversionLabel;
+                    landingPage.menuPosition = menuPosition;
                 }
                 db.SubmitChanges();
             } catch {}

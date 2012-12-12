@@ -1,4 +1,4 @@
-﻿var getVCDBVehicles, getCurtDevVehicles, generateConfigTable, removeConfig;
+﻿var getVCDBVehicles, getCurtDevVehicles, generateConfigTable, removeConfig, generateVehicleConfigs;
 $(function () {
     $("#tabs").tabs();
     $('#find').hide();
@@ -89,75 +89,73 @@ $(function () {
         $("#config-dialog").empty();
         $.getJSON('/ACES/GetConfigs?BaseVehicleID=' + bvid + '&submodelID=' + submodelID, function (data) {
             //console.log(data);
-            if (data != null && data.configs.length > 0) {
-                if (data.configs.length == 1) {
+            if (data == null || data.configs.length == 0) {
+                $("#config-dialog").append("<p>There are no configurations for this vehicle in the VCDB</p>");
+            } else if (data.configs.length == 1) {
                     $("#config-dialog").append("<p>There is only one configuration for this vehicle available</p>");
-                } else {
-                    var configtable = '<div class="configs" style="display:block;" data-bvid="' + bvid + '" data-submodelid="' + submodelID + '"><table><thead>';
-                    var checkrow = '<tr>';
-                    var typerow = '<tr>';
-                    $(data.types).each(function (i, type) {
-                        if (type.count > 1) {
-                            checkrow += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
-                            typerow += '<th>' + type.name + '</th>';
-                        }
-                    });
-                    checkrow += '</tr>';
-                    typerow += '</tr>';
-                    configtable += typerow;
-                    configtable += checkrow;
-                    configtable += '</thead><tbody>';
-                    $(data.configs).each(function (i, config) {
-                        configtable += '<tr>';
-                        $(config.attributes).each(function (x, attr) {
-                            if (attr.ConfigAttributeType.count > 1) {
-                                configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
-                            }
-                        });
-
-                        configtable += '</tr>';
-                    });
-                    configtable += '</tbody></table></div>';
-                }
-                $("#config-dialog").append(configtable);
-                $("#config-dialog").dialog({
-                    modal: true,
-                    title: "Add Vehicle Configuration",
-                    width: 'auto',
-                    height: 'auto',
-                    buttons: {
-                        "Add": function () {
-                            var bvid = $('#config-dialog').find('div.configs').data('bvid');
-                            var submodelID = $('#config-dialog').find('div.configs').data('submodelid');
-                            var configs = new Array();
-                            $('input.configattributes').each(function (i, obj) {
-                                if ($(obj).is(':checked')) {
-                                    configs.push($(obj).val());
-                                }
-                            });
-                            $.getJSON('/ACES/AddConfig', { BaseVehicleID: bvid, SubmodelID: submodelID, configs: configs.join(",") }, function (data) {
-                                $(data.Submodels).each(function (i, submodel) {
-                                    var submodelli = $('#bv' + data.ID + 's' + submodel.SubmodelID);
-                                    $(submodelli).find('div.configs').remove();
-                                    var configtable = generateConfigTable(submodel);
-                                    $(submodelli).append(configtable);
-                                    $(submodelli).find('div.configs').show();
-                                    var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
-                                    $(submodelli).find('a.showConfig').empty().append(ccount);
-                                    $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
-                                    $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
-                                });
-                            });
-                            $(this).dialog("close");
-                        },
-                        "Close": function () {
-                            $(this).dialog("close");
-                        }
+            } else {
+                var configtable = '<div class="configs" style="display:block;" data-bvid="' + bvid + '" data-submodelid="' + submodelID + '"><table><thead>';
+                var checkrow = '<tr>';
+                var typerow = '<tr>';
+                $(data.types).each(function (i, type) {
+                    if (type.count > 1) {
+                        checkrow += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                        typerow += '<th>' + type.name + '</th>';
                     }
                 });
-            } else {
-                showMessage("There are no configurations for this vehicle");
+                checkrow += '</tr>';
+                typerow += '</tr>';
+                configtable += typerow;
+                configtable += checkrow;
+                configtable += '</thead><tbody>';
+                $(data.configs).each(function (i, config) {
+                    configtable += '<tr>';
+                    $(config.attributes).each(function (x, attr) {
+                        if (attr.ConfigAttributeType.count > 1) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        }
+                    });
+
+                    configtable += '</tr>';
+                });
+                configtable += '</tbody></table></div>';
             }
+            $("#config-dialog").append(configtable);
+            $("#config-dialog").dialog({
+                modal: true,
+                title: "Add Vehicle Configuration",
+                width: 'auto',
+                height: 'auto',
+                buttons: {
+                    "Add": function () {
+                        var bvid = $('#config-dialog').find('div.configs').data('bvid');
+                        var submodelID = $('#config-dialog').find('div.configs').data('submodelid');
+                        var configs = new Array();
+                        $('input.configattributes').each(function (i, obj) {
+                            if ($(obj).is(':checked')) {
+                                configs.push($(obj).val());
+                            }
+                        });
+                        $.getJSON('/ACES/AddConfig', { BaseVehicleID: bvid, SubmodelID: submodelID, configs: configs.join(",") }, function (data) {
+                            $(data.Submodels).each(function (i, submodel) {
+                                var submodelli = $('#bv' + data.ID + 's' + submodel.SubmodelID);
+                                $(submodelli).find('div.configs').remove();
+                                var configtable = generateConfigTable(submodel);
+                                $(submodelli).append(configtable);
+                                $(submodelli).find('div.configs').show();
+                                var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                $(submodelli).find('a.showConfig').empty().append(ccount);
+                                $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                            });
+                        });
+                        $(this).dialog("close");
+                    },
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
         })
     });
 
@@ -267,7 +265,7 @@ $(function () {
                         if (selectedAttr != undefined) {
                             // check if adding would create a duplicate vehicle
                             $.getJSON('/ACES/checkVehicleExists', { vehicleID: vid, attributeID: selectedAttr, method: "add" }, function (existsData) {
-                                console.log(existsData);
+                                //console.log(existsData);
                                 if (existsData == 0) {
                                     $.getJSON('/ACES/AddCustomConfig', { vehicleID: vid, attrID: selectedAttr }, function (response) {
                                         $(response.Submodels).each(function (i, submodel) {
@@ -411,12 +409,166 @@ $(function () {
 
     $(document).on('click', '.change', function (e) {
         e.preventDefault();
-
+        var vID = $(this).data('id');
+        $.getJSON('/ACES/getConfigsByVehicle/' + vID, function (data) {
+            //console.log(vID);
+            //console.log(data);
+            generateVehicleConfigs(data,vID);
+            $("#config-dialog").dialog({
+                modal: true,
+                title: "Change Vehicle Configuration",
+                width: 'auto',
+                height: 'auto',
+                buttons: {
+                    "Add": function () {
+                        var dialogbox = $(this);
+                        var cobj = $('input.addedAttrib:checked');
+                        if (cobj.length > 0) {
+                            var vcdbID = $(cobj).data('id');
+                            var typeID = $(cobj).data('typeid');
+                            var value = $(cobj).data('value');
+                            $.getJSON('/ACES/checkVehicleAndNewAttributeExists', { vehicleID: vID, vcdbID: vcdbID, typeID: typeID, textvalue: value }, function (existsdata) {
+                                if (existsdata == 0) {
+                                    // no duplicates exist...add attribute
+                                    $.getJSON('/ACES/addAttributeToVehicle', { vehicleID: vID, vcdbID: vcdbID, typeID: typeID, value: value }, function (response) {
+                                        $(response.Submodels).each(function (i, submodel) {
+                                            var submodelli = $('#bv' + response.ID + 's' + submodel.SubmodelID);
+                                            $(submodelli).find('div.configs').remove();
+                                            var configtable = generateConfigTable(submodel);
+                                            $(submodelli).append(configtable);
+                                            $(submodelli).find('div.configs').show();
+                                            var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                            $(submodelli).find('a.showConfig').empty().append(ccount);
+                                            $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                            $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                                        });
+                                        $.getJSON('/ACES/getConfigsByVehicle/' + vID, function (configdata) { generateVehicleConfigs(configdata, vID); })
+                                    });
+                                } else {
+                                    $("#config-dialog").empty();
+                                    var warningmsg = "<p>A Vehicle already exists with the configuration you would create if you add the attribute you chose. ";
+                                    warningmsg += "You can either merge the parts from the current vehicle into the target one, or you can cancel.</p>";
+                                    warningmsg += "<p>How would you like to proceed?</p>";
+                                    $("#config-dialog").append(warningmsg);
+                                    $("#config-dialog").dialog({
+                                        modal: true,
+                                        title: "WARNING: Duplicate Vehicle Ahead!!",
+                                        width: 400,
+                                        height: 'auto',
+                                        buttons: {
+                                            "Merge": function () {
+                                                var dialogbox = $(this);
+                                                $.getJSON('/ACES/MergeVehicles', { targetID: existsdata, currentID: vID }, function (response) {
+                                                    $(response.Submodels).each(function (i, submodel) {
+                                                        var submodelli = $('#bv' + response.ID + 's' + submodel.SubmodelID);
+                                                        $(submodelli).find('div.configs').remove();
+                                                        var configtable = generateConfigTable(submodel);
+                                                        $(submodelli).append(configtable);
+                                                        $(submodelli).find('div.configs').show();
+                                                        var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                                        $(submodelli).find('a.showConfig').empty().append(ccount);
+                                                        $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                                        $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                                                    });
+                                                    $(dialogbox).dialog("close");
+                                                });
+                                            },
+                                            "Cancel": function () {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            showMessage('No attributes selected');
+                        }
+                    },
+                    "Add As New": function () {
+                        var dialogbox = $(this);
+                        var cobj = $('input.addedAttrib:checked');
+                        if (cobj.length > 0) {
+                            var vcdbID = $(cobj).data('id');
+                            var typeID = $(cobj).data('typeid');
+                            var value = $(cobj).data('value');
+                            $.getJSON('/ACES/checkVehicleAndNewAttributeExists', { vehicleID: vID, vcdbID: vcdbID, typeID: typeID, textvalue: value }, function (existsdata) {
+                                if (existsdata == 0) {
+                                    // no duplicates exist...add attribute
+                                    $.getJSON('/ACES/addAttribute', { vehicleID: vID, vcdbID: vcdbID, typeID: typeID, value: value }, function (response) {
+                                        $(response.Submodels).each(function (i, submodel) {
+                                            var submodelli = $('#bv' + response.ID + 's' + submodel.SubmodelID);
+                                            $(submodelli).find('div.configs').remove();
+                                            var configtable = generateConfigTable(submodel);
+                                            $(submodelli).append(configtable);
+                                            $(submodelli).find('div.configs').show();
+                                            var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                            $(submodelli).find('a.showConfig').empty().append(ccount);
+                                            $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                            $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                                        });
+                                    });
+                                } else {
+                                    $("#config-dialog").empty();
+                                    var warningmsg = "<p>A Vehicle already exists with the configuration you would create if you add the attribute you chose. ";
+                                    warningmsg += "You can either merge the parts from the current vehicle into the target one, or you can cancel.</p>";
+                                    warningmsg += "<p>How would you like to proceed?</p>";
+                                    $("#config-dialog").append(warningmsg);
+                                    $("#config-dialog").dialog({
+                                        modal: true,
+                                        title: "WARNING: Duplicate Vehicle Ahead!!",
+                                        width: 400,
+                                        height: 'auto',
+                                        buttons: {
+                                            "Merge": function () {
+                                                var dialogbox = $(this);
+                                                $.getJSON('/ACES/MergeVehicles', { targetID: existsdata, currentID: vID }, function (response) {
+                                                    $(response.Submodels).each(function (i, submodel) {
+                                                        var submodelli = $('#bv' + response.ID + 's' + submodel.SubmodelID);
+                                                        $(submodelli).find('div.configs').remove();
+                                                        var configtable = generateConfigTable(submodel);
+                                                        $(submodelli).append(configtable);
+                                                        $(submodelli).find('div.configs').show();
+                                                        var ccount = '<span class="vehicleCount">' + submodel.vehicles.length + '</span><span class="arrow"></span>';
+                                                        $(submodelli).find('a.showConfig').empty().append(ccount);
+                                                        $(submodelli).find('a.showConfig span.arrow').css({ WebkitTransform: 'rotate(90deg)' });
+                                                        $(submodelli).find('a.showConfig span.arrow').css({ '-moz-transform': 'rotate(90deg)' });
+                                                    });
+                                                    $(dialogbox).dialog("close");
+                                                });
+                                            },
+                                            "Cancel": function () {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            showMessage('No attributes selected');
+                        }
+                    },
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
     });
 
     $('#find').on('click', function () {
         getCurtDevVehicles();
         getVCDBVehicles();
+    });
+
+    $(document).on('click', 'input.addedAttrib', function (e) {
+        var rowid = $(this).parent().parent().attr('id');
+        var cboxes = $('input.addedAttrib');
+        if (cboxes.is(':checked')) {
+            $('input.addedAttrib').attr('disabled', 'disabled');
+            $(this).removeAttr('disabled');
+        } else {
+            $('input.addedAttrib').removeAttr('disabled', 'disabled');
+        }
     });
 
 });
@@ -549,4 +701,36 @@ generateConfigTable = function (submodel) {
     });
     configTable += '</tbody></table></div>';
     return configTable;
+};
+
+generateVehicleConfigs = function (data,vID) {
+    $("#config-dialog").empty();
+    if (data == null || data.configs.length == 0) {
+        $("#config-dialog").append("<p>There are no configurations for this vehicle in the VCDB</p>");
+    } else if (data.configs.length == 1) {
+        $("#config-dialog").append("<p>There is only one configuration for this vehicle available</p>");
+    } else {
+        var configtable = '<div class="configs" style="display:block;" data-vid="' + vID + '"><table><thead>';
+        var typerow = '<tr>';
+        $(data.types).each(function (i, type) {
+            if (type.count > 1) {
+                typerow += '<th>' + type.name + '</th>';
+            }
+        });
+        typerow += '</tr>';
+        configtable += typerow;
+        configtable += '</thead><tbody>';
+        $(data.configs).each(function (i, config) {
+            configtable += '<tr id="row_' + i + '">';
+            $(config.attributes).each(function (x, attr) {
+                if (attr.ConfigAttributeType.count > 1) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                }
+            });
+
+            configtable += '</tr>';
+        });
+        configtable += '</tbody></table></div>';
+    }
+    $("#config-dialog").append(configtable);
 };

@@ -22272,6 +22272,8 @@ namespace CurtAdmin
 		
 		private string _conversionLabel;
 		
+		private string _menuPosition;
+		
 		private EntitySet<LandingPageData> _LandingPageDatas;
 		
 		private EntitySet<LandingPageImage> _LandingPageImages;
@@ -22304,6 +22306,8 @@ namespace CurtAdmin
     partial void OnconversionIDChanged();
     partial void OnconversionLabelChanging(string value);
     partial void OnconversionLabelChanged();
+    partial void OnmenuPositionChanging(string value);
+    partial void OnmenuPositionChanged();
     #endregion
 		
 		public LandingPage()
@@ -22534,6 +22538,26 @@ namespace CurtAdmin
 					this._conversionLabel = value;
 					this.SendPropertyChanged("conversionLabel");
 					this.OnconversionLabelChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_menuPosition", DbType="VarChar(15) NOT NULL", CanBeNull=false)]
+		public string menuPosition
+		{
+			get
+			{
+				return this._menuPosition;
+			}
+			set
+			{
+				if ((this._menuPosition != value))
+				{
+					this.OnmenuPositionChanging(value);
+					this.SendPropertyChanging();
+					this._menuPosition = value;
+					this.SendPropertyChanged("menuPosition");
+					this.OnmenuPositionChanged();
 				}
 			}
 		}

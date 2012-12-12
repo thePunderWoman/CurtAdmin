@@ -40,8 +40,9 @@
                     <td>@lp.url</td>
                     <td>@lp.LandingPageImages.Count</td>
                     <td class="center">
+                        <a href="@lp.Website.url/lp/@lp.id/@lp.name" target="_blank" title="View">View</a> | 
                         <a href="/LandingPages/edit/@lp.id">Edit</a> | 
-                        <a href="/LandingPages/delete/@lp.id">Delete</a>
+                        <a class="deletepage" href="/LandingPages/remove/@lp.id">Delete</a>
                     </td>
                 </tr>
             }
@@ -63,6 +64,22 @@
             null
         ],
             "aaSorting": [[2, "desc"]]
+        });
+
+        $(document).on('click', '.deletepage', function (e) {
+            e.preventDefault();
+            var table_row = $(this).parent().parent().get()[0];
+            var href = $(this).attr('href');
+            if (confirm('Are you sure you want to delete this page?')) {
+                $.getJSON(href, function (data) {
+                    if (data) {
+                        pagetable.fnDeleteRow(table_row);
+                        showMessage('Page Removed.');
+                    } else {
+                        showMessage('There was a problem removing the page');
+                    }
+                });
+            }
         });
     });
 </script>

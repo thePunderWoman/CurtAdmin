@@ -260,6 +260,12 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(configs);
         }
 
+        public string GetConfigsByVehicle(int id) {
+            ACESConfigs configs = new ACESConfigs();
+            configs = new ACES().getVehicleConfigs(id);
+            return JsonConvert.SerializeObject(configs);
+        }
+
         public string checkVehicle(int id) {
             vcdb_Vehicle vehicle = new vcdb_Vehicle();
             vehicle = new ACES().GetVehicle(id);
@@ -276,9 +282,26 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(duplicateID);
         }
 
+        public string checkVehicleAndNewAttributeExists(int vehicleID, int vcdbID, int typeID, string textvalue) {
+            int duplicateID = new ACES().checkVehicleExists(vehicleID, vcdbID, typeID, textvalue);
+            return JsonConvert.SerializeObject(duplicateID);
+        }
+
         public string mergeVehicles(int targetID, int currentID, bool deleteCurrent = true) {
             ACESBaseVehicle basevehicle = new ACESBaseVehicle();
             basevehicle = new ACES().mergeVehicles(targetID, currentID, deleteCurrent);
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
+        public string addAttributeToVehicle(int vehicleID, int vcdbID, int typeID, string value) {
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            basevehicle = new ACES().addAttributeToVehicle(vehicleID, vcdbID, typeID, value);
+            return JsonConvert.SerializeObject(basevehicle);
+        }
+
+        public string addAttribute(int vehicleID, int vcdbID, int typeID, string value) {
+            ACESBaseVehicle basevehicle = new ACESBaseVehicle();
+            basevehicle = new ACES().addAttribute(vehicleID, vcdbID, typeID, value);
             return JsonConvert.SerializeObject(basevehicle);
         }
 

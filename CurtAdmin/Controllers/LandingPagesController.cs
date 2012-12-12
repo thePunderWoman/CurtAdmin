@@ -73,6 +73,15 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public string Remove(int id) {
+            try {
+                new LandingPage().Remove(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
         [ValidateInput(false)]
         public ActionResult Save(int id = 0) {
             string name = Request.Form["name"] ?? null;
@@ -85,6 +94,7 @@ namespace CurtAdmin.Controllers {
             string conversionID = String.IsNullOrWhiteSpace(Request.Form["conversionID"]) ? null : Request.Form["conversionID"];
             string conversionLabel = String.IsNullOrWhiteSpace(Request.Form["conversionLabel"]) ? null : Request.Form["conversionLabel"];
             bool newWindow = (Request.Form["newWindow"] == null) ? false : true;
+            string menuPosition = Request.Form["menuPosition"];
             string error = "";
 
             LandingPage landingPage = new LandingPage();
@@ -96,7 +106,7 @@ namespace CurtAdmin.Controllers {
                 }
             } else {
                 try {
-                    landingPage = landingPage.Save(id, name, websiteID, startDate, endDate, url, content, linkClasses, newWindow, conversionID, conversionLabel);
+                    landingPage = landingPage.Save(id, name, websiteID, startDate, endDate, url, content, linkClasses, newWindow, conversionID, conversionLabel, menuPosition);
                     id = landingPage.id;
                 } catch (Exception e) {
                     error = e.Message + " " + e.StackTrace;
