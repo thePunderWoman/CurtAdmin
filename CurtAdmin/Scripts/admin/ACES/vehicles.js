@@ -169,9 +169,27 @@ $(function () {
             var confirmmessage = '';
             var count = data.vcdb_VehicleParts.length;
             if (count > 0) {
-                if (confirm('This vehicle is associated with ' + count + ' parts. Are you sure you want to delete this vehicle?')) {
-                    removeConfig(href, aobj)
-                }
+                $("#config-dialog").empty();
+                var partsmessage = "<p>This vehicle is associated with the following parts:</p><ul>";
+                $(data.vcdb_VehicleParts).each(function (i, part) {
+                    partsmessage += '<li><a target="_blank" href="/Product/EditACESVehicles?partID=' + part.PartNumber + '">' + part.PartNumber + '</a></li>';
+                });
+                partsmessage += "</ul><p>Are you sure you want to delete this vehicle?</p>";
+                $('#config-dialog').append(partsmessage)
+                $("#config-dialog").dialog({
+                    modal: true,
+                    title: "Remove Vehicle",
+                    width: 'auto',
+                    height: 'auto',
+                    buttons: {
+                        "Delete": function () {
+                            removeConfig(href, aobj)
+                        },
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             } else {
                 removeConfig(href, aobj)
             }
