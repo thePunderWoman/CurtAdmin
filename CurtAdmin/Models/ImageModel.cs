@@ -56,6 +56,7 @@ namespace CurtAdmin.Models {
             CurtDevDataContext db = new CurtDevDataContext();
             PartImage i = db.PartImages.Where(x => x.imageID.Equals(imageid)).First();
             List<string> ids = db.PartImages.Where(x => x.sizeID.Equals(i.sizeID)).Where(x => x.partID.Equals(i.partID)).Where(x => x.imageID != i.imageID).OrderBy(x => x.sort).Select(x => x.imageID.ToString()).ToList();
+            ProductModels.UpdatePart(i.partID);
             db.PartImages.DeleteOnSubmit(i);
             db.SubmitChanges();
             UpdateSort(ids);
@@ -66,6 +67,7 @@ namespace CurtAdmin.Models {
             char index = 'a';
             for (int i = 0; i < images.Count; i++ ) {
                 PartImage p = db.PartImages.Where(x => x.imageID.Equals(Convert.ToInt32(images[i]))).First();
+                ProductModels.UpdatePart(p.partID);
                 if (i != 0) {
                     index = GetNextLetter(index.ToString());
                 }

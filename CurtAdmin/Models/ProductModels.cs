@@ -105,6 +105,7 @@ namespace CurtAdmin.Models {
                 };
                 db.CatParts.InsertOnSubmit(cat_part);
                 db.SubmitChanges();
+                UpdatePart(partID);
             } catch (Exception e) {
                 return e.Message;
             }
@@ -121,6 +122,7 @@ namespace CurtAdmin.Models {
 
                 db.CatParts.DeleteAllOnSubmit<CatParts>(cat_part);
                 db.SubmitChanges();
+                UpdatePart(partID);
             } catch (Exception e) {
                 return e.Message;
             }
@@ -236,7 +238,7 @@ namespace CurtAdmin.Models {
                     // get the related parts information
                     ConvertedPart part = new ConvertedPart();
                     part = GetPart(relatedID);
-
+                    UpdatePart(partID);
                     // Serialize and return
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     return js.Serialize(part);
@@ -257,7 +259,7 @@ namespace CurtAdmin.Models {
                                       select r).FirstOrDefault<RelatedPart>();
                     db.RelatedParts.DeleteOnSubmit(rp);
                     db.SubmitChanges();
-
+                    UpdatePart(partID);
                     // Get the parts information
                     ConvertedPart part = GetPart(relatedID);
 
@@ -320,6 +322,7 @@ namespace CurtAdmin.Models {
                             db.indexPart(partnum);
                         }
                     }
+                    UpdatePart(partID);
                 } else {
                     throw new Exception("Invalid partID or vehicleID");
                 }
@@ -371,6 +374,7 @@ namespace CurtAdmin.Models {
                 db.VehicleParts.DeleteOnSubmit(vp);
                 db.SubmitChanges();
                 db.indexPart(partID);
+                UpdatePart(partID);
                 return "";
             } catch (Exception e) {
                 return e.Message;
@@ -520,7 +524,7 @@ namespace CurtAdmin.Models {
                     db.SubmitChanges();
                 };
 
-
+                UpdatePart(partID);
                 return Vehicle.GetFullVehicle(vID);
 
             } catch (Exception e) {
@@ -594,6 +598,7 @@ namespace CurtAdmin.Models {
                 c.cTypeID = contentType;
             }
             db.SubmitChanges();
+            UpdatePart(partID);
             return GetFullContent(c.contentID);
         }
 
@@ -608,6 +613,7 @@ namespace CurtAdmin.Models {
                 db.Contents.DeleteOnSubmit(c);
                 db.SubmitChanges();
             }
+            UpdatePart(partID);
             return "";
         }
 
@@ -647,6 +653,7 @@ namespace CurtAdmin.Models {
             attribute.value = value;
             db.SubmitChanges();
             db.indexPart(partID);
+            UpdatePart(partID);
         }
 
         internal static bool HasAttribute(int partID = 0, string key = "") {
@@ -671,6 +678,7 @@ namespace CurtAdmin.Models {
             CurtDevDataContext db = new CurtDevDataContext();
             for (int i = 0; i < attributes.Count; i++) {
                 PartAttribute a = db.PartAttributes.Where(x => x.pAttrID.Equals(Convert.ToInt32(attributes[i]))).First();
+                UpdatePart(a.partID);
                 a.sort = i + 1;
                 db.SubmitChanges();
             }
@@ -688,6 +696,7 @@ namespace CurtAdmin.Models {
                 VehiclePartAttribute vpa = db.VehiclePartAttributes.Where(x => x.vpAttrID.Equals(Convert.ToInt32(attributes[i]))).First();
                 vpa.sort = i + 1;
                 db.SubmitChanges();
+                UpdatePart(vpa.VehiclePart.partID);
             }
         }
 
@@ -756,6 +765,7 @@ namespace CurtAdmin.Models {
             db.SubmitChanges();
             UpdateAttributeSort(getAttributeIDs(partID));
             db.indexPart(partID);
+            UpdatePart(partID);
             // Return PartAttribute
             return pa;
         }
@@ -776,6 +786,7 @@ namespace CurtAdmin.Models {
             db.SubmitChanges();
             UpdateAttributeSort(getAttributeIDs(pid));
             db.indexPart(pid);
+            UpdatePart(pid);
         }
 
         // End Part Attribute Methods
@@ -839,7 +850,7 @@ namespace CurtAdmin.Models {
                     v.drilling = "Drilling required";
                 }
             };
-
+            UpdatePart(v.partID);
             db.SubmitChanges();
             return attribute;
             //db.indexPart(partID);
@@ -901,6 +912,7 @@ namespace CurtAdmin.Models {
             db.VehiclePartAttributes.InsertOnSubmit(vpa);
             db.SubmitChanges();
             updateVehicleAttributeSort(getVehiclePartAttributeIDs(vPartID));
+            UpdatePart(vpa.VehiclePart.partID);
             //db.indexPart(partID);
             // Return PartAttribute
             return vpa;
@@ -922,7 +934,8 @@ namespace CurtAdmin.Models {
                 db.VehiclePartAttributes.DeleteOnSubmit(vpa);
                 db.SubmitChanges();
                 updateVehicleAttributeSort(getVehiclePartAttributeIDs(pid));
-                db.indexPart(pid);
+                db.indexPart(vpa.VehiclePart.partID);
+                UpdatePart(vpa.VehiclePart.partID);
                 return "";
             } catch (Exception e) {
                 return e.Message;
@@ -1000,6 +1013,7 @@ namespace CurtAdmin.Models {
                 priceID = price_obj.priceID,
                 priceType = price_obj.priceType
             };
+            UpdatePart(partID);
             return ser_price;
         }
 
@@ -1010,6 +1024,7 @@ namespace CurtAdmin.Models {
             price = (from p in db.Prices
                      where p.priceID.Equals(priceID)
                      select p).FirstOrDefault<Price>();
+            UpdatePart(price.partID);
             if (price.partID > 0) {
                 db.Prices.DeleteOnSubmit(price);
                 db.SubmitChanges();
@@ -1092,6 +1107,7 @@ namespace CurtAdmin.Models {
                     throw new Exception("Failed to update package.");
                 }
             }
+            UpdatePart(partID);
             return package;
         }
 
@@ -1102,10 +1118,18 @@ namespace CurtAdmin.Models {
                 package = (from p in db.PartPackages
                            where p.ID.Equals(packageID)
                            select p).First<PartPackage>();
+                UpdatePart(package.partID);
                 db.PartPackages.DeleteOnSubmit(package);
                 db.SubmitChanges();
             } catch { }
             return "";
+        }
+
+        public static void UpdatePart(int partID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            Part part = db.Parts.Where(x => x.partID.Equals(partID)).First();
+            part.dateModified = DateTime.Now;
+            db.SubmitChanges();
         }
     }
 

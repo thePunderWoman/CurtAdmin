@@ -162,6 +162,9 @@ namespace CurtAdmin.Models {
                 }
 
                 r = Get(r.reviewID);
+                try {
+                    ProductModels.UpdatePart((int)review.partID);
+                } catch { }
 
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 return js.Serialize(r);
@@ -177,6 +180,9 @@ namespace CurtAdmin.Models {
                 Review review = db.Reviews.Where(x => x.reviewID == id).First<Review>();
                 review.active = false;
                 db.SubmitChanges();
+                try {
+                    ProductModels.UpdatePart((int)review.partID);
+                } catch { }
                 return true;
             } catch { return false; }
         }
@@ -193,6 +199,7 @@ namespace CurtAdmin.Models {
                     approvedmsg = "1";
                 }
                 db.SubmitChanges();
+                ProductModels.UpdatePart((int)review.partID);
                 return approvedmsg;
             } catch { return approvedmsg; }
         }

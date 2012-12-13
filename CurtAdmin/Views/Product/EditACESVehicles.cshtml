@@ -19,26 +19,33 @@
                     @foreach(CurtAdmin.Submodel s in bv.vcdb_Vehicles.Where(x => x.SubModelID != null).Select(x => x.Submodel).Distinct().OrderBy(x => x.SubmodelName)) {
                         <li>@s.SubmodelName
                             @if(bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).Any(x => x.ConfigID != null)) {
-                                <a href="#" class="showConfig">Show Configs</a>
-                                <table class="configs">
-                                    <thead>
-                                        <tr>
-                                        @foreach (CurtAdmin.ConfigAttributeType config in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.sort)) {
-                                            <th>@config.name</th>
-                                        }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach(CurtAdmin.VehicleConfig vconfig in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).Select(x => x.VehicleConfig)) {
-                                        <tr>
+                                <span class="tools">
+                                    <a href="#" class="showConfig" title="Show / Hide Configurations">
+                                        <span class="vehicleCount">@bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).Count()</span><span class="arrow"></span>
+                                    </a>
+                                </span>
+                                <span class="clear"></span>
+                                <div class="configs">
+                                    <table>
+                                        <thead>
+                                            <tr>
                                             @foreach (CurtAdmin.ConfigAttributeType config in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.sort)) {
-                                                configval = vconfig.VehicleConfigAttributes.Where(x => x.ConfigAttribute.ConfigAttributeTypeID.Equals(config.ID)).Select(x => x.ConfigAttribute.value).ToList<string>();
-                                                <td>@((configval.Count == 0) ? "" : configval.Aggregate((i, j) => i + " " + j))</td>
+                                                <th>@config.name</th>
                                             }
-                                        </tr>
-                                        }
-                                    </tbody>
-                                </table>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach(CurtAdmin.VehicleConfig vconfig in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).Select(x => x.VehicleConfig)) {
+                                            <tr>
+                                                @foreach (CurtAdmin.ConfigAttributeType config in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.sort)) {
+                                                    configval = vconfig.VehicleConfigAttributes.Where(x => x.ConfigAttribute.ConfigAttributeTypeID.Equals(config.ID)).Select(x => x.ConfigAttribute.value).ToList<string>();
+                                                    <td>@((configval.Count == 0) ? "" : configval.Aggregate((i, j) => i + " " + j))</td>
+                                                }
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
                             }
                         </li>
                     }

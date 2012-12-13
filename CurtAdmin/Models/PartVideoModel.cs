@@ -55,6 +55,7 @@ namespace CurtAdmin.Models {
                     db.PartVideos.InsertOnSubmit(v);
                     db.SubmitChanges();
                 }
+                ProductModels.UpdatePart(partID);
             } catch {
                 return "error";
             }
@@ -64,6 +65,7 @@ namespace CurtAdmin.Models {
         public static void DeleteVideo(int videoID = 0) {
             CurtDevDataContext db = new CurtDevDataContext();
             PartVideo v = db.PartVideos.Where(x => x.pVideoID.Equals(videoID)).First();
+            ProductModels.UpdatePart(v.partID);
             db.PartVideos.DeleteOnSubmit(v);
             db.SubmitChanges();
         }
