@@ -364,6 +364,18 @@ namespace CurtAdmin.Controllers {
         public string GetPartTypeByID(int id = 0) {
             return new ACES().GetPartTypeByID(id);
         }
+
+        public string GetVehicleParts(int vehicleID, int baseVehicleID, int submodelID) {
+            List<vcdb_VehiclePart> parts = new List<vcdb_VehiclePart>();
+            try {
+                if (vehicleID != 0) {
+                    parts = new ACES().GetVehicleParts(vehicleID);
+                } else {
+                    parts = new ACES().GetVehicleParts(baseVehicleID, submodelID);
+                }
+            } catch { }
+            return JsonConvert.SerializeObject(parts);
+        }
     }
 
     

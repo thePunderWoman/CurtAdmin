@@ -950,7 +950,7 @@ namespace CurtAdmin.Controllers
                     fullpath = file.Replace("http://docs.curthitch.biz", "");
                     fullpath = Server.MapPath(fullpath.Replace("http://www.curtmfg.com", ""));
                 } catch { };
-                UpdatePart(partID);
+                ProductModels.UpdatePart(partID);
                 return ImageModel.AddImage(partID, size, file, fullpath);
             } else {
                 return "error";

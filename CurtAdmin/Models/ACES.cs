@@ -1551,6 +1551,28 @@ namespace CurtAdmin.Models {
             }
             return GetVehicle(vehicle.BaseVehicleID, (int)vehicle.SubModelID);
         }
+
+        public List<vcdb_VehiclePart> GetVehicleParts(int vehicleID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+            List<vcdb_VehiclePart> parts = vehicle.vcdb_VehicleParts.ToList();
+            return parts;
+        }
+
+        public List<vcdb_VehiclePart> GetVehicleParts(int baseVehicleID, int submodelID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            List<vcdb_VehiclePart> parts = new List<vcdb_VehiclePart>();
+            try {
+                if (submodelID == 0) {
+                    vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(baseVehicleID) && x.SubModelID == null).First();
+                } else {
+                    vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(baseVehicleID) && x.SubModelID.Equals(submodelID) && x.ConfigID == null).First();
+                }
+                parts = vehicle.vcdb_VehicleParts.ToList();
+            } catch { }
+            return parts;
+        }
     }
 
     public class ConfigAttributeComparer : IEqualityComparer<ConfigAttribute> {

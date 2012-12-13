@@ -163,7 +163,7 @@ namespace CurtAdmin.Models {
 
                 r = Get(r.reviewID);
                 try {
-                    ProductModels.UpdatePart((int)review.partID);
+                    ProductModels.UpdatePart((int)r.partID);
                 } catch { }
 
                 JavaScriptSerializer js = new JavaScriptSerializer();

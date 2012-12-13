@@ -589,6 +589,41 @@ $(function () {
         }
     });
 
+    $(document).on('click', 'a.parts,a.gear', function (e) {
+        var vid = $(this).data('vid');
+        var bvid = $(this).data('bvid');
+        var submodelID = $(this).data('submodelid');
+        if (vid == undefined) {
+            vid = 0;
+        }
+        if (bvid == undefined) {
+            bvid = 0;
+        }
+        if (submodelID == undefined) {
+            submodelID = 0;
+        }
+        $.getJSON('/ACES/GetVehicleParts', { vehicleID: vid, baseVehicleID: bvid, submodelID: submodelID }, function (data) {
+            $("#config-dialog").empty();
+            var partmsg = '<ul id="vehiclePartList">';
+            $(data).each(function (i, vpart) {
+                partmsg += '<li><a target="_blank" href="/Product/EditACESVehicles?partID=' + vpart.PartNumber + '">' + vpart.PartNumber + '</a><a class="removePart" href="/ACES/RemoveVehiclePart/' + vpart.ID + '">&times;</a>';
+            });
+            partmsg += '</ul>';
+            $("#config-dialog").append(partmsg);
+            $("#config-dialog").dialog({
+                modal: true,
+                title: "Vehicle Parts",
+                width: 'auto',
+                height: 'auto',
+                buttons: {
+                    "Done": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+    });
+
 });
 
 removeConfig = function (href,aobj) {
