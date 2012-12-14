@@ -1638,7 +1638,7 @@ ul#pageImages li a.removeimage {
     margin: 0 0 0 5px;
 }
 
-ul#dataList li a.removeData {
+ul#dataList li a.removeData, #vehiclePartList li a.removePart, #notelist li a.removeNote {
     display: none;
     position: relative;
     text-decoration: none;
@@ -1647,11 +1647,20 @@ ul#dataList li a.removeData {
     padding: 0;
 }
 
+#vehiclePartList li a.removePart {
+    float: right;
+}
+#vehiclePartList li a.viewNotes {
+    margin-left: 10px;
+    text-decoration: none;
+    font-size: 11px;
+}
+
 ul#pageImages li:hover a.removeimage {
     display: block;
 }
 
-ul#dataList:hover li a.removeData {
+ul#dataList li:hover a.removeData, #vehiclePartList li:hover a.removePart, #notelist li:hover a.removeNote {
     display: inline-block;
 }
 
@@ -1677,4 +1686,16 @@ input#dataValue {
     border-radius: 100%;
     -webkit-box-shadow: inset 0 0 0 0.15em #686868;
     box-shadow: inset 0 0 0 0.15em #686868;
+}
+
+#vehiclePartList {
+    list-style: none;
+    padding: 20px 10px;
+    margin: 0;
+}
+
+#addNote {
+    width: 394px;
+    font-size: 14px;
+    padding: 3px;
 }

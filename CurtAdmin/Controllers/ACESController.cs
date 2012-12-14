@@ -376,6 +376,61 @@ namespace CurtAdmin.Controllers {
             } catch { }
             return JsonConvert.SerializeObject(parts);
         }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string RemoveVehiclePart(int id) {
+            try {
+                new ACES().RemoveVehiclePart(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
+        public string AddVehiclePart(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0, int partID = 0) {
+            List<vcdb_VehiclePart> vparts = new List<vcdb_VehiclePart>();
+            try {
+                vparts = new ACES().AddVehiclePart(vehicleID, baseVehicleID, submodelID, partID);
+            } catch { }
+            return JsonConvert.SerializeObject(vparts);
+        }
+
+        public string GetNotes(int id) {
+            List<Note> notes = new List<Note>();
+            try {
+                notes = new ACES().getNotes(id);
+            } catch { }
+            return JsonConvert.SerializeObject(notes);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string RemoveNote(int id) {
+            try {
+                new ACES().RemoveNote(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
+        public string AddNote(int vPartID, string note) {
+            try {
+                new ACES().AddNote(vPartID, note);
+            } catch { }
+            return GetNotes(vPartID);
+        }
+
+        public string SearchNotes(string keyword = "") {
+            return new ACES().SearchNotes(keyword);
+        }
+
+        public string PopulatePartsFromBaseVehicle(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0) {
+            try {
+                new ACES().PopulatePartsFromBaseVehicle(vehicleID, baseVehicleID, submodelID);
+            } catch { }
+            return GetVehicleParts(vehicleID, baseVehicleID, submodelID);
+        }
+
     }
 
     

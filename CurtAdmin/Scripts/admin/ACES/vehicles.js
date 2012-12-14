@@ -1,4 +1,4 @@
-﻿var getVCDBVehicles, getCurtDevVehicles, generateConfigTable, removeConfig, generateVehicleConfigs;
+﻿var getVCDBVehicles, getCurtDevVehicles, generateConfigTable, removeConfig, generateVehicleConfigs, loadNotes;
 $(function () {
     $("#tabs").tabs();
     $('#find').hide();
@@ -606,9 +606,14 @@ $(function () {
             $("#config-dialog").empty();
             var partmsg = '<ul id="vehiclePartList">';
             $(data).each(function (i, vpart) {
-                partmsg += '<li><a target="_blank" href="/Product/EditACESVehicles?partID=' + vpart.PartNumber + '">' + vpart.PartNumber + '</a><a class="removePart" href="/ACES/RemoveVehiclePart/' + vpart.ID + '">&times;</a>';
+                partmsg += '<li><a target="_blank" href="/Product/EditACESVehicles?partID=' + vpart.PartNumber + '">' + vpart.PartNumber + '</a><a href="#" class="viewNotes" data-id="' + vpart.ID + '">Notes</a> <a class="removePart" href="/ACES/RemoveVehiclePart/' + vpart.ID + '">&times;</a>';
             });
             partmsg += '</ul>';
+            if (data.length == 0) {
+                partmsg += '<p id="noparts">No Parts Associated</p>';
+            }
+            partmsg += '<label for="addPart">Add Part<br /><input type="text" id="addPart" data-vid="' + vid + '" data-submodelid="' + submodelID + '" data-bvid="' + bvid + '" placeholder="Enter a part number" /></label>';
+            partmsg += '<button id="submitPart">Add</button>';
             $("#config-dialog").append(partmsg);
             $("#config-dialog").dialog({
                 modal: true,
@@ -616,12 +621,115 @@ $(function () {
                 width: 'auto',
                 height: 'auto',
                 buttons: {
+                    "Populate": function () {
+                        $.getJSON('/ACES/PopulatePartsFromBaseVehicle', { vehicleID: vid, baseVehicleID: bvid, submodelID: submodelID }, function (partdata) {
+                            if (partdata.length > 0) {
+                                $('#noparts').remove();
+                                var partmsg = "";
+                                $(partdata).each(function (i, vpart) {
+                                    partmsg += '<li><a target="_blank" href="/Product/EditACESVehicles?partID=' + vpart.PartNumber + '">' + vpart.PartNumber + '</a><a href="#" class="viewNotes" data-id="' + vpart.ID + '">Notes</a> <a class="removePart" href="/ACES/RemoveVehiclePart/' + vpart.ID + '">&times;</a>';
+                                });
+                                $('#vehiclePartList').empty();
+                                $('#vehiclePartList').append(partmsg);
+                            }
+                        });
+                    },
                     "Done": function () {
                         $(this).dialog("close");
                     }
                 }
             });
         });
+    });
+
+    $(document).on('click', '.removePart', function (e) {
+        e.preventDefault();
+        var href = $(this).attr('href');
+        var liobj = $(this).parent();
+        if (confirm('Are you sure you want to remove this part from this vehicle?')) {
+            $.post(href, function (data) {
+                if (data) {
+                    $(liobj).fadeOut('400', function () {
+                        $(liobj).remove();
+                        if ($('#vehiclePartList li').length == 0) {
+                            $('#vehiclePartList').after('<p id="noparts">No Parts Associated</p>');
+                        }
+                    });
+                }
+            }, "json");
+        }
+    });
+
+    $(document).on('click', '.removeNote', function (e) {
+        e.preventDefault();
+        var href = $(this).attr('href');
+        var liobj = $(this).parent();
+        $.post(href, function (data) {
+            if (data) {
+                $(liobj).fadeOut('400', function () {
+                    $(liobj).remove();
+                    if ($('#notelist li').length == 0) {
+                        $('#notelist').after('<p id="nonotes">No Notes</p>');
+                    }
+                });
+            }
+        }, "json");
+    });
+
+    $(document).on('click', '#submitPart', function (e) {
+        e.preventDefault();
+        var bobj = $(this);
+        var partID = $('#addPart').val().trim();
+        if (partID != "") {
+            var vid = $('#addPart').data('vid');
+            var bvid = $('#addPart').data('bvid');
+            var submodelid = $('#addPart').data('submodelid');
+            $.getJSON('/ACES/AddVehiclePart', { vehicleID: vid, baseVehicleID: bvid, submodelID: submodelid, partID: partID }, function (data) {
+                $('#noparts').remove();
+                $('#vehiclePartList').empty();
+                var partmsg = "";
+                var vpid = 0;
+                $(data).each(function (i, vpart) {
+                    partmsg += '<li><a target="_blank" href="/Product/EditACESVehicles?partID=' + vpart.PartNumber + '">' + vpart.PartNumber + '</a><a href="#" class="viewNotes" data-id="' + vpart.ID + '">Notes</a><a class="removePart" href="/ACES/RemoveVehiclePart/' + vpart.ID + '">&times;</a>';
+                    if (vpart.PartNumber == partID) {
+                        vpid = vpart.ID;
+                    }
+                });
+                $('#vehiclePartList').append(partmsg);
+                $('#addPart').attr('value', '');
+                loadNotes(vpid);
+            });
+        } else {
+            $('#addPart').attr('value','');
+            showMessage("You must enter a part ID.");
+        }
+    });
+
+    $(document).on('click', 'a.viewNotes', function (e) {
+        e.preventDefault();
+        var vpid = $(this).data('id');
+        loadNotes(vpid);
+    });
+
+    $(document).on('click', '#submitNote', function (e) {
+        e.preventDefault();
+        var notetext = $('#addNote').val().trim();
+        if (notetext != "") {
+            var vpid = $('#addNote').data('vpid');
+            $.getJSON('/ACES/AddNote', { vPartID: vpid, note: notetext }, function (data) {
+                var notemsg = "";
+                $(data).each(function (i, note) {
+                    notemsg += '<li>' + note.note1 + '<a href="/ACES/RemoveNote/' + note.ID + '" class="removeNote">&times;</a></li>';
+                });
+                $('#notelist').empty();
+                $('#notelist').append(notemsg);
+                $('#nonotes').remove();
+                $('#addNote').attr('value', '');
+            });
+        } else {
+            $('#addNote').attr('value', '');
+            showMessage("You must enter a note.");
+        }
     });
 
 });
@@ -787,3 +895,56 @@ generateVehicleConfigs = function (data,vID) {
     }
     $("#config-dialog").append(configtable);
 };
+
+loadNotes = function (vPartID) {
+    $("#notes-dialog").empty();
+    $.getJSON('/ACES/GetNotes/' + vPartID, function (data) {
+        var notemsg = '<ul id="notelist">';
+        $(data).each(function (i, note) {
+            notemsg += '<li>' + note.note1 + '<a href="/ACES/RemoveNote/' + note.ID + '" class="removeNote">&times;</a></li>';
+        });
+        notemsg += '</ul>';
+        if (data.length == 0) {
+            notemsg += '<p id="nonotes">No Notes</p>';
+        }
+        notemsg += '<label for="addNote">Add Note<br /><input type="text" id="addNote" data-vpid="' + vPartID + '" placeholder="Enter a note" /></label>';
+        notemsg += '<button id="submitNote">Add</button>';
+        $("#notes-dialog").append(notemsg);
+        $('#addNote').autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                $.getJSON('/ACES/SearchNotes', { keyword: $('#addNote').val() }, function (data) {
+                    response($.map(data, function (item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.ID
+                        }
+                    }));
+                })
+            },
+            open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            },
+            select: function (e, ui) {
+                e.preventDefault();
+                $('#addNote').val(ui.item.value);
+            }
+        });
+        $("#notes-dialog").dialog({
+            modal: true,
+            title: "Vehicle Part Notes",
+            width: 'auto',
+            height: 'auto',
+            buttons: {
+                "Done": function () {
+                    $(this).dialog("close");
+                    $('#addPart').focus();
+                }
+            }
+        });
+    });
+}

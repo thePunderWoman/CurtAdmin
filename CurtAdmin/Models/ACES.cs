@@ -1573,6 +1573,193 @@ namespace CurtAdmin.Models {
             } catch { }
             return parts;
         }
+
+        public void RemoveVehiclePart(int vPartID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<Note> notes = db.Notes.Where(x => x.vcdb_VehiclePart.ID.Equals(vPartID)).ToList<Note>();
+            db.Notes.DeleteAllOnSubmit(notes);
+            db.SubmitChanges();
+
+            vcdb_VehiclePart vehiclePart = db.vcdb_VehicleParts.Where(x => x.ID.Equals(vPartID)).First();
+            db.vcdb_VehicleParts.DeleteOnSubmit(vehiclePart);
+            db.SubmitChanges();
+        }
+
+        public List<vcdb_VehiclePart> AddVehiclePart(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0, int partID = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            List<vcdb_VehiclePart> vParts = new List<vcdb_VehiclePart>();
+            if (vehicleID != 0) {
+                vehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+            } else {
+                if (submodelID == 0) {
+                    try {
+                        vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(baseVehicleID) && x.SubModelID.Equals(null)).First();
+                    } catch {
+                        // no vehicle exists -- create it
+                        vehicle = new vcdb_Vehicle {
+                            BaseVehicleID = baseVehicleID
+                        };
+                        db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                        db.SubmitChanges();
+                    }
+                } else {
+                    try {
+                        vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(baseVehicleID) && x.SubModelID.Equals(submodelID) && x.ConfigID.Equals(null)).First();
+                    } catch {
+                        // no vehicle exists -- create it
+                        vehicle = new vcdb_Vehicle {
+                            BaseVehicleID = baseVehicleID,
+                            SubModelID = submodelID
+                        };
+                        db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                        db.SubmitChanges();
+                    }
+                }
+            }
+            // have vehicle -- add part if part exists
+            Part part = new Part();
+            try {
+                part = db.Parts.Where(x => x.partID.Equals(partID)).First();
+            } catch {
+                throw new Exception("Part doesn't exist");
+            }
+            try {
+                // check if vehicle part relationship already exists
+                vcdb_VehiclePart vPart = db.vcdb_VehicleParts.Where(x => x.PartNumber.Equals(part.partID) && x.VehicleID.Equals(vehicle.ID)).First();
+            } catch {
+                // relationship doesn't exist yet - add it
+                vcdb_VehiclePart vPart = new vcdb_VehiclePart {
+                    VehicleID = vehicle.ID,
+                    PartNumber = part.partID
+                };
+                db.vcdb_VehicleParts.InsertOnSubmit(vPart);
+                db.SubmitChanges();
+
+                // Select a distinct set of the notes for each vehicle and add them to the vpart
+                List<Note> notes = db.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(vehicle.ID)).SelectMany(x => x.Notes).ToList().Distinct(new NoteComparer()).ToList();
+                List<Note> newNotes = new List<Note>();
+                foreach (Note n in notes) {
+                    Note newNote = new Note {
+                        note1 = n.note1,
+                        vehiclePartID = vPart.ID
+                    };
+                    newNotes.Add(newNote);
+                }
+                if (newNotes.Count > 0) {
+                    db.Notes.InsertAllOnSubmit(newNotes);
+                    db.SubmitChanges();
+                }
+            }
+            vParts = db.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(vehicle.ID)).ToList();
+            return vParts;
+        }
+
+        public void PopulatePartsFromBaseVehicle(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<vcdb_VehiclePart> vParts = new List<vcdb_VehiclePart>();
+            List<vcdb_Vehicle> vehicles = new List<vcdb_Vehicle>();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            if (vehicleID != 0) {
+                vehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+                vehicles = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).SelectMany(x => x.BaseVehicle.vcdb_Vehicles).ToList();
+            } else {
+                if (submodelID == 0) {
+                    try {
+                        vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(baseVehicleID) && x.SubModelID.Equals(null)).First();
+                    } catch {
+                        vehicle = new vcdb_Vehicle {
+                            BaseVehicleID = baseVehicleID
+                        };
+                        db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                        db.SubmitChanges();
+                    }
+                } else {
+                    try {
+                        vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(baseVehicleID) && x.SubModelID.Equals(submodelID) && x.ConfigID.Equals(null)).First();
+                    } catch {
+                        vehicle = new vcdb_Vehicle {
+                            BaseVehicleID = baseVehicleID,
+                            SubModelID = submodelID
+                        };
+                        db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                        db.SubmitChanges();
+                    }
+                }
+                vehicles = db.BaseVehicles.Where(x => x.ID.Equals(baseVehicleID)).SelectMany(x => x.vcdb_Vehicles).ToList();
+            }
+            if (vehicles.Count > 0 && vehicle != null && vehicle.ID > 0) {
+                vParts = vehicles.SelectMany(x => x.vcdb_VehicleParts).ToList().Distinct(new VehiclePartComparer()).ToList();
+                
+                foreach (vcdb_VehiclePart vpart in vParts) {
+                    vcdb_VehiclePart vp = new vcdb_VehiclePart {
+                        VehicleID = vehicle.ID,
+                        PartNumber = vpart.PartNumber
+                    };
+                    db.vcdb_VehicleParts.InsertOnSubmit(vp);
+                    db.SubmitChanges();
+
+                    List<Note> notes = new List<Note>();
+                    foreach (Note note in vpart.Notes) {
+                        Note n = new Note {
+                            vehiclePartID = vp.ID,
+                            note1 = note.note1
+                        };
+                        notes.Add(n);
+                    }
+                    db.Notes.InsertAllOnSubmit(notes);
+                    db.SubmitChanges();
+                }
+            }
+
+        }
+
+        public List<Note> getNotes(int vPartID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<Note> notes = new List<Note>();
+            try {
+                notes = db.Notes.Where(x => x.vehiclePartID.Equals(vPartID)).ToList();
+            } catch { }
+            return notes;
+        }
+
+        public void RemoveNote(int noteID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            Note note = db.Notes.Where(x => x.ID.Equals(noteID)).First<Note>();
+            db.Notes.DeleteOnSubmit(note);
+            db.SubmitChanges();
+        }
+
+        public void AddNote(int vPartID, string note) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                Note n = db.Notes.Where(x => x.vehiclePartID.Equals(vPartID) && x.note1.ToLower().Trim().Equals(note.ToLower().Trim())).First();
+            } catch {
+                Note n = new Note {
+                    vehiclePartID = vPartID,
+                    note1 = note.Trim()
+                };
+                db.Notes.InsertOnSubmit(n);
+                db.SubmitChanges();
+            }
+        }
+
+        public string SearchNotes(string keyword = "") {
+            CurtDevDataContext db = new CurtDevDataContext();
+            if (keyword != "" && keyword.Length >= 1) {
+                var notes = (from n in db.Notes
+                             where n.note1.Contains(keyword)
+                             orderby n.note1
+                             select new {
+                                 id = 1,
+                                 label = n.note1,
+                                 value = n.note1
+                             }).ToList().Distinct().ToList();
+                return JsonConvert.SerializeObject(notes);
+            }
+            return "[]";
+        }
+
     }
 
     public class ConfigAttributeComparer : IEqualityComparer<ConfigAttribute> {
@@ -1588,6 +1775,38 @@ namespace CurtAdmin.Models {
 
         int IEqualityComparer<ConfigAttribute>.GetHashCode(ConfigAttribute obj) {
             return obj.vcdbID.GetHashCode();
+        }
+    }
+
+    public class NoteComparer : IEqualityComparer<Note> {
+        bool IEqualityComparer<Note>.Equals(Note x, Note y) {
+            // Check whether the compared objects reference the same data.
+            if (x.note1.Trim().Equals(y.note1.Trim())) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        int IEqualityComparer<Note>.GetHashCode(Note obj) {
+            return obj.note1.GetHashCode();
+        }
+    }
+
+    public class VehiclePartComparer : IEqualityComparer<vcdb_VehiclePart> {
+        bool IEqualityComparer<vcdb_VehiclePart>.Equals(vcdb_VehiclePart x, vcdb_VehiclePart y) {
+            // Check whether the compared objects reference the same data.
+            if (x.PartNumber.Equals(y.PartNumber)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        int IEqualityComparer<vcdb_VehiclePart>.GetHashCode(vcdb_VehiclePart obj) {
+            return obj.PartNumber.GetHashCode();
         }
     }
 
