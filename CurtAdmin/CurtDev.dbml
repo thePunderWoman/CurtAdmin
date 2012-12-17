@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="CurtDev" Class="CurtDevDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=CurtDev;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CurtDevConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=CurtDev;Integrated Security=True;Asynchronous Processing=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CurtDevConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Class" Member="Classes">
     <Type Name="Class">
       <Column Name="classID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -1083,6 +1083,38 @@
       <Column Name="url" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="sort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="LandingPage_LandingPageImage" Member="LandingPage" AccessModifier="Internal" ThisKey="landingPageID" OtherKey="id" Type="LandingPage" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Cabelas" Member="Cabelas">
+    <Type Name="Cabela">
+      <Column Name="cabelasID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="priceCode" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="cabelasPart" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.KioskOrderItems" Member="KioskOrderItems">
+    <Type Name="KioskOrderItem">
+      <Column Name="itemID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="orderID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="price" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="isFulfilled" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PartChange2012" Member="PartChange2012s">
+    <Type Name="PartChange2012">
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="priceCode" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="list" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="map" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="jobber" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="newPartID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="newPriceCode" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="newList" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="newMap" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="newJobber" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="UPC" Type="System.Double" DbType="Float" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">
