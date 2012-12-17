@@ -36,10 +36,11 @@ namespace CurtAdmin.Controllers {
         }
 
         public string UpdateParts() {
-            CurtDevDataContext db = new CurtDevDataContext();
+            CurtDevDataContext db2 = new CurtDevDataContext();
             List<PartChange2012> changes = new List<PartChange2012>();
-            changes = db.PartChange2012s.Where(x => x.partID < 13000).OrderBy(x => x.partID).ToList();
+            changes = db2.PartChange2012s.Where(x => x.partID < 13000).OrderBy(x => x.partID).ToList();
             Parallel.ForEach(changes, change => {
+                CurtDevDataContext db = new CurtDevDataContext();
                 Part oldPart = db.Parts.Where(x => x.partID.Equals(change.partID)).FirstOrDefault();
                 if (oldPart != null && oldPart.partID != null && oldPart.partID > 0) {
                     try {
@@ -139,8 +140,9 @@ namespace CurtAdmin.Controllers {
             });
 
             changes = new List<PartChange2012>();
-            changes = db.PartChange2012s.Where(x => x.partID > 13000).OrderBy(x => x.partID).ToList();
+            changes = db2.PartChange2012s.Where(x => x.partID > 13000).OrderBy(x => x.partID).ToList();
             Parallel.ForEach(changes, change => {
+                CurtDevDataContext db = new CurtDevDataContext();
                 Part oldPart = db.Parts.Where(x => x.partID.Equals(change.partID)).FirstOrDefault();
                 if (oldPart != null && oldPart.partID != null && oldPart.partID > 0) {
                     try {
