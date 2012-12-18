@@ -38,209 +38,231 @@ namespace CurtAdmin.Controllers {
         public string UpdateParts() {
             CurtDevDataContext db2 = new CurtDevDataContext();
             List<PartChange2012> changes = new List<PartChange2012>();
+            Dictionary<DateTime, List<PartChange2012>> results = new Dictionary<DateTime, List<PartChange2012>>();
+            List<int> failedList = new List<int>();
             changes = db2.PartChange2012s.Where(x => x.partID < 13000).OrderBy(x => x.partID).ToList();
+            failedList = processChanges(changes);
+            results.Add(DateTime.Now, changes);
+            while (failedList.Count > 0) {
+                changes = new List<PartChange2012>();
+                changes = db2.PartChange2012s.Where(x => failedList.Contains(x.partID)).OrderBy(x => x.partID).ToList();
+                failedList = processChanges(changes);
+            }
+            
+            failedList = new List<int>();
+            changes = new List<PartChange2012>();
+            changes = db2.PartChange2012s.Where(x => x.partID > 13000).OrderBy(x => x.partID).ToList();
+            failedList = processChanges(changes);
+            results.Add(DateTime.Now, changes);
+            while (failedList.Count > 0) {
+                changes = new List<PartChange2012>();
+                changes = db2.PartChange2012s.Where(x => failedList.Contains(x.partID)).OrderBy(x => x.partID).ToList();
+                failedList = processChanges(changes);
+            }
+
+            return JsonConvert.SerializeObject(results);
+        }
+
+        private List<int> processChanges(List<PartChange2012> changes) {
+            List<int> failedParts = new List<int>();
             Parallel.ForEach(changes, change => {
                 CurtDevDataContext db = new CurtDevDataContext();
                 Part oldPart = db.Parts.Where(x => x.partID.Equals(change.partID)).FirstOrDefault();
+                List<string> errors = new List<string>();
                 if (oldPart != null && oldPart.partID != null && oldPart.partID > 0) {
                     try {
-                        Part newPart = new Part {
-                            partID = change.newPartID,
-                            priceCode = change.newPriceCode,
-                            ACESPartTypeID = oldPart.ACESPartTypeID,
-                            classID = oldPart.classID,
-                            dateAdded = oldPart.dateAdded,
-                            dateModified = DateTime.Now,
-                            oldPartNumber = oldPart.oldPartNumber,
-                            featured = oldPart.featured,
-                            shortDesc = oldPart.shortDesc,
-                            status = oldPart.status
-                        };
-                        db.Parts.InsertOnSubmit(newPart);
-                        db.SubmitChanges();
-
-                        foreach (PartImage img in oldPart.PartImages) {
-                            img.partID = newPart.partID;
+                        Part newPart = new Part();
+                        try {
+                            newPart = db.Parts.Where(x => x.partID.Equals(change.newPartID)).First();
+                            newPart.priceCode = change.newPriceCode;
+                            newPart.ACESPartTypeID = oldPart.ACESPartTypeID;
+                            newPart.classID = oldPart.classID;
+                            newPart.dateAdded = oldPart.dateAdded;
+                            newPart.dateModified = DateTime.Now;
+                            newPart.oldPartNumber = oldPart.oldPartNumber;
+                            newPart.featured = oldPart.featured;
+                            newPart.shortDesc = oldPart.shortDesc;
+                            newPart.status = oldPart.status;
+                            db.SubmitChanges();
+                        } catch {
+                            newPart = new Part {
+                                partID = change.newPartID,
+                                priceCode = change.newPriceCode,
+                                ACESPartTypeID = oldPart.ACESPartTypeID,
+                                classID = oldPart.classID,
+                                dateAdded = oldPart.dateAdded,
+                                dateModified = DateTime.Now,
+                                oldPartNumber = oldPart.oldPartNumber,
+                                featured = oldPart.featured,
+                                shortDesc = oldPart.shortDesc,
+                                status = oldPart.status
+                            };
+                            db.Parts.InsertOnSubmit(newPart);
+                            db.SubmitChanges();
                         }
 
-                        foreach (PartAttribute attr in oldPart.PartAttributes) {
-                            attr.partID = newPart.partID;
+                        try {
+                            foreach (PartImage img in oldPart.PartImages) {
+                                img.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (CatParts cp in oldPart.CatParts) {
-                            cp.partID = newPart.partID;
+                        try {
+                            foreach (PartAttribute attr in oldPart.PartAttributes) {
+                                attr.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (ContentBridge cb in oldPart.ContentBridges) {
-                            cb.partID = newPart.partID;
+                        try {
+                            foreach (CatParts cp in oldPart.CatParts) {
+                                cp.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (PartPackage pp in oldPart.PartPackages) {
-                            pp.partID = newPart.partID;
+                        try {
+                            foreach (ContentBridge cb in oldPart.ContentBridges) {
+                                cb.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (PartVideo pv in oldPart.PartVideos) {
-                            pv.partID = newPart.partID;
+                        try {
+                            foreach (PartPackage pp in oldPart.PartPackages) {
+                                pp.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (Price pr in oldPart.Prices) {
-                            pr.partID = newPart.partID;
+                        try {
+                            foreach (PartVideo pv in oldPart.PartVideos) {
+                                pv.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (RelatedPart rp in oldPart.RelatedParts) {
-                            rp.partID = newPart.partID;
+                        try {
+                            foreach (Price pr in oldPart.Prices) {
+                                pr.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (Review review in oldPart.Reviews) {
-                            review.partID = newPart.partID;
+                        try {
+                            foreach (RelatedPart rp in oldPart.RelatedParts) {
+                                rp.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (vcdb_VehiclePart vvp in oldPart.vcdb_VehicleParts) {
-                            vvp.PartNumber = newPart.partID;
+                        try {
+                            foreach (Review review in oldPart.Reviews) {
+                                review.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        foreach (VehiclePart vp in oldPart.VehicleParts) {
-                            vp.partID = newPart.partID;
+                        try {
+                            foreach (vcdb_VehiclePart vvp in oldPart.vcdb_VehicleParts) {
+                                vvp.PartNumber = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        List<CartIntegration> integrations = db.CartIntegrations.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (CartIntegration integration in integrations) {
-                            integration.partID = newPart.partID;
+                        try {
+                            foreach (VehiclePart vp in oldPart.VehicleParts) {
+                                vp.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        List<CustomerPricing> pricing = db.CustomerPricings.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (CustomerPricing price in pricing) {
-                            price.partID = newPart.partID;
+                        try {
+                            List<CartIntegration> integrations = db.CartIntegrations.Where(x => x.partID.Equals(oldPart.partID)).ToList();
+                            foreach (CartIntegration integration in integrations) {
+                                integration.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        List<CustomerReportPart> reportParts = db.CustomerReportParts.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (CustomerReportPart reportPart in reportParts) {
-                            reportPart.partID = newPart.partID;
+                        try {
+                            List<CustomerPricing> pricing = db.CustomerPricings.Where(x => x.partID.Equals(oldPart.partID)).ToList();
+                            foreach (CustomerPricing price in pricing) {
+                                price.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        List<PartIndex> indeces = db.PartIndexes.Where(x => x.partID.Equals(oldPart.partID)).ToList<PartIndex>();
-                        foreach (PartIndex ix in indeces) {
-                            ix.partID = newPart.partID;
+                        try {
+                            List<CustomerReportPart> reportParts = db.CustomerReportParts.Where(x => x.partID.Equals(oldPart.partID)).ToList();
+                            foreach (CustomerReportPart reportPart in reportParts) {
+                                reportPart.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        List<KioskOrderItem> koitems = db.KioskOrderItems.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (KioskOrderItem koitem in koitems) {
-                            koitem.partID = newPart.partID;
+                        try {
+                            List<PartIndex> indeces = db.PartIndexes.Where(x => x.partID.Equals(oldPart.partID)).ToList<PartIndex>();
+                            foreach (PartIndex ix in indeces) {
+                                ix.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
                         }
 
-                        db.SubmitChanges();
+                        try {
+                            List<KioskOrderItem> koitems = db.KioskOrderItems.Where(x => x.partID.Equals(oldPart.partID)).ToList();
+                            foreach (KioskOrderItem koitem in koitems) {
+                                koitem.partID = newPart.partID;
+                            }
+                        } catch (Exception e) {
+                            errors.Add(e.Message);
+                        }
 
-                        db.Parts.DeleteOnSubmit(oldPart);
-                        db.SubmitChanges();
-                    } catch {
-                        sendMail("Error during change for part # " + change.partID + ".");
+                        try {
+                            db.SubmitChanges();
+                        } catch {
+                            errors.Add("Error on Submit Changes");
+                        }
+
+                        try {
+                            db.Parts.DeleteOnSubmit(oldPart);
+                            db.SubmitChanges();
+                        } catch {
+                            errors.Add("Error Deleting Part");
+                        }
+                        if (errors.Count > 0) {
+                            throw new Exception();
+                        }
+                    } catch (Exception e) {
+                        failedParts.Add(change.partID);
+                        string emsg = "<p>Error during change for part # " + change.partID + ".</p><ul>";
+                        foreach (string error in errors) {
+                            emsg += "<li>" + error + "</li>";
+                        }
+                        emsg += "<li>" + e.Message + "</li>";
+                        emsg += "</ul>";
+                        sendMail(emsg);
                     }
                 }
 
             });
-
-            changes = new List<PartChange2012>();
-            changes = db2.PartChange2012s.Where(x => x.partID > 13000).OrderBy(x => x.partID).ToList();
-            Parallel.ForEach(changes, change => {
-                CurtDevDataContext db = new CurtDevDataContext();
-                Part oldPart = db.Parts.Where(x => x.partID.Equals(change.partID)).FirstOrDefault();
-                if (oldPart != null && oldPart.partID != null && oldPart.partID > 0) {
-                    try {
-                        Part newPart = new Part {
-                            partID = change.newPartID,
-                            priceCode = change.newPriceCode,
-                            ACESPartTypeID = oldPart.ACESPartTypeID,
-                            classID = oldPart.classID,
-                            dateAdded = oldPart.dateAdded,
-                            dateModified = DateTime.Now,
-                            oldPartNumber = oldPart.oldPartNumber,
-                            featured = oldPart.featured,
-                            shortDesc = oldPart.shortDesc,
-                            status = oldPart.status
-                        };
-                        db.Parts.InsertOnSubmit(newPart);
-                        db.SubmitChanges();
-
-                        foreach (PartImage img in oldPart.PartImages) {
-                            img.partID = newPart.partID;
-                        }
-
-                        foreach (PartAttribute attr in oldPart.PartAttributes) {
-                            attr.partID = newPart.partID;
-                        }
-
-                        foreach (CatParts cp in oldPart.CatParts) {
-                            cp.partID = newPart.partID;
-                        }
-
-                        foreach (ContentBridge cb in oldPart.ContentBridges) {
-                            cb.partID = newPart.partID;
-                        }
-
-                        foreach (PartPackage pp in oldPart.PartPackages) {
-                            pp.partID = newPart.partID;
-                        }
-
-                        foreach (PartVideo pv in oldPart.PartVideos) {
-                            pv.partID = newPart.partID;
-                        }
-
-                        foreach (Price pr in oldPart.Prices) {
-                            pr.partID = newPart.partID;
-                        }
-
-                        foreach (RelatedPart rp in oldPart.RelatedParts) {
-                            rp.partID = newPart.partID;
-                        }
-
-                        foreach (Review review in oldPart.Reviews) {
-                            review.partID = newPart.partID;
-                        }
-
-                        foreach (vcdb_VehiclePart vvp in oldPart.vcdb_VehicleParts) {
-                            vvp.PartNumber = newPart.partID;
-                        }
-
-                        foreach (VehiclePart vp in oldPart.VehicleParts) {
-                            vp.partID = newPart.partID;
-                        }
-
-                        List<CartIntegration> integrations = db.CartIntegrations.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (CartIntegration integration in integrations) {
-                            integration.partID = newPart.partID;
-                        }
-
-                        List<CustomerPricing> pricing = db.CustomerPricings.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (CustomerPricing price in pricing) {
-                            price.partID = newPart.partID;
-                        }
-
-                        List<CustomerReportPart> reportParts = db.CustomerReportParts.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (CustomerReportPart reportPart in reportParts) {
-                            reportPart.partID = newPart.partID;
-                        }
-
-                        List<PartIndex> indeces = db.PartIndexes.Where(x => x.partID.Equals(oldPart.partID)).ToList<PartIndex>();
-                        foreach (PartIndex ix in indeces) {
-                            ix.partID = newPart.partID;
-                        }
-
-                        List<KioskOrderItem> koitems = db.KioskOrderItems.Where(x => x.partID.Equals(oldPart.partID)).ToList();
-                        foreach (KioskOrderItem koitem in koitems) {
-                            koitem.partID = newPart.partID;
-                        }
-
-                        db.SubmitChanges();
-
-                        db.Parts.DeleteOnSubmit(oldPart);
-                        db.SubmitChanges();
-                    } catch {
-                        sendMail("Error during change for part # " + change.partID + ".");
-                    }
-                }
-
-            }); 
-            return JsonConvert.SerializeObject(changes);
+            return failedParts;
         }
 
         private void sendMail(string message = "") {
@@ -248,14 +270,14 @@ namespace CurtAdmin.Controllers {
             SmtpClient SmtpServer = new SmtpClient();
 
             mail.To.Add("websupport@curtmfg.com");
-            mail.Subject = "CURT Documentation Account Recovery";
+            mail.Subject = "Automated Part Number Change Error";
 
             mail.IsBodyHtml = true;
             string htmlBody;
 
             htmlBody = "<h4>Error on Part Change process</h4>";
             htmlBody += "<p>There has been an error during the change process:</p>";
-            htmlBody += "<p>" + message + "</p>";
+            htmlBody += message;
 
             mail.Body = htmlBody;
 
