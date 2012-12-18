@@ -2,8 +2,8 @@
     ViewBag.Title = "Edit ACES Vehicles";
     Layout = "~/Views/Shared/_Layout.cshtml";
     CurtAdmin.Models.ConvertedPart part = ViewBag.part;
-    List<CurtAdmin.BaseVehicle> vehicles = ViewBag.part_vehicles ?? new List<CurtAdmin.BaseVehicle>();
-    List<CurtAdmin.ConfigAttributeType> configs = ViewBag.configs ?? new List<CurtAdmin.ConfigAttributeType>();
+    List<CurtAdmin.Models.ACESBaseVehicle> vehicles = ViewBag.part_vehicles ?? new List<CurtAdmin.Models.ACESBaseVehicle>();
+    List<CurtAdmin.vcdb_Make> makes = ViewBag.makes ?? new List<CurtAdmin.vcdb_Make>();
     List<string> configval = new List<string>();
 }
 
@@ -12,47 +12,89 @@
 <div id="content_container">
     <h2>Edit Vehicles for part #@part.partID - @part.shortDesc</h2>
     <hr style="border-bottom: 1px dotted #343434;clear:right" />
-    <ul class="vehicles" id="vehicleData">
-        @foreach(CurtAdmin.BaseVehicle bv in vehicles) {
-            <li>@bv.YearID @bv.vcdb_Make.MakeName @bv.vcdb_Model.ModelName
-                <ul class="submodels">
-                    @foreach(CurtAdmin.Submodel s in bv.vcdb_Vehicles.Where(x => x.SubModelID != null).Select(x => x.Submodel).Distinct().OrderBy(x => x.SubmodelName)) {
-                        <li>@s.SubmodelName
-                            @if(bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).Any(x => x.ConfigID != null)) {
-                                <span class="tools">
-                                    <a href="#" class="showConfig" title="Show / Hide Configurations">
-                                        <span class="vehicleCount">@bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).Count()</span><span class="arrow"></span>
-                                    </a>
-                                </span>
-                                <span class="clear"></span>
-                                <div class="configs">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                            @foreach (CurtAdmin.ConfigAttributeType config in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.sort)) {
-                                                <th>@config.name</th>
-                                            }
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach(CurtAdmin.VehicleConfig vconfig in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).Select(x => x.VehicleConfig)) {
-                                            <tr>
-                                                @foreach (CurtAdmin.ConfigAttributeType config in bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.ID)).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.sort)) {
-                                                    configval = vconfig.VehicleConfigAttributes.Where(x => x.ConfigAttribute.ConfigAttributeTypeID.Equals(config.ID)).Select(x => x.ConfigAttribute.value).ToList<string>();
-                                                    <td>@((configval.Count == 0) ? "" : configval.Aggregate((i, j) => i + " " + j))</td>
+    <div id="tabs">
+        <ul class="tabs"><li><a href="#vehicleParts">Vehicles</a></li><li><a href="#CurtDev">Add Vehicles</a></li></ul>
+        <div id="vehicleParts">
+            <img id="loadingVehicles" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+            <ul class="vehicles" id="vehicleData">
+                @foreach (CurtAdmin.Models.ACESBaseVehicle bv in vehicles) {
+                    <li id="bv-' + bv.ID + '">@bv.YearID @bv.Make.MakeName @bv.Model.ModelName @((bv.AAIABaseVehicleID != null) ? Html.Raw("<span class=vcdb>&#10004</span>") : Html.Raw("<span class=notvcdb>&times</span>"))
+                        @if(bv.vehiclePart != null && bv.vehiclePart.ID != 0) {
+                        <span class="tools">
+                            <a class="removeBV" href="/ACES/RemoveVehiclePart/@bv.vehiclePart.ID" title="Remove Vehicle Part Relationship">&times;</a>
+                            | <a class="viewNotes" href="#" title="View Vehicle Part Notes" data-id="@bv.vehiclePart.ID">Notes</a>
+                        </span>
+                        }
+                        <ul class="submodels">
+                            @foreach(CurtAdmin.Models.ACESSubmodel s in bv.Submodels) {
+                                if(s.vehiclePart != null || s.vehicles.Any(x => x.vehiclePart != null)) {
+                                <li>@s.submodel.SubmodelName
+                                    @((s.vcdb) ? Html.Raw("<span class=vcdb>&#10004</span>") : Html.Raw("<span class=notvcdb>&times</span>"))
+                                    <span class="tools">
+                                        <span class="removalTools">
+                                        @if (s.vehiclePart != null) {
+                                            <a class="removeSubmodel" href="/ACES/RemoveVehiclePart/@s.vehiclePart.ID" title="Remove Vehicle Part Relationship">&times;</a>
+                                            <text>|</text> <a class="viewNotes" href="#" title="View Vehicle Part Notes" data-id="@s.vehiclePart.ID">Notes</a>
+                                        }
+                                        </span>
+                                        <a href="#" class="showConfig" title="Show / Hide Configurations">
+                                            <span class="vehicleCount">@s.vehicles.Where(x => x.vehiclePart != null).Count()</span><span class="arrow"></span>
+                                        </a>
+                                    </span>
+                                    <span class="clear"></span>
+                                    <div class="configs">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>VCDB</th>
+                                                    @foreach (CurtAdmin.ConfigAttributeType config in s.configlist) {
+                                                        <th>@config.name</th>
+                                                    }
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (CurtAdmin.Models.ACESVehicle vehicle in s.vehicles.Where(x => x.vehiclePart != null)) {
+                                                <tr>
+                                                    <td>@((vehicle.vcdb) ? Html.Raw("<span class=vcdb>&#10004</span>") : Html.Raw("<span class=notvcdb>&times</span>"))</td>
+                                                    @foreach (CurtAdmin.ConfigAttributeType config in s.configlist) {
+                                                        <td>@vehicle.configs.Where(x => x.ConfigAttributeTypeID.Equals(config.ID)).Select(x => x.value).FirstOrDefault()</td>
+                                                    }
+                                                    <td>
+                                                        <a class="removeConfig" href="/ACES/RemoveVehiclePart/@vehicle.vehiclePart.ID" title="Remove Vehicle Part Relationship">&times;</a>
+                                                        | <a class="viewNotes" href="#" title="View Vehicle Part Notes" data-id="@vehicle.vehiclePart.ID">Notes</a>
+                                                    </td>
+                                                </tr>
                                                 }
-                                            </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </li>
+                                }
                             }
-                        </li>
-                    }
-                </ul>
-            </li>
-        }
-    </ul>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div id="CurtDev">
+            <select id="make" name="make">
+                <option value="">Select a Make</option>
+                @foreach (CurtAdmin.vcdb_Make make in makes) {
+                    <option value="@make.ID">@make.MakeName</option>
+                }
+            </select>
+
+            <select id="model" name="model" disabled="disabled">
+                <option value="">Select a Model</option>
+            </select>
+            <button id="find">Find</button>
+            <div class="clear"></div>
+            <img id="loadingCurtDev" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+            <ul class="vehicles" id="curtDevData"></ul>
+        </div>
+    </div>
 </div>
+<div id="notes-dialog"></div>
 
 <script src="/Scripts/admin/Product/EditACESVehicles.js"></script>

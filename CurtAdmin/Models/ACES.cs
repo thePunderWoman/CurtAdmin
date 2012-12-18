@@ -328,6 +328,56 @@ namespace CurtAdmin.Models {
             return vehicles;
         }
 
+        public List<ACESBaseVehicle> GetVehiclesByPart(int partID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
+            vehicles = (from bv in db.BaseVehicles
+                        join vv in db.vcdb_Vehicles on bv.ID equals vv.BaseVehicleID
+                        join vvp in db.vcdb_VehicleParts on vv.ID equals vvp.VehicleID
+                        where vvp.PartNumber.Equals(partID)
+                        select new ACESBaseVehicle {
+                            ID = bv.ID,
+                            AAIABaseVehicleID = bv.AAIABaseVehicleID,
+                            YearID = bv.YearID,
+                            Make = bv.vcdb_Make,
+                            Model = bv.vcdb_Model,
+                            vehiclePart = bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(null) && x.ConfigID.Equals(null)).Select(x => x.vcdb_VehicleParts.Where(y => y.PartNumber.Equals(partID)).FirstOrDefault()).FirstOrDefault(),
+                            Submodels = (from v in bv.vcdb_Vehicles
+                                         where v.SubModelID != null
+                                         group v by v.Submodel into s
+                                         select new ACESSubmodel {
+                                             SubmodelID = s.Key.ID,
+                                             submodel = s.Key,
+                                             vehiclePart = s.Where(x => x.SubModelID.Equals(s.Key.ID) && x.ConfigID.Equals(null)).Select(x => x.vcdb_VehicleParts.Where(y => y.PartNumber.Equals(partID)).FirstOrDefault()).FirstOrDefault(),
+                                             vehicles = (from ve in bv.vcdb_Vehicles
+                                                         where ve.SubModelID.Equals(s.Key.ID)
+                                                         select new ACESVehicle {
+                                                             ID = ve.ID,
+                                                             configs = ve.VehicleConfig.VehicleConfigAttributes.Select(x => x.ConfigAttribute).OrderBy(x => x.ConfigAttributeType.name).ToList<ConfigAttribute>(),
+                                                             vehiclePart = ve.vcdb_VehicleParts.Where(x => x.PartNumber.Equals(partID)).FirstOrDefault(),
+                                                         }).OrderBy(x => x.configs.Count).ToList<ACESVehicle>(),
+                                             configlist = (from c in bv.vcdb_Vehicles
+                                                           join vc in db.VehicleConfigAttributes on c.ConfigID equals vc.VehicleConfigID
+                                                           where c.SubModelID.Equals(s.Key.ID) && c.vcdb_VehicleParts.Where(x => x.PartNumber.Equals(partID)).Count() > 0
+                                                           select vc.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.name).ToList<ConfigAttributeType>()
+                                         }).OrderBy(x => x.submodel.SubmodelName).ToList<ACESSubmodel>(),
+                        }).ToList<ACESBaseVehicle>().Distinct(new BaseVehicleComparer()).OrderByDescending(x => x.YearID).ToList<ACESBaseVehicle>();
+            foreach (ACESBaseVehicle abv in vehicles) {
+                foreach (ACESSubmodel sm in abv.Submodels) {
+                    sm.vcdb = vcdb.Vehicles.Where(x => x.BaseVehicleID.Equals(abv.AAIABaseVehicleID) && x.SubmodelID.Equals(sm.submodel.AAIASubmodelID)).ToList<AAIA.Vehicle>().Count > 0;
+                    foreach (ACESVehicle v in sm.vehicles) {
+                        if (v.configs.Any(x => x.vcdbID == null) || abv.AAIABaseVehicleID == null || sm.submodel.AAIASubmodelID == null) {
+                            v.vcdb = false;
+                        } else {
+                            v.vcdb = ValidateVehicleToVCDB((int)abv.AAIABaseVehicleID, (int)sm.submodel.AAIASubmodelID, v.configs);
+                        }
+                    }
+                }
+            }
+            return vehicles;
+        }
+        
         public ACESBaseVehicle GetVehicle(int basevehicleID, int submodelID) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
@@ -737,15 +787,6 @@ namespace CurtAdmin.Models {
             CurtDevDataContext db = new CurtDevDataContext();
             configs = db.ConfigAttributeTypes.OrderBy(x => x.sort).ToList<ConfigAttributeType>();
             return configs;
-        }
-
-        public List<BaseVehicle> GetVehiclesByPart(int partid) {
-            CurtDevDataContext db = new CurtDevDataContext();
-            List<BaseVehicle> vehicles = new List<BaseVehicle>();
-            vehicles = (from vp in db.vcdb_VehicleParts
-                        where vp.PartNumber.Equals(partid)
-                        select vp.vcdb_Vehicle.BaseVehicle).Distinct().OrderBy(x => x.YearID).ToList<BaseVehicle>();
-            return vehicles;
         }
 
         public List<AAIA.PartTerminology> GetPartTypes() {
@@ -1810,6 +1851,22 @@ namespace CurtAdmin.Models {
         }
     }
 
+    public class BaseVehicleComparer : IEqualityComparer<ACESBaseVehicle> {
+        bool IEqualityComparer<ACESBaseVehicle>.Equals(ACESBaseVehicle x, ACESBaseVehicle y) {
+            // Check whether the compared objects reference the same data.
+            if (x.ID.Equals(y.ID)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        int IEqualityComparer<ACESBaseVehicle>.GetHashCode(ACESBaseVehicle obj) {
+            return obj.ID.GetHashCode();
+        }
+    }
+
     /*public class AAIAVehicleComparer : IEqualityComparer<ACESVehicle> {
         bool IEqualityComparer<ACESVehicle>.Equals(ACESVehicle x, ACESVehicle y) {
             // Check whether the compared objects reference the same data.
@@ -1886,6 +1943,7 @@ namespace CurtAdmin.Models {
         public int YearID { get; set; }
         public vcdb_Make Make { get; set; }
         public vcdb_Model Model { get; set; }
+        public vcdb_VehiclePart vehiclePart { get; set; }
         public List<ACESSubmodel> Submodels { get; set; }
     }
 
@@ -1895,12 +1953,14 @@ namespace CurtAdmin.Models {
         public List<ConfigAttributeType> configlist { get; set; }
         public List<ACESVehicle> vehicles { get; set; }
         public bool vcdb { get; set; }
+        public vcdb_VehiclePart vehiclePart { get; set; }
     }
 
     public class ACESVehicle {
         public int ID { get; set; }
         public List<ConfigAttribute> configs { get; set; }
         public bool vcdb { get; set; }
+        public vcdb_VehiclePart vehiclePart { get; set; }
     }
 
     public class ACESConfigs {

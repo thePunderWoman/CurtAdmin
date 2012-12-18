@@ -570,14 +570,13 @@ namespace CurtAdmin.Controllers
             ConvertedPart part = ProductModels.GetPart(partID);
             ViewBag.part = part;
 
-            List<ConfigAttributeType> configs = new List<ConfigAttributeType>();
-            configs = new ACES().GetConfigAttributeTypes();
-            ViewBag.configs = configs;
-            
             // Get the vehicles that are tied to this part
-            List<BaseVehicle> part_vehicles = new List<BaseVehicle>();
+            List<ACESBaseVehicle> part_vehicles = new List<ACESBaseVehicle>();
             part_vehicles = new ACES().GetVehiclesByPart(partID);
             ViewBag.part_vehicles = part_vehicles;
+
+            List<vcdb_Make> makes = new ACES().GetMakes();
+            ViewBag.makes = makes;
 
             ViewBag.active_tab = "acesvehicles";
             return View();
