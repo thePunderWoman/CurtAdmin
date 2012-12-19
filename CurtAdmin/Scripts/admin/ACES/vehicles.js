@@ -8,6 +8,7 @@ $(function () {
         $('#model').html('<option value="">Select a Model</option>');
         $('#model').attr('disabled', 'disabled');
         var idstr = $(this).val();
+        if (idstr == "") return;
         $.getJSON('/ACES/GetModels/' + idstr, function (data) {
             $(data).each(function (i, obj) {
                 var opt = '<option value="' + obj.ID + '">' + obj.ModelName + '</option>';
@@ -750,16 +751,24 @@ removeConfig = function (href,aobj) {
 getCurtDevVehicles = function () {
     var makeid = $('#make').val();
     var modelid = $('#model').val();
-    $('#vehicleData').empty();
+    var partid = ($('#partID').val() != undefined) ? $('#partID').val() : 0;
+    var showAdd = ($('#showAdd').val() != undefined && $('#showAdd').val() == 'true') ? true : false;
+    if (makeid == "" || modelid == "") return;
+    $('#curtDevData').empty();
     $('#loadingCurtDev').show();
-    $.getJSON('/ACES/GetVehicles', { makeid: makeid, modelid: modelid }, function (vData) {
+    $.getJSON('/ACES/GetVehicles', { makeid: makeid, modelid: modelid, partid: partid }, function (vData) {
         //console.log(vData);
         $('#loadingCurtDev').hide();
         if (vData.length > 0) {
             $(vData).each(function (y, BaseVehicle) {
-                var opt = '<li id="bv-' + BaseVehicle.ID + '">' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools"><a href="#" class="gear" data-bvid="' + BaseVehicle.ID + '" title="View Parts"></a><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '" title="Remove Base Vehicle">&times;</a></span><ul class="submodels">';
+                var hasPart = (BaseVehicle.vehiclePart != null) ? true : false;
+                var opt = '<li id="bv-' + BaseVehicle.ID + '">' + BaseVehicle.YearID + ' ' + BaseVehicle.Make.MakeName + ' ' + BaseVehicle.Model.ModelName + ((BaseVehicle.AAIABaseVehicleID != "") ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">' + ((showAdd && !hasPart) ? '<a href="/ACES/AddVehiclePart?partID=' + partid + '&baseVehicleID=' + BaseVehicle.ID + '&partOrVehicle=part" class="addToPart leftarrow" title="Add vehicle part relationship"></a>' : '') + '<a href="#" class="gear" data-bvid="' + BaseVehicle.ID + '" title="View Parts"></a><a class="remove" href="/ACES/RemoveBaseVehicle/' + BaseVehicle.ID + '" title="Remove Base Vehicle">&times;</a></span><ul class="submodels">';
                 $(BaseVehicle.Submodels).each(function (i, submodel) {
+                    var hasPart = (submodel.vehiclePart != null) ? true : false;
                     opt += '<li id="bv' + BaseVehicle.ID + 's' + submodel.SubmodelID + '">' + submodel.submodel.SubmodelName.trim() + ((submodel.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '<span class="tools">';
+                    if (showAdd && !hasPart) {
+                        opt += '<a href="/ACES/AddVehiclePart?partID=' + partid + '&baseVehicleID=' + BaseVehicle.ID + '&submodelID=' + submodel.SubmodelID + '&partOrVehicle=part" title="Add vehicle part relationship" class="addToPart leftarrow"></a>';
+                    }
                     opt += '<a href="/ACES/RemoveSubmodel?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" class="removesubmodel" title="Remove Submodel Vehicle">&times;</a>';
                     opt += '<a href="/ACES/AddConfig?BaseVehicleID=' + BaseVehicle.ID + '&SubmodelID=' + submodel.SubmodelID + '" data-bvid="' + BaseVehicle.ID + '" data-submodelID="' + submodel.SubmodelID + '"  class="addconfig" title="Add Configuration">+</a>';
                     opt += ' <a href="#" class="gear" data-bvid="' + BaseVehicle.ID + '" data-submodelID="' + submodel.SubmodelID + '" title="View Parts"></a><a href="#" class="showConfig" title="Show / Hide Configurations">';
@@ -769,10 +778,10 @@ getCurtDevVehicles = function () {
                     opt += generateConfigTable(submodel);
                 });
                 opt += '</ul></li>';
-                $('#vehicleData').append(opt);
+                $('#curtDevData').append(opt);
             });
         } else {
-            $('#vehicleData').append('<p>No Vehicles</p>');
+            $('#curtDevData').append('<p>No Vehicles</p>');
         }
     });
 };
@@ -780,6 +789,7 @@ getCurtDevVehicles = function () {
 getVCDBVehicles = function () {
     var makeid = $('#make').val();
     var modelid = $('#model').val();
+    if (makeid == "" || modelid == "") return;
     $('#vcdbData').empty();
     $('#loadingVCDB').show();
     $.getJSON('/ACES/GetVCDBVehicles', { makeid: makeid, modelid: modelid }, function (vcdbData) {
@@ -837,6 +847,8 @@ getVCDBVehicles = function () {
 };
 
 generateConfigTable = function (submodel) {
+    var showAdd = ($('#showAdd').val() != undefined && $('#showAdd').val() == 'true') ? true : false;
+    var partid = ($('#partID').val() != undefined) ? $('#partID').val() : 0;
     var configTable = "";
     configTable += '<div class="configs"><table>';
     configTable += '<thead><tr>';
@@ -847,6 +859,7 @@ generateConfigTable = function (submodel) {
     configTable += '<th></th>';
     configTable += '</tr></thead><tbody>';
     $(submodel.vehicles).each(function (x, vehicle) {
+        var hasPart = (vehicle.vehiclePart != null) ? true : false;
         configTable += '<tr>';
         configTable += '<td>' + ((vehicle.vcdb) ? '<span class="vcdb">&#10004</span>' : '<span class="notvcdb">&times</span>') + '</td>';
         $(submodel.configlist).each(function (z, config) {
@@ -858,7 +871,7 @@ generateConfigTable = function (submodel) {
             });
             configTable += '</td>';
         });
-        configTable += '<td><a href="#" class="change" data-id="' + vehicle.ID + '" title="Add new attributes">Change</a> | <a href="#" class="custom" data-id="' + vehicle.ID + '" title="Custom Configuration">Custom</a> | <a href="#" class="parts" data-vid="' + vehicle.ID + '" title="View Parts">Parts</a> | <a href="/ACES/removeVehicle/' + vehicle.ID + '" data-id="' + vehicle.ID + '" class="removeconfig" title="Remove Configuration">&times;</a></td></tr>'
+        configTable += '<td>' + ((showAdd && !hasPart) ? '<a href="/ACES/AddVehiclePart?partID=' + partid + '&vehicleID=' + vehicle.ID + '&partOrVehicle=part" class="addToPart" title="Add vehicle part relationship">Add to Part</a> | ' : '') + '<a href="#" class="change" data-id="' + vehicle.ID + '" title="Add new attributes">Change</a> | <a href="#" class="custom" data-id="' + vehicle.ID + '" title="Custom Configuration">Custom</a> | <a href="#" class="parts" data-vid="' + vehicle.ID + '" title="View Parts">Parts</a> | <a href="/ACES/removeVehicle/' + vehicle.ID + '" data-id="' + vehicle.ID + '" class="removeconfig" title="Remove Configuration">&times;</a></td></tr>'
     });
     configTable += '</tbody></table></div>';
     return configTable;

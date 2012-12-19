@@ -212,9 +212,9 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(models);
         }
 
-        public string GetVehicles(int makeid, int modelid) {
+        public string GetVehicles(int makeid, int modelid, int partID = 0) {
             List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
-            vehicles = new ACES().GetVehicles(makeid, modelid);
+            vehicles = new ACES().GetVehicles(makeid, modelid, partID);
             return JsonConvert.SerializeObject(vehicles);
         }
 
@@ -387,10 +387,10 @@ namespace CurtAdmin.Controllers {
             }
         }
 
-        public string AddVehiclePart(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0, int partID = 0) {
+        public string AddVehiclePart(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0, int partID = 0, string partOrVehicle = "vehicle") {
             List<vcdb_VehiclePart> vparts = new List<vcdb_VehiclePart>();
             try {
-                vparts = new ACES().AddVehiclePart(vehicleID, baseVehicleID, submodelID, partID);
+                vparts = new ACES().AddVehiclePart(vehicleID, baseVehicleID, submodelID, partID, partOrVehicle);
             } catch { }
             return JsonConvert.SerializeObject(vparts);
         }

@@ -581,6 +581,13 @@ namespace CurtAdmin.Controllers
             ViewBag.active_tab = "acesvehicles";
             return View();
         }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string GetPartVehicles(int partID = 0) {
+            List<ACESBaseVehicle> part_vehicles = new List<ACESBaseVehicle>();
+            part_vehicles = new ACES().GetVehiclesByPart(partID);
+            return JsonConvert.SerializeObject(part_vehicles);
+        }
         
         public ActionResult EditPricing(int partID = 0) {
             CurtDevDataContext db = new CurtDevDataContext();

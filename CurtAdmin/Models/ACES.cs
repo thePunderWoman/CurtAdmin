@@ -283,7 +283,7 @@ namespace CurtAdmin.Models {
             }
         }
 
-        public List<ACESBaseVehicle> GetVehicles(int makeid, int modelid) {
+        public List<ACESBaseVehicle> GetVehicles(int makeid, int modelid, int partID = 0) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
@@ -295,17 +295,20 @@ namespace CurtAdmin.Models {
                             YearID = bv.YearID,
                             Make = bv.vcdb_Make,
                             Model = bv.vcdb_Model,
+                            vehiclePart = bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(null) && x.ConfigID.Equals(null)).Select(x => x.vcdb_VehicleParts.Where(y => y.PartNumber.Equals(partID)).FirstOrDefault()).FirstOrDefault(),
                             Submodels = (from v in bv.vcdb_Vehicles
                                          where v.SubModelID != null
                                          group v by v.Submodel into s
                                          select new ACESSubmodel {
                                              SubmodelID = s.Key.ID,
                                              submodel = s.Key,
+                                             vehiclePart = bv.vcdb_Vehicles.Where(x => x.SubModelID.Equals(s.Key.ID) && x.ConfigID.Equals(null)).Select(x => x.vcdb_VehicleParts.Where(y => y.PartNumber.Equals(partID)).FirstOrDefault()).FirstOrDefault(),
                                              vehicles = (from ve in bv.vcdb_Vehicles
                                                          where ve.SubModelID.Equals(s.Key.ID)
                                                          select new ACESVehicle {
                                                              ID = ve.ID,
-                                                             configs = ve.VehicleConfig.VehicleConfigAttributes.Select(x => x.ConfigAttribute).OrderBy(x => x.ConfigAttributeType.name).ToList<ConfigAttribute>()
+                                                             configs = ve.VehicleConfig.VehicleConfigAttributes.Select(x => x.ConfigAttribute).OrderBy(x => x.ConfigAttributeType.name).ToList<ConfigAttribute>(),
+                                                             vehiclePart = ve.vcdb_VehicleParts.Where(x => x.PartNumber.Equals(partID)).FirstOrDefault()
                                                          }).OrderBy(x => x.configs.Count).ToList<ACESVehicle>(),
                                              configlist = (from c in bv.vcdb_Vehicles
                                                            join vc in db.VehicleConfigAttributes on c.ConfigID equals vc.VehicleConfigID
@@ -1626,7 +1629,7 @@ namespace CurtAdmin.Models {
             db.SubmitChanges();
         }
 
-        public List<vcdb_VehiclePart> AddVehiclePart(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0, int partID = 0) {
+        public List<vcdb_VehiclePart> AddVehiclePart(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0, int partID = 0, string partOrVehicle = "vehicle") {
             CurtDevDataContext db = new CurtDevDataContext();
             vcdb_Vehicle vehicle = new vcdb_Vehicle();
             List<vcdb_VehiclePart> vParts = new List<vcdb_VehiclePart>();
@@ -1677,8 +1680,15 @@ namespace CurtAdmin.Models {
                 db.vcdb_VehicleParts.InsertOnSubmit(vPart);
                 db.SubmitChanges();
 
+                List<Note> notes = new List<Note>();
                 // Select a distinct set of the notes for each vehicle and add them to the vpart
-                List<Note> notes = db.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(vehicle.ID)).SelectMany(x => x.Notes).ToList().Distinct(new NoteComparer()).ToList();
+                if (partOrVehicle == "vehicle") {
+                    // lean notes on the vehicle side
+                    notes = db.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(vehicle.ID)).SelectMany(x => x.Notes).ToList().Distinct(new NoteComparer()).ToList();
+                } else {
+                    // lean notes on the part side
+                    notes = db.vcdb_VehicleParts.Where(x => x.PartNumber.Equals(partID)).SelectMany(x => x.Notes).ToList().Distinct(new NoteComparer()).ToList();
+                }
                 List<Note> newNotes = new List<Note>();
                 foreach (Note n in notes) {
                     Note newNote = new Note {
@@ -1691,8 +1701,14 @@ namespace CurtAdmin.Models {
                     db.Notes.InsertAllOnSubmit(newNotes);
                     db.SubmitChanges();
                 }
+                if (partOrVehicle != "vehicle") {
+                    vPart.Notes.AddRange(newNotes);
+                    vParts.Add(vPart);
+                }
             }
-            vParts = db.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(vehicle.ID)).ToList();
+            if (partOrVehicle == "vehicle") {
+                vParts = db.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(vehicle.ID)).ToList();
+            }
             return vParts;
         }
 

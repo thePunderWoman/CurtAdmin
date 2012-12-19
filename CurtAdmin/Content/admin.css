@@ -1699,3 +1699,25 @@ input#dataValue {
     font-size: 14px;
     padding: 3px;
 }
+
+.leftarrow {
+    border: 3px solid #057a00;
+    display: inline-block;
+    border-left: 0;
+    border-right: 0;
+    height: 0;
+    margin-bottom: 3px !important;
+}
+
+.leftarrow::before {
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-left: none;
+    border-right-color: #057a00;
+    display:block;
+    position: relative;
+    content: "";
+    top: -6px;
+    right: 6px;
+}

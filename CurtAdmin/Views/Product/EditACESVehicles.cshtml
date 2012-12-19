@@ -8,12 +8,13 @@
 }
 
 @{Html.RenderPartial("PartMenu");}
-
+<input type="hidden" id="partID" value="@part.partID" />
+<input type="hidden" id="showAdd" value="true" />
 <div id="content_container">
     <h2>Edit Vehicles for part #@part.partID - @part.shortDesc</h2>
     <hr style="border-bottom: 1px dotted #343434;clear:right" />
     <div id="tabs">
-        <ul class="tabs"><li><a href="#vehicleParts">Vehicles</a></li><li><a href="#CurtDev">Add Vehicles</a></li></ul>
+        <ul class="tabs"><li><a href="#vehicleParts">Vehicles</a></li><li><a href="#CurtDev">Add Vehicles</a></li><li><a href="#vcdb">VCDB</a></li></ul>
         <div id="vehicleParts">
             <img id="loadingVehicles" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
             <ul class="vehicles" id="vehicleData">
@@ -93,8 +94,13 @@
             <img id="loadingCurtDev" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
             <ul class="vehicles" id="curtDevData"></ul>
         </div>
+        <div id="vcdb">
+            <img id="loadingVCDB" src="/Content/img/ajax_loader.gif" alt="Loading..." style="display: none;" />
+            <ul class="vehicles" id="vcdbData"></ul>
+        </div>
     </div>
 </div>
 <div id="notes-dialog"></div>
-
+<div id="config-dialog"></div>
+<script src="/Scripts/admin/ACES/vehicles.js"></script>
 <script src="/Scripts/admin/Product/EditACESVehicles.js"></script>
