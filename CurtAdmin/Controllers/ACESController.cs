@@ -34,12 +34,31 @@ namespace CurtAdmin.Controllers {
         public ActionResult AddVehicle() {
             List<AAIA.Make> makes = new ACES().GetVCDBMakes();
             ViewBag.makes = makes;
+
+            List<int> years = new ACES().GetYears();
+            ViewBag.years = years;
+
             return View();
+        }
+
+        public string GetMakesByYear(int yearID) {
+            List<ACESMake> makes = new ACES().GetMakesByYear(yearID);
+            return JsonConvert.SerializeObject(makes);
+        }
+
+        public string GetModelsByMake(int yearID, string makeID) {
+            List<ACESMake> makes = new ACES().GetModelsByMake(yearID, makeID);
+            return JsonConvert.SerializeObject(makes);
         }
 
         public string GetVCDBModels(int id = 0) {
             List<AAIA.Model> models = new ACES().GetVCDBModels(id);
             return JsonConvert.SerializeObject(models);
+        }
+
+        public string GetSubmodelsByModel(int yearID, string makeID, string modelID) {
+            List<ACESMake> submodels = new ACES().GetSubmodelsByModel(yearID, makeID, modelID);
+            return JsonConvert.SerializeObject(submodels);
         }
 
         public string GetBaseVehicles(int makeid, int modelid) {

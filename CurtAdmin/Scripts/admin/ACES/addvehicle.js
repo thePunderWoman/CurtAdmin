@@ -1,17 +1,19 @@
 ﻿$(function () {
     $('#find').hide();
+    $("#tabs").tabs();
+    $('.addImg:first').fadeIn();
 
-    $(document).on('change', '#make', function () {
+    $(document).on('change', '#vcdbmake', function () {
         $('#find').hide();
-        $('#model').html('<option value="">Select a Model</option>');
-        $('#model').attr('disabled', 'disabled');
+        $('#vcdbmodel').html('<option value="">Select a Model</option>');
+        $('#vcdbmodel').attr('disabled', 'disabled');
         var makeid = $(this).val();
         if (makeid != "") {
             $.getJSON('/ACES/GetVCDBModels/' + makeid, function (data) {
                 $(data).each(function (i, model) {
-                    $('#model').append('<option value="' + model.ModelID + '">' + $.trim(model.ModelName) + '</option>');
+                    $('#vcdbmodel').append('<option value="' + model.ModelID + '">' + $.trim(model.ModelName) + '</option>');
                 });
-                $('#model').removeAttr('disabled', 'disabled');
+                $('#vcdbmodel').removeAttr('disabled', 'disabled');
             })
         }
     });
@@ -30,7 +32,7 @@
     });
     
 
-    $('#model').on('change', function (e) {
+    $('#vcdbmodel').on('change', function (e) {
         if ($(this).val() == "") {
             $('#find').hide();
         } else {
@@ -39,8 +41,8 @@
     });
 
     $('#find').on('click', function () {
-        var makeid = $('#make').val();
-        var modelid = $('#model').val();
+        var makeid = $('#vcdbmake').val();
+        var modelid = $('#vcdbmodel').val();
         $('#vehicleData').empty();
         $('#loading').show();
         $.getJSON('/ACES/GetBaseVehicles', { makeid: makeid, modelid: modelid }, function (data) {
@@ -57,6 +59,121 @@
 
     });
 
+    $('#nonyear').change(function () {
+        var yearID = $(this).val();
+        $('.delImg').fadeOut();
+        $('.editImg').fadeOut();
+        //$('#editYear').fadeIn();
+        var targetid = 'addMake';
+        if (yearID > 0) {
+            $.getJSON('/ACES/GetMakesByYear', { 'yearID': yearID }, function (makes) {
+                if (makes.length == 0) {
+                    $('#delYear').show();
+                }
+                $('#nonmake').html('<option value="">- Select Make -</option>');
+                $('#nonmodel').html('<option value="">- Select Model -</option>');
+                $('#nonsubmodel').html('<option value="">- Select Submodel -</option>');
+                $.each(makes, function (i, make) {
+                    var new_option = '<option value="' + make.ID + '|' + make.AAIAID + '">' + make.name.trim() + '</option>';
+                    $('#nonmake').append(new_option);
+                });
+            });
+            //$('.addImg').fadeOut();
+        } else {
+            $('#nonmake').html('<option value="0">- Select Make -</option>');
+            $('#nonmodel').html('<option value="0">- Select Model -</option>');
+            $('#nonsubmodel').html('<option value="0">- Select Submodel -</option>');
+            targetid = 'addYear';
+        }
+        $('.addImg').each(function (i, obj) {
+            if ($(this).attr('id') == targetid) {
+                $(this).fadeIn();
+            } else {
+                $(this).fadeOut();
+            }
+        });
+    });
+
+    // Get the models for this year and remove all other content for select boxes.
+    $('#nonmake').change(function () {
+        var yearID = $('#nonyear').val();
+        var makeID = $(this).val();
+        var acesID = Number(makeID.split('|')[1]);
+        $('#delModel').fadeOut();
+        $('#delSubmodel').fadeOut();
+        if (acesID == 0) {
+            $('#editMake').fadeIn();
+        }
+        $('#editModel').fadeOut();
+        $('#editSubmodel').fadeOut();
+        var targetid = 'addModel';
+        if (makeID != "") {
+            $.getJSON('/ACES/GetModelsByMake', { 'yearID': yearID, 'makeID': makeID }, function (models) {
+                if (models.length == 0) {
+                    $('#delModel').show();
+                }
+                $('#nonmodel').html('<option value="">- Select Model -</option>');
+                $('#nonsubmodel').html('<option value="">- Select Submodel -</option>');
+                $.each(models, function (i, model) {
+                    var new_option = '<option value="' + model.ID + '|' + model.AAIAID + '">' + model.name.trim() + '</option>';
+                    $('#nonmodel').append(new_option);
+                });
+            });
+        } else {
+            $('#nonmodel').html('<option value="0">- Select Model -</option>');
+            $('#nonsubmodel').html('<option value="0">- Select Submodel -</option>');
+            targetid = 'addMake';
+        }
+        $('.addImg').each(function (i, obj) {
+            if ($(this).attr('id') == targetid) {
+                $(this).fadeIn();
+            } else {
+                $(this).fadeOut();
+            }
+        });
+    });
+
+    // Get the styles for this year and remove all other content for select boxes.
+    $('#nonmodel').change(function () {
+        var yearID = $('#nonyear').val();
+        var makeID = $('#nonmake').val();
+        var modelID = $(this).val();
+        var acesID = Number(modelID.split('|')[1]);
+        var targetid = 'addSubmodel';
+        $('#delSubmodel').fadeOut();
+        if (acesID == 0) {
+            $('#editModel').fadeIn();
+        }
+        $('#editStyle').fadeOut();
+        if (modelID != "") {
+            $.getJSON('/ACES/GetSubmodelsByModel', { 'yearID': yearID, 'makeID': makeID, 'modelID': modelID }, function (submodels) {
+                $('#nonsubmodel').html('<option value="">- Select Submodel -</option>');
+                $.each(submodels, function (i, submodel) {
+                    var new_option = '<option value="' + submodel.ID + '|' + submodel.AAIAID + '">' + submodel.name.trim() + '</option>';
+                    $('#nonsubmodel').append(new_option);
+                });
+            });
+        } else {
+            $('#nonsubmodel').html('<option value="">- Select Submodel -</option>');
+            targetid = 'addModel';
+        }
+        $('.addImg').each(function (i, obj) {
+            if ($(this).attr('id') == targetid) {
+                $(this).fadeIn();
+            } else {
+                $(this).fadeOut();
+            }
+        });
+    });
+
+    $('#nonsubmodel').change(function () {
+        var submodelID = $(this).val();
+        var acesID = Number(submodelID.split('|')[1]);
+        if (acesID == 0) {
+            $('#editSubmodel').fadeIn();
+            $('#delSubmodel').fadeIn();
+        }
+    });
 });
 
 String.prototype.trim = function() {
