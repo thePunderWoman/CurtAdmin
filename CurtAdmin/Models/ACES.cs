@@ -336,9 +336,7 @@ namespace CurtAdmin.Models {
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             List<ACESBaseVehicle> vehicles = new List<ACESBaseVehicle>();
             vehicles = (from bv in db.BaseVehicles
-                        join vv in db.vcdb_Vehicles on bv.ID equals vv.BaseVehicleID
-                        join vvp in db.vcdb_VehicleParts on vv.ID equals vvp.VehicleID
-                        where vvp.PartNumber.Equals(partID)
+                        where bv.vcdb_Vehicles.Any(x => x.vcdb_VehicleParts.Any(y => y.PartNumber.Equals(partID)))
                         select new ACESBaseVehicle {
                             ID = bv.ID,
                             AAIABaseVehicleID = bv.AAIABaseVehicleID,
@@ -365,7 +363,7 @@ namespace CurtAdmin.Models {
                                                            where c.SubModelID.Equals(s.Key.ID) && c.vcdb_VehicleParts.Where(x => x.PartNumber.Equals(partID)).Count() > 0
                                                            select vc.ConfigAttribute.ConfigAttributeType).Distinct().OrderBy(x => x.name).ToList<ConfigAttributeType>()
                                          }).OrderBy(x => x.submodel.SubmodelName).ToList<ACESSubmodel>(),
-                        }).ToList<ACESBaseVehicle>().Distinct(new BaseVehicleComparer()).OrderByDescending(x => x.YearID).ToList<ACESBaseVehicle>();
+                        }).Distinct().OrderByDescending(x => x.YearID).ToList<ACESBaseVehicle>();
             foreach (ACESBaseVehicle abv in vehicles) {
                 foreach (ACESSubmodel sm in abv.Submodels) {
                     sm.vcdb = vcdb.Vehicles.Where(x => x.BaseVehicleID.Equals(abv.AAIABaseVehicleID) && x.SubmodelID.Equals(sm.submodel.AAIASubmodelID)).ToList<AAIA.Vehicle>().Count > 0;
