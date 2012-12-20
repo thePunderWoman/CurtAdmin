@@ -250,7 +250,7 @@ namespace CurtAdmin.Controllers {
                             htmlBody += "<p>Once you have your Authorized Dealer Badge, please place it on your website, to build trust with your customers and reinforce your brand.</p>";
                             htmlBody += "<p><strong>Please respond to this email address when your web property is ready for the second final review.</strong> In that email please provide:</p>";
                             htmlBody += "<ul><ol>1. The url of the page on your web property that contains the badge.</ol><ol>2. The url of the page on your web property that contains the hyperlink to www.curtmfg.com.</ol></ul>";
-                            htmlBody += "<p>If you are experiencing any problems adding the badge to your website, please contact websupport@curtmfg.com and we will be happy to help you.</p>";
+                            htmlBody += "<p>If you are experiencing any problems adding the badge to your website, please contact dealers@curtmfg.com and we will be happy to help you.</p>";
                             helpers.SendEmail(wp.CustUserWebProperty.CustomerUser.email, subject, htmlBody, true);
                         }
                         catch (Exception e)
