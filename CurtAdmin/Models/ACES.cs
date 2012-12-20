@@ -7,6 +7,41 @@ using LinqKit;
 
 namespace CurtAdmin.Models {
     public class ACES {
+        public List<int> GetYears() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<int> years = new List<int>();
+            years = db.vcdb_Years.OrderByDescending(x => x.YearID).Select(x => x.YearID).ToList();
+            return years;
+        }
+
+        public List<ACESMake> GetMakesByYear(int yearID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            List<ACESMake> makes = (from m in db.vcdb_Makes
+                                    join bv in db.BaseVehicles on m.ID equals bv.MakeID
+                                    where bv.YearID.Equals(yearID)
+                                    select new ACESMake { 
+                                        ID = m.ID,
+                                        name = m.MakeName,
+                                        AAIAID = m.AAIAMakeID
+                                    }).Distinct().ToList();
+            List<int> makeids = makes.Where(x => x.AAIAID != null).Select(x => (int)x.AAIAID).ToList();
+            List<int> regions = new List<int> { 1, 2 };
+            List<int> vtypes = new List<int> { 5, 6, 7 };
+            List<ACESMake> vcdbmakes = (from m in vcdb.Makes
+                                        join bv in vcdb.BaseVehicles on m.MakeID equals bv.MakeID
+                                        where bv.YearID.Equals(yearID) && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                                        && vtypes.Contains(bv.Model.VehicleTypeID) && !makeids.Contains(m.MakeID)
+                                        select new ACESMake {
+                                            ID = 0,
+                                            name = m.MakeName,
+                                            AAIAID = m.MakeID
+                                        }).Distinct().ToList();
+            makes.AddRange(vcdbmakes);
+            List<ACESMake> allmakes = makes.OrderBy(x => x.name).ToList();
+            return allmakes;
+        }
+
         public List<vcdb_Make> GetMakes() {
             CurtDevDataContext db = new CurtDevDataContext();
             List<vcdb_Make> makes = new List<vcdb_Make>();
@@ -49,6 +84,73 @@ namespace CurtAdmin.Models {
                       && vtypes.Contains(m.VehicleTypeID) && bv.MakeID.Equals(id)
                       select m).Distinct().OrderBy(x => x.ModelName).ToList<AAIA.Model>();
             return models;
+        }
+
+        public List<ACESMake> GetModelsByMake(int yearID, string makeID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            List<int> idlist = makeID.Split('|').Select(n => int.Parse(n)).ToList();
+            int mID = idlist[0];
+            int aaiaID = idlist[1];
+            List<ACESMake> models = (from m in db.vcdb_Models
+                                    join bv in db.BaseVehicles on m.ID equals bv.ModelID
+                                    where bv.YearID.Equals(yearID) && (bv.MakeID.Equals(mID) || bv.vcdb_Make.AAIAMakeID.Equals(aaiaID))
+                                    select new ACESMake {
+                                        ID = m.ID,
+                                        name = m.ModelName,
+                                        AAIAID = m.AAIAModelID
+                                    }).Distinct().ToList();
+            List<int> modelids = models.Where(x => x.AAIAID != null).Select(x => (int)x.AAIAID).ToList();
+            List<int> regions = new List<int> { 1, 2 };
+            List<int> vtypes = new List<int> { 5, 6, 7 };
+            List<ACESMake> vcdbmodels = (from m in vcdb.Models
+                                        join bv in vcdb.BaseVehicles on m.ModelID equals bv.ModelID
+                                        where bv.YearID.Equals(yearID) && bv.MakeID.Equals(aaiaID) && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                                        && vtypes.Contains(bv.Model.VehicleTypeID) && !modelids.Contains(m.ModelID)
+                                        select new ACESMake {
+                                            ID = 0,
+                                            name = m.ModelName,
+                                            AAIAID = m.ModelID
+                                        }).Distinct().ToList();
+            models.AddRange(vcdbmodels);
+            List<ACESMake> allmodels = models.OrderBy(x => x.name).ToList();
+            return allmodels;
+        }
+
+        public List<ACESMake> GetSubmodelsByModel(int yearID, string makeID, string modelID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            List<int> idlist = makeID.Split('|').Select(n => int.Parse(n)).ToList();
+            int maID = idlist[0];
+            int maAaiaID = idlist[1];
+            idlist = modelID.Split('|').Select(n => int.Parse(n)).ToList();
+            int moID = idlist[0];
+            int moAaiaID = idlist[1];
+            List<ACESMake> submodels = (from s in db.Submodels
+                                        join v in db.vcdb_Vehicles on s.ID equals v.SubModelID
+                                        where v.BaseVehicle.YearID.Equals(yearID) && (v.BaseVehicle.MakeID.Equals(maID) || v.BaseVehicle.vcdb_Make.AAIAMakeID.Equals(maAaiaID))
+                                        && (v.BaseVehicle.ModelID.Equals(moID) || v.BaseVehicle.vcdb_Model.AAIAModelID.Equals(moAaiaID))
+                                        select new ACESMake {
+                                            ID = s.ID,
+                                            name = s.SubmodelName,
+                                            AAIAID = s.AAIASubmodelID
+                                        }).Distinct().ToList();
+            List<int> submodelids = submodels.Where(x => x.AAIAID != null).Select(x => (int)x.AAIAID).ToList();
+            List<int> regions = new List<int> { 1, 2 };
+            List<int> vtypes = new List<int> { 5, 6, 7 };
+            List<ACESMake> vcdbsubmodels = (from s in vcdb.Submodels
+                                            join v in vcdb.Vehicles on s.SubmodelID equals v.SubmodelID
+                                            where v.BaseVehicle.YearID.Equals(yearID) && v.BaseVehicle.MakeID.Equals(maAaiaID) && v.BaseVehicle.ModelID.Equals(moAaiaID)
+                                            && regions.Contains(v.RegionID)
+                                            && vtypes.Contains(v.BaseVehicle.Model.VehicleTypeID) && !submodelids.Contains(s.SubmodelID)
+                                            select new ACESMake {
+                                                ID = 0,
+                                                name = s.SubmodelName,
+                                                AAIAID = s.SubmodelID
+                                            }).Distinct().ToList();
+            submodels.AddRange(vcdbsubmodels);
+            List<ACESMake> allsubmodels = submodels.OrderBy(x => x.name).ToList();
+            return allsubmodels;
         }
 
         public List<AAIA.BaseVehicle> GetBaseVehicles(int makeid, int modelid) {
@@ -1930,6 +2032,13 @@ namespace CurtAdmin.Models {
             return obj.BedConfig.GetHashCode();
         }
     }*/
+
+    public class ACESMake {
+        public int ID { get; set; }
+        public string name { get; set; }
+        public int? AAIAID { get; set; }
+    }
+
     public class ACESModel {
         public int ID { get; set; }
         public string name { get; set; }
