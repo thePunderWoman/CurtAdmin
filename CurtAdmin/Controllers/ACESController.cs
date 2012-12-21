@@ -38,7 +38,28 @@ namespace CurtAdmin.Controllers {
             List<int> years = new ACES().GetYears();
             ViewBag.years = years;
 
+            List<ACESMake> allmakes = new ACES().GetAllMakes();
+            ViewBag.allmakes = allmakes;
+
+            List<ACESMake> allmodels = new ACES().GetAllModels();
+            ViewBag.allmodels = allmodels;
+
+            List<ACESMake> allsubmodels = new ACES().GetAllSubmodels();
+            ViewBag.allsubmodels = allsubmodels;
+
             return View();
+        }
+
+        public string AddNonVCDBVehicle() {
+            int year = Convert.ToInt32(Request.Form["nonyear"]);
+            string make = Request.Form["nonmake"];
+            string model = Request.Form["nonmodel"];
+            string submodel = Request.Form["nonsubmodel"] ?? "";
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            try {
+                vehicle = new ACES().AddNonVCDBVehicle(year, make, model, submodel);
+            } catch { };
+            return JsonConvert.SerializeObject(vehicle);
         }
 
         public string GetYears() {
@@ -60,13 +81,32 @@ namespace CurtAdmin.Controllers {
             }
         }
 
-        public string GetMakesByYear(int yearID) {
-            List<ACESMake> makes = new ACES().GetMakesByYear(yearID);
+        public string GetAllMakes() {
+            List<ACESMake> makes = new ACES().GetAllMakes();
             return JsonConvert.SerializeObject(makes);
         }
 
-        public string GetModelsByMake(int yearID, string makeID) {
-            List<ACESMake> makes = new ACES().GetModelsByMake(yearID, makeID);
+        public string AddMake(string make) {
+            vcdb_Make m = new ACES().AddMake(make);
+            return JsonConvert.SerializeObject(m);
+        }
+
+        public string UpdateMake(int id, string name) {
+            vcdb_Make m = new ACES().UpdateMake(id,name);
+            return JsonConvert.SerializeObject(m);
+        }
+
+        public string RemoveMake(string make) {
+            try {
+                new ACES().RemoveMake(make);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
+        public string GetAllModels() {
+            List<ACESMake> makes = new ACES().GetAllModels();
             return JsonConvert.SerializeObject(makes);
         }
 
@@ -75,9 +115,47 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(models);
         }
 
-        public string GetSubmodelsByModel(int yearID, string makeID, string modelID) {
-            List<ACESMake> submodels = new ACES().GetSubmodelsByModel(yearID, makeID, modelID);
+        public string AddModel(string model) {
+            vcdb_Model m = new ACES().AddModel(Uri.UnescapeDataString(model));
+            return JsonConvert.SerializeObject(m);
+        }
+
+        public string UpdateModel(int id, string name) {
+            vcdb_Model m = new ACES().UpdateModel(id, Uri.UnescapeDataString(name));
+            return JsonConvert.SerializeObject(m);
+        }
+
+        public string RemoveModel(string model) {
+            try {
+                new ACES().RemoveModel(model);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
+        public string GetAllSubmodels() {
+            List<ACESMake> submodels = new ACES().GetAllSubmodels();
             return JsonConvert.SerializeObject(submodels);
+        }
+
+        public string AddSubmodelByName(string submodel) {
+            Submodel s = new ACES().AddSubmodel(Uri.UnescapeDataString(submodel));
+            return JsonConvert.SerializeObject(s);
+        }
+
+        public string UpdateSubmodel(int id, string name) {
+            Submodel s = new ACES().UpdateSubmodel(id, Uri.UnescapeDataString(name));
+            return JsonConvert.SerializeObject(s);
+        }
+
+        public string RemoveSubmodelByIDList(string submodel) {
+            try {
+                new ACES().RemoveSubmodel(submodel);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
         }
 
         public string GetBaseVehicles(int makeid, int modelid) {
@@ -460,6 +538,18 @@ namespace CurtAdmin.Controllers {
 
         public string SearchNotes(string keyword = "") {
             return new ACES().SearchNotes(keyword);
+        }
+
+        public string SearchMakes(string keyword = "") {
+            return new ACES().SearchMakes(keyword);
+        }
+
+        public string SearchModels(string keyword = "") {
+            return new ACES().SearchModels(keyword);
+        }
+
+        public string SearchSubmodels(string keyword = "") {
+            return new ACES().SearchSubmodels(keyword);
         }
 
         public string PopulatePartsFromBaseVehicle(int vehicleID = 0, int baseVehicleID = 0, int submodelID = 0) {

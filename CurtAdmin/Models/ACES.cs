@@ -37,31 +37,28 @@ namespace CurtAdmin.Models {
             db.SubmitChanges();
         }
 
-        public List<ACESMake> GetMakesByYear(int yearID) {
+        public List<ACESMake> GetAllMakes() {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             List<ACESMake> makes = (from m in db.vcdb_Makes
-                                    join bv in db.BaseVehicles on m.ID equals bv.MakeID
-                                    where bv.YearID.Equals(yearID)
                                     select new ACESMake { 
                                         ID = m.ID,
                                         name = m.MakeName,
                                         AAIAID = m.AAIAMakeID
                                     }).Distinct().ToList();
-            List<int> makeids = makes.Where(x => x.AAIAID != null).Select(x => (int)x.AAIAID).ToList();
             List<int> regions = new List<int> { 1, 2 };
             List<int> vtypes = new List<int> { 5, 6, 7 };
             List<ACESMake> vcdbmakes = (from m in vcdb.Makes
                                         join bv in vcdb.BaseVehicles on m.MakeID equals bv.MakeID
-                                        where bv.YearID.Equals(yearID) && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
-                                        && vtypes.Contains(bv.Model.VehicleTypeID) && !makeids.Contains(m.MakeID)
+                                        where bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                                        && vtypes.Contains(bv.Model.VehicleTypeID)
                                         select new ACESMake {
                                             ID = 0,
                                             name = m.MakeName,
                                             AAIAID = m.MakeID
                                         }).Distinct().ToList();
             makes.AddRange(vcdbmakes);
-            List<ACESMake> allmakes = makes.OrderBy(x => x.name).ToList();
+            List<ACESMake> allmakes = makes.Distinct(new ACESMakeComparer()).OrderBy(x => x.name).ToList();
             return allmakes;
         }
 
@@ -87,6 +84,68 @@ namespace CurtAdmin.Models {
             return makes;
         }
 
+        public vcdb_Make AddMake(string name) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Make make = new vcdb_Make();
+            try {
+                make = db.vcdb_Makes.Where(x => x.MakeName.ToLower().Trim().Equals(name.ToLower().Trim())).First();
+            } catch {
+                AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+                AAIA.Make vcdbMake = vcdb.Makes.Where(x => x.MakeName.ToLower().Trim().Equals(name.ToLower().Trim())).FirstOrDefault();
+                make = new vcdb_Make {
+                    MakeName = name,
+                    AAIAMakeID = (vcdbMake != null && vcdbMake.MakeID > 0) ? vcdbMake.MakeID : (int?)null,
+                };
+                db.vcdb_Makes.InsertOnSubmit(make);
+                db.SubmitChanges();
+            }
+            return make;
+        }
+
+        public vcdb_Make UpdateMake(int id, string name) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            vcdb_Make make = new vcdb_Make();
+            // get make
+            make = db.vcdb_Makes.Where(x => x.ID.Equals(id)).First();
+            try {
+                // check if the make exists in the vcdb
+                AAIA.Make vcdbMake = vcdb.Makes.Where(x => x.MakeName.Trim().ToLower().Equals(name.Trim().ToLower())).First();
+                try {
+                    // if it exists, check to see if a make is already in curtdev with the matching AAIA ID
+                    vcdb_Make existingMake = db.vcdb_Makes.Where(x => x.AAIAMakeID.Equals(vcdbMake.MakeID)).First();
+                    // get all the base vehicles with the present make
+                    List<BaseVehicle> baseVehicles = db.BaseVehicles.Where(x => x.MakeID.Equals(make.ID)).ToList();
+                    foreach (BaseVehicle bv in baseVehicles) {
+                        // update the Base Vehicles to use the existing make that's correct
+                        bv.MakeID = existingMake.ID;
+                    }
+                    db.SubmitChanges();
+                    // delete the duplicate
+                    db.vcdb_Makes.DeleteOnSubmit(make);
+                } catch {
+                    // there is no existing make.  Update the make with the new vcdb correct values
+                    make.MakeName = vcdbMake.MakeName.Trim();
+                    make.AAIAMakeID = vcdbMake.MakeID;
+                }
+            } catch {
+                // no vcdb match...just update the name
+                make.MakeName = name.Trim();
+            }
+            db.SubmitChanges();
+            return make;
+        }
+
+        public void RemoveMake(string make) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<int> idlist = make.Split('|').Select(n => int.Parse(n)).ToList();
+            int mID = idlist[0];
+            int aaiaID = idlist[1];
+            vcdb_Make m = db.vcdb_Makes.Where(x => x.ID.Equals(mID) || x.AAIAMakeID.Equals(aaiaID)).First();
+            db.vcdb_Makes.DeleteOnSubmit(m);
+            db.SubmitChanges();
+        }
+
         public List<vcdb_Model> GetModels(int makeid) {
             CurtDevDataContext db = new CurtDevDataContext();
             List<vcdb_Model> models = new List<vcdb_Model>();
@@ -109,71 +168,262 @@ namespace CurtAdmin.Models {
             return models;
         }
 
-        public List<ACESMake> GetModelsByMake(int yearID, string makeID) {
+        public List<ACESMake> GetAllModels() {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
-            List<int> idlist = makeID.Split('|').Select(n => int.Parse(n)).ToList();
-            int mID = idlist[0];
-            int aaiaID = idlist[1];
             List<ACESMake> models = (from m in db.vcdb_Models
-                                    join bv in db.BaseVehicles on m.ID equals bv.ModelID
-                                    where bv.YearID.Equals(yearID) && (bv.MakeID.Equals(mID) || bv.vcdb_Make.AAIAMakeID.Equals(aaiaID))
                                     select new ACESMake {
                                         ID = m.ID,
                                         name = m.ModelName,
                                         AAIAID = m.AAIAModelID
                                     }).Distinct().ToList();
-            List<int> modelids = models.Where(x => x.AAIAID != null).Select(x => (int)x.AAIAID).ToList();
             List<int> regions = new List<int> { 1, 2 };
             List<int> vtypes = new List<int> { 5, 6, 7 };
             List<ACESMake> vcdbmodels = (from m in vcdb.Models
                                         join bv in vcdb.BaseVehicles on m.ModelID equals bv.ModelID
-                                        where bv.YearID.Equals(yearID) && bv.MakeID.Equals(aaiaID) && bv.Vehicles.Any(x => regions.Contains(x.RegionID))
-                                        && vtypes.Contains(bv.Model.VehicleTypeID) && !modelids.Contains(m.ModelID)
+                                        where bv.Vehicles.Any(x => regions.Contains(x.RegionID))
+                                        && vtypes.Contains(bv.Model.VehicleTypeID)
                                         select new ACESMake {
                                             ID = 0,
                                             name = m.ModelName,
                                             AAIAID = m.ModelID
                                         }).Distinct().ToList();
             models.AddRange(vcdbmodels);
-            List<ACESMake> allmodels = models.OrderBy(x => x.name).ToList();
+            List<ACESMake> allmodels = models.Distinct(new ACESMakeComparer()).OrderBy(x => x.name).ToList();
             return allmodels;
         }
 
-        public List<ACESMake> GetSubmodelsByModel(int yearID, string makeID, string modelID) {
+        public vcdb_Model AddModel(string name) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Model model = new vcdb_Model();
+            try {
+                model = db.vcdb_Models.Where(x => x.ModelName.ToLower().Trim().Equals(name.ToLower().Trim())).First();
+            } catch {
+                AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+                AAIA.Model vcdbModel = vcdb.Models.Where(x => x.ModelName.ToLower().Trim().Equals(name.ToLower().Trim())).FirstOrDefault();
+                model = new vcdb_Model {
+                    ModelName = name,
+                    AAIAModelID = (vcdbModel != null && vcdbModel.ModelID > 0) ? vcdbModel.ModelID : (int?)null,
+                };
+                db.vcdb_Models.InsertOnSubmit(model);
+                db.SubmitChanges();
+            }
+            return model;
+        }
+
+        public vcdb_Model UpdateModel(int id, string name) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
-            List<int> idlist = makeID.Split('|').Select(n => int.Parse(n)).ToList();
-            int maID = idlist[0];
-            int maAaiaID = idlist[1];
-            idlist = modelID.Split('|').Select(n => int.Parse(n)).ToList();
-            int moID = idlist[0];
-            int moAaiaID = idlist[1];
+            vcdb_Model model = new vcdb_Model();
+            // get make
+            model = db.vcdb_Models.Where(x => x.ID.Equals(id)).First();
+            try {
+                // check if the make exists in the vcdb
+                AAIA.Model vcdbModel = vcdb.Models.Where(x => x.ModelName.Trim().ToLower().Equals(name.Trim().ToLower())).First();
+                try {
+                    // if it exists, check to see if a make is already in curtdev with the matching AAIA ID
+                    vcdb_Model existingModel = db.vcdb_Models.Where(x => x.AAIAModelID.Equals(vcdbModel.ModelID)).First();
+                    // get all the base vehicles with the present make
+                    List<BaseVehicle> baseVehicles = db.BaseVehicles.Where(x => x.ModelID.Equals(model.ID)).ToList();
+                    foreach (BaseVehicle bv in baseVehicles) {
+                        // update the Base Vehicles to use the existing make that's correct
+                        bv.ModelID = existingModel.ID;
+                    }
+                    db.SubmitChanges();
+                    // delete the duplicate
+                    db.vcdb_Models.DeleteOnSubmit(model);
+                } catch {
+                    // there is no existing make.  Update the make with the new vcdb correct values
+                    model.ModelName = vcdbModel.ModelName.Trim();
+                    model.AAIAModelID = vcdbModel.ModelID;
+                }
+            } catch {
+                // no vcdb match...just update the name
+                model.ModelName = name.Trim();
+            }
+            db.SubmitChanges();
+            return model;
+        }
+
+        public void RemoveModel(string model) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<int> idlist = model.Split('|').Select(n => int.Parse(n)).ToList();
+            int mID = idlist[0];
+            int aaiaID = idlist[1];
+            vcdb_Model m = db.vcdb_Models.Where(x => x.ID.Equals(mID) || x.AAIAModelID.Equals(aaiaID)).First();
+            db.vcdb_Models.DeleteOnSubmit(m);
+            db.SubmitChanges();
+        }
+
+        public Submodel AddSubmodel(string name) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            Submodel submodel = new Submodel();
+            try {
+                submodel = db.Submodels.Where(x => x.SubmodelName.ToLower().Trim().Equals(name.ToLower().Trim())).First();
+            } catch {
+                AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+                AAIA.Submodel vcdbSubmodel = vcdb.Submodels.Where(x => x.SubmodelName.ToLower().Trim().Equals(name.ToLower().Trim())).FirstOrDefault();
+                submodel = new Submodel {
+                    SubmodelName = name,
+                    AAIASubmodelID = (vcdbSubmodel != null && vcdbSubmodel.SubmodelID > 0) ? vcdbSubmodel.SubmodelID : (int?)null,
+                };
+                db.Submodels.InsertOnSubmit(submodel);
+                db.SubmitChanges();
+            }
+            return submodel;
+        }
+
+        public Submodel UpdateSubmodel(int id, string name) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            Submodel submodel = new Submodel();
+            // get make
+            submodel = db.Submodels.Where(x => x.ID.Equals(id)).First();
+            try {
+                // check if the make exists in the vcdb
+                AAIA.Submodel vcdbSubmodel = vcdb.Submodels.Where(x => x.SubmodelName.Trim().ToLower().Equals(name.Trim().ToLower())).First();
+                try {
+                    // if it exists, check to see if a make is already in curtdev with the matching AAIA ID
+                    Submodel existingSubmodel = db.Submodels.Where(x => x.AAIASubmodelID.Equals(vcdbSubmodel.SubmodelID)).First();
+                    // get all the base vehicles with the present make
+                    List<vcdb_Vehicle> vehicles = db.vcdb_Vehicles.Where(x => x.SubModelID.Equals(submodel.ID)).ToList();
+                    foreach (vcdb_Vehicle v in vehicles) {
+                        // update the Base Vehicles to use the existing make that's correct
+                        v.SubModelID = existingSubmodel.ID;
+                    }
+                    db.SubmitChanges();
+                    // delete the duplicate
+                    db.Submodels.DeleteOnSubmit(submodel);
+                } catch {
+                    // there is no existing make.  Update the make with the new vcdb correct values
+                    submodel.SubmodelName = vcdbSubmodel.SubmodelName.Trim();
+                    submodel.AAIASubmodelID = vcdbSubmodel.SubmodelID;
+                }
+            } catch {
+                // no vcdb match...just update the name
+                submodel.SubmodelName = name.Trim();
+            }
+            db.SubmitChanges();
+            return submodel;
+        }
+
+        public void RemoveSubmodel(string submodel) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<int> idlist = submodel.Split('|').Select(n => int.Parse(n)).ToList();
+            int sID = idlist[0];
+            int aaiaID = idlist[1];
+            Submodel s = db.Submodels.Where(x => x.ID.Equals(sID) || x.AAIASubmodelID.Equals(aaiaID)).First();
+            db.Submodels.DeleteOnSubmit(s);
+            db.SubmitChanges();
+        }
+
+        public List<ACESMake> GetAllSubmodels() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             List<ACESMake> submodels = (from s in db.Submodels
-                                        join v in db.vcdb_Vehicles on s.ID equals v.SubModelID
-                                        where v.BaseVehicle.YearID.Equals(yearID) && (v.BaseVehicle.MakeID.Equals(maID) || v.BaseVehicle.vcdb_Make.AAIAMakeID.Equals(maAaiaID))
-                                        && (v.BaseVehicle.ModelID.Equals(moID) || v.BaseVehicle.vcdb_Model.AAIAModelID.Equals(moAaiaID))
                                         select new ACESMake {
                                             ID = s.ID,
                                             name = s.SubmodelName,
                                             AAIAID = s.AAIASubmodelID
                                         }).Distinct().ToList();
-            List<int> submodelids = submodels.Where(x => x.AAIAID != null).Select(x => (int)x.AAIAID).ToList();
             List<int> regions = new List<int> { 1, 2 };
             List<int> vtypes = new List<int> { 5, 6, 7 };
             List<ACESMake> vcdbsubmodels = (from s in vcdb.Submodels
                                             join v in vcdb.Vehicles on s.SubmodelID equals v.SubmodelID
-                                            where v.BaseVehicle.YearID.Equals(yearID) && v.BaseVehicle.MakeID.Equals(maAaiaID) && v.BaseVehicle.ModelID.Equals(moAaiaID)
-                                            && regions.Contains(v.RegionID)
-                                            && vtypes.Contains(v.BaseVehicle.Model.VehicleTypeID) && !submodelids.Contains(s.SubmodelID)
+                                            where regions.Contains(v.RegionID)
+                                            && vtypes.Contains(v.BaseVehicle.Model.VehicleTypeID)
                                             select new ACESMake {
                                                 ID = 0,
                                                 name = s.SubmodelName,
                                                 AAIAID = s.SubmodelID
                                             }).Distinct().ToList();
             submodels.AddRange(vcdbsubmodels);
-            List<ACESMake> allsubmodels = submodels.OrderBy(x => x.name).ToList();
+            List<ACESMake> allsubmodels = submodels.Distinct(new ACESMakeComparer()).OrderBy(x => x.name).ToList();
             return allsubmodels;
+        }
+
+        public vcdb_Vehicle AddNonVCDBVehicle(int year, string make, string model, string submodel = "") {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            vcdb_Vehicle vehicle = new vcdb_Vehicle();
+            List<int> idlist = make.Split('|').Select(n => int.Parse(n)).ToList();
+            int maID = idlist[0];
+            int maAaiaID = idlist[1];
+
+            idlist = model.Split('|').Select(n => int.Parse(n)).ToList();
+            int moID = idlist[0];
+            int moAaiaID = idlist[1];
+
+            int sID = 0;
+            int sAaiaID = 0;
+            if (submodel != "") {
+                idlist = submodel.Split('|').Select(n => int.Parse(n)).ToList();
+                sID = idlist[0];
+                sAaiaID = idlist[1];
+            }
+
+            if (maID == 0) {
+                AAIA.Make vcdbMake = vcdb.Makes.Where(x => x.MakeID.Equals(maAaiaID)).First();
+                vcdb_Make cdmake = new vcdb_Make {
+                    MakeName = vcdbMake.MakeName.Trim(),
+                    AAIAMakeID = vcdbMake.MakeID
+                };
+                db.vcdb_Makes.InsertOnSubmit(cdmake);
+                db.SubmitChanges();
+                maID = cdmake.ID;
+            }
+
+            if (moID == 0) {
+                AAIA.Model vcdbModel = vcdb.Models.Where(x => x.ModelID.Equals(moAaiaID)).First();
+                vcdb_Model cdmodel = new vcdb_Model {
+                    ModelName = vcdbModel.ModelName.Trim(),
+                    AAIAModelID = vcdbModel.ModelID,
+                    VehicleTypeID = vcdbModel.VehicleTypeID
+                };
+                db.vcdb_Models.InsertOnSubmit(cdmodel);
+                db.SubmitChanges();
+                moID = cdmodel.ID;
+            }
+
+            BaseVehicle bv = new BaseVehicle();
+            try {
+                bv = db.BaseVehicles.Where(x => x.YearID.Equals(year) && x.MakeID.Equals(maID) && x.ModelID.Equals(moID)).First();
+            } catch {
+                AAIA.BaseVehicle aaiabv = new AAIA.BaseVehicle();
+                aaiabv = vcdb.BaseVehicles.Where(x => x.YearID.Equals(year) && x.MakeID.Equals(maAaiaID) && x.ModelID.Equals(moAaiaID)).FirstOrDefault();
+                bv = new BaseVehicle {
+                    YearID = year,
+                    MakeID = maID,
+                    ModelID = moID,
+                    AAIABaseVehicleID = (aaiabv != null && aaiabv.BaseVehicleID > 0) ? aaiabv.BaseVehicleID : (int?)null
+                };
+                db.BaseVehicles.InsertOnSubmit(bv);
+                db.SubmitChanges();
+            }
+            int? subID = null;
+            if (sID > 0) {
+                subID = sID;
+            } else if (sAaiaID > 0) {
+                AAIA.Submodel vcdbSubmodel = vcdb.Submodels.Where(x => x.SubmodelID.Equals(sAaiaID)).First();
+                Submodel cdsubmodel = new Submodel {
+                    SubmodelName = vcdbSubmodel.SubmodelName.Trim(),
+                    AAIASubmodelID = vcdbSubmodel.SubmodelID
+                };
+                db.Submodels.InsertOnSubmit(cdsubmodel);
+                db.SubmitChanges();
+                subID = cdsubmodel.ID;
+            }
+            try {
+                vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(bv.ID) && x.SubModelID.Equals(subID) && x.ConfigID.Equals(null)).First();
+            } catch {
+                vehicle = new vcdb_Vehicle {
+                    BaseVehicleID = bv.ID,
+                    SubModelID = subID
+                };
+                db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                db.SubmitChanges();
+            }
+            return vehicle;
         }
 
         public List<AAIA.BaseVehicle> GetBaseVehicles(int makeid, int modelid) {
@@ -1940,6 +2190,81 @@ namespace CurtAdmin.Models {
             return "[]";
         }
 
+        public string SearchMakes(string keyword = "") {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            if (keyword != "" && keyword.Length >= 1) {
+                List<Autocomplete> makes = (from m in db.vcdb_Makes
+                                            where m.MakeName.Contains(keyword)
+                                            select new Autocomplete {
+                                                id = 1,
+                                                label = m.MakeName.Trim(),
+                                                value = m.MakeName.Trim()
+                                            }).ToList();
+                List<Autocomplete> vcdbMakes = (from m in vcdb.Makes
+                                                where m.MakeName.Contains(keyword)
+                                                select new Autocomplete {
+                                                    id = 1,
+                                                    label = m.MakeName.Trim(),
+                                                    value = m.MakeName.Trim()
+                                                }).ToList();
+                makes.AddRange(vcdbMakes);
+                List<Autocomplete> allmakes = makes.Distinct().ToList();
+                return JsonConvert.SerializeObject(allmakes);
+            }
+            return "[]";
+        }
+
+        public string SearchModels(string keyword = "") {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            if (keyword != "" && keyword.Length >= 1) {
+                List<Autocomplete> models = (from m in db.vcdb_Models
+                                             where m.ModelName.Contains(keyword)
+                                             orderby m.ModelName
+                                             select new Autocomplete {
+                                                 id = 1,
+                                                 label = m.ModelName.Trim(),
+                                                 value = m.ModelName.Trim()
+                                             }).ToList();
+                List<Autocomplete> vcdbModels = (from m in vcdb.Models
+                                                 where m.ModelName.Contains(keyword)
+                                                 select new Autocomplete {
+                                                     id = 1,
+                                                     label = m.ModelName.Trim(),
+                                                     value = m.ModelName.Trim()
+                                                 }).ToList();
+                models.AddRange(vcdbModels);
+                List<Autocomplete> allmodels = models.Distinct().ToList();
+                return JsonConvert.SerializeObject(models);
+            }
+            return "[]";
+        }
+
+        public string SearchSubmodels(string keyword = "") {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            if (keyword != "" && keyword.Length >= 1) {
+                List<Autocomplete> submodels = (from s in db.Submodels
+                                                where s.SubmodelName.Contains(keyword)
+                                                select new Autocomplete {
+                                                    id = 1,
+                                                    label = s.SubmodelName,
+                                                    value = s.SubmodelName
+                                                }).ToList();
+                List<Autocomplete> vcdbSubmodels = (from s in vcdb.Submodels
+                                                    where s.SubmodelName.Contains(keyword)
+                                                    select new Autocomplete {
+                                                        id = 1,
+                                                        label = s.SubmodelName.Trim(),
+                                                        value = s.SubmodelName.Trim()
+                                                    }).ToList();
+                submodels.AddRange(vcdbSubmodels);
+                List<Autocomplete> allsubmodels = submodels.Distinct().ToList();
+                return JsonConvert.SerializeObject(allsubmodels);
+            }
+            return "[]";
+        }
     }
 
     public class ConfigAttributeComparer : IEqualityComparer<ConfigAttribute> {
@@ -2006,10 +2331,10 @@ namespace CurtAdmin.Models {
         }
     }
 
-    /*public class AAIAVehicleComparer : IEqualityComparer<ACESVehicle> {
-        bool IEqualityComparer<ACESVehicle>.Equals(ACESVehicle x, ACESVehicle y) {
+    public class ACESMakeComparer : IEqualityComparer<ACESMake> {
+        bool IEqualityComparer<ACESMake>.Equals(ACESMake x, ACESMake y) {
             // Check whether the compared objects reference the same data.
-            if (x.BaseVehicle.BaseVehicleID.Equals(y.BaseVehicle.BaseVehicleID) && x.Submodel.SubmodelID.Equals(y.Submodel.SubmodelID)) {
+            if (x.name.Trim().Equals(y.name.Trim()) && x.AAIAID.Equals(y.AAIAID)) {
                 return true;
             } else {
                 return false;
@@ -2017,44 +2342,60 @@ namespace CurtAdmin.Models {
 
         }
 
-        int IEqualityComparer<ACESVehicle>.GetHashCode(ACESVehicle obj) {
-            return obj.BaseVehicle.GetHashCode();
+        int IEqualityComparer<ACESMake>.GetHashCode(ACESMake obj) {
+            return obj.name.Trim().GetHashCode();
         }
     }
 
-    public class AAIAVehicleConfigComparer : IEqualityComparer<AAIA.VehicleConfig> {
-        bool IEqualityComparer<AAIA.VehicleConfig>.Equals(AAIA.VehicleConfig x, AAIA.VehicleConfig y) {
-            // Check whether the compared objects reference the same data.
-            if (x.BedConfig.BedLengthID.Equals(y.BedConfig.BedLengthID) && x.BedConfig.BedTypeID.Equals(y.BedConfig.BedTypeID)
-                && x.BodyStyleConfig.BodyTypeID.Equals(y.BodyStyleConfig.BodyTypeID) && x.BodyStyleConfig.BodyNumDoorsID.Equals(y.BodyStyleConfig.BodyNumDoorsID)
-                && x.BrakeConfig.BrakeABSID.Equals(y.BrakeConfig.BrakeABSID)  && x.BrakeConfig.BrakeSystemID.Equals(y.BrakeConfig.BrakeSystemID)
-                && x.BrakeConfig.FrontBrakeTypeID.Equals(y.BrakeConfig.FrontBrakeTypeID) && x.BrakeConfig.RearBrakeTypeID.Equals(y.BrakeConfig.RearBrakeTypeID)
-                && x.DriveTypeID.Equals(y.DriveTypeID) && x.WheelbaseID.Equals(y.WheelbaseID) && x.MfrBodyCodeID.Equals(y.MfrBodyCodeID) 
-                && x.EngineConfig.EngineBaseID.Equals(y.EngineConfig.EngineBaseID) && x.EngineConfig.FuelDeliveryConfigID.Equals(y.EngineConfig.FuelDeliveryConfigID)
-                && x.EngineConfig.FuelTypeID.Equals(y.EngineConfig.FuelTypeID) && x.EngineConfig.ValvesID.Equals(y.EngineConfig.ValvesID)
-                && x.EngineConfig.IgnitionSystemTypeID.Equals(y.EngineConfig.IgnitionSystemTypeID) && x.EngineConfig.EngineVINID.Equals(y.EngineConfig.EngineVINID)
-                && x.EngineConfig.EngineVersionID.Equals(y.EngineConfig.EngineVersionID) && x.EngineConfig.EngineMfrID.Equals(y.EngineConfig.EngineMfrID)
-                && x.EngineConfig.EngineDesignationID.Equals(y.EngineConfig.EngineDesignationID) && x.EngineConfig.CylinderHeadTypeID.Equals(y.EngineConfig.CylinderHeadTypeID)
-                && x.EngineConfig.AspirationID.Equals(y.EngineConfig.AspirationID) && x.SpringTypeConfig.RearSpringTypeID.Equals(y.SpringTypeConfig.RearSpringTypeID)
-                && x.SpringTypeConfig.FrontSpringTypeID.Equals(y.SpringTypeConfig.FrontSpringTypeID) && x.SteeringConfig.SteeringSystemID.Equals(y.SteeringConfig.SteeringSystemID)
-                && x.SteeringConfig.SteeringTypeID.Equals(y.SteeringConfig.SteeringTypeID) && x.SpringTypeConfigID.Equals(y.SpringTypeConfigID) && x.SteeringConfigID.Equals(y.SteeringConfigID)
-                && x.Transmission.TransmissionElecControlledID.Equals(y.Transmission.TransmissionElecControlledID)
-                && x.Transmission.TransmissionMfrCodeID.Equals(y.Transmission.TransmissionMfrCodeID)
-                && x.Transmission.TransmissionMfrID.Equals(y.Transmission.TransmissionMfrID) && x.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(y.Transmission.TransmissionBase.TransmissionControlTypeID)
-                && x.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(y.Transmission.TransmissionBase.TransmissionNumSpeedsID)
-                && x.Transmission.TransmissionBase.TransmissionTypeID.Equals(x.Transmission.TransmissionBase.TransmissionTypeID)
-                ) {
-                return true;
-            } else {
-                return false;
-            }
+    /*public class AAIAVehicleComparer : IEqualityComparer<ACESVehicle> {
+         bool IEqualityComparer<ACESVehicle>.Equals(ACESVehicle x, ACESVehicle y) {
+             // Check whether the compared objects reference the same data.
+             if (x.BaseVehicle.BaseVehicleID.Equals(y.BaseVehicle.BaseVehicleID) && x.Submodel.SubmodelID.Equals(y.Submodel.SubmodelID)) {
+                 return true;
+             } else {
+                 return false;
+             }
 
-        }
+         }
 
-        int IEqualityComparer<AAIA.VehicleConfig>.GetHashCode(AAIA.VehicleConfig obj) {
-            return obj.BedConfig.GetHashCode();
-        }
-    }*/
+         int IEqualityComparer<ACESVehicle>.GetHashCode(ACESVehicle obj) {
+             return obj.BaseVehicle.GetHashCode();
+         }
+     }
+
+     public class AAIAVehicleConfigComparer : IEqualityComparer<AAIA.VehicleConfig> {
+         bool IEqualityComparer<AAIA.VehicleConfig>.Equals(AAIA.VehicleConfig x, AAIA.VehicleConfig y) {
+             // Check whether the compared objects reference the same data.
+             if (x.BedConfig.BedLengthID.Equals(y.BedConfig.BedLengthID) && x.BedConfig.BedTypeID.Equals(y.BedConfig.BedTypeID)
+                 && x.BodyStyleConfig.BodyTypeID.Equals(y.BodyStyleConfig.BodyTypeID) && x.BodyStyleConfig.BodyNumDoorsID.Equals(y.BodyStyleConfig.BodyNumDoorsID)
+                 && x.BrakeConfig.BrakeABSID.Equals(y.BrakeConfig.BrakeABSID)  && x.BrakeConfig.BrakeSystemID.Equals(y.BrakeConfig.BrakeSystemID)
+                 && x.BrakeConfig.FrontBrakeTypeID.Equals(y.BrakeConfig.FrontBrakeTypeID) && x.BrakeConfig.RearBrakeTypeID.Equals(y.BrakeConfig.RearBrakeTypeID)
+                 && x.DriveTypeID.Equals(y.DriveTypeID) && x.WheelbaseID.Equals(y.WheelbaseID) && x.MfrBodyCodeID.Equals(y.MfrBodyCodeID) 
+                 && x.EngineConfig.EngineBaseID.Equals(y.EngineConfig.EngineBaseID) && x.EngineConfig.FuelDeliveryConfigID.Equals(y.EngineConfig.FuelDeliveryConfigID)
+                 && x.EngineConfig.FuelTypeID.Equals(y.EngineConfig.FuelTypeID) && x.EngineConfig.ValvesID.Equals(y.EngineConfig.ValvesID)
+                 && x.EngineConfig.IgnitionSystemTypeID.Equals(y.EngineConfig.IgnitionSystemTypeID) && x.EngineConfig.EngineVINID.Equals(y.EngineConfig.EngineVINID)
+                 && x.EngineConfig.EngineVersionID.Equals(y.EngineConfig.EngineVersionID) && x.EngineConfig.EngineMfrID.Equals(y.EngineConfig.EngineMfrID)
+                 && x.EngineConfig.EngineDesignationID.Equals(y.EngineConfig.EngineDesignationID) && x.EngineConfig.CylinderHeadTypeID.Equals(y.EngineConfig.CylinderHeadTypeID)
+                 && x.EngineConfig.AspirationID.Equals(y.EngineConfig.AspirationID) && x.SpringTypeConfig.RearSpringTypeID.Equals(y.SpringTypeConfig.RearSpringTypeID)
+                 && x.SpringTypeConfig.FrontSpringTypeID.Equals(y.SpringTypeConfig.FrontSpringTypeID) && x.SteeringConfig.SteeringSystemID.Equals(y.SteeringConfig.SteeringSystemID)
+                 && x.SteeringConfig.SteeringTypeID.Equals(y.SteeringConfig.SteeringTypeID) && x.SpringTypeConfigID.Equals(y.SpringTypeConfigID) && x.SteeringConfigID.Equals(y.SteeringConfigID)
+                 && x.Transmission.TransmissionElecControlledID.Equals(y.Transmission.TransmissionElecControlledID)
+                 && x.Transmission.TransmissionMfrCodeID.Equals(y.Transmission.TransmissionMfrCodeID)
+                 && x.Transmission.TransmissionMfrID.Equals(y.Transmission.TransmissionMfrID) && x.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(y.Transmission.TransmissionBase.TransmissionControlTypeID)
+                 && x.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(y.Transmission.TransmissionBase.TransmissionNumSpeedsID)
+                 && x.Transmission.TransmissionBase.TransmissionTypeID.Equals(x.Transmission.TransmissionBase.TransmissionTypeID)
+                 ) {
+                 return true;
+             } else {
+                 return false;
+             }
+
+         }
+
+         int IEqualityComparer<AAIA.VehicleConfig>.GetHashCode(AAIA.VehicleConfig obj) {
+             return obj.BedConfig.GetHashCode();
+         }
+     }*/
 
     public class ACESMake {
         public int ID { get; set; }
@@ -2137,5 +2478,11 @@ namespace CurtAdmin.Models {
 
     public class ACESVehicleConfig {
         public List<ConfigAttribute> attributes { get; set; }
+    }
+
+    public class Autocomplete {
+        public int id { get; set; }
+        public string label { get; set; }
+        public string value { get; set; }
     }
 }
