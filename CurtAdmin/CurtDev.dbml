@@ -877,7 +877,7 @@
   </Table>
   <Table Name="dbo.vcdb_Year" Member="vcdb_Years">
     <Type Name="vcdb_Year">
-      <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="YearID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" CanBeNull="false" />
       <Association Name="vcdb_Year_BaseVehicle" Member="BaseVehicles" AccessModifier="Internal" ThisKey="YearID" OtherKey="YearID" Type="BaseVehicle" />
     </Type>
   </Table>

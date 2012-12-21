@@ -41,6 +41,25 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public string GetYears() {
+            List<int> years = new ACES().GetYears();
+            return JsonConvert.SerializeObject(years);
+        }
+
+        public string AddYear(int year) {
+            vcdb_Year y = new ACES().AddYear(year);
+            return JsonConvert.SerializeObject(y);
+        }
+
+        public string RemoveYear(int year) {
+            try {
+                new ACES().RemoveYear(year);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
         public string GetMakesByYear(int yearID) {
             List<ACESMake> makes = new ACES().GetMakesByYear(yearID);
             return JsonConvert.SerializeObject(makes);

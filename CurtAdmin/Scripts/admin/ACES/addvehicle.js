@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿var saveNewYear;
+
+$(function () {
     $('#find').hide();
     $("#tabs").tabs();
     $('.addImg:first').fadeIn();
@@ -174,9 +176,61 @@
             $('#delSubmodel').fadeIn();
         }
     });
+
+    $('#addYear').click(function () {
+        var html = '<input type="text" name="newYear" id="newYear" class="prompt_text" placeholder="Enter new year..." /><br />';
+        $.prompt(html, {
+            submit: saveNewYear,
+            buttons: { Save: true }
+        });
+    });
+
+    $('#delYear').live('click', function (e) {
+        e.preventDefault();
+        var yearID = $('#nonyear').val();
+
+        if (yearID > 0 && confirm("Are you sure you want to remove this year?")) {
+            $.getJSON('/ACES/RemoveYear', { 'year': yearID }, function (data) {
+                if (data.success) {
+                    loadYears();
+                } else {
+                    showMessage("There was a problem removing the year.")
+                }
+            });
+        } else {
+            if (yearID == 0) { // 
+                showMessage('Invalid year.');
+            }
+        }
+    });
+
 });
 
-String.prototype.trim = function() {
+saveNewYear = function (action, f, d, m) {
+    var year = m.newYear;
+    if (!isNaN(year) && year.length > 0 && year > 0) {
+        $.getJSON('/ACES/AddYear', { 'year': year }, function (response) {
+            loadYears();
+        });
+    } else {
+        showMessage('Invalid year.');
+    }
+}
+
+loadYears = function () {
+    $.getJSON('/ACES/GetYears', function (years) {
+        $('#nonyear').empty();
+        $('#nonyear').append('<option value="">- Select Year -</option>');
+        $(years).each(function (i, year) {
+            var opt = '<option value="' + year + '">' + year + '</option>'
+            $('#nonyear').append(opt);
+        });
+        $('#nonyear').trigger('change');
+    });
+}
+
+
+/*String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g,"");
 }
 String.prototype.ltrim = function() {
@@ -184,4 +238,4 @@ String.prototype.ltrim = function() {
 }
 String.prototype.rtrim = function() {
     return this.replace(/\s+$/,"");
-}
+}*/

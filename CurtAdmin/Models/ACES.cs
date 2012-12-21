@@ -14,6 +14,29 @@ namespace CurtAdmin.Models {
             return years;
         }
 
+        public vcdb_Year AddYear(int year) {
+            vcdb_Year y = new vcdb_Year();
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                y = db.vcdb_Years.Where(x => x.YearID.Equals(year)).First();
+            } catch {
+                y = new vcdb_Year {
+                    YearID = year
+                };
+                db.vcdb_Years.InsertOnSubmit(y);
+                db.SubmitChanges();
+            }
+
+            return y;
+        }
+
+        public void RemoveYear(int year) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            vcdb_Year y = db.vcdb_Years.Where(x => x.YearID.Equals(year)).First();
+            db.vcdb_Years.DeleteOnSubmit(y);
+            db.SubmitChanges();
+        }
+
         public List<ACESMake> GetMakesByYear(int yearID) {
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
