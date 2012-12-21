@@ -536,6 +536,7 @@
     <Content Include="Views\LandingPages\past.cshtml" />
     <Content Include="Views\LandingPages\add.cshtml" />
     <Content Include="Views\LandingPages\edit.cshtml" />
+    <Content Include="Views\ACES\RunVehicleCheck.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

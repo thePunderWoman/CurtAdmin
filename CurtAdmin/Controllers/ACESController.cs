@@ -455,6 +455,16 @@ namespace CurtAdmin.Controllers {
             return JsonConvert.SerializeObject(types);
         }
 
+        public ActionResult RunVehicleCheck(int? updatedVehicles = null) {
+            ViewBag.updatedVehicles = updatedVehicles;
+            return View();
+        }
+
+        public ActionResult RunCheck() {
+            int vehicles = new ACES().RunCheck();
+            return RedirectToAction("RunVehicleCheck", new { updatedVehicles = vehicles });
+        }
+
         public string GetAttributesByType(int id) {
             List<ConfigAttribute> attributes = new List<ConfigAttribute>();
             attributes = new ACES().GetAttributesByType(id);

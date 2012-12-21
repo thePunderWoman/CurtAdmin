@@ -2277,6 +2277,52 @@ namespace CurtAdmin.Models {
             }
             return "[]";
         }
+
+        public int RunCheck() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            List<vcdb_Vehicle> vehicles = new List<vcdb_Vehicle>();
+            List<vcdb_Make> makes = db.vcdb_Makes.Where(x => x.AAIAMakeID.Equals(null)).ToList();
+            foreach(vcdb_Make make in makes) {
+                try {
+                    AAIA.Make amake = vcdb.Makes.Where(x => x.MakeName.Trim().ToLower().Equals(make.MakeName.Trim().ToLower())).First();
+                    make.MakeName = amake.MakeName.Trim();
+                    make.AAIAMakeID = amake.MakeID;
+                } catch {}
+            }
+
+            List<vcdb_Model> models = db.vcdb_Models.Where(x => x.AAIAModelID.Equals(null)).ToList();
+            foreach(vcdb_Model model in models) {
+                try {
+                    AAIA.Model amodel = vcdb.Models.Where(x => x.ModelName.Trim().ToLower().Equals(model.ModelName.Trim().ToLower())).First();
+                    model.ModelName = amodel.ModelName.Trim();
+                    model.AAIAModelID = amodel.ModelID;
+                    model.VehicleTypeID = amodel.VehicleTypeID;
+                } catch {}
+            }
+
+            List<Submodel> submodels = db.Submodels.Where(x => x.AAIASubmodelID.Equals(null)).ToList();
+            foreach(Submodel submodel in submodels) {
+                try {
+                    AAIA.Submodel asubmodel = vcdb.Submodels.Where(x => x.SubmodelName.Trim().ToLower().Equals(submodel.SubmodelName.Trim().ToLower())).First();
+                    submodel.SubmodelName = asubmodel.SubmodelName.Trim();
+                    submodel.AAIASubmodelID = asubmodel.SubmodelID;
+                } catch {}
+            }
+            db.SubmitChanges();
+
+            int updateCount = 0;
+            List<BaseVehicle> baseVehicles = db.BaseVehicles.Where(x => x.AAIABaseVehicleID.Equals(null)).ToList();
+            foreach (BaseVehicle baseVehicle in baseVehicles) {
+                try {
+                    AAIA.BaseVehicle bv = vcdb.BaseVehicles.Where(x => x.YearID.Equals(baseVehicle.YearID) && x.MakeID.Equals(baseVehicle.vcdb_Make.AAIAMakeID) && x.ModelID.Equals(baseVehicle.vcdb_Model.AAIAModelID)).First();
+                    baseVehicle.AAIABaseVehicleID = bv.BaseVehicleID;
+                    updateCount++;
+                } catch { }
+            }
+            db.SubmitChanges();
+            return updateCount;
+        }
     }
 
     public class ConfigAttributeComparer : IEqualityComparer<ConfigAttribute> {
