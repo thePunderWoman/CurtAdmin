@@ -1723,10 +1723,19 @@ namespace CurtAdmin.Models {
 
         public List<ConfigAttributeType> getNonACESConfigurationTypes(int vehicleID) {
             CurtDevDataContext db = new CurtDevDataContext();
-            List<ConfigAttributeType> alltypes = db.ConfigAttributeTypes.Where(x => x.AcesTypeID == null).OrderBy(x => x.name).ToList();
-            List<VehicleConfigAttribute> vehicleattr = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID) && x.ConfigID != null).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Distinct().ToList();
-            List<ConfigAttributeType> vehicletypes = vehicleattr.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesTypeID == null).Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().ToList<ConfigAttributeType>();
-            List<ConfigAttributeType> types = alltypes.Except(vehicletypes).OrderBy(x => x.name).ToList<ConfigAttributeType>();
+            vcdb_Vehicle vehicle = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
+            List<ConfigAttributeType> types = new List<ConfigAttributeType>();
+            if (vehicle.BaseVehicle.AAIABaseVehicleID == null || vehicle.Submodel.AAIASubmodelID == null) {
+                List<ConfigAttributeType> alltypes = db.ConfigAttributeTypes.OrderBy(x => x.name).ToList();
+                List<VehicleConfigAttribute> vehicleattr = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID) && x.ConfigID != null).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Distinct().ToList();
+                List<ConfigAttributeType> vehicletypes = vehicleattr.Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().ToList<ConfigAttributeType>();
+                types = alltypes.Except(vehicletypes).OrderBy(x => x.name).ToList<ConfigAttributeType>();
+            } else {
+                List<ConfigAttributeType> alltypes = db.ConfigAttributeTypes.Where(x => x.AcesTypeID == null).OrderBy(x => x.name).ToList();
+                List<VehicleConfigAttribute> vehicleattr = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID) && x.ConfigID != null).SelectMany(x => x.VehicleConfig.VehicleConfigAttributes).Distinct().ToList();
+                List<ConfigAttributeType> vehicletypes = vehicleattr.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesTypeID == null).Select(x => x.ConfigAttribute.ConfigAttributeType).Distinct().ToList<ConfigAttributeType>();
+                types = alltypes.Except(vehicletypes).OrderBy(x => x.name).ToList<ConfigAttributeType>();
+            }
             return types;
         }
 
@@ -1741,7 +1750,10 @@ namespace CurtAdmin.Models {
             CurtDevDataContext db = new CurtDevDataContext();
             vcdb_Vehicle vehicle = new vcdb_Vehicle();
             vehicle = new ACES().GetVehicle(vehicleID);
-            List<ConfigAttribute> attributelist = attributelist = vehicle.VehicleConfig.VehicleConfigAttributes.Where(x => x.AttributeID != attributeID).Select(x => x.ConfigAttribute).ToList<ConfigAttribute>();
+            List<ConfigAttribute> attributelist = new List<ConfigAttribute>();
+            if(vehicle.ConfigID != null) {
+                attributelist = vehicle.VehicleConfig.VehicleConfigAttributes.Where(x => x.AttributeID != attributeID).Select(x => x.ConfigAttribute).ToList<ConfigAttribute>();
+            }
             if (method != "remove") {
                 ConfigAttribute ca = db.ConfigAttributes.Where(x => x.ID.Equals(attributeID)).First();
                 attributelist.Add(ca);
