@@ -68,13 +68,13 @@ namespace CurtAdmin.Models {
         }
 
         public void ImportImagesAsync(HttpServerUtilityBase server, int partid, object userState) {
-            string directory = server.MapPath("/CURTLibrary/" + partid.ToString() + "/images/");
+            string directory = server.MapPath("/masterlibrary/" + partid.ToString() + "/images/");
             try {
                 string[] filenames = Directory.GetFiles(@directory);
                 List<string> files = new List<string>();
                 List<PartImage> newimgs = new List<PartImage>();
                 foreach (string file in filenames) {
-                    files.Add(file.Substring(file.IndexOf("CURTLibrary") - 1));
+                    files.Add(file.Substring(file.IndexOf("masterlibrary") - 1));
                 }
 
                 CurtDevDataContext db = new CurtDevDataContext();
@@ -125,12 +125,12 @@ namespace CurtAdmin.Models {
 
         public string ImportImages(HttpServerUtilityBase server, int partid = 0) {
             try {
-                string directory = server.MapPath("/CURTLibrary/" + partid.ToString() + "/images/");
+                string directory = server.MapPath("/masterlibrary/" + partid.ToString() + "/images/");
                 string[] filenames = Directory.GetFiles(@directory);
                 List<string> files = new List<string>();
                 List<PartImage> newimgs = new List<PartImage>();
                 foreach (string file in filenames) {
-                    files.Add(file.Substring(file.IndexOf("CURTLibrary") - 1));
+                    files.Add(file.Substring(file.IndexOf("masterlibrary") - 1));
                 }
 
                 CurtDevDataContext db = new CurtDevDataContext();

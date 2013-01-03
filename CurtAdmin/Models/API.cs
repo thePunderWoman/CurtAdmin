@@ -6184,17 +6184,17 @@ namespace CurtAdmin.Models {
                                                                new XElement("Icon",
                                                                    new XAttribute("Extension", "jpg"),
                                                                    new XAttribute("Delete", "false"),
-                                                                   "http://graphics.curthitch.biz/CURTLibrary/" + p.partID + "/images/" + p.partID + "_100x75_a.jpg"
+                                                                   "http://www.curtmfg.com/CURTLibrary/" + p.partID + "/images/" + p.partID + "_100x75_a.jpg"
                                                                    ),
                                                                new XElement("Medium",
                                                                    new XAttribute("Extension", "jpg"),
                                                                    new XAttribute("Delete", "false"),
-                                                                   "http://graphics.curthitch.biz/CURTLibrary/" + p.partID + "/images/" + p.partID + "_300x225_a.jpg"
+                                                                   "http://www.curtmfg.com/CURTLibrary/" + p.partID + "/images/" + p.partID + "_300x225_a.jpg"
                                                                    ),
                                                                new XElement("Large",
                                                                    new XAttribute("Extension", "jpg"),
                                                                    new XAttribute("Delete", "false"),
-                                                                   "http://graphics.curthitch.biz/CURTLibrary/" + p.partID + "/images/" + p.partID + "_1024x768_a.jpg"
+                                                                   "http://www.curtmfg.com/CURTLibrary/" + p.partID + "/images/" + p.partID + "_1024x768_a.jpg"
                                                                    ))
                                                             )).ToList<XElement>());
                 //XElement xml_parts = new XElement("Parts", parts);
