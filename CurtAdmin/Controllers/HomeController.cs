@@ -35,7 +35,7 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
-        public string UpdateParts() {
+        /*public string UpdateParts() {
             CurtDevDataContext db2 = new CurtDevDataContext();
             List<PartChange2012> changes = new List<PartChange2012>();
             Dictionary<DateTime, List<PartChange2012>> results = new Dictionary<DateTime, List<PartChange2012>>();
@@ -282,6 +282,6 @@ namespace CurtAdmin.Controllers {
             mail.Body = htmlBody;
 
             SmtpServer.Send(mail);
-        }
+        }*/
     }
 }

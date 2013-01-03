@@ -4,6 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CurtAdmin.AAIA.Make> makes = ViewBag.makes ?? new List<CurtAdmin.AAIA.Make>();
     List<int> years = ViewBag.years ?? new List<int>();
+    List<CurtAdmin.Models.ACESMake> allmakes = ViewBag.allmakes ?? new List<CurtAdmin.Models.ACESMake>();
+    List<CurtAdmin.Models.ACESMake> allmodels = ViewBag.allmodels ?? new List<CurtAdmin.Models.ACESMake>();
+    List<CurtAdmin.Models.ACESMake> allsubmodels = ViewBag.allsubmodels ?? new List<CurtAdmin.Models.ACESMake>();
     string error = ViewBag.error ?? "";
 }
 <style type="text/css">
@@ -79,11 +82,11 @@
         </div>
         <div id="nonvcdb">
             <h3>Non-VCDB Vehicles</h3>
-            <form action="/ACES/AddNonVCDBVehicle" method="post">
+            <form action="/ACES/AddNonVCDBVehicle" method="post" id="Addnonvcdb">
                 <div id="col1" class="col">
                     <label for="nonyear">
                         Year<br />
-                        <select name="year" id="nonyear">
+                        <select name="year" id="nonyear" required>
                             <option value="">- Select Year -</option>
                             @foreach (int y in years) {
                                 <option value="@y">@y</option>
@@ -97,8 +100,11 @@
                 <div id="col2" class="col">
                     <label for="nonmake">
                         Make<br />
-                        <select name="make" id="nonmake">
+                        <select name="make" id="nonmake" required>
                             <option value="">- Select Make -</option>
+                            @foreach (CurtAdmin.Models.ACESMake m in allmakes) {
+                                <option value="@m.ID|@(m.AAIAID ?? 0)">@m.name</option>
+                            }
                         </select>
                         <img src="@Url.Content("~/Content/img/button_green_add.png")" class="addImg" id="addMake" alt="Add New Make" title="Add New Make" />
                         <img src="@Url.Content("~/Content/img/edit.png")" class="editImg" id="editMake" alt="Edit Make" title="Edit Make" />
@@ -109,8 +115,11 @@
                 <div id="col3" class="col">
                     <label for="nonmodel">
                         Model<br />
-                        <select name="model" id="nonmodel">
+                        <select name="model" id="nonmodel" required>
                             <option value="">- Select Model -</option>
+                            @foreach (CurtAdmin.Models.ACESMake m in allmodels) {
+                                <option value="@m.ID|@(m.AAIAID ?? 0)">@m.name</option>
+                            }
                         </select>
                         <img src="@Url.Content("~/Content/img/button_green_add.png")" class="addImg" id="addModel" alt="Add New Model" title="Add New Model" />
                         <img src="@Url.Content("~/Content/img/edit.png")" class="editImg" id="editModel" alt="Edit Model" title="Edit Model" />
@@ -121,8 +130,11 @@
                 <div id="col4" class="col">
                     <label for="nonsubmodel">
                         Submodel (optional)<br />
-                        <select name="nonsubmodel" id="nonsubmodel">
-                            <option value="">- Select Style -</option>
+                        <select name="submodel" id="nonsubmodel">
+                            <option value="">- Select Submodel -</option>
+                            @foreach (CurtAdmin.Models.ACESMake m in allsubmodels) {
+                                <option value="@m.ID|@(m.AAIAID ?? 0)">@m.name</option>
+                            }
                         </select>
                         <img src="@Url.Content("~/Content/img/button_green_add.png")" class="addImg" id="addSubmodel" alt="Add New Submodel" title="Add New Submodel" />
                         <img src="@Url.Content("~/Content/img/edit.png")" class="editImg" id="editSubmodel" alt="Edit Submodel" title="Edit Submodel" />
@@ -141,3 +153,4 @@
 </div>
 
 <script src="/Scripts/admin/ACES/addvehicle.js"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-impromptu.4.0.min.js")"></script>
