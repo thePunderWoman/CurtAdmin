@@ -443,6 +443,9 @@
       <Association Name="Part_ContentBridge" Member="ContentBridges" ThisKey="partID" OtherKey="partID" Type="ContentBridge" />
       <Association Name="Part_PartPackage" Member="PartPackages" ThisKey="partID" OtherKey="partID" Type="PartPackage" />
       <Association Name="Part_vcdb_VehiclePart" Member="vcdb_VehicleParts" ThisKey="partID" OtherKey="PartNumber" Type="vcdb_VehiclePart" />
+      <Association Name="Part_IncludedPart1" Member="IncludedParts" ThisKey="partID" OtherKey="partID" Type="IncludedPart" />
+      <Association Name="Part_PartGroupPart" Member="PartGroupParts" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="PartGroupPart" />
+      <Association Name="IncludedPart_Part" Member="IncludedPart" ThisKey="partID" OtherKey="includedID" Type="IncludedPart" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.IPBlock" Member="IPBlocks">
@@ -1115,6 +1118,32 @@
       <Column Name="newMap" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="newJobber" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="UPC" Type="System.Double" DbType="Float" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.IncludedPart" Member="IncludedParts">
+    <Type Name="IncludedPart">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="includedID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="IncludedPart_Part" Member="Part" AccessModifier="Internal" ThisKey="includedID" OtherKey="partID" Type="Part" Cardinality="One" />
+      <Association Name="Part_IncludedPart1" Member="ParentPart" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PartGroup" Member="PartGroups">
+    <Type Name="PartGroup">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="PartGroup_PartGroupPart" Member="Parts" ThisKey="id" OtherKey="partGroupID" Type="PartGroupPart" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PartGroupPart" Member="PartGroupParts">
+    <Type Name="PartGroupPart">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="partGroupID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="sort" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="PartGroup_PartGroupPart" Member="PartGroup" AccessModifier="Internal" ThisKey="partGroupID" OtherKey="id" Type="PartGroup" IsForeignKey="true" />
+      <Association Name="Part_PartGroupPart" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

@@ -87,6 +87,30 @@ namespace CurtAdmin.Models {
             return parts;
         }
 
+        public static List<ConvertedPart> GetIncludedParts(int partID = 0) {
+            List<ConvertedPart> parts = new List<ConvertedPart>();
+            CurtDevDataContext db = new CurtDevDataContext();
+
+            parts = (from p in db.Parts
+                     join ip in db.IncludedParts on p.partID equals ip.includedID
+                     where ip.partID.Equals(partID)
+                     select new ConvertedPart {
+                         partID = p.partID,
+                         status = p.status,
+                         dateModified = Convert.ToDateTime(p.dateModified).ToString(),
+                         dateAdded = Convert.ToDateTime(p.dateAdded).ToString(),
+                         shortDesc = p.shortDesc,
+                         oldPartNumber = p.oldPartNumber,
+                         priceCode = Convert.ToInt32(p.priceCode),
+                         pClass = p.classID,
+                         featured = p.featured,
+                         listPrice = String.Format("{0:C}", (from prices in db.Prices
+                                                             where prices.partID.Equals(p.partID) && prices.priceType.Equals("List")
+                                                             select prices.price1 != null ? prices.price1 : (decimal?)0).FirstOrDefault<decimal?>())
+                     }).ToList<ConvertedPart>();
+            return parts;
+        }
+
         public static string AddCategoryToPart(int catID = 0, int partID = 0) {
             if (catID == 0 || partID == 0) { return "Invalid parameters."; }
 
@@ -262,6 +286,55 @@ namespace CurtAdmin.Models {
                     UpdatePart(partID);
                     // Get the parts information
                     ConvertedPart part = GetPart(relatedID);
+
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    return js.Serialize(part);
+                } else {
+                    return "{\"error\":\"Invalid data.\"}";
+                }
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        public static string AddIncluded(int partID = 0, int includedID = 0) {
+            try {
+                if (partID > 0 && includedID > 0) {
+                    CurtDevDataContext db = new CurtDevDataContext();
+                    IncludedPart included_part = new IncludedPart {
+                        partID = partID,
+                        includedID = includedID
+                    };
+                    db.IncludedParts.InsertOnSubmit(included_part);
+                    db.SubmitChanges();
+
+                    // get the related parts information
+                    ConvertedPart part = new ConvertedPart();
+                    part = GetPart(includedID);
+                    UpdatePart(partID);
+                    // Serialize and return
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    return js.Serialize(part);
+                } else {
+                    return "{\"error\":\"Invalid data.\"}";
+                }
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        public static string DeleteIncluded(int partID = 0, int includedID = 0) {
+            try {
+                if (partID > 0 && includedID > 0) {
+                    CurtDevDataContext db = new CurtDevDataContext();
+                    IncludedPart ip = (from r in db.IncludedParts
+                                       where r.includedID.Equals(includedID) && r.partID.Equals(partID)
+                                       select r).FirstOrDefault<IncludedPart>();
+                    db.IncludedParts.DeleteOnSubmit(ip);
+                    db.SubmitChanges();
+                    UpdatePart(partID);
+                    // Get the parts information
+                    ConvertedPart part = GetPart(includedID);
 
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     return js.Serialize(part);

@@ -431,6 +431,25 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult EditIncluded(int partID = 0) {
+
+            // Get the related parts for this part
+            List<ConvertedPart> included_parts = ProductModels.GetIncludedParts(partID);
+            ViewBag.included_parts = included_parts;
+
+            // Get all of the parts
+            List<ConvertedPart> parts = ProductModels.GetAllParts();
+            ViewBag.parts = parts;
+
+            // Get the part we're working with
+            ConvertedPart part = ProductModels.GetPart(partID);
+            ViewBag.part = part;
+
+            ViewBag.active_tab = "included";
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult EditReviews(int partID = 0) {
 
             // Get the reviews for this product
@@ -664,6 +683,16 @@ namespace CurtAdmin.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public string DeleteRelated(int partID = 0, int relatedID = 0) {
             return ProductModels.DeleteRelated(partID, relatedID);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string AddIncluded(int partID = 0, int includedID = 0) {
+            return ProductModels.AddIncluded(partID, includedID);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string DeleteIncluded(int partID = 0, int includedID = 0) {
+            return ProductModels.DeleteIncluded(partID, includedID);
         }
 
         [AcceptVerbs(HttpVerbs.Get)]

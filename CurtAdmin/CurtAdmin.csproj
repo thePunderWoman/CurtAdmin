@@ -404,6 +404,7 @@
     <Content Include="Scripts\admin\editcontent.js" />
     <Content Include="Scripts\admin\LandingPages\add.js" />
     <Content Include="Scripts\admin\LandingPages\edit.js" />
+    <Content Include="Scripts\admin\Product\EditIncluded.js" />
     <Content Include="Scripts\admin\salesReps.js" />
     <Content Include="Scripts\admin\Product\EditACESVehicles.js" />
     <Content Include="Scripts\admin\Product\Edit.js" />
@@ -537,6 +538,7 @@
     <Content Include="Views\LandingPages\add.cshtml" />
     <Content Include="Views\LandingPages\edit.cshtml" />
     <Content Include="Views\ACES\RunVehicleCheck.cshtml" />
+    <Content Include="Views\Product\EditIncluded.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

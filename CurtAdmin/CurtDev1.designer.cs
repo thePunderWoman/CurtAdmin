@@ -333,6 +333,15 @@ namespace CurtAdmin
     partial void InsertKioskOrderItem(KioskOrderItem instance);
     partial void UpdateKioskOrderItem(KioskOrderItem instance);
     partial void DeleteKioskOrderItem(KioskOrderItem instance);
+    partial void InsertIncludedPart(IncludedPart instance);
+    partial void UpdateIncludedPart(IncludedPart instance);
+    partial void DeleteIncludedPart(IncludedPart instance);
+    partial void InsertPartGroup(PartGroup instance);
+    partial void UpdatePartGroup(PartGroup instance);
+    partial void DeletePartGroup(PartGroup instance);
+    partial void InsertPartGroupPart(PartGroupPart instance);
+    partial void UpdatePartGroupPart(PartGroupPart instance);
+    partial void DeletePartGroupPart(PartGroupPart instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1186,6 +1195,30 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<PartChange2012>();
+			}
+		}
+		
+		public System.Data.Linq.Table<IncludedPart> IncludedParts
+		{
+			get
+			{
+				return this.GetTable<IncludedPart>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PartGroup> PartGroups
+		{
+			get
+			{
+				return this.GetTable<PartGroup>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PartGroupPart> PartGroupParts
+		{
+			get
+			{
+				return this.GetTable<PartGroupPart>();
 			}
 		}
 		
@@ -9540,6 +9573,12 @@ namespace CurtAdmin
 		
 		private EntitySet<vcdb_VehiclePart> _vcdb_VehicleParts;
 		
+		private EntitySet<IncludedPart> _IncludedParts;
+		
+		private EntitySet<PartGroupPart> _PartGroupParts;
+		
+		private EntityRef<IncludedPart> _IncludedPart;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -9579,6 +9618,9 @@ namespace CurtAdmin
 			this._ContentBridges = new EntitySet<ContentBridge>(new Action<ContentBridge>(this.attach_ContentBridges), new Action<ContentBridge>(this.detach_ContentBridges));
 			this._PartPackages = new EntitySet<PartPackage>(new Action<PartPackage>(this.attach_PartPackages), new Action<PartPackage>(this.detach_PartPackages));
 			this._vcdb_VehicleParts = new EntitySet<vcdb_VehiclePart>(new Action<vcdb_VehiclePart>(this.attach_vcdb_VehicleParts), new Action<vcdb_VehiclePart>(this.detach_vcdb_VehicleParts));
+			this._IncludedParts = new EntitySet<IncludedPart>(new Action<IncludedPart>(this.attach_IncludedParts), new Action<IncludedPart>(this.detach_IncludedParts));
+			this._PartGroupParts = new EntitySet<PartGroupPart>(new Action<PartGroupPart>(this.attach_PartGroupParts), new Action<PartGroupPart>(this.detach_PartGroupParts));
+			this._IncludedPart = default(EntityRef<IncludedPart>);
 			OnCreated();
 		}
 		
@@ -9593,6 +9635,10 @@ namespace CurtAdmin
 			{
 				if ((this._partID != value))
 				{
+					if (this._IncludedPart.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnpartIDChanging(value);
 					this.SendPropertyChanging();
 					this._partID = value;
@@ -9925,6 +9971,66 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_IncludedPart1", Storage="_IncludedParts", ThisKey="partID", OtherKey="partID")]
+		public EntitySet<IncludedPart> IncludedParts
+		{
+			get
+			{
+				return this._IncludedParts;
+			}
+			set
+			{
+				this._IncludedParts.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_PartGroupPart", Storage="_PartGroupParts", ThisKey="partID", OtherKey="partID")]
+		internal EntitySet<PartGroupPart> PartGroupParts
+		{
+			get
+			{
+				return this._PartGroupParts;
+			}
+			set
+			{
+				this._PartGroupParts.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IncludedPart_Part", Storage="_IncludedPart", ThisKey="partID", OtherKey="includedID", IsForeignKey=true)]
+		public IncludedPart IncludedPart
+		{
+			get
+			{
+				return this._IncludedPart.Entity;
+			}
+			set
+			{
+				IncludedPart previousValue = this._IncludedPart.Entity;
+				if (((previousValue != value) 
+							|| (this._IncludedPart.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._IncludedPart.Entity = null;
+						previousValue.Part = null;
+					}
+					this._IncludedPart.Entity = value;
+					if ((value != null))
+					{
+						value.Part = this;
+						this._partID = value.includedID;
+					}
+					else
+					{
+						this._partID = default(int);
+					}
+					this.SendPropertyChanged("IncludedPart");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -10072,6 +10178,30 @@ namespace CurtAdmin
 		}
 		
 		private void detach_vcdb_VehicleParts(vcdb_VehiclePart entity)
+		{
+			this.SendPropertyChanging();
+			entity.Part = null;
+		}
+		
+		private void attach_IncludedParts(IncludedPart entity)
+		{
+			this.SendPropertyChanging();
+			entity.ParentPart = this;
+		}
+		
+		private void detach_IncludedParts(IncludedPart entity)
+		{
+			this.SendPropertyChanging();
+			entity.ParentPart = null;
+		}
+		
+		private void attach_PartGroupParts(PartGroupPart entity)
+		{
+			this.SendPropertyChanging();
+			entity.Part = this;
+		}
+		
+		private void detach_PartGroupParts(PartGroupPart entity)
 		{
 			this.SendPropertyChanging();
 			entity.Part = null;
@@ -23542,6 +23672,519 @@ namespace CurtAdmin
 				{
 					this._UPC = value;
 				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.IncludedPart")]
+	public partial class IncludedPart : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _partID;
+		
+		private int _includedID;
+		
+		private EntityRef<Part> _Part;
+		
+		private EntityRef<Part> _ParentPart;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnpartIDChanging(int value);
+    partial void OnpartIDChanged();
+    partial void OnincludedIDChanging(int value);
+    partial void OnincludedIDChanged();
+    #endregion
+		
+		public IncludedPart()
+		{
+			this._Part = default(EntityRef<Part>);
+			this._ParentPart = default(EntityRef<Part>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partID", DbType="Int NOT NULL")]
+		public int partID
+		{
+			get
+			{
+				return this._partID;
+			}
+			set
+			{
+				if ((this._partID != value))
+				{
+					if (this._ParentPart.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnpartIDChanging(value);
+					this.SendPropertyChanging();
+					this._partID = value;
+					this.SendPropertyChanged("partID");
+					this.OnpartIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_includedID", DbType="Int NOT NULL")]
+		public int includedID
+		{
+			get
+			{
+				return this._includedID;
+			}
+			set
+			{
+				if ((this._includedID != value))
+				{
+					this.OnincludedIDChanging(value);
+					this.SendPropertyChanging();
+					this._includedID = value;
+					this.SendPropertyChanged("includedID");
+					this.OnincludedIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IncludedPart_Part", Storage="_Part", ThisKey="includedID", OtherKey="partID", IsUnique=true, IsForeignKey=false)]
+		internal Part Part
+		{
+			get
+			{
+				return this._Part.Entity;
+			}
+			set
+			{
+				Part previousValue = this._Part.Entity;
+				if (((previousValue != value) 
+							|| (this._Part.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Part.Entity = null;
+						previousValue.IncludedPart = null;
+					}
+					this._Part.Entity = value;
+					if ((value != null))
+					{
+						value.IncludedPart = this;
+					}
+					this.SendPropertyChanged("Part");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_IncludedPart1", Storage="_ParentPart", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
+		internal Part ParentPart
+		{
+			get
+			{
+				return this._ParentPart.Entity;
+			}
+			set
+			{
+				Part previousValue = this._ParentPart.Entity;
+				if (((previousValue != value) 
+							|| (this._ParentPart.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ParentPart.Entity = null;
+						previousValue.IncludedParts.Remove(this);
+					}
+					this._ParentPart.Entity = value;
+					if ((value != null))
+					{
+						value.IncludedParts.Add(this);
+						this._partID = value.partID;
+					}
+					else
+					{
+						this._partID = default(int);
+					}
+					this.SendPropertyChanged("ParentPart");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PartGroup")]
+	public partial class PartGroup : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private EntitySet<PartGroupPart> _Parts;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public PartGroup()
+		{
+			this._Parts = new EntitySet<PartGroupPart>(new Action<PartGroupPart>(this.attach_Parts), new Action<PartGroupPart>(this.detach_Parts));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PartGroup_PartGroupPart", Storage="_Parts", ThisKey="id", OtherKey="partGroupID")]
+		public EntitySet<PartGroupPart> Parts
+		{
+			get
+			{
+				return this._Parts;
+			}
+			set
+			{
+				this._Parts.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Parts(PartGroupPart entity)
+		{
+			this.SendPropertyChanging();
+			entity.PartGroup = this;
+		}
+		
+		private void detach_Parts(PartGroupPart entity)
+		{
+			this.SendPropertyChanging();
+			entity.PartGroup = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PartGroupPart")]
+	public partial class PartGroupPart : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _partGroupID;
+		
+		private int _partID;
+		
+		private int _sort;
+		
+		private EntityRef<PartGroup> _PartGroup;
+		
+		private EntityRef<Part> _Part;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnpartGroupIDChanging(int value);
+    partial void OnpartGroupIDChanged();
+    partial void OnpartIDChanging(int value);
+    partial void OnpartIDChanged();
+    partial void OnsortChanging(int value);
+    partial void OnsortChanged();
+    #endregion
+		
+		public PartGroupPart()
+		{
+			this._PartGroup = default(EntityRef<PartGroup>);
+			this._Part = default(EntityRef<Part>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partGroupID", DbType="Int NOT NULL")]
+		public int partGroupID
+		{
+			get
+			{
+				return this._partGroupID;
+			}
+			set
+			{
+				if ((this._partGroupID != value))
+				{
+					if (this._PartGroup.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnpartGroupIDChanging(value);
+					this.SendPropertyChanging();
+					this._partGroupID = value;
+					this.SendPropertyChanged("partGroupID");
+					this.OnpartGroupIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partID", DbType="Int NOT NULL")]
+		public int partID
+		{
+			get
+			{
+				return this._partID;
+			}
+			set
+			{
+				if ((this._partID != value))
+				{
+					if (this._Part.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnpartIDChanging(value);
+					this.SendPropertyChanging();
+					this._partID = value;
+					this.SendPropertyChanged("partID");
+					this.OnpartIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sort", DbType="Int NOT NULL")]
+		public int sort
+		{
+			get
+			{
+				return this._sort;
+			}
+			set
+			{
+				if ((this._sort != value))
+				{
+					this.OnsortChanging(value);
+					this.SendPropertyChanging();
+					this._sort = value;
+					this.SendPropertyChanged("sort");
+					this.OnsortChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PartGroup_PartGroupPart", Storage="_PartGroup", ThisKey="partGroupID", OtherKey="id", IsForeignKey=true)]
+		internal PartGroup PartGroup
+		{
+			get
+			{
+				return this._PartGroup.Entity;
+			}
+			set
+			{
+				PartGroup previousValue = this._PartGroup.Entity;
+				if (((previousValue != value) 
+							|| (this._PartGroup.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._PartGroup.Entity = null;
+						previousValue.Parts.Remove(this);
+					}
+					this._PartGroup.Entity = value;
+					if ((value != null))
+					{
+						value.Parts.Add(this);
+						this._partGroupID = value.id;
+					}
+					else
+					{
+						this._partGroupID = default(int);
+					}
+					this.SendPropertyChanged("PartGroup");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_PartGroupPart", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
+		public Part Part
+		{
+			get
+			{
+				return this._Part.Entity;
+			}
+			set
+			{
+				Part previousValue = this._Part.Entity;
+				if (((previousValue != value) 
+							|| (this._Part.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Part.Entity = null;
+						previousValue.PartGroupParts.Remove(this);
+					}
+					this._Part.Entity = value;
+					if ((value != null))
+					{
+						value.PartGroupParts.Add(this);
+						this._partID = value.partID;
+					}
+					else
+					{
+						this._partID = default(int);
+					}
+					this.SendPropertyChanged("Part");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
