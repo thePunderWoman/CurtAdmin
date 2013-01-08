@@ -12,7 +12,7 @@
       <Column Name="contentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="text" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="cTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Content_ContentBridge" Member="ContentBridges" ThisKey="contentID" OtherKey="contentID" Type="ContentBridge" />
+      <Association Name="Content_ContentBridge" Member="ContentBridges" AccessModifier="Internal" ThisKey="contentID" OtherKey="contentID" Type="ContentBridge" />
       <Association Name="ContentType_Content" Member="ContentType" ThisKey="cTypeID" OtherKey="cTypeID" Type="ContentType" IsForeignKey="true" />
     </Type>
   </Table>
@@ -397,7 +397,7 @@
       <Column Name="sizeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="size" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
       <Column Name="dimensions" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Association Name="PartImageSize_PartImage" Member="PartImages" ThisKey="sizeID" OtherKey="sizeID" Type="PartImage" />
+      <Association Name="PartImageSize_PartImage" Member="PartImages" AccessModifier="Internal" ThisKey="sizeID" OtherKey="sizeID" Type="PartImage" />
     </Type>
   </Table>
   <Table Name="dbo.Video" Member="Videos">
@@ -443,7 +443,7 @@
       <Association Name="Part_ContentBridge" Member="ContentBridges" ThisKey="partID" OtherKey="partID" Type="ContentBridge" />
       <Association Name="Part_PartPackage" Member="PartPackages" ThisKey="partID" OtherKey="partID" Type="PartPackage" />
       <Association Name="Part_vcdb_VehiclePart" Member="vcdb_VehicleParts" ThisKey="partID" OtherKey="PartNumber" Type="vcdb_VehiclePart" />
-      <Association Name="Part_IncludedPart1" Member="IncludedParts" ThisKey="partID" OtherKey="partID" Type="IncludedPart" />
+      <Association Name="Part_IncludedPart" Member="IncludedParts" ThisKey="partID" OtherKey="partID" Type="IncludedPart" />
       <Association Name="Part_PartGroupPart" Member="PartGroupParts" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="PartGroupPart" />
       <Association Name="IncludedPart_Part" Member="IncludedPart" ThisKey="partID" OtherKey="includedID" Type="IncludedPart" IsForeignKey="true" />
     </Type>
@@ -549,8 +549,8 @@
       <Column Name="catPartID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="catID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Part_CatParts" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
-      <Association Name="Categories_CatParts" Member="Categories" ThisKey="catID" OtherKey="catID" Type="Categories" IsForeignKey="true" />
+      <Association Name="Part_CatParts" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Categories_CatParts" Member="Categories" AccessModifier="Internal" ThisKey="catID" OtherKey="catID" Type="Categories" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Categories" Member="Categories">
@@ -568,7 +568,7 @@
       <Column Name="vehicleSpecific" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="Categories_CatParts" Member="CatParts" ThisKey="catID" OtherKey="catID" Type="CatParts" />
       <Association Name="Categories_Lifestyle_Trailer" Member="Lifestyle_Trailers" ThisKey="catID" OtherKey="catID" Type="Lifestyle_Trailer" />
-      <Association Name="Categories_ContentBridge" Member="ContentBridges" ThisKey="catID" OtherKey="catID" Type="ContentBridge" />
+      <Association Name="Categories_ContentBridge" Member="ContentBridges" AccessModifier="Internal" ThisKey="catID" OtherKey="catID" Type="ContentBridge" />
     </Type>
   </Table>
   <Table Name="dbo.YearMake" Member="YearMakes">
@@ -646,7 +646,7 @@
       <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="priceType" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="price" Member="price1" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
-      <Association Name="Part_Price" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Part_Price" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Review" Member="Reviews">
@@ -682,7 +682,7 @@
       <Column Name="height" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="width" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Part_PartImage" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Part_PartImage" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
       <Association Name="PartImageSize_PartImage" Member="PartImageSize" ThisKey="sizeID" OtherKey="sizeID" Type="PartImageSize" IsForeignKey="true" />
     </Type>
   </Table>
@@ -694,7 +694,7 @@
       <Column Name="modelID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="styleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="dateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="Vehicles_VehiclePart" Member="VehicleParts" ThisKey="vehicleID" OtherKey="vehicleID" Type="VehiclePart" />
+      <Association Name="Vehicles_VehiclePart" Member="VehicleParts" AccessModifier="Internal" ThisKey="vehicleID" OtherKey="vehicleID" Type="VehiclePart" />
       <Association Name="Make_Vehicles" Member="Make" ThisKey="makeID" OtherKey="makeID" Type="Make" IsForeignKey="true" />
       <Association Name="Model_Vehicles" Member="Model" ThisKey="modelID" OtherKey="modelID" Type="Model" IsForeignKey="true" />
       <Association Name="Style_Vehicles" Member="Style" ThisKey="styleID" OtherKey="styleID" Type="Style" IsForeignKey="true" />
@@ -710,7 +710,7 @@
       <Column Name="exposed" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="installTime" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="VehiclePart_VehiclePartAttribute" Member="VehiclePartAttributes" ThisKey="vPartID" OtherKey="vPartID" Type="VehiclePartAttribute" />
-      <Association Name="Part_VehiclePart" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Part_VehiclePart" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
       <Association Name="Vehicles_VehiclePart" Member="Vehicles" Storage="_Vehicle" ThisKey="vehicleID" OtherKey="vehicleID" Type="Vehicles" IsForeignKey="true" />
     </Type>
   </Table>
@@ -720,7 +720,7 @@
       <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="relatedID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
       <Column Name="rTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Part_RelatedPart" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Part_RelatedPart" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.videoType" Member="videoTypes">
@@ -750,7 +750,7 @@
       <Column Name="contentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Categories_ContentBridge" Member="Categories" ThisKey="catID" OtherKey="catID" Type="Categories" IsForeignKey="true" />
       <Association Name="Content_ContentBridge" Member="Content" ThisKey="contentID" OtherKey="contentID" Type="Content" IsForeignKey="true" />
-      <Association Name="Part_ContentBridge" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Part_ContentBridge" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.DealerTiers" Member="DealerTiers">
@@ -1126,7 +1126,7 @@
       <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="includedID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="IncludedPart_Part" Member="Part" AccessModifier="Internal" ThisKey="includedID" OtherKey="partID" Type="Part" Cardinality="One" />
-      <Association Name="Part_IncludedPart1" Member="ParentPart" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Part_IncludedPart" Member="ParentPart" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.PartGroup" Member="PartGroups">

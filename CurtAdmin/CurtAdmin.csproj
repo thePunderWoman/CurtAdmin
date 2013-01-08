@@ -296,6 +296,7 @@
     <Content Include="Content\img\addCategory.png" />
     <Content Include="Content\img\addContent.png" />
     <Content Include="Content\img\addCustomer.png" />
+    <Content Include="Content\img\addGroup.png" />
     <Content Include="Content\img\addLocation.png" />
     <Content Include="Content\img\addPackage.png" />
     <Content Include="Content\img\addPart.png" />
@@ -404,6 +405,7 @@
     <Content Include="Scripts\admin\editcontent.js" />
     <Content Include="Scripts\admin\LandingPages\add.js" />
     <Content Include="Scripts\admin\LandingPages\edit.js" />
+    <Content Include="Scripts\admin\Product\EditGroup.js" />
     <Content Include="Scripts\admin\Product\EditIncluded.js" />
     <Content Include="Scripts\admin\salesReps.js" />
     <Content Include="Scripts\admin\Product\EditACESVehicles.js" />
@@ -539,6 +541,7 @@
     <Content Include="Views\LandingPages\edit.cshtml" />
     <Content Include="Views\ACES\RunVehicleCheck.cshtml" />
     <Content Include="Views\Product\EditIncluded.cshtml" />
+    <Content Include="Views\Product\EditGroups.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

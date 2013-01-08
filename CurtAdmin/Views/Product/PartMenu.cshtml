@@ -6,6 +6,7 @@
     <ul>
         <li><a href="@Url.Content("~/Product/Edit?partID=" + part.partID)" title="Part Info" @((ViewBag.active_tab == "info") ? "class=active" : "")>Info</a></li>
         <li><a href="@Url.Content("~/Product/EditCategories?partID=" + part.partID)" title="Part Categories" @((ViewBag.active_tab == "categories") ? "class=active" : "")>Categories</a></li>
+        <li><a href="@Url.Content("~/Product/EditGroups?partID=" + part.partID)" title="Part Groups" @((ViewBag.active_tab == "groups") ? "class=active" : "")>Groups</a></li>
         <li><a href="@Url.Content("~/Product/EditRelated?partID=" + part.partID)" title="Related Parts" @((ViewBag.active_tab == "related") ? "class=active" : "")>Related</a></li>
         <li><a href="@Url.Content("~/Product/EditIncluded?partID=" + part.partID)" title="Included Parts" @((ViewBag.active_tab == "included") ? "class=active" : "")>Included</a></li>
         <li><a href="@Url.Content("~/Product/EditReviews?partID=" + part.partID)" title="Part Reviews" @((ViewBag.active_tab == "reviews") ? "class=active" : "")>Reviews</a></li>

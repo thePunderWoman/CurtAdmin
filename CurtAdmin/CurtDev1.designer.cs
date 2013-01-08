@@ -1454,7 +1454,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Content_ContentBridge", Storage="_ContentBridges", ThisKey="contentID", OtherKey="contentID")]
-		public EntitySet<ContentBridge> ContentBridges
+		internal EntitySet<ContentBridge> ContentBridges
 		{
 			get
 			{
@@ -9116,7 +9116,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PartImageSize_PartImage", Storage="_PartImages", ThisKey="sizeID", OtherKey="sizeID")]
-		public EntitySet<PartImage> PartImages
+		internal EntitySet<PartImage> PartImages
 		{
 			get
 			{
@@ -9971,7 +9971,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_IncludedPart1", Storage="_IncludedParts", ThisKey="partID", OtherKey="partID")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_IncludedPart", Storage="_IncludedParts", ThisKey="partID", OtherKey="partID")]
 		public EntitySet<IncludedPart> IncludedParts
 		{
 			get
@@ -12215,7 +12215,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_CatParts", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
@@ -12249,7 +12249,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Categories_CatParts", Storage="_Categories", ThisKey="catID", OtherKey="catID", IsForeignKey=true)]
-		public Categories Categories
+		internal Categories Categories
 		{
 			get
 			{
@@ -12620,7 +12620,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Categories_ContentBridge", Storage="_ContentBridges", ThisKey="catID", OtherKey="catID")]
-		public EntitySet<ContentBridge> ContentBridges
+		internal EntitySet<ContentBridge> ContentBridges
 		{
 			get
 			{
@@ -14234,7 +14234,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_Price", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
@@ -14969,7 +14969,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_PartImage", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
@@ -15250,7 +15250,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Vehicles_VehiclePart", Storage="_VehicleParts", ThisKey="vehicleID", OtherKey="vehicleID")]
-		public EntitySet<VehiclePart> VehicleParts
+		internal EntitySet<VehiclePart> VehicleParts
 		{
 			get
 			{
@@ -15623,7 +15623,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_VehiclePart", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
@@ -15844,7 +15844,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_RelatedPart", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
@@ -16479,7 +16479,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_ContentBridge", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
@@ -23804,7 +23804,7 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_IncludedPart1", Storage="_ParentPart", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_IncludedPart", Storage="_ParentPart", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
 		internal Part ParentPart
 		{
 			get

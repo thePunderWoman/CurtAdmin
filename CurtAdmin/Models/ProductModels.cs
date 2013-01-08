@@ -111,6 +111,14 @@ namespace CurtAdmin.Models {
             return parts;
         }
 
+        public static List<PartGroup> GetPartGroups(int partID = 0) {
+            List<PartGroup> groups = new List<PartGroup>();
+            CurtDevDataContext db = new CurtDevDataContext();
+
+            groups = db.PartGroups.Where(x => x.Parts.Any(y => y.partID.Equals(partID))).Distinct().ToList();
+            return groups;
+        }
+
         public static string AddCategoryToPart(int catID = 0, int partID = 0) {
             if (catID == 0 || partID == 0) { return "Invalid parameters."; }
 
@@ -633,6 +641,55 @@ namespace CurtAdmin.Models {
                            content_type_id = c.cTypeID
                        }).FirstOrDefault<FullContent>();
             return content;
+        }
+
+        public static PartGroup GetGroup(int groupID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroup pg = new PartGroup();
+            try {
+                pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();
+            } catch { }
+            return pg;
+        }
+
+        public static PartGroup SaveGroup(int partID, string name, int groupID = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroup pg = new PartGroup();
+
+            if (groupID == 0) {
+                pg = new PartGroup {
+                    name = name
+                };
+                db.PartGroups.InsertOnSubmit(pg);
+                db.SubmitChanges();
+
+                PartGroupPart pgp = new PartGroupPart {
+                    partGroupID = pg.id,
+                    partID = partID,
+                    sort = 1
+                };
+                db.PartGroupParts.InsertOnSubmit(pgp);
+            } else {
+                pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();
+                pg.name = name;
+            }
+            db.SubmitChanges();
+            UpdatePart(partID);
+            return GetGroup(pg.id);
+        }
+
+        public static string DeleteGroup(int groupID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroup pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();
+            List<int> partids = pg.Parts.Select(x => x.partID).Distinct().ToList();
+            List<PartGroupPart> pgps = pg.Parts.ToList();
+            db.PartGroupParts.DeleteAllOnSubmit(pgps);
+            db.PartGroups.DeleteOnSubmit(pg);
+            db.SubmitChanges();
+            foreach (int partID in partids) {
+                UpdatePart(partID);
+            }
+            return "";
         }
 
         public static FullContent SaveContent(int contentID = 0, int partID = 0, string content = "", int contentType = 0) {

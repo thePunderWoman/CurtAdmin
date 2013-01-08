@@ -450,6 +450,21 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult EditGroups(int partID = 0) {
+
+            // Get the related parts for this part
+            List<PartGroup> partGroups = ProductModels.GetPartGroups(partID);
+            ViewBag.partGroups = partGroups;
+
+            // Get the part we're working with
+            ConvertedPart part = ProductModels.GetPart(partID);
+            ViewBag.part = part;
+
+            ViewBag.active_tab = "groups";
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult EditReviews(int partID = 0) {
 
             // Get the reviews for this product
@@ -858,11 +873,38 @@ namespace CurtAdmin.Controllers
 
         [AcceptVerbs(HttpVerbs.Get)]
         public string GetVehiclePartAttribute(int vpAttrID = 0) {
-            JavaScriptSerializer js = new JavaScriptSerializer();
             try {
-                return js.Serialize(ProductModels.GetVehiclePartAttribute(vpAttrID));
+                return JsonConvert.SerializeObject(ProductModels.GetVehiclePartAttribute(vpAttrID));
             } catch (Exception e) {
                 return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string GetGroup(int groupID) {
+            try {
+                return JsonConvert.SerializeObject(ProductModels.GetGroup(groupID));
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string SaveGroup(int partID, string name, int groupID = 0) {
+            try {
+                return JsonConvert.SerializeObject(ProductModels.SaveGroup(partID, name, groupID));
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string DeleteGroup(int groupID = 0) {
+            try {
+                return ProductModels.DeleteGroup(groupID);
+            } catch (Exception e) {
+                return e.Message;
             }
         }
 
