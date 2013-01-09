@@ -678,6 +678,49 @@ namespace CurtAdmin.Models {
             return GetGroup(pg.id);
         }
 
+        public static PartGroup AddGroupPart(int groupID, int partID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                PartGroupPart pgp = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID) && x.partID.Equals(partID)).First();
+            } catch {
+                int sort = 1;
+                try {
+                    sort = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID)).OrderByDescending(x => x.sort).Select(x => x.sort).First() + 1;
+                } catch {}
+                PartGroupPart pgp = new PartGroupPart {
+                    partID = partID,
+                    partGroupID = groupID,
+                    sort = sort
+                };
+                db.PartGroupParts.InsertOnSubmit(pgp);
+                db.SubmitChanges();
+                List<string> partgroupparts = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID)).OrderBy(x => x.sort).Select(x => x.id.ToString()).ToList();
+                UpdateGroupSort(partgroupparts);
+            }
+
+            return GetGroup(groupID);
+        }
+
+        public static void RemovePartFromGroup(int id) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroupPart pgp = db.PartGroupParts.Where(x => x.id.Equals(id)).First();
+            int groupID = pgp.partGroupID;
+            db.PartGroupParts.DeleteOnSubmit(pgp);
+            db.SubmitChanges();
+            List<string> partgroupparts = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID)).OrderBy(x => x.sort).Select(x => x.id.ToString()).ToList();
+            UpdateGroupSort(partgroupparts);
+        }
+
+        public static void UpdateGroupSort(List<string> partgroupparts) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            for (int i = 0; i < partgroupparts.Count; i++) {
+                PartGroupPart pgp = db.PartGroupParts.Where(x => x.id.Equals(Convert.ToInt32(partgroupparts[i]))).First();
+                UpdatePart(pgp.partID);
+                pgp.sort = i + 1;
+                db.SubmitChanges();
+            }
+        }
+
         public static string DeleteGroup(int groupID) {
             CurtDevDataContext db = new CurtDevDataContext();
             PartGroup pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();

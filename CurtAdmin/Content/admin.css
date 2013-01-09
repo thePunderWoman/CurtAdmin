@@ -1638,7 +1638,7 @@ ul#pageImages li a.removeimage {
     margin: 0 0 0 5px;
 }
 
-ul#dataList li a.removeData, #vehiclePartList li a.removePart, #notelist li a.removeNote {
+ul#dataList li a.removeData, #vehiclePartList li a.removePart, #notelist li a.removeNote, #groupPartList li a.removePart {
     display: none;
     position: relative;
     text-decoration: none;
@@ -1647,9 +1647,18 @@ ul#dataList li a.removeData, #vehiclePartList li a.removePart, #notelist li a.re
     padding: 0;
 }
 
-#vehiclePartList li a.removePart {
+#vehiclePartList li a.removePart, #groupPartList li a.removePart {
     float: right;
 }
+
+#groupPartList li {
+    cursor: move;
+}
+
+#groupPartList li a {
+    cursor: pointer;
+}
+
 #vehiclePartList li a.viewNotes {
     margin-left: 10px;
     text-decoration: none;
@@ -1660,7 +1669,7 @@ ul#pageImages li:hover a.removeimage {
     display: block;
 }
 
-ul#dataList li:hover a.removeData, #vehiclePartList li:hover a.removePart, #notelist li:hover a.removeNote {
+ul#dataList li:hover a.removeData, #vehiclePartList li:hover a.removePart, #notelist li:hover a.removeNote, #groupPartList li:hover a.removePart {
     display: inline-block;
 }
 

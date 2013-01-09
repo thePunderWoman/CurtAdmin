@@ -908,6 +908,31 @@ namespace CurtAdmin.Controllers
             }
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string AddGroupPart(int groupID, int partID) {
+            try {
+                return JsonConvert.SerializeObject(ProductModels.AddGroupPart(groupID, partID));
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        public string updateGroupSort() {
+            List<string> partgroupparts = Request.QueryString["parts[]"].Split(',').ToList<string>();
+            ProductModels.UpdateGroupSort(partgroupparts);
+            return "";
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string RemovePartFromGroup(int id) {
+            try {
+                ProductModels.RemovePartFromGroup(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
+            }
+        }
+
         [AcceptVerbs(HttpVerbs.Get), ValidateInput(false)]
         public string SaveContent(int contentID = 0, int partID = 0, string content = "", int contentType = 0) {
             try {

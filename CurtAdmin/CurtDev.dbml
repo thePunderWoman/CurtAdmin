@@ -662,7 +662,7 @@
       <Column Name="approved" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="createdDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="cust_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Part_Review" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
+      <Association Name="Part_Review" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ContentType" Member="ContentTypes">

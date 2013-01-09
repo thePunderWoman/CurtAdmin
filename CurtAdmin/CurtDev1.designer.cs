@@ -14577,7 +14577,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Part_Review", Storage="_Part", ThisKey="partID", OtherKey="partID", IsForeignKey=true)]
-		public Part Part
+		internal Part Part
 		{
 			get
 			{
