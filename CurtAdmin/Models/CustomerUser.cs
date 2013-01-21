@@ -41,6 +41,27 @@ namespace CurtAdmin {
             }
         }
 
+        public List<WebProperty> getWebProperties() {
+            try {
+                CurtDevDataContext db = new CurtDevDataContext();
+
+                List<WebProperty> webProperties = new List<WebProperty>();
+                List<int> listOfWebPropIDs = db.CustUserWebProperties.Where(x => x.userID.Equals(this.id)).Select(x => x.webPropID).ToList<int>();
+                foreach (int webPropID in listOfWebPropIDs) {
+                    WebProperty webProp = db.WebProperties.Where(x => x.id == webPropID).FirstOrDefault<WebProperty>();
+                    if (webProp != null) {
+                        webProperties.Add(webProp);
+                    }
+                }
+                return webProperties;
+
+
+            } catch (Exception e) {
+                
+                throw e;
+            }
+        }
+
         /// <summary>
         /// This will update the active/isactive status of the user.
         /// </summary>

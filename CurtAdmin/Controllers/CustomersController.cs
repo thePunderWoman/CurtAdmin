@@ -198,6 +198,7 @@ namespace CurtAdmin.Controllers {
             
             return View();
         }
+
         public ActionResult ViewUserWebProperties(Guid userID)
         {
             CurtDevDataContext db = new CurtDevDataContext();
@@ -217,6 +218,31 @@ namespace CurtAdmin.Controllers {
             }// end foreach
             ViewBag.user = user;
             ViewBag.webProperties = webProperties;
+            return View("ViewWebProperties");
+        }
+
+        public ActionResult ViewCustomerWebProperties(int custID) {
+            if (custID != 0) {
+                try {
+                    CurtDevDataContext db = new CurtDevDataContext();
+                    Customer customer = CustomerModel.Get(custID);
+                    ViewBag.customer = customer;
+                    List<CustomerUser> users = customer.CustomerUsers.ToList<CustomerUser>();
+                    List<CustomerUser> usersWithProperties = new List<CustomerUser>();
+                    foreach (CustomerUser user in users) {
+                        List<int> listOfProperties = user.CustUserWebProperties.Where(x => x.userID.Equals(user.id)).Select(x => x.webPropID).ToList<int>();
+                        if (listOfProperties.Count > 0) {
+                            usersWithProperties.Add(user);
+                        }
+                    }
+                    ViewBag.usersWithProperties = usersWithProperties;
+                } catch (Exception e) {
+                    ViewBag.error = e.Message;
+                }
+            } else {
+                ViewBag.error = "That cust_id doesnt exist.";
+            }
+
             return View();
         }
 

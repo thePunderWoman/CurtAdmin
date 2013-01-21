@@ -543,6 +543,7 @@
     <Content Include="Views\ACES\RunVehicleCheck.cshtml" />
     <Content Include="Views\Product\EditIncluded.cshtml" />
     <Content Include="Views\Product\EditGroups.cshtml" />
+    <Content Include="Views\Customers\ViewCustomerWebProperties.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

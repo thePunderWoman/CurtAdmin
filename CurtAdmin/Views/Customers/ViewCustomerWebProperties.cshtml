@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "ViewCustomerWebProperties";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.CustomerUser> usersWithProperties = ViewBag.usersWithProperties ?? new List<CurtAdmin.CustomerUser>();
+    CurtAdmin.Customer customer = ViewBag.customer ?? new CurtAdmin.Customer();
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+
+<div id="content_container">
+    <h2>Viewing Web Properties for Customer: @customer.name</h2>
+    <strong>Pending Date Color Codes:</strong> ( Web Property needs to be approved or denied. )
+        <ul>
+            <li><a href="#" title="green" class="searchByColor" style="color:green;">Green:</a> 8-90 Days Left</li>
+            <li><a href="#" title="orange" class="searchByColor" style="color:orange;">Orange:</a>1-7 days left</li>
+            <li><a href="#" title="red" class="searchByColor" style="color:red;">Red:</a>0 Days left</li>    
+        </ul>
+    <p><em><strong>Tip:</strong> You can filter based on color by typing in the color in the search bar.</em></p>
+        
+    <div style="width: 100%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>URL</th>
+                    <th>Seller ID</th>
+                    <th>Type</th>
+                    <th>Email</th>
+                    <th>CustomerID</th>
+                    <th>Is Customer</th>
+                    <th>Badge ID</th>
+                    <th>Date Added</th>
+                    <th>Date Requested</th>
+                    <th>Approved Pending</th>
+                    <th>Pending Date</th>
+                    <th>Officially Approved</th>
+                    <th>Rejected</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(CurtAdmin.CustomerUser user in usersWithProperties){
+                    foreach (CurtAdmin.WebProperty wp in user.getWebProperties()) {
+                        <tr id="webProperty:@wp.id" title="Web Property for: @user.email">
+                            <td>@wp.name</td>
+                            <td style="word-wrap:break-word; word-break:break-all;">@wp.url</td>
+                            <td>@wp.sellerID</td>
+                            <td>@if(wp.typeID !=0){@wp.WebPropertyTypes.type}</td>
+                            <td>@wp.CustUserWebProperty.CustomerUser.email</td>
+                            <td>@wp.CustUserWebProperty.CustomerUser.customerID</td>
+                            @if(wp.CustUserWebProperty.CustomerUser.notCustomer == false){
+                            <td>Yes</td>
+                            }else{
+                            <td>No</td>   
+                            }
+                            <td>@wp.badgeID</td>
+                            <td>@wp.addedDate</td>
+                            <td>@wp.requestedDate</td>
+                            <td class="center">
+                                <input type="checkbox" name="isEnabled" @((wp.isEnabled) ? "title='yes'" : "title='no'") id="isEnabled:@wp.id" class="isEnabled" value="1" @((wp.isEnabled) ? "checked" : "") />
+                            </td>
+                            <td>
+                                @{
+                                 string originalDateString = wp.isEnabledDate.ToString();
+                                 DateTime original = Convert.ToDateTime(wp.isEnabledDate);
+                                 }
+                                @if (originalDateString.Length != 0 && DateTime.Now > (original.AddDays(90)))
+                                {
+                                    <span style="color:red;">@wp.isEnabledDate</span>
+                                }
+                                else if (originalDateString.Length != 0 && DateTime.Now > (original.AddDays(83)))
+                                {
+                                    <span style="color:orange;">@wp.isEnabledDate</span>
+                                }else{
+                                    if (originalDateString.Length != 0)
+                                    {
+                                    <span style="color:green;">@wp.isEnabledDate</span>
+                                    }
+                                }
+                            </td>
+                            <td class="center">
+                                <input type="checkbox" name="isFinalApproved" id="isFinalApproved:@wp.id" class="isFinalApproved" value="1" @((wp.isFinalApproved) ? "checked" : "") />
+                            </td>
+                            <td>
+                                <input type="checkbox" name="isDenied" id="isDenied:@wp.id" class="isDenied" value="1" @((wp.isDenied) ? "checked" : "") />
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/webPropertiesEnabled.js")"></script>
+<script>
+    $(document).ready(function () {
+
+
+
+    });
+
+
+</script>
+
