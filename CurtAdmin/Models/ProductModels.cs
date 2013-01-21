@@ -87,6 +87,38 @@ namespace CurtAdmin.Models {
             return parts;
         }
 
+        public static List<ConvertedPart> GetIncludedParts(int partID = 0) {
+            List<ConvertedPart> parts = new List<ConvertedPart>();
+            CurtDevDataContext db = new CurtDevDataContext();
+
+            parts = (from p in db.Parts
+                     join ip in db.IncludedParts on p.partID equals ip.includedID
+                     where ip.partID.Equals(partID)
+                     select new ConvertedPart {
+                         partID = p.partID,
+                         status = p.status,
+                         dateModified = Convert.ToDateTime(p.dateModified).ToString(),
+                         dateAdded = Convert.ToDateTime(p.dateAdded).ToString(),
+                         shortDesc = p.shortDesc,
+                         oldPartNumber = p.oldPartNumber,
+                         priceCode = Convert.ToInt32(p.priceCode),
+                         pClass = p.classID,
+                         featured = p.featured,
+                         listPrice = String.Format("{0:C}", (from prices in db.Prices
+                                                             where prices.partID.Equals(p.partID) && prices.priceType.Equals("List")
+                                                             select prices.price1 != null ? prices.price1 : (decimal?)0).FirstOrDefault<decimal?>())
+                     }).ToList<ConvertedPart>();
+            return parts;
+        }
+
+        public static List<PartGroup> GetPartGroups(int partID = 0) {
+            List<PartGroup> groups = new List<PartGroup>();
+            CurtDevDataContext db = new CurtDevDataContext();
+
+            groups = db.PartGroups.Where(x => x.Parts.Any(y => y.partID.Equals(partID))).Distinct().ToList();
+            return groups;
+        }
+
         public static string AddCategoryToPart(int catID = 0, int partID = 0) {
             if (catID == 0 || partID == 0) { return "Invalid parameters."; }
 
@@ -262,6 +294,55 @@ namespace CurtAdmin.Models {
                     UpdatePart(partID);
                     // Get the parts information
                     ConvertedPart part = GetPart(relatedID);
+
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    return js.Serialize(part);
+                } else {
+                    return "{\"error\":\"Invalid data.\"}";
+                }
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        public static string AddIncluded(int partID = 0, int includedID = 0) {
+            try {
+                if (partID > 0 && includedID > 0) {
+                    CurtDevDataContext db = new CurtDevDataContext();
+                    IncludedPart included_part = new IncludedPart {
+                        partID = partID,
+                        includedID = includedID
+                    };
+                    db.IncludedParts.InsertOnSubmit(included_part);
+                    db.SubmitChanges();
+
+                    // get the related parts information
+                    ConvertedPart part = new ConvertedPart();
+                    part = GetPart(includedID);
+                    UpdatePart(partID);
+                    // Serialize and return
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    return js.Serialize(part);
+                } else {
+                    return "{\"error\":\"Invalid data.\"}";
+                }
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        public static string DeleteIncluded(int partID = 0, int includedID = 0) {
+            try {
+                if (partID > 0 && includedID > 0) {
+                    CurtDevDataContext db = new CurtDevDataContext();
+                    IncludedPart ip = (from r in db.IncludedParts
+                                       where r.includedID.Equals(includedID) && r.partID.Equals(partID)
+                                       select r).FirstOrDefault<IncludedPart>();
+                    db.IncludedParts.DeleteOnSubmit(ip);
+                    db.SubmitChanges();
+                    UpdatePart(partID);
+                    // Get the parts information
+                    ConvertedPart part = GetPart(includedID);
 
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     return js.Serialize(part);
@@ -560,6 +641,98 @@ namespace CurtAdmin.Models {
                            content_type_id = c.cTypeID
                        }).FirstOrDefault<FullContent>();
             return content;
+        }
+
+        public static PartGroup GetGroup(int groupID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroup pg = new PartGroup();
+            try {
+                pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();
+            } catch { }
+            return pg;
+        }
+
+        public static PartGroup SaveGroup(int partID, string name, int groupID = 0) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroup pg = new PartGroup();
+
+            if (groupID == 0) {
+                pg = new PartGroup {
+                    name = name
+                };
+                db.PartGroups.InsertOnSubmit(pg);
+                db.SubmitChanges();
+
+                PartGroupPart pgp = new PartGroupPart {
+                    partGroupID = pg.id,
+                    partID = partID,
+                    sort = 1
+                };
+                db.PartGroupParts.InsertOnSubmit(pgp);
+            } else {
+                pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();
+                pg.name = name;
+            }
+            db.SubmitChanges();
+            UpdatePart(partID);
+            return GetGroup(pg.id);
+        }
+
+        public static PartGroup AddGroupPart(int groupID, int partID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                PartGroupPart pgp = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID) && x.partID.Equals(partID)).First();
+            } catch {
+                int sort = 1;
+                try {
+                    sort = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID)).OrderByDescending(x => x.sort).Select(x => x.sort).First() + 1;
+                } catch {}
+                PartGroupPart pgp = new PartGroupPart {
+                    partID = partID,
+                    partGroupID = groupID,
+                    sort = sort
+                };
+                db.PartGroupParts.InsertOnSubmit(pgp);
+                db.SubmitChanges();
+                List<string> partgroupparts = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID)).OrderBy(x => x.sort).Select(x => x.id.ToString()).ToList();
+                UpdateGroupSort(partgroupparts);
+            }
+
+            return GetGroup(groupID);
+        }
+
+        public static void RemovePartFromGroup(int id) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroupPart pgp = db.PartGroupParts.Where(x => x.id.Equals(id)).First();
+            int groupID = pgp.partGroupID;
+            db.PartGroupParts.DeleteOnSubmit(pgp);
+            db.SubmitChanges();
+            List<string> partgroupparts = db.PartGroupParts.Where(x => x.partGroupID.Equals(groupID)).OrderBy(x => x.sort).Select(x => x.id.ToString()).ToList();
+            UpdateGroupSort(partgroupparts);
+        }
+
+        public static void UpdateGroupSort(List<string> partgroupparts) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            for (int i = 0; i < partgroupparts.Count; i++) {
+                PartGroupPart pgp = db.PartGroupParts.Where(x => x.id.Equals(Convert.ToInt32(partgroupparts[i]))).First();
+                UpdatePart(pgp.partID);
+                pgp.sort = i + 1;
+                db.SubmitChanges();
+            }
+        }
+
+        public static string DeleteGroup(int groupID) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            PartGroup pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();
+            List<int> partids = pg.Parts.Select(x => x.partID).Distinct().ToList();
+            List<PartGroupPart> pgps = pg.Parts.ToList();
+            db.PartGroupParts.DeleteAllOnSubmit(pgps);
+            db.PartGroups.DeleteOnSubmit(pg);
+            db.SubmitChanges();
+            foreach (int partID in partids) {
+                UpdatePart(partID);
+            }
+            return "";
         }
 
         public static FullContent SaveContent(int contentID = 0, int partID = 0, string content = "", int contentType = 0) {

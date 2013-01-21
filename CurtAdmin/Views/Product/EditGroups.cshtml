@@ -1,0 +1,78 @@
+﻿@{
+    CurtAdmin.Models.ConvertedPart part = ViewBag.part;
+    List<CurtAdmin.PartGroup> partGroups = ViewBag.partGroups ?? new List<CurtAdmin.PartGroup>();
+    ViewBag.Title = "CURT Admin - Part Groups with " + part.shortDesc;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .form_left{
+        border: 1px solid #999;
+        box-shadow: #999 4px 4px 4px;
+        padding: 10px;
+        margin-bottom: 15px;
+        width: auto;
+        min-width: 550px;
+        display: none;
+    }
+    
+    #buttons{ margin-top: 0px; }
+    
+    #buttons input{
+        width: auto;
+    }
+    
+    tr td:nth-child(3){
+        text-align: center;
+    }
+</style>
+
+@{Html.RenderPartial("PartMenu");}
+
+<div id="content_container">
+    <h2 style="float:left">Part Groups with Part #@part.partID - @part.shortDesc</h2>
+    <a href="#" id="addGroup" style="float:right">
+        <img src="@Url.Content("~/Content/img/addGroup.png")" alt="Add Group" />
+    </a>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+
+    <form class="form_left">
+        <label for="name">
+            Group Name
+            <input type="text" name="name" id="name" placeholder="Enter a name for the group" required />
+        </label>
+        <div style="clear:both"></div>
+        <input type="hidden" name="groupID" id="groupID" value="0" />
+        <input type="hidden" name="partID" id="partID" value="@part.partID" />
+        <div id="buttons">
+            <input type="submit" name="btnSave" id="btnSave" value="Save" />
+            <input type="reset" name="btnReset" id="btnReset" value="Cancel" />
+        </div>
+    </form>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Group Name</th>
+                <th># of Parts</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(CurtAdmin.PartGroup group in partGroups){
+                <tr>
+                    <td>@group.name</td>
+                    <td>@group.Parts.Count</td>
+                    <td>
+                        <a href="#" class="edit" data-id="@group.id" title="Edit Group">Edit</a> | 
+                        <a href="#" class="parts" data-id="@group.id" title="Edit Parts">Edit Parts</a> | 
+                        <a href="#" class="remove" data-id="@group.id" title="Remove Group">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div id="config-dialog"></div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/Product/EditGroup.js")"></script>
+

@@ -431,6 +431,40 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult EditIncluded(int partID = 0) {
+
+            // Get the related parts for this part
+            List<ConvertedPart> included_parts = ProductModels.GetIncludedParts(partID);
+            ViewBag.included_parts = included_parts;
+
+            // Get all of the parts
+            List<ConvertedPart> parts = ProductModels.GetAllParts();
+            ViewBag.parts = parts;
+
+            // Get the part we're working with
+            ConvertedPart part = ProductModels.GetPart(partID);
+            ViewBag.part = part;
+
+            ViewBag.active_tab = "included";
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult EditGroups(int partID = 0) {
+
+            // Get the related parts for this part
+            List<PartGroup> partGroups = ProductModels.GetPartGroups(partID);
+            ViewBag.partGroups = partGroups;
+
+            // Get the part we're working with
+            ConvertedPart part = ProductModels.GetPart(partID);
+            ViewBag.part = part;
+
+            ViewBag.active_tab = "groups";
+            return View();
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult EditReviews(int partID = 0) {
 
             // Get the reviews for this product
@@ -667,6 +701,16 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
+        public string AddIncluded(int partID = 0, int includedID = 0) {
+            return ProductModels.AddIncluded(partID, includedID);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string DeleteIncluded(int partID = 0, int includedID = 0) {
+            return ProductModels.DeleteIncluded(partID, includedID);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
         public string AddReview(int partID = 0, int rating = 0, string subject = "", string review_text = "", string name = "", string email = "", int reviewID = 0) {
             return ReviewModel.Add(partID, rating, subject, review_text, name, email, reviewID);
         }
@@ -829,11 +873,63 @@ namespace CurtAdmin.Controllers
 
         [AcceptVerbs(HttpVerbs.Get)]
         public string GetVehiclePartAttribute(int vpAttrID = 0) {
-            JavaScriptSerializer js = new JavaScriptSerializer();
             try {
-                return js.Serialize(ProductModels.GetVehiclePartAttribute(vpAttrID));
+                return JsonConvert.SerializeObject(ProductModels.GetVehiclePartAttribute(vpAttrID));
             } catch (Exception e) {
                 return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string GetGroup(int groupID) {
+            try {
+                return JsonConvert.SerializeObject(ProductModels.GetGroup(groupID));
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string SaveGroup(int partID, string name, int groupID = 0) {
+            try {
+                return JsonConvert.SerializeObject(ProductModels.SaveGroup(partID, name, groupID));
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public string DeleteGroup(int groupID = 0) {
+            try {
+                return ProductModels.DeleteGroup(groupID);
+            } catch (Exception e) {
+                return e.Message;
+            }
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string AddGroupPart(int groupID, int partID) {
+            try {
+                return JsonConvert.SerializeObject(ProductModels.AddGroupPart(groupID, partID));
+            } catch (Exception e) {
+                return "{\"error\":\"" + e.Message + "\"}";
+            }
+        }
+
+        public string updateGroupSort() {
+            List<string> partgroupparts = Request.QueryString["parts[]"].Split(',').ToList<string>();
+            ProductModels.UpdateGroupSort(partgroupparts);
+            return "";
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string RemovePartFromGroup(int id) {
+            try {
+                ProductModels.RemovePartFromGroup(id);
+                return "{\"success\":true}";
+            } catch {
+                return "{\"success\":false}";
             }
         }
 

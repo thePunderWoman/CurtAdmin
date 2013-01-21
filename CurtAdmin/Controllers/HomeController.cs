@@ -35,12 +35,12 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
-        /*public string UpdateParts() {
+        public string UpdateParts() {
             CurtDevDataContext db2 = new CurtDevDataContext();
             List<PartChange2012> changes = new List<PartChange2012>();
             Dictionary<DateTime, List<PartChange2012>> results = new Dictionary<DateTime, List<PartChange2012>>();
             List<int> failedList = new List<int>();
-            changes = db2.PartChange2012s.Where(x => x.partID < 13000).OrderBy(x => x.partID).ToList();
+            changes = db2.PartChange2012s.OrderBy(x => x.partID).ToList();
             failedList = processChanges(changes);
             results.Add(DateTime.Now, changes);
             while (failedList.Count > 0) {
@@ -49,17 +49,6 @@ namespace CurtAdmin.Controllers {
                 failedList = processChanges(changes);
             }
             
-            failedList = new List<int>();
-            changes = new List<PartChange2012>();
-            changes = db2.PartChange2012s.Where(x => x.partID > 13000).OrderBy(x => x.partID).ToList();
-            failedList = processChanges(changes);
-            results.Add(DateTime.Now, changes);
-            while (failedList.Count > 0) {
-                changes = new List<PartChange2012>();
-                changes = db2.PartChange2012s.Where(x => failedList.Contains(x.partID)).OrderBy(x => x.partID).ToList();
-                failedList = processChanges(changes);
-            }
-
             return JsonConvert.SerializeObject(results);
         }
 
@@ -282,6 +271,6 @@ namespace CurtAdmin.Controllers {
             mail.Body = htmlBody;
 
             SmtpServer.Send(mail);
-        }*/
+        }
     }
 }
