@@ -50,6 +50,7 @@
                     <th>Customer #</th>
                     <th>Date Added</th>
                     <th>Is Customer</th>
+                    <th>Is Sudo</th>
                     <th>Is Active?</th>
                     <th></th>
                 </tr>
@@ -62,6 +63,13 @@
                         <td>@u.customerID</td>
                         <td>@u.date_added.ToShortDateString()</td>
                         @if(u.notCustomer == false){
+                        <td>Yes</td>
+                        }else{
+                         <td>No</td>   
+                        }
+
+                        
+                        @if(u.isSudo == true){
                         <td>Yes</td>
                         }else{
                          <td>No</td>   

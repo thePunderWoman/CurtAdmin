@@ -43,6 +43,16 @@
             }
         </label>
 
+        <label for="isSudo">
+            Is Sudo:
+            @if (user.isSudo)
+            {
+                <input type="checkbox" name="isSudo" id="isSudo" checked="checked" />
+            }else{
+                <input type="checkbox" name="isSudo" id="isActive" />
+            }
+        </label>
+
         <label for="notCustomer">
             Not a Customer:
             @if (user.notCustomer)

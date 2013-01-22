@@ -115,12 +115,16 @@ namespace CurtAdmin.Controllers {
         }
 
         [HttpPost]
-        public ActionResult EditCustomerUser(Guid user_id, string name, string email, string customerID, string isActive, string notCustomer, string cust_id )
+        public ActionResult EditCustomerUser(Guid user_id, string name, string email, string customerID, string isActive, string isSudo, string notCustomer, string cust_id )
         {
             ViewBag.error = "";
             ViewBag.msg = "";
             Boolean blnIsActive = false;
             blnIsActive = (isActive == "on") ? true : false;
+
+            Boolean blnIsSudo = false;
+            blnIsSudo = (isSudo == "on") ? true : false;
+
             Boolean blnNotCustomer = false;
             blnNotCustomer = (notCustomer == "on") ? true : false;
             if (user_id.ToString().Length > 0)
@@ -137,6 +141,7 @@ namespace CurtAdmin.Controllers {
                         user.customerID = Convert.ToInt32(customerID);
                         user.active = blnIsActive;
                         user.notCustomer = blnNotCustomer;
+                        user.isSudo = blnIsSudo;
                         user.cust_id = Convert.ToInt32(cust_id);
 
                         db.SubmitChanges();
