@@ -71,8 +71,6 @@ namespace CurtAdmin.Controllers {
         }
 
 
-
-
         public ActionResult ViewCustomerUsers()
         {
             // Get a list of all the customer users in the database
@@ -251,6 +249,125 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public ActionResult ViewAuthModules(string success = "", string error = "") {
+            if (success != "") {
+                ViewBag.success = success;
+            }
+            if (error != "") {
+                ViewBag.error = error;
+            }
+            
+            List<AuthDomain> allDomains = UserManagement.getAllAuthDomains();
+            ViewBag.allDomains = allDomains;
+            return View();
+        }
+
+        public ActionResult ViewAuthAreas(string domainID, string success ="", string error = "") {
+            if (success != "") {
+                ViewBag.success = success;
+            }
+            if (error != "") {
+                ViewBag.error = error;
+            }
+
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<AuthArea> areas = db.AuthAreas.Where(x => x.DomainID == new Guid(domainID)).ToList<AuthArea>();
+            ViewBag.areas = areas;
+            ViewBag.domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
+            return View();
+        }
+
+        public ActionResult AddAuthDomain() {
+            ViewBag.error = "";
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddAuthDomain(string url, string name) {
+            ViewBag.error = "";
+            if (url.Length == 0 || name.Length == 0) {
+                ViewBag.error = "Name and Url are both required";
+                return View();
+            } else {
+                CurtDevDataContext db = new CurtDevDataContext();
+                AuthDomain domainCheck = db.AuthDomains.Where(x => x.url == url).FirstOrDefault<AuthDomain>();
+                if (domainCheck == null) {
+                    AuthDomain newDomain = new AuthDomain();
+                    newDomain.id = Guid.NewGuid();
+                    newDomain.name = name;
+                    newDomain.url = url;
+                    db.AuthDomains.InsertOnSubmit(newDomain);
+                    db.SubmitChanges();
+                    return RedirectToAction("ViewAuthModules", "Customers", new {success = "Domain: " + name + " was successfully added. "});
+                } else {
+                    ViewBag.error = "A domain with that url already exists";
+                    return View();
+                }
+
+            }
+        }
+
+        public ActionResult AddAuthArea(string domainID) {
+            ViewBag.error = "";
+            CurtDevDataContext db = new CurtDevDataContext();
+            ViewBag.domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddAuthArea(string domainID,string path, string name ) {
+            ViewBag.error = "";
+            if (path.Length == 0 || name.Length == 0) {
+                ViewBag.error = "Name and Path are both required.";
+                return View();
+            } else {
+                CurtDevDataContext db = new CurtDevDataContext();
+                AuthArea areaCheck = db.AuthAreas.Where(x => x.DomainID == new Guid(domainID) && x.path == path).FirstOrDefault<AuthArea>();
+                if (areaCheck == null) {
+                    AuthArea newArea = new AuthArea();
+                    newArea.id = Guid.NewGuid();
+                    newArea.DomainID = new Guid(domainID);
+                    newArea.name = name;
+                    newArea.path = path;
+                    db.AuthAreas.InsertOnSubmit(newArea);
+                    db.SubmitChanges();
+                    return RedirectToAction("ViewAuthAreas", "Customers", new { domainID= domainID, success = "Area: " + name + " was successfully added. " });
+                } else {
+                    ViewBag.error = "An area with that path already exists under this domain.";
+                    return View();
+                }
+
+            }
+        }
+
+        public ActionResult EditAuthArea(string areaID) {
+            ViewBag.error = "";
+            CurtDevDataContext db = new CurtDevDataContext();
+            ViewBag.area = db.AuthAreas.Where(x => x.id == new Guid(areaID)).FirstOrDefault<AuthArea>();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditAuthArea(string areaID, string path, string name){
+            ViewBag.error = "";
+            if (path.Length == 0 || name.Length == 0) {
+                ViewBag.error = "Name and Path are both required.";
+                return View();
+            } else {
+                CurtDevDataContext db = new CurtDevDataContext();
+                AuthArea area = db.AuthAreas.Where(x => x.id == new Guid(areaID)).FirstOrDefault<AuthArea>();
+                area.path = path;
+                area.name = name;
+                db.SubmitChanges();
+                ViewBag.success = "Changes were saved.";
+                ViewBag.area = db.AuthAreas.Where(x => x.id == new Guid(areaID)).FirstOrDefault<AuthArea>();
+            }
+            return View();
+        }
+
+
         [HttpGet]
         public string SetWebPropertyStatus(int record_id)
         {
@@ -334,7 +451,6 @@ namespace CurtAdmin.Controllers {
             }
 
         }
-
 
         [HttpGet]
         public string WPSetIsDenied(int record_id)

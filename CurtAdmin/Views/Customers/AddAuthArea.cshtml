@@ -1,0 +1,28 @@
+﻿@using CurtAdmin;
+@{
+    ViewBag.Title = "AddAuthArea";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    AuthDomain domain = ViewBag.domain ?? new AuthDomain();
+}
+<div id="content_container">
+    <h2>Add Authorization Area for @domain.name </h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    <form action="/Customers/AddAuthArea" method="post" class="form_left">
+        <label for="name">Name
+            <input type="text" name="name" id="name" placeholder="Example: B2B University" required />
+        </label>
+
+        <label for="path">Path:
+            <input type="text" name="path" id="path" placeholder="Example: /B2B/" required />
+        </label>
+        <input type="hidden" name="domainID" id="domainID" value="@domain.id" />
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Add" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>

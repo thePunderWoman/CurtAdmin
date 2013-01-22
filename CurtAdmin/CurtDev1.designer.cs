@@ -342,6 +342,27 @@ namespace CurtAdmin
     partial void InsertPartGroupPart(PartGroupPart instance);
     partial void UpdatePartGroupPart(PartGroupPart instance);
     partial void DeletePartGroupPart(PartGroupPart instance);
+    partial void InsertAuthAccess(AuthAccess instance);
+    partial void UpdateAuthAccess(AuthAccess instance);
+    partial void DeleteAuthAccess(AuthAccess instance);
+    partial void InsertAuthDomain(AuthDomain instance);
+    partial void UpdateAuthDomain(AuthDomain instance);
+    partial void DeleteAuthDomain(AuthDomain instance);
+    partial void InsertAuthArea(AuthArea instance);
+    partial void UpdateAuthArea(AuthArea instance);
+    partial void DeleteAuthArea(AuthArea instance);
+    partial void InsertApiKey(ApiKey instance);
+    partial void UpdateApiKey(ApiKey instance);
+    partial void DeleteApiKey(ApiKey instance);
+    partial void InsertApiKeyType(ApiKeyType instance);
+    partial void UpdateApiKeyType(ApiKeyType instance);
+    partial void DeleteApiKeyType(ApiKeyType instance);
+    partial void InsertApiAccess(ApiAccess instance);
+    partial void UpdateApiAccess(ApiAccess instance);
+    partial void DeleteApiAccess(ApiAccess instance);
+    partial void InsertApiModule(ApiModule instance);
+    partial void UpdateApiModule(ApiModule instance);
+    partial void DeleteApiModule(ApiModule instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1219,6 +1240,62 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<PartGroupPart>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AuthAccess> AuthAccesses
+		{
+			get
+			{
+				return this.GetTable<AuthAccess>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AuthDomain> AuthDomains
+		{
+			get
+			{
+				return this.GetTable<AuthDomain>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AuthArea> AuthAreas
+		{
+			get
+			{
+				return this.GetTable<AuthArea>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ApiKey> ApiKeys
+		{
+			get
+			{
+				return this.GetTable<ApiKey>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ApiKeyType> ApiKeyTypes
+		{
+			get
+			{
+				return this.GetTable<ApiKeyType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ApiAccess> ApiAccesses
+		{
+			get
+			{
+				return this.GetTable<ApiAccess>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ApiModule> ApiModules
+		{
+			get
+			{
+				return this.GetTable<ApiModule>();
 			}
 		}
 		
@@ -16993,6 +17070,10 @@ namespace CurtAdmin
 		
 		private EntitySet<CustUserWebProperty> _CustUserWebProperties;
 		
+		private EntitySet<AuthAccess> _AuthAccesses;
+		
+		private EntitySet<ApiKey> _ApiKeys;
+		
 		private EntityRef<Customer> _Customer;
 		
     #region Extensibility Method Definitions
@@ -17026,6 +17107,8 @@ namespace CurtAdmin
 		public CustomerUser()
 		{
 			this._CustUserWebProperties = new EntitySet<CustUserWebProperty>(new Action<CustUserWebProperty>(this.attach_CustUserWebProperties), new Action<CustUserWebProperty>(this.detach_CustUserWebProperties));
+			this._AuthAccesses = new EntitySet<AuthAccess>(new Action<AuthAccess>(this.attach_AuthAccesses), new Action<AuthAccess>(this.detach_AuthAccesses));
+			this._ApiKeys = new EntitySet<ApiKey>(new Action<ApiKey>(this.attach_ApiKeys), new Action<ApiKey>(this.detach_ApiKeys));
 			this._Customer = default(EntityRef<Customer>);
 			OnCreated();
 		}
@@ -17267,6 +17350,32 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustomerUser_AuthAccess", Storage="_AuthAccesses", ThisKey="id", OtherKey="userID")]
+		public EntitySet<AuthAccess> AuthAccesses
+		{
+			get
+			{
+				return this._AuthAccesses;
+			}
+			set
+			{
+				this._AuthAccesses.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustomerUser_ApiKey", Storage="_ApiKeys", ThisKey="id", OtherKey="user_id")]
+		public EntitySet<ApiKey> ApiKeys
+		{
+			get
+			{
+				return this._ApiKeys;
+			}
+			set
+			{
+				this._ApiKeys.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Customer_CustomerUser", Storage="_Customer", ThisKey="cust_id", OtherKey="cust_id", IsForeignKey=true)]
 		internal Customer Customer
 		{
@@ -17328,6 +17437,30 @@ namespace CurtAdmin
 		}
 		
 		private void detach_CustUserWebProperties(CustUserWebProperty entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustomerUser = null;
+		}
+		
+		private void attach_AuthAccesses(AuthAccess entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustomerUser = this;
+		}
+		
+		private void detach_AuthAccesses(AuthAccess entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustomerUser = null;
+		}
+		
+		private void attach_ApiKeys(ApiKey entity)
+		{
+			this.SendPropertyChanging();
+			entity.CustomerUser = this;
+		}
+		
+		private void detach_ApiKeys(ApiKey entity)
 		{
 			this.SendPropertyChanging();
 			entity.CustomerUser = null;
@@ -24186,6 +24319,1392 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AuthAccess")]
+	public partial class AuthAccess : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private System.Guid _userID;
+		
+		private System.Guid _DomainID;
+		
+		private System.Guid _AreaID;
+		
+		private EntitySet<AuthDomain> _AuthDomains;
+		
+		private EntitySet<AuthArea> _AuthAreas;
+		
+		private EntityRef<CustomerUser> _CustomerUser;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OnuserIDChanging(System.Guid value);
+    partial void OnuserIDChanged();
+    partial void OnDomainIDChanging(System.Guid value);
+    partial void OnDomainIDChanged();
+    partial void OnAreaIDChanging(System.Guid value);
+    partial void OnAreaIDChanged();
+    #endregion
+		
+		public AuthAccess()
+		{
+			this._AuthDomains = new EntitySet<AuthDomain>(new Action<AuthDomain>(this.attach_AuthDomains), new Action<AuthDomain>(this.detach_AuthDomains));
+			this._AuthAreas = new EntitySet<AuthArea>(new Action<AuthArea>(this.attach_AuthAreas), new Action<AuthArea>(this.detach_AuthAreas));
+			this._CustomerUser = default(EntityRef<CustomerUser>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid userID
+		{
+			get
+			{
+				return this._userID;
+			}
+			set
+			{
+				if ((this._userID != value))
+				{
+					if (this._CustomerUser.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnuserIDChanging(value);
+					this.SendPropertyChanging();
+					this._userID = value;
+					this.SendPropertyChanged("userID");
+					this.OnuserIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DomainID", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid DomainID
+		{
+			get
+			{
+				return this._DomainID;
+			}
+			set
+			{
+				if ((this._DomainID != value))
+				{
+					this.OnDomainIDChanging(value);
+					this.SendPropertyChanging();
+					this._DomainID = value;
+					this.SendPropertyChanged("DomainID");
+					this.OnDomainIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AreaID", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid AreaID
+		{
+			get
+			{
+				return this._AreaID;
+			}
+			set
+			{
+				if ((this._AreaID != value))
+				{
+					this.OnAreaIDChanging(value);
+					this.SendPropertyChanging();
+					this._AreaID = value;
+					this.SendPropertyChanged("AreaID");
+					this.OnAreaIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AuthAccess_AuthDomain", Storage="_AuthDomains", ThisKey="DomainID", OtherKey="id")]
+		public EntitySet<AuthDomain> AuthDomains
+		{
+			get
+			{
+				return this._AuthDomains;
+			}
+			set
+			{
+				this._AuthDomains.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AuthAccess_AuthArea", Storage="_AuthAreas", ThisKey="AreaID", OtherKey="id")]
+		public EntitySet<AuthArea> AuthAreas
+		{
+			get
+			{
+				return this._AuthAreas;
+			}
+			set
+			{
+				this._AuthAreas.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustomerUser_AuthAccess", Storage="_CustomerUser", ThisKey="userID", OtherKey="id", IsForeignKey=true)]
+		public CustomerUser CustomerUser
+		{
+			get
+			{
+				return this._CustomerUser.Entity;
+			}
+			set
+			{
+				CustomerUser previousValue = this._CustomerUser.Entity;
+				if (((previousValue != value) 
+							|| (this._CustomerUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CustomerUser.Entity = null;
+						previousValue.AuthAccesses.Remove(this);
+					}
+					this._CustomerUser.Entity = value;
+					if ((value != null))
+					{
+						value.AuthAccesses.Add(this);
+						this._userID = value.id;
+					}
+					else
+					{
+						this._userID = default(System.Guid);
+					}
+					this.SendPropertyChanged("CustomerUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_AuthDomains(AuthDomain entity)
+		{
+			this.SendPropertyChanging();
+			entity.AuthAccess = this;
+		}
+		
+		private void detach_AuthDomains(AuthDomain entity)
+		{
+			this.SendPropertyChanging();
+			entity.AuthAccess = null;
+		}
+		
+		private void attach_AuthAreas(AuthArea entity)
+		{
+			this.SendPropertyChanging();
+			entity.AuthAccess = this;
+		}
+		
+		private void detach_AuthAreas(AuthArea entity)
+		{
+			this.SendPropertyChanging();
+			entity.AuthAccess = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AuthDomains")]
+	public partial class AuthDomain : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private string _url;
+		
+		private string _name;
+		
+		private EntitySet<AuthArea> _AuthAreas;
+		
+		private EntityRef<AuthAccess> _AuthAccess;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OnurlChanging(string value);
+    partial void OnurlChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public AuthDomain()
+		{
+			this._AuthAreas = new EntitySet<AuthArea>(new Action<AuthArea>(this.attach_AuthAreas), new Action<AuthArea>(this.detach_AuthAreas));
+			this._AuthAccess = default(EntityRef<AuthAccess>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					if (this._AuthAccess.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_url", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string url
+		{
+			get
+			{
+				return this._url;
+			}
+			set
+			{
+				if ((this._url != value))
+				{
+					this.OnurlChanging(value);
+					this.SendPropertyChanging();
+					this._url = value;
+					this.SendPropertyChanged("url");
+					this.OnurlChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AuthDomain_AuthArea", Storage="_AuthAreas", ThisKey="id", OtherKey="DomainID")]
+		public EntitySet<AuthArea> AuthAreas
+		{
+			get
+			{
+				return this._AuthAreas;
+			}
+			set
+			{
+				this._AuthAreas.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AuthAccess_AuthDomain", Storage="_AuthAccess", ThisKey="id", OtherKey="DomainID", IsForeignKey=true)]
+		public AuthAccess AuthAccess
+		{
+			get
+			{
+				return this._AuthAccess.Entity;
+			}
+			set
+			{
+				AuthAccess previousValue = this._AuthAccess.Entity;
+				if (((previousValue != value) 
+							|| (this._AuthAccess.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AuthAccess.Entity = null;
+						previousValue.AuthDomains.Remove(this);
+					}
+					this._AuthAccess.Entity = value;
+					if ((value != null))
+					{
+						value.AuthDomains.Add(this);
+						this._id = value.DomainID;
+					}
+					else
+					{
+						this._id = default(System.Guid);
+					}
+					this.SendPropertyChanged("AuthAccess");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_AuthAreas(AuthArea entity)
+		{
+			this.SendPropertyChanging();
+			entity.AuthDomain = this;
+		}
+		
+		private void detach_AuthAreas(AuthArea entity)
+		{
+			this.SendPropertyChanging();
+			entity.AuthDomain = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AuthAreas")]
+	public partial class AuthArea : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private string _path;
+		
+		private System.Guid _DomainID;
+		
+		private string _name;
+		
+		private EntityRef<AuthDomain> _AuthDomain;
+		
+		private EntityRef<AuthAccess> _AuthAccess;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OnpathChanging(string value);
+    partial void OnpathChanged();
+    partial void OnDomainIDChanging(System.Guid value);
+    partial void OnDomainIDChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public AuthArea()
+		{
+			this._AuthDomain = default(EntityRef<AuthDomain>);
+			this._AuthAccess = default(EntityRef<AuthAccess>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					if (this._AuthAccess.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_path", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string path
+		{
+			get
+			{
+				return this._path;
+			}
+			set
+			{
+				if ((this._path != value))
+				{
+					this.OnpathChanging(value);
+					this.SendPropertyChanging();
+					this._path = value;
+					this.SendPropertyChanged("path");
+					this.OnpathChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DomainID", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid DomainID
+		{
+			get
+			{
+				return this._DomainID;
+			}
+			set
+			{
+				if ((this._DomainID != value))
+				{
+					if (this._AuthDomain.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDomainIDChanging(value);
+					this.SendPropertyChanging();
+					this._DomainID = value;
+					this.SendPropertyChanged("DomainID");
+					this.OnDomainIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AuthDomain_AuthArea", Storage="_AuthDomain", ThisKey="DomainID", OtherKey="id", IsForeignKey=true)]
+		public AuthDomain AuthDomain
+		{
+			get
+			{
+				return this._AuthDomain.Entity;
+			}
+			set
+			{
+				AuthDomain previousValue = this._AuthDomain.Entity;
+				if (((previousValue != value) 
+							|| (this._AuthDomain.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AuthDomain.Entity = null;
+						previousValue.AuthAreas.Remove(this);
+					}
+					this._AuthDomain.Entity = value;
+					if ((value != null))
+					{
+						value.AuthAreas.Add(this);
+						this._DomainID = value.id;
+					}
+					else
+					{
+						this._DomainID = default(System.Guid);
+					}
+					this.SendPropertyChanged("AuthDomain");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AuthAccess_AuthArea", Storage="_AuthAccess", ThisKey="id", OtherKey="AreaID", IsForeignKey=true)]
+		public AuthAccess AuthAccess
+		{
+			get
+			{
+				return this._AuthAccess.Entity;
+			}
+			set
+			{
+				AuthAccess previousValue = this._AuthAccess.Entity;
+				if (((previousValue != value) 
+							|| (this._AuthAccess.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AuthAccess.Entity = null;
+						previousValue.AuthAreas.Remove(this);
+					}
+					this._AuthAccess.Entity = value;
+					if ((value != null))
+					{
+						value.AuthAreas.Add(this);
+						this._id = value.AreaID;
+					}
+					else
+					{
+						this._id = default(System.Guid);
+					}
+					this.SendPropertyChanged("AuthAccess");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ApiKey")]
+	public partial class ApiKey : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private System.Guid _api_key;
+		
+		private System.Guid _type_id;
+		
+		private System.Guid _user_id;
+		
+		private System.DateTime _date_added;
+		
+		private EntitySet<ApiAccess> _ApiAccesses;
+		
+		private EntityRef<CustomerUser> _CustomerUser;
+		
+		private EntityRef<ApiKeyType> _ApiKeyType;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void Onapi_keyChanging(System.Guid value);
+    partial void Onapi_keyChanged();
+    partial void Ontype_idChanging(System.Guid value);
+    partial void Ontype_idChanged();
+    partial void Onuser_idChanging(System.Guid value);
+    partial void Onuser_idChanged();
+    partial void Ondate_addedChanging(System.DateTime value);
+    partial void Ondate_addedChanged();
+    #endregion
+		
+		public ApiKey()
+		{
+			this._ApiAccesses = new EntitySet<ApiAccess>(new Action<ApiAccess>(this.attach_ApiAccesses), new Action<ApiAccess>(this.detach_ApiAccesses));
+			this._CustomerUser = default(EntityRef<CustomerUser>);
+			this._ApiKeyType = default(EntityRef<ApiKeyType>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_api_key", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid api_key
+		{
+			get
+			{
+				return this._api_key;
+			}
+			set
+			{
+				if ((this._api_key != value))
+				{
+					this.Onapi_keyChanging(value);
+					this.SendPropertyChanging();
+					this._api_key = value;
+					this.SendPropertyChanged("api_key");
+					this.Onapi_keyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type_id", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid type_id
+		{
+			get
+			{
+				return this._type_id;
+			}
+			set
+			{
+				if ((this._type_id != value))
+				{
+					if (this._ApiKeyType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Ontype_idChanging(value);
+					this.SendPropertyChanging();
+					this._type_id = value;
+					this.SendPropertyChanged("type_id");
+					this.Ontype_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_user_id", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid user_id
+		{
+			get
+			{
+				return this._user_id;
+			}
+			set
+			{
+				if ((this._user_id != value))
+				{
+					if (this._CustomerUser.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onuser_idChanging(value);
+					this.SendPropertyChanging();
+					this._user_id = value;
+					this.SendPropertyChanged("user_id");
+					this.Onuser_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_date_added", DbType="DateTime NOT NULL")]
+		public System.DateTime date_added
+		{
+			get
+			{
+				return this._date_added;
+			}
+			set
+			{
+				if ((this._date_added != value))
+				{
+					this.Ondate_addedChanging(value);
+					this.SendPropertyChanging();
+					this._date_added = value;
+					this.SendPropertyChanged("date_added");
+					this.Ondate_addedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ApiKey_ApiAccess", Storage="_ApiAccesses", ThisKey="id", OtherKey="key_id")]
+		public EntitySet<ApiAccess> ApiAccesses
+		{
+			get
+			{
+				return this._ApiAccesses;
+			}
+			set
+			{
+				this._ApiAccesses.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustomerUser_ApiKey", Storage="_CustomerUser", ThisKey="user_id", OtherKey="id", IsForeignKey=true)]
+		public CustomerUser CustomerUser
+		{
+			get
+			{
+				return this._CustomerUser.Entity;
+			}
+			set
+			{
+				CustomerUser previousValue = this._CustomerUser.Entity;
+				if (((previousValue != value) 
+							|| (this._CustomerUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CustomerUser.Entity = null;
+						previousValue.ApiKeys.Remove(this);
+					}
+					this._CustomerUser.Entity = value;
+					if ((value != null))
+					{
+						value.ApiKeys.Add(this);
+						this._user_id = value.id;
+					}
+					else
+					{
+						this._user_id = default(System.Guid);
+					}
+					this.SendPropertyChanged("CustomerUser");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ApiKeyType_ApiKey", Storage="_ApiKeyType", ThisKey="type_id", OtherKey="id", IsForeignKey=true)]
+		public ApiKeyType ApiKeyType
+		{
+			get
+			{
+				return this._ApiKeyType.Entity;
+			}
+			set
+			{
+				ApiKeyType previousValue = this._ApiKeyType.Entity;
+				if (((previousValue != value) 
+							|| (this._ApiKeyType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ApiKeyType.Entity = null;
+						previousValue.ApiKeys.Remove(this);
+					}
+					this._ApiKeyType.Entity = value;
+					if ((value != null))
+					{
+						value.ApiKeys.Add(this);
+						this._type_id = value.id;
+					}
+					else
+					{
+						this._type_id = default(System.Guid);
+					}
+					this.SendPropertyChanged("ApiKeyType");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ApiAccesses(ApiAccess entity)
+		{
+			this.SendPropertyChanging();
+			entity.ApiKey = this;
+		}
+		
+		private void detach_ApiAccesses(ApiAccess entity)
+		{
+			this.SendPropertyChanging();
+			entity.ApiKey = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ApiKeyType")]
+	public partial class ApiKeyType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private string _type;
+		
+		private System.DateTime _date_added;
+		
+		private EntitySet<ApiKey> _ApiKeys;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OntypeChanging(string value);
+    partial void OntypeChanged();
+    partial void Ondate_addedChanging(System.DateTime value);
+    partial void Ondate_addedChanged();
+    #endregion
+		
+		public ApiKeyType()
+		{
+			this._ApiKeys = new EntitySet<ApiKey>(new Action<ApiKey>(this.attach_ApiKeys), new Action<ApiKey>(this.detach_ApiKeys));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="VarChar(500)")]
+		public string type
+		{
+			get
+			{
+				return this._type;
+			}
+			set
+			{
+				if ((this._type != value))
+				{
+					this.OntypeChanging(value);
+					this.SendPropertyChanging();
+					this._type = value;
+					this.SendPropertyChanged("type");
+					this.OntypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_date_added", DbType="DateTime NOT NULL")]
+		public System.DateTime date_added
+		{
+			get
+			{
+				return this._date_added;
+			}
+			set
+			{
+				if ((this._date_added != value))
+				{
+					this.Ondate_addedChanging(value);
+					this.SendPropertyChanging();
+					this._date_added = value;
+					this.SendPropertyChanged("date_added");
+					this.Ondate_addedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ApiKeyType_ApiKey", Storage="_ApiKeys", ThisKey="id", OtherKey="type_id")]
+		public EntitySet<ApiKey> ApiKeys
+		{
+			get
+			{
+				return this._ApiKeys;
+			}
+			set
+			{
+				this._ApiKeys.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ApiKeys(ApiKey entity)
+		{
+			this.SendPropertyChanging();
+			entity.ApiKeyType = this;
+		}
+		
+		private void detach_ApiKeys(ApiKey entity)
+		{
+			this.SendPropertyChanging();
+			entity.ApiKeyType = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ApiAccess")]
+	public partial class ApiAccess : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private System.Guid _key_id;
+		
+		private System.Guid _module_id;
+		
+		private EntityRef<ApiKey> _ApiKey;
+		
+		private EntityRef<ApiModule> _ApiModule;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void Onkey_idChanging(System.Guid value);
+    partial void Onkey_idChanged();
+    partial void Onmodule_idChanging(System.Guid value);
+    partial void Onmodule_idChanged();
+    #endregion
+		
+		public ApiAccess()
+		{
+			this._ApiKey = default(EntityRef<ApiKey>);
+			this._ApiModule = default(EntityRef<ApiModule>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_key_id", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid key_id
+		{
+			get
+			{
+				return this._key_id;
+			}
+			set
+			{
+				if ((this._key_id != value))
+				{
+					if (this._ApiKey.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onkey_idChanging(value);
+					this.SendPropertyChanging();
+					this._key_id = value;
+					this.SendPropertyChanged("key_id");
+					this.Onkey_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_module_id", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid module_id
+		{
+			get
+			{
+				return this._module_id;
+			}
+			set
+			{
+				if ((this._module_id != value))
+				{
+					if (this._ApiModule.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onmodule_idChanging(value);
+					this.SendPropertyChanging();
+					this._module_id = value;
+					this.SendPropertyChanged("module_id");
+					this.Onmodule_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ApiKey_ApiAccess", Storage="_ApiKey", ThisKey="key_id", OtherKey="id", IsForeignKey=true)]
+		public ApiKey ApiKey
+		{
+			get
+			{
+				return this._ApiKey.Entity;
+			}
+			set
+			{
+				ApiKey previousValue = this._ApiKey.Entity;
+				if (((previousValue != value) 
+							|| (this._ApiKey.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ApiKey.Entity = null;
+						previousValue.ApiAccesses.Remove(this);
+					}
+					this._ApiKey.Entity = value;
+					if ((value != null))
+					{
+						value.ApiAccesses.Add(this);
+						this._key_id = value.id;
+					}
+					else
+					{
+						this._key_id = default(System.Guid);
+					}
+					this.SendPropertyChanged("ApiKey");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ApiModule_ApiAccess", Storage="_ApiModule", ThisKey="module_id", OtherKey="id", IsForeignKey=true)]
+		public ApiModule ApiModule
+		{
+			get
+			{
+				return this._ApiModule.Entity;
+			}
+			set
+			{
+				ApiModule previousValue = this._ApiModule.Entity;
+				if (((previousValue != value) 
+							|| (this._ApiModule.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ApiModule.Entity = null;
+						previousValue.ApiAccesses.Remove(this);
+					}
+					this._ApiModule.Entity = value;
+					if ((value != null))
+					{
+						value.ApiAccesses.Add(this);
+						this._module_id = value.id;
+					}
+					else
+					{
+						this._module_id = default(System.Guid);
+					}
+					this.SendPropertyChanged("ApiModule");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ApiModules")]
+	public partial class ApiModule : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private string _name;
+		
+		private System.Nullable<System.Guid> _access_level;
+		
+		private System.DateTime _date_added;
+		
+		private EntitySet<ApiAccess> _ApiAccesses;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void Onaccess_levelChanging(System.Nullable<System.Guid> value);
+    partial void Onaccess_levelChanged();
+    partial void Ondate_addedChanging(System.DateTime value);
+    partial void Ondate_addedChanged();
+    #endregion
+		
+		public ApiModule()
+		{
+			this._ApiAccesses = new EntitySet<ApiAccess>(new Action<ApiAccess>(this.attach_ApiAccesses), new Action<ApiAccess>(this.detach_ApiAccesses));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(500)")]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_access_level", DbType="UniqueIdentifier")]
+		public System.Nullable<System.Guid> access_level
+		{
+			get
+			{
+				return this._access_level;
+			}
+			set
+			{
+				if ((this._access_level != value))
+				{
+					this.Onaccess_levelChanging(value);
+					this.SendPropertyChanging();
+					this._access_level = value;
+					this.SendPropertyChanged("access_level");
+					this.Onaccess_levelChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_date_added", DbType="DateTime NOT NULL")]
+		public System.DateTime date_added
+		{
+			get
+			{
+				return this._date_added;
+			}
+			set
+			{
+				if ((this._date_added != value))
+				{
+					this.Ondate_addedChanging(value);
+					this.SendPropertyChanging();
+					this._date_added = value;
+					this.SendPropertyChanged("date_added");
+					this.Ondate_addedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ApiModule_ApiAccess", Storage="_ApiAccesses", ThisKey="id", OtherKey="module_id")]
+		public EntitySet<ApiAccess> ApiAccesses
+		{
+			get
+			{
+				return this._ApiAccesses;
+			}
+			set
+			{
+				this._ApiAccesses.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ApiAccesses(ApiAccess entity)
+		{
+			this.SendPropertyChanging();
+			entity.ApiModule = this;
+		}
+		
+		private void detach_ApiAccesses(ApiAccess entity)
+		{
+			this.SendPropertyChanging();
+			entity.ApiModule = null;
 		}
 	}
 }

@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "AddAuthDomain";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div id="content_container">
+    <h2>Add Authorization Domain</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    <form action="/Customers/AddAuthDomain" method="post" class="form_left">
+        <label for="name">Name
+            <input type="text" name="name" id="name" placeholder="Example: Dealers Area" required />
+        </label>
+
+        <label for="url">URL:
+            <input type="text" name="url" id="url" placeholder="Example: http://dealers.curtmfg.com" required />
+        </label>
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Add" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>
+
+

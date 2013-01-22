@@ -1,0 +1,61 @@
+﻿@using CurtAdmin
+@{
+    ViewBag.Title = "ViewAuthModules";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<AuthDomain> allDomains = ViewBag.allDomains ?? new List<AuthDomain>();
+    string success = ViewBag.success ?? "";
+    string error = ViewBag.error ?? "";
+    
+}
+
+<style>
+    #addDomain
+    {
+        float:right;
+    }
+
+</style>
+
+@if (success != "") {
+    <p style="color:#12990c">@success</p>
+}
+@if (error != "") {
+    <p style="color:#a30f0f">@error</p>
+}
+
+<h2>View All Authorization Domain Modules</h2>
+<a href="/Customers/addAuthDomain" title="Add Domain" id="addDomain" class="button">Add Domain</a>
+<br /><br /><br />
+   <div style="width: 100%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Domain ID</th>
+                    <th>URL</th>
+                    <th>Name</th>
+                    <th>Modify</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(AuthDomain domain in allDomains){
+                        <tr id="domain:@domain.id" title="Domain">
+                            <td>@domain.id</td>
+                            <td>@domain.url</td>
+                            <td>@domain.name</td>
+                            <td><a href="/Customers/EditAuthDomain?domainID=@domain.id">Edit Domain</a> | <a href="/Customers/ViewAuthAreas?domainID=@domain.id">View Pages/Areas</a></td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+
+
+       <script>
+           $(document).ready(function () {
+
+               var dt = $('table').dataTable({
+                   "bJQueryUI": true
+               });
+           });
+       </script>
+

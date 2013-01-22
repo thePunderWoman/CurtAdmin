@@ -1,0 +1,62 @@
+﻿@using CurtAdmin
+@{
+    ViewBag.Title = "ViewAuthAreas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    AuthDomain domain = ViewBag.domain ?? new AuthDomain();
+    List<AuthArea> areas = ViewBag.areas ?? new List<AuthArea>();
+    string success = ViewBag.success ?? "";
+    string error = ViewBag.error ?? "";
+}
+
+<style>
+    #addArea
+    {
+        float:right;
+    }
+
+</style>
+
+@if (success != "") {
+    <p style="color:#12990c">@success</p>
+}
+@if (error != "") {
+    <p style="color:#a30f0f">@error</p>
+}
+
+<h2>View All Authorization Areas for @domain.name </h2>
+<a href="/Customers/AddAuthArea?domainID=@domain.id" title="Add Area" id="addArea" class="button">Add Area</a>
+<br /><br /><br />
+   <div style="width: 100%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Domain ID</th> 
+                    <th>Path</th>
+                    <th>Full Path</th>
+                    <th>Modify</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(AuthArea area in areas){
+                        <tr id="area:@area.id" title="Domain">
+                            <td>@area.name</td>
+                            <td>@area.id</td>
+                            <td>@area.path</td>
+                            <td>@(area.AuthDomain.url)@area.path</td>
+                            <td><a href="/Customers/EditAuthArea?areaID=@area.id">Edit Area</a></td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+
+
+       <script>
+           $(document).ready(function () {
+
+               var dt = $('table').dataTable({
+                   "bJQueryUI": true
+               });
+           });
+       </script>
