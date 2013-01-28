@@ -88,7 +88,7 @@ namespace CurtAdmin.Controllers {
             int websiteID = (Request.Form["website"] != "") ? Convert.ToInt32(Request.Form["website"]) : 0;
             DateTime startDate = Convert.ToDateTime(Request.Form["startDate"]);
             DateTime endDate = Convert.ToDateTime(Request.Form["endDate"]);
-            string url = Request.Form["url"] ?? null;
+            string url = Request.Form["url"] ?? "";
             string content = String.IsNullOrWhiteSpace(Request.Form["page_content"]) ? null : Request.Form["page_content"];
             string linkClasses = String.IsNullOrWhiteSpace(Request.Form["linkClasses"]) ? null : Request.Form["linkClasses"];
             string conversionID = String.IsNullOrWhiteSpace(Request.Form["conversionID"]) ? null : Request.Form["conversionID"];
@@ -99,7 +99,7 @@ namespace CurtAdmin.Controllers {
 
             LandingPage landingPage = new LandingPage();
 
-            if (name == null || websiteID == 0 || url == null) {
+            if (name == null || websiteID == 0) {
                 error = "Please fill out all required fields";
                 if (id == 0) {
                     return RedirectToAction("Add");

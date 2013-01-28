@@ -569,6 +569,12 @@ namespace CurtAdmin.Controllers {
             return GetVehicleParts(vehicleID, baseVehicleID, submodelID);
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string MapPart(int id) {
+            List<Vehicles> unmapped = new ACES().MapPart(id);
+            return JsonConvert.SerializeObject(unmapped);
+        }
+
     }
 
     

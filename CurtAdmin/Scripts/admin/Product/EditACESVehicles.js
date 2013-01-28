@@ -5,6 +5,36 @@ $(function () {
 
     $('div.configs').show();
 
+    $(document).on('click', '.mapPart', function (e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        if (confirm('This will populate the ACES vehicles with best guesses from the non-aces vehicles mapped to this part. Are you sure?')) {
+            $.post('/ACES/MapPart/' + id, function (data) {
+                getPartVehicles();
+                if (data.length > 0) {
+                    var unmerged = "<p>The Following vehicles did not map:</p><ul>";
+                    $(data).each(function (i, obj) {
+                        unmerged += "<li>" + obj.Year.year1 + " " + obj.Make.make1 + " " + obj.Model.model1 + " " + obj.Style.style1 + "</li>";
+                    });
+                    unmerged += "</ul>";
+                    $("#config-dialog").append(unmerged);
+                    $("#config-dialog").dialog({
+                        modal: true,
+                        title: "Vehicles That Failed to Map",
+                        width: 'auto',
+                        height: 'auto',
+                        buttons: {
+                            "OK": function () {
+                                $(this).dialog("close");
+                                $("#config-dialog").empty();
+                            }
+                        }
+                    });
+                }
+            }, "json");
+        }
+    });
+
     $(document).on('click', '.removeBV,.removeSubmodel', function (e) {
         e.preventDefault();
         var href = $(this).attr('href');

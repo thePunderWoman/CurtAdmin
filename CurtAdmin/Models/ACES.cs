@@ -2323,6 +2323,100 @@ namespace CurtAdmin.Models {
             db.SubmitChanges();
             return updateCount;
         }
+
+        public List<Vehicles> MapPart(int id) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+            List<VehiclePart> vehicleParts = new List<VehiclePart>();
+            vehicleParts = db.VehicleParts.Where(x => x.partID.Equals(id)).ToList();
+            List<Vehicles> unmapped = new List<Vehicles>();
+            foreach (VehiclePart vpart in vehicleParts) {
+                try {
+                    int yearID = Convert.ToInt32(vpart.Vehicles.Year.year1);
+                    vcdb_Year year = db.vcdb_Years.Where(x => x.YearID.Equals(yearID)).First();
+
+                    string makename = vpart.Vehicles.Make.make1;
+                    AAIA.Make aaiamake = vcdb.Makes.Where(x => x.MakeName.Trim().ToLower().Equals(makename.Trim().ToLower())).First();
+                    vcdb_Make make = db.vcdb_Makes.Where(x => x.AAIAMakeID.Equals(aaiamake.MakeID)).First();
+
+                    string modelname = vpart.Vehicles.Model.model1;
+                    AAIA.Model aaiamodel = vcdb.Models.Where(x => x.ModelName.Trim().ToLower().Equals(modelname.Trim().ToLower())).First();
+                    vcdb_Model model = db.vcdb_Models.Where(x => x.AAIAModelID.Equals(aaiamodel.ModelID)).First();
+
+                    // get the basevehicle
+                    BaseVehicle bv = db.BaseVehicles.Where(x => x.YearID.Equals(year.YearID) && x.MakeID.Equals(make.ID) && x.ModelID.Equals(model.ID)).FirstOrDefault();
+                    if (bv == null || bv.ID == 0) {
+                        AAIA.BaseVehicle aaiabv = vcdb.BaseVehicles.Where(x => x.YearID.Equals(year.YearID) && x.MakeID.Equals(make.AAIAMakeID) && x.ModelID.Equals(model.AAIAModelID)).First();
+                        bv = new BaseVehicle {
+                            AAIABaseVehicleID = aaiabv.BaseVehicleID,
+                            YearID = year.YearID,
+                            MakeID = make.ID,
+                            ModelID = model.ID
+                        };
+                        db.BaseVehicles.InsertOnSubmit(bv);
+                        db.SubmitChanges();
+                    }
+                    
+                    // get the submodel if it exists
+                    Submodel submodel = new Submodel();
+                    string stylename = vpart.Vehicles.Style.style1;
+                    AAIA.Submodel aaiasubmodel = vcdb.Vehicles.Where(x => x.BaseVehicleID.Equals(bv.AAIABaseVehicleID)).Select(x => x.Submodel).Where(x => x.SubmodelName.Trim().ToLower().Equals(stylename.Trim().ToLower())).FirstOrDefault();
+                    if (aaiasubmodel != null && aaiasubmodel.SubmodelID > 0) {
+                        submodel = db.Submodels.Where(x => x.AAIASubmodelID.Equals(aaiasubmodel.SubmodelID)).FirstOrDefault();
+                        if(submodel == null || submodel.ID == 0) {
+                            // submodel is not yet in the data
+                            submodel = new Submodel {
+                                AAIASubmodelID = aaiasubmodel.SubmodelID,
+                                SubmodelName = aaiasubmodel.SubmodelName.Trim(),
+                            };
+                            db.Submodels.InsertOnSubmit(submodel);
+                            db.SubmitChanges();
+                        }
+                    }
+
+                    // get the vehicle if it exists
+                    vcdb_Vehicle vehicle = db.vcdb_Vehicles.Where(x => x.BaseVehicleID.Equals(bv.ID) && x.SubModelID.Equals(((submodel == null || submodel.ID == 0) ? null : (int?)submodel.ID)) && x.ConfigID.Equals(null)).FirstOrDefault();
+                    if(vehicle == null || vehicle.ID == 0) {
+                        vehicle = new vcdb_Vehicle {
+                            BaseVehicleID = bv.ID,
+                            SubModelID = (submodel == null || submodel.ID == 0) ? null : (int?)submodel.ID
+                        };
+                        db.vcdb_Vehicles.InsertOnSubmit(vehicle);
+                        db.SubmitChanges();
+                    }
+
+                    vcdb_VehiclePart vp = new vcdb_VehiclePart();
+                    vp = db.vcdb_VehicleParts.Where(x => x.VehicleID.Equals(vehicle.ID) && x.PartNumber.Equals(vpart.partID)).FirstOrDefault();
+                    if(vp == null || vp.ID == 0) {
+                        vp = new vcdb_VehiclePart {
+                            PartNumber = vpart.partID,
+                            VehicleID = vehicle.ID
+                        };
+                        db.vcdb_VehicleParts.InsertOnSubmit(vp);
+                        db.SubmitChanges();
+                    }
+
+                    List<Note> notes = new List<Note>();
+                    foreach (VehiclePartAttribute vpa in vpart.VehiclePartAttributes) {
+                        Note note = new Note {
+                            note1 = vpa.field + ": " + vpa.value,
+                            vehiclePartID = vp.ID
+                        };
+                        if (!vp.Notes.Any(x => x.note1.Equals(note.note1))) {
+                            notes.Add(note);
+                        }
+                    }
+                    if (notes.Count > 0) {
+                        db.Notes.InsertAllOnSubmit(notes);
+                        db.SubmitChanges();
+                    }
+
+                } catch {
+                    unmapped.Add(vpart.Vehicles);
+                }
+            }
+            return unmapped;
+        }
     }
 
     public class ConfigAttributeComparer : IEqualityComparer<ConfigAttribute> {
