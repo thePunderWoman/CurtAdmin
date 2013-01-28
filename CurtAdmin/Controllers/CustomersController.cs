@@ -341,6 +341,35 @@ namespace CurtAdmin.Controllers {
             }
         }
 
+
+        // edit authDomain will go here
+        public ActionResult EditAuthDomain(string domainID) {
+            ViewBag.error = "";
+            CurtDevDataContext db = new CurtDevDataContext();
+            ViewBag.domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditAuthDomain(string domainID, string url, string name) {
+            ViewBag.error = "";
+            if (url.Length == 0 || name.Length == 0) {
+                ViewBag.error = "Name and URL are both required.";
+                return View();
+            } else {
+                CurtDevDataContext db = new CurtDevDataContext();
+                AuthDomain domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
+                domain.url = url;
+                domain.name = name;
+                db.SubmitChanges();
+                ViewBag.success = "Changes were saved.";
+                ViewBag.domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
+            }
+            return View();
+        }
+
+
+
         public ActionResult EditAuthArea(string areaID) {
             ViewBag.error = "";
             CurtDevDataContext db = new CurtDevDataContext();

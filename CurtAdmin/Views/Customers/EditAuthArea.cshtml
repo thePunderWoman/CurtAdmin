@@ -5,6 +5,19 @@
     AuthArea area = ViewBag.area ?? new AuthArea();
     string success = ViewBag.success ?? "";
 }
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px; 
+        margin-top:10px; 
+    }
+</style>
+
+<div id="breadcrumbs">
+    <a href="/Customers">Customers</a> > <a href="/Customers/ViewAuthModules">View Authorization Domain Modules</a> > <a href="/Customers/ViewAuthAreas?domainID=@area.DomainID">View Authorization Areas</a> > Edit Authorization Area
+</div>
+
 <div id="content_container">
     <h2>Edit Authorization Area: @area.name</h2>
 

@@ -4,6 +4,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     AuthDomain domain = ViewBag.domain ?? new AuthDomain();
 }
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px; 
+        margin-top:10px; 
+    }
+</style>
+
+<div id="breadcrumbs">
+    <a href="/Customers">Customers</a> > <a href="/Customers/ViewAuthModules">View Authorization Domain Modules</a> > <a href="/Customers/ViewAuthAreas?domainID=@domain.id">View Authorization Areas</a> > Edit Authorization Area
+</div>
+
 <div id="content_container">
     <h2>Add Authorization Area for @domain.name </h2>
 

@@ -550,6 +550,7 @@
     <Content Include="Views\Customers\AddAuthDomain.cshtml" />
     <Content Include="Views\Customers\AddAuthArea.cshtml" />
     <Content Include="Views\Customers\EditAuthArea.cshtml" />
+    <Content Include="Views\Customers\EditAuthDomain.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,45 @@
+﻿@using CurtAdmin;
+@{
+    ViewBag.Title = "EditAuthDomain";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    AuthDomain domain = ViewBag.domain ?? new AuthDomain();
+    string success = ViewBag.success ?? "";
+}
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px; 
+        margin-top:10px; 
+    }
+</style>
+
+<div id="breadcrumbs">
+    <a href="/Customers">Customers</a> > <a href="/Customers/ViewAuthModules">View Authorization Domain Modules</a> > Edit Domain
+</div>
+
+<div id="content_container">
+    <h2>Edit Authorization Domain: @domain.name</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    @if (success != "") {
+        <p style="color:#12990c">@success</p>
+    }
+
+    <form action="/Customers/EditAuthDomain?domainID=@domain.id" method="post" class="form_left">
+        <label for="name">Name
+            <input type="text" name="name" id="name" placeholder="Example: Dealers Portal" value="@domain.name" required />
+        </label>
+
+        <label for="url">Url:
+            <input type="text" name="url" id="url" placeholder="Example: http://dealers.curtmfg.com" value="@domain.url" required />
+        </label>
+        <input type="hidden" name="domainID" id="domainID" value="@domain.id" />
+
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
+        </div>
+    </form>
+</div>
