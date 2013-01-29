@@ -445,7 +445,7 @@
       <Association Name="Part_vcdb_VehiclePart" Member="vcdb_VehicleParts" ThisKey="partID" OtherKey="PartNumber" Type="vcdb_VehiclePart" />
       <Association Name="Part_IncludedPart" Member="IncludedParts" ThisKey="partID" OtherKey="partID" Type="IncludedPart" />
       <Association Name="Part_PartGroupPart" Member="PartGroupParts" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="PartGroupPart" />
-      <Association Name="IncludedPart_Part" Member="IncludedPart" ThisKey="partID" OtherKey="includedID" Type="IncludedPart" IsForeignKey="true" />
+      <Association Name="IncludedPart_Part" Member="IncludedPart" AccessModifier="Internal" ThisKey="partID" OtherKey="includedID" Type="IncludedPart" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.IPBlock" Member="IPBlocks">

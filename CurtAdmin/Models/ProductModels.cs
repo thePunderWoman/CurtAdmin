@@ -645,10 +645,7 @@ namespace CurtAdmin.Models {
 
         public static PartGroup GetGroup(int groupID) {
             CurtDevDataContext db = new CurtDevDataContext();
-            PartGroup pg = new PartGroup();
-            try {
-                pg = db.PartGroups.Where(x => x.id.Equals(groupID)).First();
-            } catch { }
+            PartGroup pg = db.PartGroups.Where(x => x.id.Equals(groupID)).FirstOrDefault();
             return pg;
         }
 

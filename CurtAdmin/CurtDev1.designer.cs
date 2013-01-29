@@ -10075,7 +10075,7 @@ namespace CurtAdmin
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IncludedPart_Part", Storage="_IncludedPart", ThisKey="partID", OtherKey="includedID", IsForeignKey=true)]
-		public IncludedPart IncludedPart
+		internal IncludedPart IncludedPart
 		{
 			get
 			{
