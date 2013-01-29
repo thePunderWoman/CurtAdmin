@@ -882,8 +882,8 @@ namespace CurtAdmin.Controllers
 
         [AcceptVerbs(HttpVerbs.Get)]
         public string GetGroup(int groupID) {
-                return JsonConvert.SerializeObject(ProductModels.GetGroup(groupID));
             try {
+                return JsonConvert.SerializeObject(ProductModels.GetGroup(groupID));
             } catch (Exception e) {
                 return "{\"error\":\"" + e.Message + "\"}";
             }
