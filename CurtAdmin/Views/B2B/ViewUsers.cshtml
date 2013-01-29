@@ -54,7 +54,6 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Joined Date</th>
-                <th>B2B User Type</th>
                 <th># of certs completed</th>
                 <th># of tests completed</th>
                 <th>Has Sign</th>
@@ -70,14 +69,6 @@
                     <td>@user.name</td>
                     <td>@user.email</td>
                     <td>@user.join_date</td>
-                    @if (user.isCustomerUser)
-                    {
-                        <td>Customer User</td>
-                    }
-                    else
-                    {
-                        <td><a href="/Customers/Edit/@user.customerID" class="locations">Customer</a></td>
-                    }
                     <td>@user.numCertsCompleted</td>
                     <td>@user.numLessonsCompleted</td>
                     @if(user.hasSign){

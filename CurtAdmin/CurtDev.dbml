@@ -792,8 +792,8 @@
       <Column Name="cust_id" Type="System.Int32" CanBeNull="false" />
       <Column Name="notCustomer" Type="System.Boolean" CanBeNull="false" />
       <Association Name="CustomerUser_CustUserWebProperty" Member="CustUserWebProperties" ThisKey="id" OtherKey="userID" Type="CustUserWebProperty" />
-      <Association Name="CustomerUser_AuthAccess" Member="AuthAccesses" ThisKey="id" OtherKey="userID" Type="AuthAccess" />
       <Association Name="CustomerUser_ApiKey" Member="ApiKeys" ThisKey="id" OtherKey="user_id" Type="ApiKey" />
+      <Association Name="CustomerUser_AuthAccess" Member="AuthAccesses" ThisKey="id" OtherKey="userID" Type="AuthAccess" />
       <Association Name="Customer_CustomerUser" Member="Customer" AccessModifier="Internal" ThisKey="cust_id" OtherKey="cust_id" Type="Customer" IsForeignKey="true" />
     </Type>
   </Table>
@@ -1148,36 +1148,6 @@
       <Association Name="Part_PartGroupPart" Member="Part" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.AuthAccess" Member="AuthAccesses">
-    <Type Name="AuthAccess">
-      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="userID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="DomainID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="AreaID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Association Name="AuthAccess_AuthDomain" Member="AuthDomains" ThisKey="DomainID" OtherKey="id" Type="AuthDomain" />
-      <Association Name="AuthAccess_AuthArea" Member="AuthAreas" ThisKey="AreaID" OtherKey="id" Type="AuthArea" />
-      <Association Name="CustomerUser_AuthAccess" Member="CustomerUser" ThisKey="userID" OtherKey="id" Type="CustomerUser" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.AuthDomains" Member="AuthDomains">
-    <Type Name="AuthDomain">
-      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="url" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="AuthDomain_AuthArea" Member="AuthAreas" ThisKey="id" OtherKey="DomainID" Type="AuthArea" />
-      <Association Name="AuthAccess_AuthDomain" Member="AuthAccess" ThisKey="id" OtherKey="DomainID" Type="AuthAccess" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.AuthAreas" Member="AuthAreas">
-    <Type Name="AuthArea">
-      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="path" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="DomainID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="AuthDomain_AuthArea" Member="AuthDomain" ThisKey="DomainID" OtherKey="id" Type="AuthDomain" IsForeignKey="true" />
-      <Association Name="AuthAccess_AuthArea" Member="AuthAccess" ThisKey="id" OtherKey="AreaID" Type="AuthAccess" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.ApiKey" Member="ApiKeys">
     <Type Name="ApiKey">
       <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -1214,6 +1184,34 @@
       <Column Name="access_level" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="ApiModule_ApiAccess" Member="ApiAccesses" ThisKey="id" OtherKey="module_id" Type="ApiAccess" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AuthAccess" Member="AuthAccesses">
+    <Type Name="AuthAccess">
+      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="userID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="AreaID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="AuthAccess_AuthArea" Member="AuthAreas" ThisKey="AreaID" OtherKey="id" Type="AuthArea" />
+      <Association Name="CustomerUser_AuthAccess" Member="CustomerUser" ThisKey="userID" OtherKey="id" Type="CustomerUser" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AuthAreas" Member="AuthAreas">
+    <Type Name="AuthArea">
+      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="path" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DomainID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="parentAreaID" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="AuthAccess_AuthArea" Member="AuthAccess" ThisKey="id" OtherKey="AreaID" Type="AuthAccess" IsForeignKey="true" />
+      <Association Name="AuthDomain_AuthArea" Member="AuthDomain" ThisKey="DomainID" OtherKey="id" Type="AuthDomain" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AuthDomains" Member="AuthDomains">
+    <Type Name="AuthDomain">
+      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="AuthDomain_AuthArea" Member="AuthAreas" ThisKey="id" OtherKey="DomainID" Type="AuthArea" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

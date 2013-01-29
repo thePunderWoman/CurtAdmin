@@ -198,19 +198,14 @@ namespace CurtAdmin.Models {
         public static List<AuthArea> getAllAuthAreas(string domainID) {
 
             CurtDevDataContext db = new CurtDevDataContext();
-            List<AuthArea> allAreas = db.AuthAreas.Where(x => x.DomainID.Equals(new Guid(domainID))).ToList<AuthArea>();
+            List<AuthArea> allAreas = db.AuthAreas.Where(x => x.DomainID == new Guid(domainID)).ToList<AuthArea>();
             return allAreas;
         }
 
         public static List<AuthArea> getSelectedAreas(Guid userID, string domainID) {
             CurtDevDataContext db = new CurtDevDataContext();
             List<AuthArea> areas = new List<AuthArea>();
-
-            areas = (from a in db.AuthAreas
-                     join aa in db.AuthAccesses on a.DomainID equals aa.DomainID
-                     where aa.userID.Equals(userID) && !(aa.AreaID.Equals(Guid.Empty))
-                     orderby a.name
-                     select a).ToList<AuthArea>();
+            areas = db.AuthAreas.Where(x => x.AuthAccess.userID == userID && x.DomainID.Equals(new Guid(domainID))).ToList<AuthArea>();
             return areas;
         }
 
@@ -225,11 +220,11 @@ namespace CurtAdmin.Models {
             CurtDevDataContext db = new CurtDevDataContext();
             List<AuthDomain> domains = new List<AuthDomain>();
 
-            domains = (from d in db.AuthDomains
-                       join aa in db.AuthAccesses on d.id equals aa.DomainID
-                       where aa.userID.Equals(userID) && aa.AreaID.Equals(Guid.Empty)
-                       orderby d.name
-                       select d).ToList<AuthDomain>();
+            //domains = (from d in db.AuthDomains
+             //          join aa in db.AuthAccesses on d.id equals aa.DomainID
+             //          where aa.userID.Equals(userID) && aa.AreaID.Equals(Guid.Empty)
+             //          orderby d.name
+             //          select d).ToList<AuthDomain>();
             return domains;
         }
 
@@ -238,7 +233,7 @@ namespace CurtAdmin.Models {
             if (areaID == "") {
                 // domain level permission
                 // attempt to find  authAccess record, if one is found, delete it, if one is not found, create one.
-                AuthAccess authRecord = db.AuthAccesses.Where(x => x.userID == userID && x.DomainID.Equals(new Guid(domainID)) && x.AreaID.Equals(Guid.Empty)).FirstOrDefault<AuthAccess>();
+                AuthAccess authRecord = db.AuthAccesses.Where(x => x.userID == userID && x.AreaID.Equals(Guid.Empty)).FirstOrDefault<AuthAccess>();
                 if (authRecord != null) {
                     // record exists so delete it.
                     db.AuthAccesses.DeleteOnSubmit(authRecord);
@@ -248,7 +243,6 @@ namespace CurtAdmin.Models {
                     AuthAccess newAuthAccess = new AuthAccess();
                     newAuthAccess.id = Guid.NewGuid();
                     newAuthAccess.userID = userID;
-                    newAuthAccess.DomainID = new Guid(domainID);
                     newAuthAccess.AreaID = Guid.Empty;
                     db.AuthAccesses.InsertOnSubmit(newAuthAccess);
                     db.SubmitChanges();
@@ -258,7 +252,7 @@ namespace CurtAdmin.Models {
                 // area level permission
 
                 // attempt to find  authAccess record, if one is found, delete it, if one is not found, create one.
-                AuthAccess authRecord = db.AuthAccesses.Where(x => x.userID == userID && x.DomainID.Equals(new Guid(domainID)) && x.AreaID.Equals(new Guid(areaID))).FirstOrDefault<AuthAccess>();
+                AuthAccess authRecord = db.AuthAccesses.Where(x => x.userID == userID && x.AreaID.Equals(new Guid(areaID))).FirstOrDefault<AuthAccess>();
                 if (authRecord != null) {
                     // record exists so delete it.
                     db.AuthAccesses.DeleteOnSubmit(authRecord);
@@ -268,7 +262,6 @@ namespace CurtAdmin.Models {
                     AuthAccess newAuthAccess = new AuthAccess();
                     newAuthAccess.id = Guid.NewGuid();
                     newAuthAccess.userID = userID;
-                    newAuthAccess.DomainID = new Guid(domainID);
                     newAuthAccess.AreaID = new Guid(areaID);
                     db.AuthAccesses.InsertOnSubmit(newAuthAccess);
                     db.SubmitChanges();
@@ -286,6 +279,44 @@ namespace CurtAdmin.Models {
         public static AuthDomain getDomainByURL(string url) {
             CurtDevDataContext db = new CurtDevDataContext();
             return db.AuthDomains.Where(x => x.url.Equals(url)).FirstOrDefault<AuthDomain>();
+        }
+
+    }
+
+
+}
+
+namespace CurtAdmin {
+
+    public partial class AuthArea {
+
+        public List<AuthArea> getBreadCrumbs() {
+            CurtDevDataContext db = new CurtDevDataContext();
+
+            List<AuthArea> areas = new List<AuthArea>();
+
+            areas.Add(db.AuthAreas.Where(x => x.id == this.id).FirstOrDefault<AuthArea>());
+            bool moreAreas = (areas[0].parentAreaID == null) ? false : true; // check to see if the inital area has a parent or not.
+            while (moreAreas) {
+                // grab the last area in the areas array and grab its parent area
+                areas.Add(db.AuthAreas.Where(x => x.id == areas[areas.Count() - 1].parentAreaID).FirstOrDefault<AuthArea>());
+                // if the last area (the previous parent area) area is not null then continue
+                if (areas[areas.Count() - 1].parentAreaID == null) {
+                    moreAreas = false;
+                }
+            }
+            // reverse the order for ease of display ( /Parent/Child )
+            areas.Reverse();
+            return areas;
+        }
+
+        public string getBreadCrumbsPath() {
+            List<AuthArea> bc = getBreadCrumbs();
+            string display = this.AuthDomain.url + "/";
+            foreach(AuthArea a in bc){
+                            display += a.path + "/";
+                        }
+            return display;
         }
 
     }

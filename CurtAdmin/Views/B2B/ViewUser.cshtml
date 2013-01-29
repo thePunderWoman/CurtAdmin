@@ -69,7 +69,7 @@
                     <td>@(compCert.B2BCertificates.FirstOrDefault<B2BCertificate>().title)</td>
                     <td>@compCert.date_completed</td>
                     <td class="center">
-                        <input type="checkbox" name="hasPlaque" title="@B2BUser.custID" id="hasPlaque:@compCert.certID" class="hasPlaque" value="1" @((compCert.hasPlaque) ? "checked" : "") />
+                        <input type="checkbox" name="hasPlaque" title="@B2BUser.userID" id="hasPlaque:@compCert.certID" class="hasPlaque" value="1" @((compCert.hasPlaque) ? "checked" : "") />
                     </td>
                     @if (compCert.sentPlaqueEmail)
                     {
@@ -101,15 +101,15 @@
         $('.hasPlaque').live('click', function () {
             
             var certID = $(this).attr('id').split(':')[1];
-            var custID = $(this).attr('title');
-            set_hasPlaque(certID, custID);
+            var userID = $(this).attr('title');
+            set_hasPlaque(certID, userID);
         });
 
     });
 
-    function set_hasPlaque(certID, custID) {
+    function set_hasPlaque(certID, userID) {
         
-        var path = "/B2B/SetPlaqueStatus/" + certID + "?custID=" + custID;
+        var path = "/B2B/SetPlaqueStatus/" + certID + "?userID=" + userID;
         $.get(path, function (response) {
             if (response.length == 0) {
                 

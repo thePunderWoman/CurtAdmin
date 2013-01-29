@@ -271,9 +271,9 @@ namespace CurtAdmin.Controllers {
             }
 
             CurtDevDataContext db = new CurtDevDataContext();
-            List<AuthArea> areas = db.AuthAreas.Where(x => x.DomainID == new Guid(domainID)).ToList<AuthArea>();
-            ViewBag.areas = areas;
-            ViewBag.domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
+            AuthDomain domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
+            ViewBag.domain = domain;
+            ViewBag.areas = domain.AuthAreas.ToList<AuthArea>();
             return View();
         }
 

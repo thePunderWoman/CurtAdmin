@@ -708,8 +708,8 @@ namespace CurtAdmin.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public string SetPlaqueStatus(int id, string custID) {
-            return B2B.SetPlaqueStatus(id, custID);
+        public string SetPlaqueStatus(int id, string userID) {
+            return B2B.SetPlaqueStatus(id, userID);
         }
     }
 }
