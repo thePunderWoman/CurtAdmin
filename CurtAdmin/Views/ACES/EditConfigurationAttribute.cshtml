@@ -41,7 +41,7 @@
                 Configuration Type
                 <select name="configtypeid">
                     @foreach (CurtAdmin.ConfigAttributeType type in configtypes) {
-                        <option value="@type.ID" @((attribute.ConfigAttributeTypeID == type.ID) ? "selected" : "")>@type.name</option>
+                        <option value="@type.ID" @((attribute.ConfigAttributeTypeID == type.ID) ? "selected" : "")>@type.name @((type.AcesTypeID != null) ? "(ACES)" : "")</option>
                     }
                 </select>
             </label>
