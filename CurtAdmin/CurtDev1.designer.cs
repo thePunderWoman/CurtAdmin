@@ -25094,6 +25094,8 @@ namespace CurtAdmin
 		
 		private System.Guid _AreaID;
 		
+		private System.DateTime _dateAdded;
+		
 		private EntitySet<AuthArea> _AuthAreas;
 		
 		private EntityRef<CustomerUser> _CustomerUser;
@@ -25108,6 +25110,8 @@ namespace CurtAdmin
     partial void OnuserIDChanged();
     partial void OnAreaIDChanging(System.Guid value);
     partial void OnAreaIDChanged();
+    partial void OndateAddedChanging(System.DateTime value);
+    partial void OndateAddedChanged();
     #endregion
 		
 		public AuthAccess()
@@ -25177,6 +25181,26 @@ namespace CurtAdmin
 					this._AreaID = value;
 					this.SendPropertyChanged("AreaID");
 					this.OnAreaIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dateAdded")]
+		public System.DateTime dateAdded
+		{
+			get
+			{
+				return this._dateAdded;
+			}
+			set
+			{
+				if ((this._dateAdded != value))
+				{
+					this.OndateAddedChanging(value);
+					this.SendPropertyChanging();
+					this._dateAdded = value;
+					this.SendPropertyChanged("dateAdded");
+					this.OndateAddedChanged();
 				}
 			}
 		}

@@ -1191,6 +1191,7 @@
       <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="userID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="AreaID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="dateAdded" Type="System.DateTime" CanBeNull="false" />
       <Association Name="AuthAccess_AuthArea" Member="AuthAreas" ThisKey="AreaID" OtherKey="id" Type="AuthArea" />
       <Association Name="CustomerUser_AuthAccess" Member="CustomerUser" ThisKey="userID" OtherKey="id" Type="CustomerUser" IsForeignKey="true" />
     </Type>
