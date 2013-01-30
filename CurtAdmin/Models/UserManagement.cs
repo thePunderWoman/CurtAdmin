@@ -296,12 +296,12 @@ namespace CurtAdmin {
             List<AuthArea> areas = new List<AuthArea>();
 
             areas.Add(db.AuthAreas.Where(x => x.id == this.id).FirstOrDefault<AuthArea>());
-            bool moreAreas = (areas[0].parentAreaID == null) ? false : true; // check to see if the inital area has a parent or not.
+            bool moreAreas = (areas[0].parentAreaID == Guid.Empty) ? false : true; // check to see if the inital area has a parent or not.
             while (moreAreas) {
                 // grab the last area in the areas array and grab its parent area
                 areas.Add(db.AuthAreas.Where(x => x.id == areas[areas.Count() - 1].parentAreaID).FirstOrDefault<AuthArea>());
                 // if the last area (the previous parent area) area is not null then continue
-                if (areas[areas.Count() - 1].parentAreaID == null) {
+                if (areas[areas.Count() - 1].parentAreaID == Guid.Empty) {
                     moreAreas = false;
                 }
             }
@@ -313,9 +313,9 @@ namespace CurtAdmin {
         public string getBreadCrumbsPath() {
             List<AuthArea> bc = getBreadCrumbs();
             string display = this.AuthDomain.url + "/";
-            foreach(AuthArea a in bc){
-                            display += a.path + "/";
-                        }
+            foreach (AuthArea a in bc) {
+                display += a.path + "/";
+            }
             return display;
         }
 

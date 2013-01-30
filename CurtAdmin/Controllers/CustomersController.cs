@@ -316,20 +316,27 @@ namespace CurtAdmin.Controllers {
         }
 
         [HttpPost]
-        public ActionResult AddAuthArea(string domainID,string path, string name ) {
+        public ActionResult AddAuthArea(string domainID,string path, string name, string parent ) {
             ViewBag.error = "";
+            CurtDevDataContext db = new CurtDevDataContext();
+            ViewBag.domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
             if (path.Length == 0 || name.Length == 0) {
                 ViewBag.error = "Name and Path are both required.";
                 return View();
             } else {
-                CurtDevDataContext db = new CurtDevDataContext();
-                AuthArea areaCheck = db.AuthAreas.Where(x => x.DomainID == new Guid(domainID) && x.path == path).FirstOrDefault<AuthArea>();
+                AuthArea areaCheck = db.AuthAreas.Where(x => x.DomainID == new Guid(domainID) && x.path == path && x.parentAreaID == new Guid(parent)).FirstOrDefault<AuthArea>();
                 if (areaCheck == null) {
                     AuthArea newArea = new AuthArea();
                     newArea.id = Guid.NewGuid();
                     newArea.DomainID = new Guid(domainID);
                     newArea.name = name;
                     newArea.path = path;
+                    if(new Guid(parent) != Guid.Empty){
+                        newArea.parentAreaID = new Guid(parent);
+                    }else{
+                        newArea.parentAreaID = Guid.Empty;
+                    }
+                    
                     db.AuthAreas.InsertOnSubmit(newArea);
                     db.SubmitChanges();
                     return RedirectToAction("ViewAuthAreas", "Customers", new { domainID= domainID, success = "Area: " + name + " was successfully added. " });
@@ -373,13 +380,14 @@ namespace CurtAdmin.Controllers {
         public ActionResult EditAuthArea(string areaID) {
             ViewBag.error = "";
             CurtDevDataContext db = new CurtDevDataContext();
-            ViewBag.area = db.AuthAreas.Where(x => x.id == new Guid(areaID)).FirstOrDefault<AuthArea>();
-
+            AuthArea area = db.AuthAreas.Where(x => x.id == new Guid(areaID)).FirstOrDefault<AuthArea>();
+            ViewBag.area = area;
+            ViewBag.domain = area.AuthDomain;
             return View();
         }
 
         [HttpPost]
-        public ActionResult EditAuthArea(string areaID, string path, string name){
+        public ActionResult EditAuthArea(string areaID, string path, string name, string parent){
             ViewBag.error = "";
             if (path.Length == 0 || name.Length == 0) {
                 ViewBag.error = "Name and Path are both required.";
@@ -389,6 +397,7 @@ namespace CurtAdmin.Controllers {
                 AuthArea area = db.AuthAreas.Where(x => x.id == new Guid(areaID)).FirstOrDefault<AuthArea>();
                 area.path = path;
                 area.name = name;
+                area.parentAreaID = new Guid(parent);
                 db.SubmitChanges();
                 ViewBag.success = "Changes were saved.";
                 ViewBag.area = db.AuthAreas.Where(x => x.id == new Guid(areaID)).FirstOrDefault<AuthArea>();

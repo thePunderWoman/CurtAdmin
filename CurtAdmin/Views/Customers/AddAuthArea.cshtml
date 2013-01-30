@@ -35,12 +35,11 @@
 
         <label for="parent">Parent Area
             <select name="parent" id="parent">
-                <option value="" selected>No Parent</option>
+                <option value="@(Guid.Empty)" selected>No Parent</option>
                 @foreach(AuthArea area in domain.AuthAreas){
                     <option value="@area.id">@area.getBreadCrumbsPath()</option>
                 }
             </select>
-
         </label>
 
         <div id="buttons">

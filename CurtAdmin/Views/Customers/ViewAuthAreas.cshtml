@@ -53,7 +53,7 @@
                             <td>@area.name</td>
                             <td>@area.id</td>
                             <td>@area.path</td>
-                            <td>@(area.AuthDomain.url)@area.path</td>
+                            <td>@(area.getBreadCrumbsPath())</td>
                             <td><a href="/Customers/EditAuthArea?areaID=@area.id">Edit Area</a></td>
                         </tr>
                 }

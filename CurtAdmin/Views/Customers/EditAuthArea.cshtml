@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     AuthArea area = ViewBag.area ?? new AuthArea();
     string success = ViewBag.success ?? "";
+    AuthDomain domain = ViewBag.domain ?? new AuthDomain();
+    
 }
 <style>
     #breadcrumbs
@@ -37,6 +39,17 @@
             <input type="text" name="path" id="path" placeholder="Example: /B2B/" value="@area.path" required />
         </label>
         <input type="hidden" name="areaID" id="areaID" value="@area.id" />
+
+        <label for="parent">Parent Area
+            <select name="parent" id="parent">
+                <option value="@(Guid.Empty)">No Parent</option>
+                @foreach(AuthArea a in domain.AuthAreas){
+                    if (a.id != area.id) {
+                        <option value="@a.id" @((a.id == area.parentAreaID) ? "selected" : "")>@a.getBreadCrumbsPath()</option>
+                    }
+                }
+            </select>
+        </label>
 
         <div id="buttons">
             <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" />
