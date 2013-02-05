@@ -36,7 +36,7 @@
         </label>
 
         <label for="path">Path:
-            <input type="text" name="path" id="path" placeholder="Example: /B2B/" value="@area.path" required />
+            <input type="text" name="path" id="path" placeholder="Example: /B2B/" value="@area.path" />
         </label>
         <input type="hidden" name="areaID" id="areaID" value="@area.id" />
 
@@ -44,7 +44,7 @@
             <select name="parent" id="parent">
                 <option value="@(Guid.Empty)">No Parent</option>
                 @foreach(AuthArea a in domain.AuthAreas){
-                    if (a.id != area.id) {
+                    if (a.id != area.id && area.path != "") {
                         <option value="@a.id" @((a.id == area.parentAreaID) ? "selected" : "")>@a.getBreadCrumbsPath()</option>
                     }
                 }

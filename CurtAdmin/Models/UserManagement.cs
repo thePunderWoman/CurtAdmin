@@ -314,7 +314,11 @@ namespace CurtAdmin {
             List<AuthArea> bc = getBreadCrumbs();
             string display = this.AuthDomain.url + "/";
             foreach (AuthArea a in bc) {
-                display += a.path + "/";
+                if (a.path != "") {
+                    display += a.path + "/";
+                } else {
+                    display += a.path;
+                }
             }
             return display;
         }

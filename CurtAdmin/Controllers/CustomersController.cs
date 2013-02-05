@@ -320,8 +320,8 @@ namespace CurtAdmin.Controllers {
             ViewBag.error = "";
             CurtDevDataContext db = new CurtDevDataContext();
             ViewBag.domain = db.AuthDomains.Where(x => x.id == new Guid(domainID)).FirstOrDefault<AuthDomain>();
-            if (path.Length == 0 || name.Length == 0) {
-                ViewBag.error = "Name and Path are both required.";
+            if (name.Length == 0) {
+                ViewBag.error = "Name is required.";
                 return View();
             } else {
                 AuthArea areaCheck = db.AuthAreas.Where(x => x.DomainID == new Guid(domainID) && x.path == path && x.parentAreaID == new Guid(parent)).FirstOrDefault<AuthArea>();
@@ -389,7 +389,7 @@ namespace CurtAdmin.Controllers {
         [HttpPost]
         public ActionResult EditAuthArea(string areaID, string path, string name, string parent){
             ViewBag.error = "";
-            if (path.Length == 0 || name.Length == 0) {
+            if (name.Length == 0) {
                 ViewBag.error = "Name and Path are both required.";
                 return View();
             } else {
