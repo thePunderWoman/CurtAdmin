@@ -588,6 +588,7 @@
   <ItemGroup>
     <None Include="CurtDev.dbml.layout">
       <DependentUpon>CurtDev.dbml</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <Content Include="DocsLinq.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>

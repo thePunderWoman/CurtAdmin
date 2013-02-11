@@ -5,6 +5,14 @@
     List<CurtAdmin.WebProperty> webProperties = ViewBag.webProperties ?? new List<CurtAdmin.WebProperty>();
 }
 
+<style>
+    #dlCSV
+    {
+        float:right;
+    }
+
+</style>
+
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 
 <div id="content_container">
@@ -16,7 +24,8 @@
             <li><a href="#" title="red" class="searchByColor" style="color:red;">Red:</a>0 Days left</li>    
         </ul>
     <p><em><strong>Tip:</strong> You can filter based on color by typing in the color in the search bar.</em></p>
-        
+        <a href="/Customers/exportWebProps" title="Download CSV" id="dlCSV" class="button">Export Data</a>
+<br /><br /><br />
     <div style="width: 100%;margin:auto">
         <table style="width: 100% !important">
             <thead>

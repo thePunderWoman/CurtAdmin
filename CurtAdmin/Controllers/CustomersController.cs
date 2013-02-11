@@ -249,6 +249,39 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public FileContentResult exportWebProps() {
+            string csv = "";
+            string seperator = ",";
+            try {
+                CurtDevDataContext db = new CurtDevDataContext();
+                List<WebProperty> webProperties = new List<WebProperty>();
+                webProperties = db.WebProperties.ToList<WebProperty>();
+
+
+                csv = "Name, URL, Seller ID, Type, Email, CustomerID, badgeID, Date Added, Requested Date, Approved Pending, Pending Date, Officially Approved, Rejected";
+                csv += Environment.NewLine;
+                foreach (WebProperty wp in webProperties.OrderBy(x=>x.name)) {
+                    csv += wp.name.Replace(",","") + seperator;
+                    csv += wp.url.Replace(",", "") + seperator;
+                    csv += wp.sellerID.Replace(",", "") + seperator;
+                    csv += wp.WebPropertyTypes.type + seperator;
+                    csv += wp.CustUserWebProperty.CustomerUser.email + seperator;
+                    csv += wp.CustUserWebProperty.CustomerUser.customerID + seperator;
+                    csv += wp.badgeID + seperator;
+                    csv += wp.addedDate + seperator;
+                    csv += wp.requestedDate + seperator;
+                    csv += (wp.isEnabled) ? "Yes" + seperator : "No" + seperator;
+                    csv += wp.isEnabledDate + seperator;
+                    csv += (wp.isFinalApproved) ? "Yes" + seperator : "No" + seperator;
+                    csv += (wp.isDenied) ? "Yes" + seperator : "No" + seperator;
+                    csv += Environment.NewLine;
+                }
+                return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", "WebProperties_" + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year + ".csv");
+            } catch (Exception) {
+                throw new Exception("Could not generate CSV, please try again.");
+            }
+        }
+
         public ActionResult ViewAuthModules(string success = "", string error = "") {
             if (success != "") {
                 ViewBag.success = success;
