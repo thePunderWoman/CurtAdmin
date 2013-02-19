@@ -1,0 +1,61 @@
+﻿@using CurtAdmin;
+@{
+    ViewBag.Title = "View Web Properties' Notes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    WebProperty wp = ViewBag.wp ?? new WebProperty();
+    List<WebPropNote> notes = ViewBag.notes ?? new List<WebPropNote>();
+    string success = ViewBag.success ?? "";
+}
+
+<style>
+    #addWPNote
+    {
+        float:right;
+    }
+
+</style>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+
+<div id="content_container">
+
+
+    <h2>All notes for <strong>@wp.name</strong> - @wp.url</h2>
+    @if (success != "") {
+        <p style="font-weight: bold; color: Green;">@success</p>
+    }
+        <a href="/Customers/addWebPropNote/@wp.id" title="Add Note" id="addWPNote" class="button">Add Note</a>
+<br /><br /><br />
+    <div style="width: 100%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Note</th>
+                    <th>Date Added</th>
+                    <th>Modify</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (WebPropNote note in notes) {
+                    <tr id="note:@note.id">
+                        <td>@note.text</td>
+                        <td>@note.dateAdded</td>
+                        <td><a href="/Customers/EditWebPropNote/@note.id">Edit note</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var dt = $('table').dataTable({
+            "bJQueryUI": true,
+            "bSort": false
+        });
+
+
+    });
+
+
+</script>

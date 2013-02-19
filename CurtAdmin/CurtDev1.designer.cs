@@ -363,6 +363,9 @@ namespace CurtAdmin
     partial void InsertAuthDomain(AuthDomain instance);
     partial void UpdateAuthDomain(AuthDomain instance);
     partial void DeleteAuthDomain(AuthDomain instance);
+    partial void InsertWebPropNote(WebPropNote instance);
+    partial void UpdateWebPropNote(WebPropNote instance);
+    partial void DeleteWebPropNote(WebPropNote instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1296,6 +1299,14 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<AuthDomain>();
+			}
+		}
+		
+		public System.Data.Linq.Table<WebPropNote> WebPropNotes
+		{
+			get
+			{
+				return this.GetTable<WebPropNote>();
 			}
 		}
 		
@@ -21839,6 +21850,8 @@ namespace CurtAdmin
 		
 		private EntityRef<WebPropertyType> _WebPropertyTypes;
 		
+		private EntitySet<WebPropNote> _WebPropNotes;
+		
 		private EntityRef<CustUserWebProperty> _CustUserWebProperty;
 		
     #region Extensibility Method Definitions
@@ -21876,6 +21889,7 @@ namespace CurtAdmin
 		public WebProperty()
 		{
 			this._WebPropertyTypes = default(EntityRef<WebPropertyType>);
+			this._WebPropNotes = new EntitySet<WebPropNote>(new Action<WebPropNote>(this.attach_WebPropNotes), new Action<WebPropNote>(this.detach_WebPropNotes));
 			this._CustUserWebProperty = default(EntityRef<CustUserWebProperty>);
 			OnCreated();
 		}
@@ -22173,6 +22187,19 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropNote", Storage="_WebPropNotes", ThisKey="id", OtherKey="webPropID")]
+		public EntitySet<WebPropNote> WebPropNotes
+		{
+			get
+			{
+				return this._WebPropNotes;
+			}
+			set
+			{
+				this._WebPropNotes.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustUserWebProperty_WebProperty", Storage="_CustUserWebProperty", ThisKey="id", OtherKey="webPropID", IsForeignKey=true)]
 		public CustUserWebProperty CustUserWebProperty
 		{
@@ -22225,6 +22252,18 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_WebPropNotes(WebPropNote entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebProperty = this;
+		}
+		
+		private void detach_WebPropNotes(WebPropNote entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebProperty = null;
 		}
 	}
 	
@@ -25660,6 +25699,181 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.AuthDomain = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.WebPropNotes")]
+	public partial class WebPropNote : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _webPropID;
+		
+		private string _text;
+		
+		private System.DateTime _dateAdded;
+		
+		private EntityRef<WebProperty> _WebProperty;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnwebPropIDChanging(int value);
+    partial void OnwebPropIDChanged();
+    partial void OntextChanging(string value);
+    partial void OntextChanged();
+    partial void OndateAddedChanging(System.DateTime value);
+    partial void OndateAddedChanged();
+    #endregion
+		
+		public WebPropNote()
+		{
+			this._WebProperty = default(EntityRef<WebProperty>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_webPropID", DbType="Int NOT NULL")]
+		public int webPropID
+		{
+			get
+			{
+				return this._webPropID;
+			}
+			set
+			{
+				if ((this._webPropID != value))
+				{
+					if (this._WebProperty.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnwebPropIDChanging(value);
+					this.SendPropertyChanging();
+					this._webPropID = value;
+					this.SendPropertyChanged("webPropID");
+					this.OnwebPropIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_text", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string text
+		{
+			get
+			{
+				return this._text;
+			}
+			set
+			{
+				if ((this._text != value))
+				{
+					this.OntextChanging(value);
+					this.SendPropertyChanging();
+					this._text = value;
+					this.SendPropertyChanged("text");
+					this.OntextChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dateAdded", DbType="DateTime NOT NULL")]
+		public System.DateTime dateAdded
+		{
+			get
+			{
+				return this._dateAdded;
+			}
+			set
+			{
+				if ((this._dateAdded != value))
+				{
+					this.OndateAddedChanging(value);
+					this.SendPropertyChanging();
+					this._dateAdded = value;
+					this.SendPropertyChanged("dateAdded");
+					this.OndateAddedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropNote", Storage="_WebProperty", ThisKey="webPropID", OtherKey="id", IsForeignKey=true)]
+		public WebProperty WebProperty
+		{
+			get
+			{
+				return this._WebProperty.Entity;
+			}
+			set
+			{
+				WebProperty previousValue = this._WebProperty.Entity;
+				if (((previousValue != value) 
+							|| (this._WebProperty.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._WebProperty.Entity = null;
+						previousValue.WebPropNotes.Remove(this);
+					}
+					this._WebProperty.Entity = value;
+					if ((value != null))
+					{
+						value.WebPropNotes.Add(this);
+						this._webPropID = value.id;
+					}
+					else
+					{
+						this._webPropID = default(int);
+					}
+					this.SendPropertyChanged("WebProperty");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

@@ -1,0 +1,40 @@
+﻿@using CurtAdmin;
+@{
+    ViewBag.Title = "addWebPropNote";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    WebProperty wp = ViewBag.wp ?? new WebProperty();
+}
+<div id="content_container">
+    <h2>Add New Note for <strong>@wp.name</strong> - @wp.url</h2>
+
+    @if (ViewBag.error.Length > 0) {
+        <p style="font-weight: bold; color: Red;">@ViewBag.error</p>
+    }
+    <form action="/Customers/AddWebPropNote/@wp.id" method="post" class="form_left">
+        <label for="text">
+            Note Text:
+            <textarea name="text" id="text" placeholder="Enter the content of the note here."></textarea>
+
+        </label>
+        <br />
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Add" />
+            <input type="reset" name="btnReset" id="btnReset" value="Clear" />
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSubmit').live('click', function () {
+            var errors = 0;
+            $.each($('input:required'), function (i, input) {
+                if ($(this).val().length == 0) { $(this).css('border', '3px inset #bd0100'); errors++; }
+            });
+            if (errors > 0) {
+                showMessage('Please fix the errors outlined in red.');
+                return false;
+            }
+        });
+    });
+</script>

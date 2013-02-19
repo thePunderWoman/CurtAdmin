@@ -1033,6 +1033,7 @@
       <Column Name="requestedDate" Type="System.DateTime" CanBeNull="true" />
       <Column Name="addedDate" Type="System.DateTime" CanBeNull="false" />
       <Association Name="WebProperty_WebPropertyType" Member="WebPropertyTypes" ThisKey="typeID" OtherKey="typeID" Type="WebPropertyType" Cardinality="One" />
+      <Association Name="WebProperty_WebPropNote" Member="WebPropNotes" ThisKey="id" OtherKey="webPropID" Type="WebPropNote" />
       <Association Name="CustUserWebProperty_WebProperty" Member="CustUserWebProperty" ThisKey="id" OtherKey="webPropID" Type="CustUserWebProperty" IsForeignKey="true" />
     </Type>
   </Table>
@@ -1213,6 +1214,15 @@
       <Column Name="url" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="AuthDomain_AuthArea" Member="AuthAreas" ThisKey="id" OtherKey="DomainID" Type="AuthArea" />
+    </Type>
+  </Table>
+  <Table Name="dbo.WebPropNotes" Member="WebPropNotes">
+    <Type Name="WebPropNote">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="webPropID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="text" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="dateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="WebProperty_WebPropNote" Member="WebProperty" ThisKey="webPropID" OtherKey="id" Type="WebProperty" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

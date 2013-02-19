@@ -249,6 +249,103 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+
+        public ActionResult ViewWebPropNotes(int id, string success = "") {
+            int webPropID = id;
+            if (success != "") {
+                ViewBag.success = success;
+            }
+            if (webPropID.ToString().Length > 0) {
+                CurtDevDataContext db = new CurtDevDataContext();
+                WebProperty wp = db.WebProperties.Where(x => x.id == webPropID).FirstOrDefault<WebProperty>();
+                if (wp != null) {
+
+                    List<WebPropNote> notes = wp.WebPropNotes.OrderByDescending(x => x.dateAdded).ToList<WebPropNote>();
+                    ViewBag.wp = wp;
+                    ViewBag.notes = notes;
+                } else {
+                    ViewBag.error = "Could not find Web Property";
+                }
+            } else {
+                ViewBag.error = "Could not find Web Property";
+            }
+            return View();
+        }
+
+        public ActionResult addWebPropNote(int id) {
+            ViewBag.error = "";
+            if (id.ToString().Length > 0) {
+                CurtDevDataContext db = new CurtDevDataContext();
+                WebProperty wp = db.WebProperties.Where(x => x.id == id).FirstOrDefault<WebProperty>();
+                ViewBag.wp = wp;
+
+            } else {
+                ViewBag.error = "Could not find Web Property.";
+            }
+            return View();
+        }
+ 
+        [HttpPost]
+        public ActionResult addWebPropNote(int id, string text = "") {
+            ViewBag.error = "";
+            if (id.ToString().Length > 0 && text != "") {
+                CurtDevDataContext db = new CurtDevDataContext();
+                WebProperty wp = db.WebProperties.Where(x => x.id == id).FirstOrDefault<WebProperty>();
+                ViewBag.wp = wp;
+                if (wp != null) {
+                    WebPropNote note = new WebPropNote();
+                    note.dateAdded = DateTime.Now;
+                    note.text = text;
+                    note.webPropID = id;
+
+                    db.WebPropNotes.InsertOnSubmit(note);
+                    db.SubmitChanges();
+                    return RedirectToAction("ViewWebPropNotes", new { id = id, success= "Note was added." });
+                } else {
+                    ViewBag.error = "Could not find web property";
+                }
+
+
+
+            } else {
+                if (text == "") {
+                    ViewBag.error = "Text for the note is required.";
+                } else {
+                    ViewBag.error = "Could not find Web Property.";
+                }
+            }
+            return View();
+        }
+
+        public ActionResult EditWebPropNote(int id) {
+            ViewBag.error = "";
+            if (id.ToString().Length > 0) {
+                CurtDevDataContext db = new CurtDevDataContext();
+                WebPropNote note = db.WebPropNotes.Where(x=>x.id == id).FirstOrDefault<WebPropNote>();
+                ViewBag.note  = note;
+
+            } else {
+                ViewBag.error = "Could not find Web Property.";
+            }
+            return View();
+        }
+        [HttpPost]
+        public ActionResult EditWebPropNote(int id, string text = "") {
+            ViewBag.error = "";
+            if (id.ToString().Length > 0 && text != "") {
+                CurtDevDataContext db = new CurtDevDataContext();
+                WebPropNote note = db.WebPropNotes.Where(x => x.id == id).FirstOrDefault<WebPropNote>();
+                if (note != null) {
+                    note.text = text;
+                    db.SubmitChanges();
+                    return RedirectToAction("ViewWebPropNotes", new { id = note.webPropID, success = "Note was saved." });
+                } else {
+                    ViewBag.error = "Could not find note.";
+                }
+            }
+            return View();
+        }
+
         public FileContentResult exportWebProps() {
             string csv = "";
             string seperator = ",";
@@ -406,7 +503,6 @@ namespace CurtAdmin.Controllers {
             }
             return View();
         }
-
 
 
         public ActionResult EditAuthArea(string areaID) {

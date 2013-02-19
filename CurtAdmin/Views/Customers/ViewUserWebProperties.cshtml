@@ -29,6 +29,7 @@
                     <th>Type</th>
                     <th>Badge ID</th>
                     <th>Is Approved</th>
+                    <th>Notes</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,7 @@
                         <td class="center">
                             <input type="checkbox" name="isEnabled" id="isEnabled:@wp.id" class="isEnabled" value="1" @((wp.isEnabled) ? "checked" : "") />
                         </td>
+                        <td><a href="/Customers/ViewWebPropNotes/@wp.id">View Notes</a></td>
                     </tr>
                 }
             </tbody>

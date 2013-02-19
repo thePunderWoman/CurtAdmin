@@ -35,6 +35,7 @@
                     <th>Seller ID</th>
                     <th>Type</th>
                     <th>Email</th>
+                    <th>Notes</th>
                     <th>CustomerID</th>
                     <th>Is Customer</th>
                     <th>Badge ID</th>
@@ -54,6 +55,7 @@
                         <td>@wp.sellerID</td>
                         <td>@if(wp.typeID !=0){@wp.WebPropertyTypes.type}</td>
                         <td>@wp.CustUserWebProperty.CustomerUser.email</td>
+                        <td><a href="/Customers/ViewWebPropNotes/@wp.id">View Notes</a></td>
                         <td>@wp.CustUserWebProperty.CustomerUser.customerID</td>
                         @if(wp.CustUserWebProperty.CustomerUser.notCustomer == false){
                         <td>Yes</td>
