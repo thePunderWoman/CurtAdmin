@@ -257,7 +257,6 @@ namespace CurtAdmin.Controllers {
                 List<WebProperty> webProperties = new List<WebProperty>();
                 webProperties = db.WebProperties.ToList<WebProperty>();
 
-
                 csv = "Name, URL, Seller ID, Type, Email, CustomerID, badgeID, Date Added, Requested Date, Approved Pending, Pending Date, Officially Approved, Rejected";
                 csv += Environment.NewLine;
                 foreach (WebProperty wp in webProperties.OrderBy(x=>x.name)) {
