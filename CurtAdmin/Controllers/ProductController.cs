@@ -288,7 +288,8 @@ namespace CurtAdmin.Controllers
                                 Price price = new Price {
                                     priceType = prc.priceType,
                                     price1 = prc.price1,
-                                    partID = new_part.partID
+                                    partID = new_part.partID,
+                                    enforced = prc.enforced
                                 };
                                 new_prices.Add(price);
                             }
@@ -983,10 +984,10 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public string SavePrice(int partID = 0, int priceID = 0, decimal price = 0, string price_type = "") {
+        public string SavePrice(int partID = 0, int priceID = 0, decimal price = 0, string price_type = "", bool enforced = true) {
             try {
                 Price saved_price = new Price();
-                saved_price = ProductModels.SavePrice(priceID, price, price_type, partID);
+                saved_price = ProductModels.SavePrice(priceID, price, price_type, partID, enforced);
 
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

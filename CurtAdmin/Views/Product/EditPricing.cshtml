@@ -73,6 +73,10 @@
             Price
             <input type="text" name="price" id="price" placeholder="0.00" />
         </label>
+        <label for="enforced">
+            Enforced Pricing?
+            <input type="checkbox" name="enforced" id="enforced" checked />
+        </label>
         <div id="buttons">
             <input type="hidden" name="priceID" id="priceID" value="0" />
             <input type="submit" name="btnSave" id="btnSave" value="Save" />
@@ -84,6 +88,7 @@
             <tr>
                 <th>Price Type</th>
                 <th>Price</th>
+                <th>Enforced?</th>
                 <th></th>
             </tr>
         </thead>
@@ -92,6 +97,7 @@
                 <tr>
                     <td>@price.priceType</td>
                     <td>@String.Format("{0:C}", price.price1)</td>
+                    <td>@price.enforced</td>
                     <td>
                         <a href="javascript:void(0)" id="price_@(price.priceID)" class="edit" data-id="@price.priceID">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" data-id="@price.priceID">Delete</a>

@@ -14215,6 +14215,8 @@ namespace CurtAdmin
 		
 		private decimal _price1;
 		
+		private bool _enforced;
+		
 		private EntityRef<Part> _Part;
 		
     #region Extensibility Method Definitions
@@ -14229,6 +14231,8 @@ namespace CurtAdmin
     partial void OnpriceTypeChanged();
     partial void Onprice1Changing(decimal value);
     partial void Onprice1Changed();
+    partial void OnenforcedChanging(bool value);
+    partial void OnenforcedChanged();
     #endregion
 		
 		public Price()
@@ -14317,6 +14321,26 @@ namespace CurtAdmin
 					this._price1 = value;
 					this.SendPropertyChanged("price1");
 					this.Onprice1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_enforced")]
+		public bool enforced
+		{
+			get
+			{
+				return this._enforced;
+			}
+			set
+			{
+				if ((this._enforced != value))
+				{
+					this.OnenforcedChanging(value);
+					this.SendPropertyChanging();
+					this._enforced = value;
+					this.SendPropertyChanged("enforced");
+					this.OnenforcedChanged();
 				}
 			}
 		}

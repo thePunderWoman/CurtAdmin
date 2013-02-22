@@ -5,30 +5,41 @@ clearForm = (function () {
     $('#price_type').val(0);
     $('#price').val('');
     $('#priceID').val(0);
+    $('#enforced').attr('checked', true);
     $('.form_left').slideUp();
 });
 
-showForm = (function (price_type, price, priceID) {
+showForm = (function (price_type, price, priceID, enforced) {
     if (price_type != null) { $('#price_type').val(price_type); }
     if (price != null) {
         price = price.replace('$', '');
         $('#price').val(price);
     }
+    if (enforced == true) {
+        $('#enforced').attr('checked', true);
+    } else {
+        $('#enforced').attr('checked', false);
+    }
     if (priceID != null) { $('#priceID').val(priceID); }
     $('.form_left').slideDown();
 });
 
-savePrice = (function (price_type, price, priceID) {
-    $.getJSON('/Product/SavePrice', { 'partID': partID, 'priceID': priceID, 'price': price, 'price_type': price_type }, function (response) {
+savePrice = (function (price_type, price, priceID, enforced) {
+    $.getJSON('/Product/SavePrice', { 'partID': partID, 'priceID': priceID, 'price': price, 'price_type': price_type, 'enforced': enforced }, function (response) {
         if (response.error == null) { // Success
             var exists = $('#price_' + response.priceID);
             if (exists.length > 0) {
                 var table_row = $(exists).parent().parent().get()[0];
                 priceTable.fnDeleteRow(table_row);
             }
+            var enforcedString = "True";
+            if (response.enforced.toString() == "false") {
+                enforcedString = "False";
+            }
             priceTable.fnAddData([
                     response.priceType,
                     '$' + response.price1.toString().replace('$', ''),
+                    enforcedString,
                     '<a href="javascript:void(0)" class="edit" id="price_' + priceID + '" data-id="' + response.priceID + '">Edit</a> | <a href="javascript:void(0)" class="delete" data-id="' + response.priceID + '">Delete</a>'
                     ]);
             clearForm();
@@ -60,9 +71,16 @@ $(function () {
         if (priceID != 0) {
             var price = $('#price').val();
             var type = $('#price_type').val();
+            var enforced = "True";
+            if ($('#enforced').is(":checked")) {
+                enforced = "True";
+            } else {
+                enforced = "False";
+            }
             priceTable.fnAddData([
                     type,
                     '$' + price.replace('$', ''),
+                    enforced,
                     '<a href="javascript:void(0)" id="price_' + priceID + '" class="edit" data-id="' + priceID + '">Edit</a> | <a href="javascript:void(0)" class="delete" data-id="' + priceID + '">Delete</a>'
                 ]);
         }
@@ -73,15 +91,29 @@ $(function () {
         var priceID = $('#priceID').val();
         var price = $('#price').val();
         var price_type = $('#price_type').val();
-        savePrice(price_type, price, priceID);
+        var enforced = true;
+        if ($('#enforced').is(":checked")) {
+            enforced = true;
+        } else {
+            enforced = false;
+        }
+        savePrice(price_type, price, priceID, enforced);
     });
 
     $(document).on('click','.edit', function () {
         var priceID = $(this).data('id');
-        var price = $(this).parent().prev().text();
-        var price_type = $(this).parent().prev().prev().text();
+        var enforced = true;
+        
+        if ($(this).parent().prev().text().toString().toUpperCase() == "TRUE") {
+            enforced = true;
+        } else {
+            enforced = false;
+        }
+        var price = $(this).parent().prev().prev().text();
+        var price_type = $(this).parent().prev().prev().prev().text();
+        
         priceTable.fnDeleteRow($(this).parent().parent().get()[0]);
-        showForm(price_type, price, priceID);
+        showForm(price_type, price, priceID, enforced);
     });
 
     $(document).on('click','.delete', function () {

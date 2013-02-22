@@ -1128,7 +1128,7 @@ namespace CurtAdmin.Models {
 
 
 
-        public static Price SavePrice(int priceID, decimal price, string price_type, int partID = 0) {
+        public static Price SavePrice(int priceID, decimal price, string price_type, int partID = 0, bool enforced = true) {
             CurtDevDataContext db = new CurtDevDataContext();
             Price price_obj = new Price();
 
@@ -1139,7 +1139,9 @@ namespace CurtAdmin.Models {
             if (priceID == 0) {
                 Price existing_price = db.Prices.Where(x => x.partID.Equals(partID) && x.priceType.ToLower().Equals(price_type.Trim().ToLower())).FirstOrDefault<Price>();
                 if (existing_price != null && existing_price.priceID > 0) {
+                    // existing price exists
                     existing_price.price1 = price;
+                    existing_price.enforced = enforced;
                     db.SubmitChanges();
                     price_obj = existing_price;
                 } else {
@@ -1147,7 +1149,8 @@ namespace CurtAdmin.Models {
                     price_obj = new Price {
                         partID = partID,
                         price1 = price,
-                        priceType = price_type
+                        priceType = price_type,
+                        enforced = enforced
                     };
 
                     // Validate the price object
@@ -1172,6 +1175,7 @@ namespace CurtAdmin.Models {
                     // Update the price
                     price_obj.price1 = price;
                     price_obj.priceType = price_type;
+                    price_obj.enforced = enforced;
                     db.SubmitChanges();
                 } else {
                     throw new Exception("Failed to update price.");
@@ -1181,7 +1185,8 @@ namespace CurtAdmin.Models {
                 partID = price_obj.partID,
                 price1 = price_obj.price1,
                 priceID = price_obj.priceID,
-                priceType = price_obj.priceType
+                priceType = price_obj.priceType,
+                enforced = price_obj.enforced
             };
             UpdatePart(partID);
             return ser_price;
