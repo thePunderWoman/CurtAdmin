@@ -366,6 +366,12 @@ namespace CurtAdmin
     partial void InsertWebPropNote(WebPropNote instance);
     partial void UpdateWebPropNote(WebPropNote instance);
     partial void DeleteWebPropNote(WebPropNote instance);
+    partial void InsertLogger(Logger instance);
+    partial void UpdateLogger(Logger instance);
+    partial void DeleteLogger(Logger instance);
+    partial void InsertLoggerType(LoggerType instance);
+    partial void UpdateLoggerType(LoggerType instance);
+    partial void DeleteLoggerType(LoggerType instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1307,6 +1313,22 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<WebPropNote>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Logger> Loggers
+		{
+			get
+			{
+				return this.GetTable<Logger>();
+			}
+		}
+		
+		public System.Data.Linq.Table<LoggerType> LoggerTypes
+		{
+			get
+			{
+				return this.GetTable<LoggerType>();
 			}
 		}
 		
@@ -25898,6 +25920,367 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Logger")]
+	public partial class Logger : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private string _Message;
+		
+		private string _Source;
+		
+		private string _StackTrace;
+		
+		private string _TargetSite;
+		
+		private System.Guid _loggedType;
+		
+		private System.DateTime _Date;
+		
+		private EntityRef<LoggerType> _LoggerType;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OnMessageChanging(string value);
+    partial void OnMessageChanged();
+    partial void OnSourceChanging(string value);
+    partial void OnSourceChanged();
+    partial void OnStackTraceChanging(string value);
+    partial void OnStackTraceChanged();
+    partial void OnTargetSiteChanging(string value);
+    partial void OnTargetSiteChanged();
+    partial void OnloggedTypeChanging(System.Guid value);
+    partial void OnloggedTypeChanged();
+    partial void OnDateChanging(System.DateTime value);
+    partial void OnDateChanged();
+    #endregion
+		
+		public Logger()
+		{
+			this._LoggerType = default(EntityRef<LoggerType>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Message", DbType="VarChar(500)")]
+		public string Message
+		{
+			get
+			{
+				return this._Message;
+			}
+			set
+			{
+				if ((this._Message != value))
+				{
+					this.OnMessageChanging(value);
+					this.SendPropertyChanging();
+					this._Message = value;
+					this.SendPropertyChanged("Message");
+					this.OnMessageChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Source", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string Source
+		{
+			get
+			{
+				return this._Source;
+			}
+			set
+			{
+				if ((this._Source != value))
+				{
+					this.OnSourceChanging(value);
+					this.SendPropertyChanging();
+					this._Source = value;
+					this.SendPropertyChanged("Source");
+					this.OnSourceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StackTrace", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string StackTrace
+		{
+			get
+			{
+				return this._StackTrace;
+			}
+			set
+			{
+				if ((this._StackTrace != value))
+				{
+					this.OnStackTraceChanging(value);
+					this.SendPropertyChanging();
+					this._StackTrace = value;
+					this.SendPropertyChanged("StackTrace");
+					this.OnStackTraceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TargetSite", DbType="VarChar(500)")]
+		public string TargetSite
+		{
+			get
+			{
+				return this._TargetSite;
+			}
+			set
+			{
+				if ((this._TargetSite != value))
+				{
+					this.OnTargetSiteChanging(value);
+					this.SendPropertyChanging();
+					this._TargetSite = value;
+					this.SendPropertyChanged("TargetSite");
+					this.OnTargetSiteChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_loggedType", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid loggedType
+		{
+			get
+			{
+				return this._loggedType;
+			}
+			set
+			{
+				if ((this._loggedType != value))
+				{
+					if (this._LoggerType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnloggedTypeChanging(value);
+					this.SendPropertyChanging();
+					this._loggedType = value;
+					this.SendPropertyChanged("loggedType");
+					this.OnloggedTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date", DbType="DateTime NOT NULL")]
+		public System.DateTime Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this.OnDateChanging(value);
+					this.SendPropertyChanging();
+					this._Date = value;
+					this.SendPropertyChanged("Date");
+					this.OnDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LoggerType_Logger", Storage="_LoggerType", ThisKey="loggedType", OtherKey="id", IsForeignKey=true)]
+		public LoggerType LoggerType
+		{
+			get
+			{
+				return this._LoggerType.Entity;
+			}
+			set
+			{
+				LoggerType previousValue = this._LoggerType.Entity;
+				if (((previousValue != value) 
+							|| (this._LoggerType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._LoggerType.Entity = null;
+						previousValue.Loggers.Remove(this);
+					}
+					this._LoggerType.Entity = value;
+					if ((value != null))
+					{
+						value.Loggers.Add(this);
+						this._loggedType = value.id;
+					}
+					else
+					{
+						this._loggedType = default(System.Guid);
+					}
+					this.SendPropertyChanged("LoggerType");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.LoggerTypes")]
+	public partial class LoggerType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private string _type;
+		
+		private EntitySet<Logger> _Loggers;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OntypeChanging(string value);
+    partial void OntypeChanged();
+    #endregion
+		
+		public LoggerType()
+		{
+			this._Loggers = new EntitySet<Logger>(new Action<Logger>(this.attach_Loggers), new Action<Logger>(this.detach_Loggers));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
+		public string type
+		{
+			get
+			{
+				return this._type;
+			}
+			set
+			{
+				if ((this._type != value))
+				{
+					this.OntypeChanging(value);
+					this.SendPropertyChanging();
+					this._type = value;
+					this.SendPropertyChanged("type");
+					this.OntypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LoggerType_Logger", Storage="_Loggers", ThisKey="id", OtherKey="loggedType")]
+		public EntitySet<Logger> Loggers
+		{
+			get
+			{
+				return this._Loggers;
+			}
+			set
+			{
+				this._Loggers.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Loggers(Logger entity)
+		{
+			this.SendPropertyChanging();
+			entity.LoggerType = this;
+		}
+		
+		private void detach_Loggers(Logger entity)
+		{
+			this.SendPropertyChanging();
+			entity.LoggerType = null;
 		}
 	}
 }

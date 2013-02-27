@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "API v2 Analytics";
+    ViewBag.navigation = "_MiscNavigation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.Logger> logentries = ViewBag.logentries ?? new List<CurtAdmin.Logger>();
+    int page = ViewBag.pagenum ?? 1;
+    int perpage = ViewBag.perpage ?? 100;
+}
+<style type="text/css">
+    table {
+        border-collapse: collapse;
+    }
+    table tbody td {
+        border: 1px solid #B4B4B4;
+        padding: 3px;
+    }
+    table tbody tr:nth-child(even) {
+        background-color: #f1f1f1;
+    }
+
+</style>
+
+<div id="content_container">
+    <h2>API v2 Analytics</h2>
+    <div style="clear:both"></div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>IP Address</th>
+                <th>Method</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CurtAdmin.Logger l in logentries) {
+                <tr>
+                    <td>@l.Source</td>
+                    <td>@l.Message</td>
+                    <td>@String.Format("{0:MM/dd/yyyy hh:mm:ss tt}",l.Date)</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">@((page > 1) ? Html.Raw("<a href=\"/Misc/APIAnalytics?page=" + (page-1) + "&perpage=" + perpage + "\">&lt; Prev</a>") : Html.Raw(""))
+                    <a style="float:right;" href="/Misc/APIAnalytics?page=@(page+1)&perpage=@perpage">Next &gt;</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

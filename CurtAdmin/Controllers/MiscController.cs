@@ -253,5 +253,18 @@ namespace CurtAdmin.Controllers
             return View();
         }
 
+        public ActionResult APIAnalytics(int page = 1, int perpage = 100) {
+
+            CurtDevDataContext db = new CurtDevDataContext();
+            int skip = (page - 1) * perpage;
+
+            List<Logger> logentries = db.Loggers.Where(x => x.loggedType.Equals("C72B953C-1192-451E-B960-D7730B4F41B3")).OrderByDescending(x => x.Date).Skip(skip).Take(perpage).ToList();
+            ViewBag.logentries = logentries;
+            ViewBag.pagenum = page;
+            ViewBag.perpage = perpage;
+
+            return View();
+        }
+
     }
 }

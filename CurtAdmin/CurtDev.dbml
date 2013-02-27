@@ -1226,6 +1226,25 @@
       <Association Name="WebProperty_WebPropNote" Member="WebProperty" ThisKey="webPropID" OtherKey="id" Type="WebProperty" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Logger" Member="Loggers">
+    <Type Name="Logger">
+      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Message" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Source" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="StackTrace" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="TargetSite" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="loggedType" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="LoggerType_Logger" Member="LoggerType" ThisKey="loggedType" OtherKey="id" Type="LoggerType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LoggerTypes" Member="LoggerTypes">
+    <Type Name="LoggerType">
+      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="type" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Association Name="LoggerType_Logger" Member="Loggers" ThisKey="id" OtherKey="loggedType" Type="Logger" />
+    </Type>
+  </Table>
   <Function Name="dbo.indexPart" Method="indexPart">
     <Parameter Name="partid" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />

@@ -554,6 +554,7 @@
     <Content Include="Views\Customers\ViewWebPropNotes.cshtml" />
     <Content Include="Views\Customers\addWebPropNote.cshtml" />
     <Content Include="Views\Customers\EditWebPropNote.cshtml" />
+    <Content Include="Views\Misc\APIAnalytics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
