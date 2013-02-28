@@ -2,7 +2,7 @@
     ViewBag.Title = "API v2 Analytics";
     ViewBag.navigation = "_MiscNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<CurtAdmin.Logger> logentries = ViewBag.logentries ?? new List<CurtAdmin.Logger>();
+    List<CurtAdmin.APIAnalytic> data = ViewBag.data ?? new List<CurtAdmin.APIAnalytic>();
     int page = ViewBag.pagenum ?? 1;
     int perpage = ViewBag.perpage ?? 100;
 }
@@ -27,23 +27,29 @@
     <table>
         <thead>
             <tr>
+                <th>Host</th>
                 <th>IP Address</th>
                 <th>Method</th>
+                <th>Parameters</th>
+                <th>URL</th>
                 <th>Date</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (CurtAdmin.Logger l in logentries) {
+            @foreach (CurtAdmin.APIAnalytic d in data) {
                 <tr>
-                    <td>@l.Source</td>
-                    <td>@l.Message</td>
-                    <td>@String.Format("{0:MM/dd/yyyy hh:mm:ss tt}",l.Date)</td>
+                    <td>@((d.IPtoDNS.dnsentry != null) ? d.IPtoDNS.dnsentry : "Unknown")</td>
+                    <td>@d.IPtoDNS.ipaddress</td>
+                    <td>@d.method</td>
+                    <td>@d.querystring</td>
+                    <td>@d.url</td>
+                    <td>@String.Format("{0:MM/dd/yyyy hh:mm:ss tt}",d.date)</td>
                 </tr>
             }
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3">@((page > 1) ? Html.Raw("<a href=\"/Misc/APIAnalytics?page=" + (page-1) + "&perpage=" + perpage + "\">&lt; Prev</a>") : Html.Raw(""))
+                <td colspan="6">@((page > 1) ? Html.Raw("<a href=\"/Misc/APIAnalytics?page=" + (page-1) + "&perpage=" + perpage + "\">&lt; Prev</a>") : Html.Raw(""))
                     <a style="float:right;" href="/Misc/APIAnalytics?page=@(page+1)&perpage=@perpage">Next &gt;</a>
                 </td>
             </tr>

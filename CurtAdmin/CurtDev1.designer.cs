@@ -366,12 +366,12 @@ namespace CurtAdmin
     partial void InsertWebPropNote(WebPropNote instance);
     partial void UpdateWebPropNote(WebPropNote instance);
     partial void DeleteWebPropNote(WebPropNote instance);
-    partial void InsertLogger(Logger instance);
-    partial void UpdateLogger(Logger instance);
-    partial void DeleteLogger(Logger instance);
-    partial void InsertLoggerType(LoggerType instance);
-    partial void UpdateLoggerType(LoggerType instance);
-    partial void DeleteLoggerType(LoggerType instance);
+    partial void InsertAPIAnalytic(APIAnalytic instance);
+    partial void UpdateAPIAnalytic(APIAnalytic instance);
+    partial void DeleteAPIAnalytic(APIAnalytic instance);
+    partial void InsertIPtoDNS(IPtoDNS instance);
+    partial void UpdateIPtoDNS(IPtoDNS instance);
+    partial void DeleteIPtoDNS(IPtoDNS instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1316,19 +1316,19 @@ namespace CurtAdmin
 			}
 		}
 		
-		public System.Data.Linq.Table<Logger> Loggers
+		public System.Data.Linq.Table<APIAnalytic> APIAnalytics
 		{
 			get
 			{
-				return this.GetTable<Logger>();
+				return this.GetTable<APIAnalytic>();
 			}
 		}
 		
-		public System.Data.Linq.Table<LoggerType> LoggerTypes
+		public System.Data.Linq.Table<IPtoDNS> IPtoDNS
 		{
 			get
 			{
-				return this.GetTable<LoggerType>();
+				return this.GetTable<IPtoDNS>();
 			}
 		}
 		
@@ -25923,228 +25923,204 @@ namespace CurtAdmin
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Logger")]
-	public partial class Logger : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.APIAnalytics")]
+	public partial class APIAnalytic : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private System.Guid _id;
+		private System.Guid _ID;
 		
-		private string _Message;
+		private int _addressID;
 		
-		private string _Source;
+		private string _url;
 		
-		private string _StackTrace;
+		private string _method;
 		
-		private string _TargetSite;
+		private string _querystring;
 		
-		private System.Guid _loggedType;
+		private System.DateTime _date;
 		
-		private System.DateTime _Date;
-		
-		private EntityRef<LoggerType> _LoggerType;
+		private EntityRef<IPtoDNS> _IPtoDNS;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnidChanging(System.Guid value);
-    partial void OnidChanged();
-    partial void OnMessageChanging(string value);
-    partial void OnMessageChanged();
-    partial void OnSourceChanging(string value);
-    partial void OnSourceChanged();
-    partial void OnStackTraceChanging(string value);
-    partial void OnStackTraceChanged();
-    partial void OnTargetSiteChanging(string value);
-    partial void OnTargetSiteChanged();
-    partial void OnloggedTypeChanging(System.Guid value);
-    partial void OnloggedTypeChanged();
-    partial void OnDateChanging(System.DateTime value);
-    partial void OnDateChanged();
+    partial void OnIDChanging(System.Guid value);
+    partial void OnIDChanged();
+    partial void OnaddressIDChanging(int value);
+    partial void OnaddressIDChanged();
+    partial void OnurlChanging(string value);
+    partial void OnurlChanged();
+    partial void OnmethodChanging(string value);
+    partial void OnmethodChanged();
+    partial void OnquerystringChanging(string value);
+    partial void OnquerystringChanged();
+    partial void OndateChanging(System.DateTime value);
+    partial void OndateChanged();
     #endregion
 		
-		public Logger()
+		public APIAnalytic()
 		{
-			this._LoggerType = default(EntityRef<LoggerType>);
+			this._IPtoDNS = default(EntityRef<IPtoDNS>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-		public System.Guid id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid ID
 		{
 			get
 			{
-				return this._id;
+				return this._ID;
 			}
 			set
 			{
-				if ((this._id != value))
+				if ((this._ID != value))
 				{
-					this.OnidChanging(value);
+					this.OnIDChanging(value);
 					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Message", DbType="VarChar(500)")]
-		public string Message
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_addressID", DbType="Int NOT NULL")]
+		public int addressID
 		{
 			get
 			{
-				return this._Message;
+				return this._addressID;
 			}
 			set
 			{
-				if ((this._Message != value))
+				if ((this._addressID != value))
 				{
-					this.OnMessageChanging(value);
-					this.SendPropertyChanging();
-					this._Message = value;
-					this.SendPropertyChanged("Message");
-					this.OnMessageChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Source", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Source
-		{
-			get
-			{
-				return this._Source;
-			}
-			set
-			{
-				if ((this._Source != value))
-				{
-					this.OnSourceChanging(value);
-					this.SendPropertyChanging();
-					this._Source = value;
-					this.SendPropertyChanged("Source");
-					this.OnSourceChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StackTrace", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string StackTrace
-		{
-			get
-			{
-				return this._StackTrace;
-			}
-			set
-			{
-				if ((this._StackTrace != value))
-				{
-					this.OnStackTraceChanging(value);
-					this.SendPropertyChanging();
-					this._StackTrace = value;
-					this.SendPropertyChanged("StackTrace");
-					this.OnStackTraceChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TargetSite", DbType="VarChar(500)")]
-		public string TargetSite
-		{
-			get
-			{
-				return this._TargetSite;
-			}
-			set
-			{
-				if ((this._TargetSite != value))
-				{
-					this.OnTargetSiteChanging(value);
-					this.SendPropertyChanging();
-					this._TargetSite = value;
-					this.SendPropertyChanged("TargetSite");
-					this.OnTargetSiteChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_loggedType", DbType="UniqueIdentifier NOT NULL")]
-		public System.Guid loggedType
-		{
-			get
-			{
-				return this._loggedType;
-			}
-			set
-			{
-				if ((this._loggedType != value))
-				{
-					if (this._LoggerType.HasLoadedOrAssignedValue)
+					if (this._IPtoDNS.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.OnloggedTypeChanging(value);
+					this.OnaddressIDChanging(value);
 					this.SendPropertyChanging();
-					this._loggedType = value;
-					this.SendPropertyChanged("loggedType");
-					this.OnloggedTypeChanged();
+					this._addressID = value;
+					this.SendPropertyChanged("addressID");
+					this.OnaddressIDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date", DbType="DateTime NOT NULL")]
-		public System.DateTime Date
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_url", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string url
 		{
 			get
 			{
-				return this._Date;
+				return this._url;
 			}
 			set
 			{
-				if ((this._Date != value))
+				if ((this._url != value))
 				{
-					this.OnDateChanging(value);
+					this.OnurlChanging(value);
 					this.SendPropertyChanging();
-					this._Date = value;
-					this.SendPropertyChanged("Date");
-					this.OnDateChanged();
+					this._url = value;
+					this.SendPropertyChanged("url");
+					this.OnurlChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LoggerType_Logger", Storage="_LoggerType", ThisKey="loggedType", OtherKey="id", IsForeignKey=true)]
-		public LoggerType LoggerType
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_method", DbType="VarChar(255)")]
+		public string method
 		{
 			get
 			{
-				return this._LoggerType.Entity;
+				return this._method;
 			}
 			set
 			{
-				LoggerType previousValue = this._LoggerType.Entity;
+				if ((this._method != value))
+				{
+					this.OnmethodChanging(value);
+					this.SendPropertyChanging();
+					this._method = value;
+					this.SendPropertyChanged("method");
+					this.OnmethodChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_querystring", DbType="VarChar(255)")]
+		public string querystring
+		{
+			get
+			{
+				return this._querystring;
+			}
+			set
+			{
+				if ((this._querystring != value))
+				{
+					this.OnquerystringChanging(value);
+					this.SendPropertyChanging();
+					this._querystring = value;
+					this.SendPropertyChanged("querystring");
+					this.OnquerystringChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_date", DbType="DateTime NOT NULL")]
+		public System.DateTime date
+		{
+			get
+			{
+				return this._date;
+			}
+			set
+			{
+				if ((this._date != value))
+				{
+					this.OndateChanging(value);
+					this.SendPropertyChanging();
+					this._date = value;
+					this.SendPropertyChanged("date");
+					this.OndateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IPtoDN_APIAnalytic", Storage="_IPtoDNS", ThisKey="addressID", OtherKey="ID", IsForeignKey=true)]
+		public IPtoDNS IPtoDNS
+		{
+			get
+			{
+				return this._IPtoDNS.Entity;
+			}
+			set
+			{
+				IPtoDNS previousValue = this._IPtoDNS.Entity;
 				if (((previousValue != value) 
-							|| (this._LoggerType.HasLoadedOrAssignedValue == false)))
+							|| (this._IPtoDNS.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._LoggerType.Entity = null;
-						previousValue.Loggers.Remove(this);
+						this._IPtoDNS.Entity = null;
+						previousValue.APIAnalytics.Remove(this);
 					}
-					this._LoggerType.Entity = value;
+					this._IPtoDNS.Entity = value;
 					if ((value != null))
 					{
-						value.Loggers.Add(this);
-						this._loggedType = value.id;
+						value.APIAnalytics.Add(this);
+						this._addressID = value.ID;
 					}
 					else
 					{
-						this._loggedType = default(System.Guid);
+						this._addressID = default(int);
 					}
-					this.SendPropertyChanged("LoggerType");
+					this.SendPropertyChanged("IPtoDNS");
 				}
 			}
 		}
@@ -26170,84 +26146,132 @@ namespace CurtAdmin
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.LoggerTypes")]
-	public partial class LoggerType : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.IPtoDNS")]
+	public partial class IPtoDNS : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private System.Guid _id;
+		private int _ID;
 		
-		private string _type;
+		private string _ipaddress;
 		
-		private EntitySet<Logger> _Loggers;
+		private string _dnsentry;
+		
+		private System.DateTime _dateChecked;
+		
+		private EntitySet<APIAnalytic> _APIAnalytics;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnidChanging(System.Guid value);
-    partial void OnidChanged();
-    partial void OntypeChanging(string value);
-    partial void OntypeChanged();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnipaddressChanging(string value);
+    partial void OnipaddressChanged();
+    partial void OndnsentryChanging(string value);
+    partial void OndnsentryChanged();
+    partial void OndateCheckedChanging(System.DateTime value);
+    partial void OndateCheckedChanged();
     #endregion
 		
-		public LoggerType()
+		public IPtoDNS()
 		{
-			this._Loggers = new EntitySet<Logger>(new Action<Logger>(this.attach_Loggers), new Action<Logger>(this.detach_Loggers));
+			this._APIAnalytics = new EntitySet<APIAnalytic>(new Action<APIAnalytic>(this.attach_APIAnalytics), new Action<APIAnalytic>(this.detach_APIAnalytics));
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-		public System.Guid id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
 		{
 			get
 			{
-				return this._id;
+				return this._ID;
 			}
 			set
 			{
-				if ((this._id != value))
+				if ((this._ID != value))
 				{
-					this.OnidChanging(value);
+					this.OnIDChanging(value);
 					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
-		public string type
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ipaddress", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string ipaddress
 		{
 			get
 			{
-				return this._type;
+				return this._ipaddress;
 			}
 			set
 			{
-				if ((this._type != value))
+				if ((this._ipaddress != value))
 				{
-					this.OntypeChanging(value);
+					this.OnipaddressChanging(value);
 					this.SendPropertyChanging();
-					this._type = value;
-					this.SendPropertyChanged("type");
-					this.OntypeChanged();
+					this._ipaddress = value;
+					this.SendPropertyChanged("ipaddress");
+					this.OnipaddressChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LoggerType_Logger", Storage="_Loggers", ThisKey="id", OtherKey="loggedType")]
-		public EntitySet<Logger> Loggers
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dnsentry", DbType="VarChar(255)")]
+		public string dnsentry
 		{
 			get
 			{
-				return this._Loggers;
+				return this._dnsentry;
 			}
 			set
 			{
-				this._Loggers.Assign(value);
+				if ((this._dnsentry != value))
+				{
+					this.OndnsentryChanging(value);
+					this.SendPropertyChanging();
+					this._dnsentry = value;
+					this.SendPropertyChanged("dnsentry");
+					this.OndnsentryChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dateChecked", DbType="DateTime NOT NULL")]
+		public System.DateTime dateChecked
+		{
+			get
+			{
+				return this._dateChecked;
+			}
+			set
+			{
+				if ((this._dateChecked != value))
+				{
+					this.OndateCheckedChanging(value);
+					this.SendPropertyChanging();
+					this._dateChecked = value;
+					this.SendPropertyChanged("dateChecked");
+					this.OndateCheckedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="IPtoDN_APIAnalytic", Storage="_APIAnalytics", ThisKey="ID", OtherKey="addressID")]
+		public EntitySet<APIAnalytic> APIAnalytics
+		{
+			get
+			{
+				return this._APIAnalytics;
+			}
+			set
+			{
+				this._APIAnalytics.Assign(value);
 			}
 		}
 		
@@ -26271,16 +26295,16 @@ namespace CurtAdmin
 			}
 		}
 		
-		private void attach_Loggers(Logger entity)
+		private void attach_APIAnalytics(APIAnalytic entity)
 		{
 			this.SendPropertyChanging();
-			entity.LoggerType = this;
+			entity.IPtoDNS = this;
 		}
 		
-		private void detach_Loggers(Logger entity)
+		private void detach_APIAnalytics(APIAnalytic entity)
 		{
 			this.SendPropertyChanging();
-			entity.LoggerType = null;
+			entity.IPtoDNS = null;
 		}
 	}
 }
