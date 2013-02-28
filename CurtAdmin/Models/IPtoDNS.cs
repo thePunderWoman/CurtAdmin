@@ -9,22 +9,26 @@ namespace CurtAdmin {
 
         public void CheckAddresses() {
             CurtDevDataContext db = new CurtDevDataContext();
-            List<IPtoDNS> addresses = db.IPtoDNS.Where(x => x.dnsentry == null).ToList();
+            List<IPtoDNS> addresses = db.IPtoDNS.Where(x => x.dnsentry == null).Take(10).ToList();
             foreach (IPtoDNS adr in addresses) {
                 LookupAsync(adr.ipaddress);
             }
         }
 
-        public string Lookup(string address) {
-            IPHostEntry hostEntry = Dns.GetHostEntry(address);
-            string url = hostEntry.HostName;
-            return url;
+        public IPHostEntry Lookup(string address) {
+            IPHostEntry hostEntry = new IPHostEntry();
+            try {
+                IPAddress hostIPAddress = IPAddress.Parse(address);
+                hostEntry = Dns.GetHostEntry(hostIPAddress);
+            } catch { }
+            return hostEntry;
         }
 
         public void LookupAsync(string address) {
             AsyncCallback callback = LookupAsyncCompleteCallback;
             ResolveState ioContext= new ResolveState(address);
-            Dns.BeginGetHostEntry(address,callback,ioContext);
+            IPAddress hostIPAddress = IPAddress.Parse(address);
+            Dns.BeginGetHostEntry(hostIPAddress, callback, ioContext);
         }
 
         /// <summary>
@@ -33,12 +37,15 @@ namespace CurtAdmin {
         /// <param name="result"></param>
         private void LookupAsyncCompleteCallback(IAsyncResult ar) {
             ResolveState ioContext = (ResolveState)ar.AsyncState;
-
-            ioContext.IPs = Dns.EndGetHostEntry(ar);
             CurtDevDataContext db = new CurtDevDataContext();
+            string hostname = "unknown";
+            try {
+                ioContext.IPs = Dns.EndGetHostEntry(ar);
+                hostname = ioContext.IPs.HostName;
+            } catch { };
             IPtoDNS ip = db.IPtoDNS.Where(x => x.ipaddress.Equals(ioContext.host.Trim())).FirstOrDefault();
             if (ip != null && ip.ID > 0) {
-                ip.dnsentry = ioContext.IPs.HostName;
+                ip.dnsentry = hostname;
                 db.SubmitChanges();
             }
             GetHostEntryFinished.Set();

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ExcelGenerator</id>
+    <version>1.4</version>
+    <title>Excel Generator</title>
+    <authors>Andre Riodades</authors>
+    <owners>Andre Riodades</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://code.google.com/p/excel-generator/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A C#/.Net library for creating reports in Excel spreadsheet files directly through code. Unlike .csv files, these can be directly opened by Excel and thus provide an easy way to define excel styles. No need to install Ms Office Excel or any third-party libraries.</description>
+    <releaseNotes>Adding a new feature to MVC ExcelResult to save the file as a XML to avoid problems when opening in Excel.</releaseNotes>
+    <language>en-US</language>
+    <references>
+      <reference file="ExcelGenerator.dll" />
+    </references>
+  </metadata>
+</package>

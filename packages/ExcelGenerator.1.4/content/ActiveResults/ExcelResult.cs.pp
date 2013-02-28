@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
 
-namespace CurtAdmin.ActionResults
+namespace $rootnamespace$.ActionResults
 {
     /// <summary>
     /// Custom ActionResult for saving excel files

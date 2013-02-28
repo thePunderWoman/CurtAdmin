@@ -30,8 +30,6 @@
                 <th>Host</th>
                 <th>IP Address</th>
                 <th>Method</th>
-                <th>Parameters</th>
-                <th>URL</th>
                 <th>Date</th>
             </tr>
         </thead>
@@ -41,8 +39,6 @@
                     <td>@((d.IPtoDNS.dnsentry != null) ? d.IPtoDNS.dnsentry : "Unknown")</td>
                     <td>@d.IPtoDNS.ipaddress</td>
                     <td>@d.method</td>
-                    <td>@d.querystring</td>
-                    <td>@d.url</td>
                     <td>@String.Format("{0:MM/dd/yyyy hh:mm:ss tt}",d.date)</td>
                 </tr>
             }

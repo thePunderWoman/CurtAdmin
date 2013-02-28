@@ -266,5 +266,9 @@ namespace CurtAdmin.Controllers
             return View();
         }
 
+        /*public string CheckAddresses(string ipaddress) {
+            return JsonConvert.SerializeObject(new IPtoDNS().Lookup(ipaddress));
+        }*/
+
     }
 }
