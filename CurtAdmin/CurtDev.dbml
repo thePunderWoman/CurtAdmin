@@ -777,6 +777,7 @@
       <Column Name="startTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="endTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="partcount" Member="partCount" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="currentCount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.CustomerUser" Member="CustomerUsers">

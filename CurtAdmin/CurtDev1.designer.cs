@@ -16977,6 +16977,8 @@ namespace CurtAdmin
 		
 		private int _partCount;
 		
+		private int _currentCount;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -16989,6 +16991,8 @@ namespace CurtAdmin
     partial void OnendTimeChanged();
     partial void OnpartCountChanging(int value);
     partial void OnpartCountChanged();
+    partial void OncurrentCountChanging(int value);
+    partial void OncurrentCountChanged();
     #endregion
 		
 		public ImportProcess()
@@ -17072,6 +17076,26 @@ namespace CurtAdmin
 					this._partCount = value;
 					this.SendPropertyChanged("partCount");
 					this.OnpartCountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_currentCount", DbType="Int NOT NULL")]
+		public int currentCount
+		{
+			get
+			{
+				return this._currentCount;
+			}
+			set
+			{
+				if ((this._currentCount != value))
+				{
+					this.OncurrentCountChanging(value);
+					this.SendPropertyChanging();
+					this._currentCount = value;
+					this.SendPropertyChanged("currentCount");
+					this.OncurrentCountChanged();
 				}
 			}
 		}

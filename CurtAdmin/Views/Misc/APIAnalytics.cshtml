@@ -9,6 +9,7 @@
 <style type="text/css">
     table {
         border-collapse: collapse;
+        font-size: 12px;
     }
     table tbody td {
         border: 1px solid #B4B4B4;
@@ -40,7 +41,7 @@
                 <tr>
                     <td>@((d.IPtoDNS.dnsentry != null) ? d.IPtoDNS.dnsentry : "Unknown")</td>
                     <td>@d.IPtoDNS.ipaddress</td>
-                    <td>@d.referrer</td>
+                    <td>@((d.referrer != null && d.referrer != "") ? new Uri(d.referrer).Host : "")</td>
                     <td>@d.method</td>
                     <td>@d.HttpMethod</td>
                     <td>@String.Format("{0:MM/dd/yyyy hh:mm:ss tt}", d.date)</td>

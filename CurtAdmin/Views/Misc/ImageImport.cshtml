@@ -5,23 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     CurtAdmin.ImportProcess status = ViewBag.status ?? new CurtAdmin.ImportProcess();
 }
+<style type="text/css">
+    .status {
+        font-weight: bold;
+        font-size: 14px;
+    }
+</style>
 
 <div id="content_container">
     <h2>Import Status</h2>
     @if (status != null && status.ID > 0) {
-        if (status.endTime.Equals(null)) {
-            <p>Process currently importing images for @status.partCount parts.  Started at @String.Format("{0:M/d/yyyy} at {0:h:mm tt}", status.startTime).</p>
-            <p>Average Time Per Part: @Convert.ToDecimal(status.average / 1000.0) seconds</p>
-            <p>Estimated Time to Completion: @String.Format("{0:M/d/yyyy} at {0:h:mm:ss tt}",status.startTime.AddMilliseconds(status.average * status.partCount))</p>
-        } else {
-            <p>Process last Completed on @String.Format("{0:M/d/yyyy} at {0:h:mm:ss tt}", status.endTime).</p>
-            <p>Average Time Per Part: @Convert.ToDecimal(status.average / 1000.0) seconds</p>
-            <input type="button" id="startImport" value="Start Import" />
-        }
+        <p class="status">@((status.isRunning()) ? "Import Running" : "Import Complete")</p>
+        <progress id="importProgress" value="@status.currentCount" max="@status.partCount" style="@((status.isRunning()) ? "display:block;" : "display: none;")"></progress>
+        <div id="importDetails">
+            @if (status.isRunning()) {
+                <p>Process currently importing images for @status.partCount parts.  Started at @String.Format("{0:M/d/yyyy} at {0:H:mm}", status.startTime).</p>
+                <p>Estimated Time to Completion: @String.Format("{0:M/d/yyyy} at {0:H:mm}", status.startTime.AddMilliseconds(status.average * status.partCount)).</p>
+            } else {
+                <p>Process last Completed on @String.Format("{0:M/d/yyyy} at {0:H:mm}", status.endTime).</p>
+            }
+            <p>Average Time Per Part: <span id="average">@Convert.ToDecimal(status.average / 1000.0)</span> seconds</p>
+        </div>
+        <input type="button" id="startImport" value="Start Import" style="@((status.isRunning()) ? "display:none;" : "display:block;")" />
     }
 </div>
-
 <script type="text/javascript">
+    var statusCheck,checkInterval,startCheck,parseDateTime;
     $(function () {
         $(document).on('click', '#startImport', function (e) {
             event.preventDefault();
@@ -30,11 +39,60 @@
                     if (response == "Started") {
                         showMessage("Started Import Process");
                         $('#startImport').hide();
+                        startCheck();
                     } else {
                         showMessage("Import Process was already running.");
                     }
                 });
             }
         });
+
     });
+
+    startCheck = function() {
+        window.clearInterval(checkInterval);
+        checkInterval = setInterval(statusCheck,5000);
+    };
+
+    statusCheck = function () {
+        $.getJSON('/Import/CheckStatus', function (data) {
+            var avg = data.average / 1000;
+            if (data.endTime != null) {
+                window.clearInterval(checkInterval);
+                $('#importProgress').hide();
+                $('p.status').html("Import Complete");
+                $('#importDetails').empty();
+                var endDate = parseDateTime(data.endTime); 
+                $('#importDetails').append("<p>Process last Completed on " + $.datepicker.formatDate('m/d/yy', endDate) + " at " + endDate.getHours() + ":" + ((endDate.getMinutes() < 10) ? "0" : "") + endDate.getMinutes() + ".</p>");
+                $('#importDetails').append('<p>Average Time Per Part: <span id="average">' + avg.toFixed(3) + '</span> seconds</p>');
+                $('#startImport').show();
+            } else {
+                $('#startImport').hide();
+                $('#importProgress').show();
+                $('#importProgress').attr('value', data.currentCount).attr('max', data.partCount);
+                $('p.status').html("Import Running");
+                $('#importDetails').empty();
+                var startDate = parseDateTime(data.startTime);
+                $('#importDetails').append("<p>Process currently importing images for " + data.partCount + " parts. Started at " + $.datepicker.formatDate('m/d/yy', startDate) + " at " + startDate.getHours() + ":" + ((startDate.getMinutes() < 10) ? "0" : "") + startDate.getMinutes() + ".</p>");
+                var ms = data.average * data.partCount;
+                startDate.setMilliseconds(startDate.getMilliseconds() + ms);
+                $('#importDetails').append("<p>Estimated Time to Completion: " + $.datepicker.formatDate('m/d/yy', startDate) + " at " + startDate.getHours() + ":" + ((startDate.getMinutes() < 10) ? "0" : "") + startDate.getMinutes() + ".</p>");
+                $('#importDetails').append('<p>Average Time Per Part: <span id="average">' + avg.toFixed(3) + '</span> seconds</p>');
+            }
+
+        });
+    };
+
+    parseDateTime = function (dt) {
+        var datetime = dt.split('T');
+        var date = datetime[0].split('-');
+        var time = datetime[1].split('.')[0].split(':');
+        var d = new Date(date[0], date[1], date[2], time[0], time[1], time[2], datetime[1].split('.')[1])
+        d.setMonth(d.getMonth() - 1);
+        return d;
+    }
 </script>
+
+@if (status.isRunning()) {
+    <script type="text/javascript">startCheck();</script>
+}

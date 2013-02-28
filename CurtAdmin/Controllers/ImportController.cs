@@ -11,7 +11,7 @@ namespace CurtAdmin.Controllers {
 
         private List<int> _parts;
 
-        public ActionResult Start(string partlist = "", int partcount = 0) {
+        /*public ActionResult Start(string partlist = "", int partcount = 0) {
             ImportService importService = new ImportService();
             ImportProcess currentProcess = importService.checkStatus();
             if (currentProcess.endTime != null) {
@@ -19,13 +19,15 @@ namespace CurtAdmin.Controllers {
             }
             ViewBag.status = currentProcess;
             return View();
-        }
+        }*/
 
-        public string StartAjax(string partlist = "", int partcount = 0) {
+        public string StartAjax() {
             ImportService importService = new ImportService();
             ImportProcess currentProcess = importService.checkStatus();
             if (currentProcess.endTime != null) {
-                ThreadPool.QueueUserWorkItem(o => ImportAsync(partlist, partcount));
+                importService.StartImport();
+                ThreadPool.QueueUserWorkItem(o => ImportAsync());
+
                 return "Started";
             }
             return "Running";
@@ -36,48 +38,43 @@ namespace CurtAdmin.Controllers {
             ImportProcess currentProcess = importService.checkStatus();
             return Newtonsoft.Json.JsonConvert.SerializeObject(currentProcess);
         }
-        
-        public void ImportAsync(string partlist = "", int partcount = 0) {
+
+        public void ContinueProcessing() {
+            ThreadPool.QueueUserWorkItem(o => ImportAsync());
+        }
+
+        public void ImportAsync() {
             ImportService importService = new ImportService();
-            List<int> importedparts = new List<int>();
+            List<int> importedparts = importService.GetImportList();
             List<int> localpartlist = new List<int>();
-            if (partlist != "") {
-                List<int> suppliedparts = new List<int>();
-                string[] suppliedliststring = partlist.Split(',');
-                foreach (string part in suppliedliststring) {
-                    suppliedparts.Add(Convert.ToInt32(part));
-                }
-                this._parts = suppliedparts;
-            } else {
-                this._parts = importService.GetPartList(partcount);
-            }
-            localpartlist.AddRange(this._parts);
-            if (importService.StartImport(_parts.Count)) {
-                AsyncManager.OutstandingOperations.Increment(_parts.Count);
+            localpartlist.AddRange(importedparts);
+            if (importedparts.Count > 0) {
+                AsyncManager.OutstandingOperations.Increment(localpartlist.Count);
+                int count = AsyncManager.OutstandingOperations.Count;
                 foreach (int partID in localpartlist) {
                     importService.ImportImagesCompleted += (sender, e) => {
-                        AsyncManager.OutstandingOperations.Decrement();
-                        importedparts.Add(e.partID);
-                        _parts.Remove(e.partID);
-                        if (_parts.Count == 0) {
-                            importService.FinishImport();
+                        bool removed = importedparts.Remove(e.partID);
+                        if (removed) {
+                            AsyncManager.OutstandingOperations.Decrement();
                         }
-                        AsyncManager.Parameters["importedParts"] = importedparts;
+                        count = AsyncManager.OutstandingOperations.Count;
+                        if (count == 0 && removed) {
+                            ImportCompleted();
+                        }
                     };
                     importService.ImportImagesAsync(Server, partID, Guid.NewGuid());
                 }
             }
         }
 
-        public ActionResult ImportCompleted(List<int> importedParts = null) {
-            List<int> parts = (importedParts != null) ? importedParts : new List<int>();
+        public void ImportCompleted() {
             ImportService importService = new ImportService();
-            if (parts.Count == _parts.Count) {
+            ImportProcess process = importService.checkStatus();
+            if (process.currentCount == process.partCount) {
                 importService.FinishImport();
+            } else {
+                ThreadPool.QueueUserWorkItem(o => ImportAsync());
             }
-            ViewBag.status = importService.checkStatus();
-            ViewBag.parts = parts;
-            return View();
         }
 
     }

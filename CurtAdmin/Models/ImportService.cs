@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 namespace CurtAdmin.Models {
     public class ImportService {
 
-        public bool StartImport(int count) {
+        public bool StartImport() {
             CurtDevDataContext db = new CurtDevDataContext();
             ImportProcess currentProcess = db.ImportProcesses.Where(x => x.endTime.Equals(null)).FirstOrDefault<ImportProcess>();
+            int count = db.Parts.Count();
             if (currentProcess != null && currentProcess.ID > 0) {
                 return false;
             } else {
                 ImportProcess newProcess = new ImportProcess {
                     startTime = DateTime.Now,
-                    partCount = count
+                    partCount = count,
+                    currentCount = 0
                 };
                 db.ImportProcesses.InsertOnSubmit(newProcess);
                 db.SubmitChanges();
@@ -25,6 +27,15 @@ namespace CurtAdmin.Models {
             }
         }
 
+        public void IncrementCount() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ImportProcess currentProcess = db.ImportProcesses.Where(x => x.endTime.Equals(null)).FirstOrDefault<ImportProcess>();
+            if (currentProcess != null && currentProcess.ID > 0) {
+                currentProcess.currentCount = currentProcess.currentCount + 1;
+                db.SubmitChanges();
+            }
+        }
+        
         public ImportProcess checkStatus() {
             CurtDevDataContext db = new CurtDevDataContext();
             ImportProcess currentProcess = db.ImportProcesses.Where(x => x.endTime.Equals(null)).FirstOrDefault<ImportProcess>();
@@ -47,13 +58,15 @@ namespace CurtAdmin.Models {
             return Convert.ToInt32(milliseconds.Average());
         }
 
-        public void FinishImport() {
+        public List<int> GetImportList() {
             CurtDevDataContext db = new CurtDevDataContext();
-            try {
-                ImportProcess currentProcess = db.ImportProcesses.Where(x => x.endTime.Equals(null)).FirstOrDefault<ImportProcess>();
-                currentProcess.endTime = DateTime.Now;
-                db.SubmitChanges();
-            } catch { };
+            ImportProcess process = checkStatus();
+            int startpoint = 0;
+            if (process != null && process.ID != 0) {
+                startpoint = process.currentCount;
+            }
+            List<int> ids = db.Parts.OrderBy(x => x.partID).Select(x => x.partID).Skip(startpoint).Take(10).ToList();
+            return ids;
         }
 
         public List<int> GetPartList(int partcount = 0) {
@@ -109,6 +122,7 @@ namespace CurtAdmin.Models {
                 db.SubmitChanges();
 
             } catch { };
+            IncrementCount();
             /*
             * These are some junk response objects for testing
             * Evetually we will populate this will slightly less abstract data. In the end, it's really meaningless unless we need to update the status or something similar
@@ -120,8 +134,6 @@ namespace CurtAdmin.Models {
             ImportImagesCompleted.Invoke(sender, args);
 
         }
-
-        public event ImportImagesCompletedEventHandler ImportImagesCompleted;
 
         public string ImportImages(HttpServerUtilityBase server, int partid = 0) {
             try {
@@ -167,8 +179,17 @@ namespace CurtAdmin.Models {
             return "done";
         }
 
-        public void importACES() {
+        public event ImportImagesCompletedEventHandler ImportImagesCompleted;
+
+        public void FinishImport() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            try {
+                ImportProcess currentProcess = db.ImportProcesses.Where(x => x.endTime.Equals(null)).FirstOrDefault<ImportProcess>();
+                currentProcess.endTime = DateTime.Now;
+                db.SubmitChanges();
+            } catch { };
         }
+
     }
 
     public delegate void ImportImagesCompletedEventHandler(object sender, ImportImagesCompletedEventArgs e);
