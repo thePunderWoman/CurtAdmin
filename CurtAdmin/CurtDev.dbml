@@ -1234,7 +1234,9 @@
       <Column Name="method" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="querystring" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="IPtoDN_APIAnalytic" Member="IPtoDNS" ThisKey="addressID" OtherKey="ID" Type="IPtoDNS" IsForeignKey="true" />
+      <Column Name="referrer" Type="System.String" DbType="VarChar(255) NULL" CanBeNull="true" />
+      <Column Name="HttpMethod" Type="System.String" DbType="VarChar(100) NULL" CanBeNull="true" />
+      <Association Name="IPtoDNS_APIAnalytic" Member="IPtoDNS" ThisKey="addressID" OtherKey="ID" Type="IPtoDNS" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.IPtoDNS" Member="IPtoDNS">
@@ -1243,7 +1245,7 @@
       <Column Name="ipaddress" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="dnsentry" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="dateChecked" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="IPtoDN_APIAnalytic" Member="APIAnalytics" ThisKey="ID" OtherKey="addressID" Type="APIAnalytic" />
+      <Association Name="IPtoDNS_APIAnalytic" Member="APIAnalytics" ThisKey="ID" OtherKey="addressID" Type="APIAnalytic" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

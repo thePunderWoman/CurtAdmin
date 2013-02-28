@@ -29,7 +29,9 @@
             <tr>
                 <th>Host</th>
                 <th>IP Address</th>
+                <th>Referrer</th>
                 <th>Method</th>
+                <th>Http Method</th>
                 <th>Date</th>
             </tr>
         </thead>
@@ -38,15 +40,17 @@
                 <tr>
                     <td>@((d.IPtoDNS.dnsentry != null) ? d.IPtoDNS.dnsentry : "Unknown")</td>
                     <td>@d.IPtoDNS.ipaddress</td>
+                    <td>@d.referrer</td>
                     <td>@d.method</td>
-                    <td>@String.Format("{0:MM/dd/yyyy hh:mm:ss tt}",d.date)</td>
+                    <td>@d.HttpMethod</td>
+                    <td>@String.Format("{0:MM/dd/yyyy hh:mm:ss tt}", d.date)</td>
                 </tr>
             }
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6">@((page > 1) ? Html.Raw("<a href=\"/Misc/APIAnalytics?page=" + (page-1) + "&perpage=" + perpage + "\">&lt; Prev</a>") : Html.Raw(""))
-                    <a style="float:right;" href="/Misc/APIAnalytics?page=@(page+1)&perpage=@perpage">Next &gt;</a>
+                <td colspan="6">@((page > 1) ? Html.Raw("<a href=\"/Misc/APIAnalytics?page=" + (page - 1) + "&perpage=" + perpage + "\">&lt; Prev</a>") : Html.Raw(""))
+                    <a style="float:right;" href="/Misc/APIAnalytics?page=@(page + 1)&perpage=@perpage">Next &gt;</a>
                 </td>
             </tr>
         </tfoot>
