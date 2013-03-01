@@ -97,9 +97,5 @@ namespace CurtAdmin.Controllers {
             }
         }
 
-        public void SendTest() {
-            Models.helpers.SendEmail("jjaniuk@curtmfg.com", "Test of Scheduler", "<p>Task is successful</p>", true);
-        }
-
     }
 }
