@@ -101,20 +101,22 @@ namespace CurtAdmin.Models {
                 foreach (PartImageSize size in sizes) {
                     foreach (string file in files) {
                         if (file.IndexOf(size.dimensions) != -1) {
-                            int period = file.IndexOf(".");
-                            int start = file.IndexOf("_", file.IndexOf(size.dimensions)) + 1;
-                            string sort = file.Substring(start, (period - start));
-                            Image i = Image.FromFile(server.MapPath(file));
+                            try {
+                                int period = file.IndexOf(".");
+                                int start = file.IndexOf("_", file.IndexOf(size.dimensions)) + 1;
+                                string sort = file.Substring(start, (period - start));
+                                Image i = Image.FromFile(server.MapPath(file));
 
-                            PartImage img = new PartImage {
-                                sizeID = size.sizeID,
-                                sort = Convert.ToChar(sort),
-                                path = "https://www.curtmfg.com" + file.Replace('\\', '/'),
-                                partID = partid,
-                                height = i.Height,
-                                width = i.Width
-                            };
-                            newimgs.Add(img);
+                                PartImage img = new PartImage {
+                                    sizeID = size.sizeID,
+                                    sort = Convert.ToChar(sort),
+                                    path = "https://www.curtmfg.com" + file.Replace('\\', '/'),
+                                    partID = partid,
+                                    height = i.Height,
+                                    width = i.Width
+                                };
+                                newimgs.Add(img);
+                            } catch { }
                         }
                     }
                 }
@@ -156,20 +158,22 @@ namespace CurtAdmin.Models {
                 foreach (PartImageSize size in sizes) {
                     foreach (string file in files) {
                         if (file.IndexOf(size.dimensions) != -1) {
-                            int period = file.IndexOf(".");
-                            int start = file.IndexOf("_", file.IndexOf(size.dimensions)) + 1;
-                            string sort = file.Substring(start, (period - start));
-                            Image i = Image.FromFile(server.MapPath(file));
+                            try {
+                                int period = file.IndexOf(".");
+                                int start = file.IndexOf("_", file.IndexOf(size.dimensions)) + 1;
+                                string sort = file.Substring(start, (period - start));
+                                Image i = Image.FromFile(server.MapPath(file));
 
-                            PartImage img = new PartImage {
-                                sizeID = size.sizeID,
-                                sort = Convert.ToChar(sort),
-                                path = "https://www.curtmfg.com" + file.Replace('\\', '/'),
-                                partID = partid,
-                                height = i.Height,
-                                width = i.Width
-                            };
-                            newimgs.Add(img);
+                                PartImage img = new PartImage {
+                                    sizeID = size.sizeID,
+                                    sort = Convert.ToChar(sort),
+                                    path = "https://www.curtmfg.com" + file.Replace('\\', '/'),
+                                    partID = partid,
+                                    height = i.Height,
+                                    width = i.Width
+                                };
+                                newimgs.Add(img);
+                            } catch { }
                         }
                     }
                 }

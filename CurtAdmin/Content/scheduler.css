@@ -1,0 +1,45 @@
+﻿.form_left label input[type=number] {
+    width: 400px;
+    height: 35px;
+    line-height: 30px;
+    padding: 2.5px;
+    border-radius: 3px 3px 3px;
+    border: 2px inset #CCC;
+    float: right;
+    color: #343434;
+    font-family: Arial;
+}
+
+p.error {
+    color: #aa0000;
+    font-weight: bold;
+}
+
+p.heading {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+table {
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+table thead tr {
+    border-bottom: 1px solid #ccc;
+}
+table th, table td {
+	vertical-align: top;
+    padding: 4px;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #eee;
+}
+
+a.delete {
+	float: right;
+	font-size: 16px;
+	font-weight: bold;
+	color: #BF3504;
+}

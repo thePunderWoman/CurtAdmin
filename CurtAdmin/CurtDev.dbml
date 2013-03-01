@@ -1249,6 +1249,18 @@
       <Association Name="IPtoDNS_APIAnalytic" Member="APIAnalytics" ThisKey="ID" OtherKey="addressID" Type="APIAnalytic" />
     </Type>
   </Table>
+  <Table Name="dbo.ScheduledTask" Member="ScheduledTasks">
+    <Type Name="ScheduledTask">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="url" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="runtime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="runday" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="runfrequency" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="interval" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="lastRan" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.indexPart" Method="indexPart">
     <Parameter Name="partid" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />

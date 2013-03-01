@@ -171,6 +171,7 @@
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TestimonialController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Models\LandingPage.cs" />
     <Compile Include="Models\helpers.cs" />
     <Compile Include="Models\IPtoDNS.cs" />
+    <Compile Include="Models\ScheduledTask.cs" />
     <Compile Include="Models\UserManagement.cs" />
     <Compile Include="Models\Website.cs" />
     <Compile Include="Models\ACES\AcesType.cs" />
@@ -377,6 +379,7 @@
     <Content Include="Content\logs\log.txt" />
     <Content Include="Content\public.css" />
     <Content Include="Content\reports.css" />
+    <Content Include="Content\scheduler.css" />
     <Content Include="Content\signup.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -444,6 +447,7 @@
     <Content Include="Scripts\admin\reports.js" />
     <Content Include="Scripts\admin\resource_admin.js" />
     <Content Include="Scripts\admin\reviews.js" />
+    <Content Include="Scripts\admin\scheduler.js" />
     <Content Include="Scripts\admin\search.js" />
     <Content Include="Scripts\admin\selectfile.js" />
     <Content Include="Scripts\admin\testimonials.js" />
@@ -559,6 +563,7 @@
     <Content Include="Views\Customers\addWebPropNote.cshtml" />
     <Content Include="Views\Customers\EditWebPropNote.cshtml" />
     <Content Include="Views\Misc\APIAnalytics.cshtml" />
+    <Content Include="Views\Scheduler\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

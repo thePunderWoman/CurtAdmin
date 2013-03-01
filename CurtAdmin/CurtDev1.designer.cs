@@ -372,6 +372,9 @@ namespace CurtAdmin
     partial void InsertIPtoDNS(IPtoDNS instance);
     partial void UpdateIPtoDNS(IPtoDNS instance);
     partial void DeleteIPtoDNS(IPtoDNS instance);
+    partial void InsertScheduledTask(ScheduledTask instance);
+    partial void UpdateScheduledTask(ScheduledTask instance);
+    partial void DeleteScheduledTask(ScheduledTask instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1329,6 +1332,14 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<IPtoDNS>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ScheduledTask> ScheduledTasks
+		{
+			get
+			{
+				return this.GetTable<ScheduledTask>();
 			}
 		}
 		
@@ -26377,6 +26388,236 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.IPtoDNS = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ScheduledTask")]
+	public partial class ScheduledTask : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _name;
+		
+		private string _url;
+		
+		private System.Nullable<System.DateTime> _runtime;
+		
+		private System.Nullable<int> _runday;
+		
+		private string _runfrequency;
+		
+		private System.Nullable<int> _interval;
+		
+		private System.Nullable<System.DateTime> _lastRan;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void OnurlChanging(string value);
+    partial void OnurlChanged();
+    partial void OnruntimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnruntimeChanged();
+    partial void OnrundayChanging(System.Nullable<int> value);
+    partial void OnrundayChanged();
+    partial void OnrunfrequencyChanging(string value);
+    partial void OnrunfrequencyChanged();
+    partial void OnintervalChanging(System.Nullable<int> value);
+    partial void OnintervalChanged();
+    partial void OnlastRanChanging(System.Nullable<System.DateTime> value);
+    partial void OnlastRanChanged();
+    #endregion
+		
+		public ScheduledTask()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(255)")]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_url", DbType="VarChar(255)")]
+		public string url
+		{
+			get
+			{
+				return this._url;
+			}
+			set
+			{
+				if ((this._url != value))
+				{
+					this.OnurlChanging(value);
+					this.SendPropertyChanging();
+					this._url = value;
+					this.SendPropertyChanged("url");
+					this.OnurlChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_runtime", DbType="DateTime")]
+		public System.Nullable<System.DateTime> runtime
+		{
+			get
+			{
+				return this._runtime;
+			}
+			set
+			{
+				if ((this._runtime != value))
+				{
+					this.OnruntimeChanging(value);
+					this.SendPropertyChanging();
+					this._runtime = value;
+					this.SendPropertyChanged("runtime");
+					this.OnruntimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_runday", DbType="Int")]
+		public System.Nullable<int> runday
+		{
+			get
+			{
+				return this._runday;
+			}
+			set
+			{
+				if ((this._runday != value))
+				{
+					this.OnrundayChanging(value);
+					this.SendPropertyChanging();
+					this._runday = value;
+					this.SendPropertyChanged("runday");
+					this.OnrundayChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_runfrequency", DbType="VarChar(50)")]
+		public string runfrequency
+		{
+			get
+			{
+				return this._runfrequency;
+			}
+			set
+			{
+				if ((this._runfrequency != value))
+				{
+					this.OnrunfrequencyChanging(value);
+					this.SendPropertyChanging();
+					this._runfrequency = value;
+					this.SendPropertyChanged("runfrequency");
+					this.OnrunfrequencyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_interval", DbType="Int")]
+		public System.Nullable<int> interval
+		{
+			get
+			{
+				return this._interval;
+			}
+			set
+			{
+				if ((this._interval != value))
+				{
+					this.OnintervalChanging(value);
+					this.SendPropertyChanging();
+					this._interval = value;
+					this.SendPropertyChanged("interval");
+					this.OnintervalChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_lastRan", DbType="DateTime")]
+		public System.Nullable<System.DateTime> lastRan
+		{
+			get
+			{
+				return this._lastRan;
+			}
+			set
+			{
+				if ((this._lastRan != value))
+				{
+					this.OnlastRanChanging(value);
+					this.SendPropertyChanging();
+					this._lastRan = value;
+					this.SendPropertyChanged("lastRan");
+					this.OnlastRanChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }
