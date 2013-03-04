@@ -647,6 +647,7 @@
       <Column Name="priceType" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="price" Member="price1" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="enforced" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="dateModified" Type="System.DateTime" DbType="datetime" CanBeNull="false" />
       <Association Name="Part_Price" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>

@@ -36,10 +36,12 @@ savePrice = (function (price_type, price, priceID, enforced) {
             if (response.enforced.toString() == "false") {
                 enforcedString = "False";
             }
+         
             priceTable.fnAddData([
                     response.priceType,
                     '$' + response.price1.toString().replace('$', ''),
                     enforcedString,
+                    response.dispDateModified,
                     '<a href="javascript:void(0)" class="edit" id="price_' + priceID + '" data-id="' + response.priceID + '">Edit</a> | <a href="javascript:void(0)" class="delete" data-id="' + response.priceID + '">Delete</a>'
                     ]);
             clearForm();
@@ -104,13 +106,13 @@ $(function () {
         var priceID = $(this).data('id');
         var enforced = true;
         
-        if ($(this).parent().prev().text().toString().toUpperCase() == "TRUE") {
+        if ($(this).parent().prev().prev().text().toString().toUpperCase() == "TRUE") {
             enforced = true;
         } else {
             enforced = false;
         }
-        var price = $(this).parent().prev().prev().text();
-        var price_type = $(this).parent().prev().prev().prev().text();
+        var price = $(this).parent().prev().prev().prev().text();
+        var price_type = $(this).parent().prev().prev().prev().prev().text();
         
         priceTable.fnDeleteRow($(this).parent().parent().get()[0]);
         showForm(price_type, price, priceID, enforced);

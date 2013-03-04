@@ -14250,6 +14250,8 @@ namespace CurtAdmin
 		
 		private bool _enforced;
 		
+		private System.DateTime _dateModified;
+		
 		private EntityRef<Part> _Part;
 		
     #region Extensibility Method Definitions
@@ -14266,6 +14268,8 @@ namespace CurtAdmin
     partial void Onprice1Changed();
     partial void OnenforcedChanging(bool value);
     partial void OnenforcedChanged();
+    partial void OndateModifiedChanging(System.DateTime value);
+    partial void OndateModifiedChanged();
     #endregion
 		
 		public Price()
@@ -14374,6 +14378,26 @@ namespace CurtAdmin
 					this._enforced = value;
 					this.SendPropertyChanged("enforced");
 					this.OnenforcedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dateModified", DbType="datetime")]
+		public System.DateTime dateModified
+		{
+			get
+			{
+				return this._dateModified;
+			}
+			set
+			{
+				if ((this._dateModified != value))
+				{
+					this.OndateModifiedChanging(value);
+					this.SendPropertyChanging();
+					this._dateModified = value;
+					this.SendPropertyChanged("dateModified");
+					this.OndateModifiedChanged();
 				}
 			}
 		}

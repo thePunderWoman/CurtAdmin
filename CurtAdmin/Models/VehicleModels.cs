@@ -252,6 +252,4 @@ namespace CurtAdmin.Models {
             return prices;
         }
     }
-
-
 }

@@ -89,6 +89,7 @@
                 <th>Price Type</th>
                 <th>Price</th>
                 <th>Enforced?</th>
+                <th>Last Changed</th>
                 <th></th>
             </tr>
         </thead>
@@ -98,6 +99,7 @@
                     <td>@price.priceType</td>
                     <td>@String.Format("{0:C}", price.price1)</td>
                     <td>@price.enforced</td>
+                    <td>@price.dateModified.ToShortDateString()</td>
                     <td>
                         <a href="javascript:void(0)" id="price_@(price.priceID)" class="edit" data-id="@price.priceID">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" data-id="@price.priceID">Delete</a>

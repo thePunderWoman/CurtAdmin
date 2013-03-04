@@ -988,7 +988,6 @@ namespace CurtAdmin.Controllers
             try {
                 Price saved_price = new Price();
                 saved_price = ProductModels.SavePrice(priceID, price, price_type, partID, enforced);
-
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 Newtonsoft.Json.Formatting format = Newtonsoft.Json.Formatting.None;

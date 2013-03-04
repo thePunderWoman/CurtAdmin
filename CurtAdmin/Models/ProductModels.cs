@@ -1142,6 +1142,7 @@ namespace CurtAdmin.Models {
                     // existing price exists
                     existing_price.price1 = price;
                     existing_price.enforced = enforced;
+                    existing_price.dateModified = DateTime.Now;
                     db.SubmitChanges();
                     price_obj = existing_price;
                 } else {
@@ -1150,7 +1151,8 @@ namespace CurtAdmin.Models {
                         partID = partID,
                         price1 = price,
                         priceType = price_type,
-                        enforced = enforced
+                        enforced = enforced,
+                        dateModified = DateTime.Now
                     };
 
                     // Validate the price object
@@ -1176,6 +1178,7 @@ namespace CurtAdmin.Models {
                     price_obj.price1 = price;
                     price_obj.priceType = price_type;
                     price_obj.enforced = enforced;
+                    price_obj.dateModified = DateTime.Now;
                     db.SubmitChanges();
                 } else {
                     throw new Exception("Failed to update price.");
@@ -1186,7 +1189,11 @@ namespace CurtAdmin.Models {
                 price1 = price_obj.price1,
                 priceID = price_obj.priceID,
                 priceType = price_obj.priceType,
-                enforced = price_obj.enforced
+                enforced = price_obj.enforced,
+                dateModified = price_obj.dateModified,
+                dispDateModified = price_obj.dateModified.ToShortDateString()
+
+               
             };
             UpdatePart(partID);
             return ser_price;
@@ -1311,4 +1318,15 @@ namespace CurtAdmin.Models {
     public class FullVehiclePart : VehiclePart {
         public List<VehiclePartAttribute> attributes { get; set; }
     }
+
+
 }
+
+namespace CurtAdmin {
+
+    public partial class Price {
+        public string dispDateModified { get; set; }
+    }
+
+}
+
