@@ -348,6 +348,14 @@ namespace CurtAdmin.Controllers
             part.partID = partID;
             part.shortDesc = shortDesc;
             part.status = status;
+            if (status == 900) {
+                // find eMAP pricing and set enforced = 0
+                Price eMapPrice = db.Prices.Where(x => x.priceType == "eMap" && x.partID == partID).FirstOrDefault<Price>();
+                if (eMapPrice != null) {
+                    eMapPrice.enforced = false;
+                    db.SubmitChanges();
+                }
+            }
             part.oldPartNumber = oldPartNumber;
             part.priceCode = priceCode;
             part.classID = classID;
