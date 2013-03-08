@@ -353,6 +353,7 @@ namespace CurtAdmin.Controllers
                 Price eMapPrice = db.Prices.Where(x => x.priceType == "eMap" && x.partID == partID).FirstOrDefault<Price>();
                 if (eMapPrice != null) {
                     eMapPrice.enforced = false;
+                    eMapPrice.dateModified = DateTime.Now;
                     db.SubmitChanges();
                 }
             }
