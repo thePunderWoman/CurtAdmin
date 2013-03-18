@@ -5,6 +5,7 @@ clearForm = (function () {
     var inch = $('#heightUnit option:contains(IN)').val();
     var pound = $('#heightUnit option:contains(LB)').val();
     var each = $('#heightUnit option:contains(EA)').val();
+    $('#packageType').attr('value', '');
     $('#weight').attr('value', '');
     $('#height').attr('value', '');
     $('#width').attr('value', '');
@@ -19,7 +20,7 @@ clearForm = (function () {
     $('.form_left').slideUp();
 });
 
-showForm = (function (packageID, weight, height, width, length, qty, packageUnit, dimensionUnit, weightUnit) {
+showForm = (function (packageID, weight, height, width, length, qty, packageUnit, dimensionUnit, weightUnit, type) {
     $('#packageID').attr('value', packageID);
     $('#weight').attr('value', weight);
     $('#height').attr('value', height);
@@ -31,11 +32,12 @@ showForm = (function (packageID, weight, height, width, length, qty, packageUnit
     $('#widthUnit').val(dimensionUnit)
     $('#weightUnit').val(weightUnit)
     $('#qtyUnit').val(packageUnit)
+    $('#packageType').val(type)
     $('.form_left').slideDown();
 });
 
-savePackage = (function (packageID, partID, weight, height, width, length, qty, weightUnit, heightUnit, widthUnit, lengthUnit, qtyUnit) {
-    $.getJSON('/Product/SavePackage', { 'packageID': packageID, 'partID': partID, 'weight': weight, 'height': height, 'width': width, 'length': length, 'qty': qty, 'weightUnit': weightUnit, 'heightUnit': heightUnit, 'widthUnit': widthUnit, 'lengthUnit': lengthUnit, 'qtyUnit': qtyUnit }, function (response) {
+savePackage = (function (packageID, partID, weight, height, width, length, qty, weightUnit, heightUnit, widthUnit, lengthUnit, qtyUnit, type) {
+    $.getJSON('/Product/SavePackage', { 'packageID': packageID, 'partID': partID, 'weight': weight, 'height': height, 'width': width, 'length': length, 'qty': qty, 'weightUnit': weightUnit, 'heightUnit': heightUnit, 'widthUnit': widthUnit, 'lengthUnit': lengthUnit, 'qtyUnit': qtyUnit, 'type': type }, function (response) {
         if (response.error == null) { // Success
             packageTable.fnAddData([
                     response.weight + " " + response.weightUnit.code,
@@ -44,6 +46,7 @@ savePackage = (function (packageID, partID, weight, height, width, length, qty, 
                     response.length + " " + response.dimensionUnit.code,
                     response.quantity,
                     response.packageUnit.code,
+                    response.PackageType.name,
                     '<a href="javascript:void(0)" class="edit" id="package_' + response.ID + '" data-id="' + response.ID + '">Edit</a> | <a href="javascript:void(0)" class="delete" data-id="' + response.ID + '">Delete</a>'
                     ]);
             clearForm();
@@ -57,12 +60,12 @@ $(function () {
     partID = $('#partID').val();
     packageTable = $('table').dataTable({ "bJQueryUI": true });
 
-    $('#addPackage').live('click', function () {
+    $('#addPackage').on('click', function () {
         var inch = $('#heightUnit option:contains(IN)').val();
         var pound = $('#heightUnit option:contains(LB)').val();
         var each = $('#heightUnit option:contains(EA)').val();
         clearForm();
-        showForm(0,"","","","",1,each,inch,pound);
+        showForm(0,"","","","",1,each,inch,pound,1);
     });
 
     $(document).on('click', '#btnReset', function () {
@@ -77,6 +80,7 @@ $(function () {
                     response.length + " " + response.dimensionUnit.code,
                     response.quantity,
                     response.packageUnit.code,
+                    response.PackageType.name,
                     '<a href="javascript:void(0)" class="edit" id="package_' + response.ID + '" data-id="' + response.ID + '">Edit</a> | <a href="javascript:void(0)" class="delete" data-id="' + response.packageID + '">Delete</a>'
                     ]);
                     clearForm();
@@ -90,6 +94,7 @@ $(function () {
 
     $(document).on('click', '#btnSave', function () {
         var packageID = $('#packageID').val();
+        var type = $('#packageType').val();
         var weight = $('#weight').val();
         var height = $('#height').val();
         var width = $('#width').val();
@@ -100,7 +105,7 @@ $(function () {
         var widthUnit = $('#widthUnit').val();
         var lengthUnit = $('#lengthUnit').val();
         var qtyUnit = $('#qtyUnit').val();
-        savePackage(packageID, partID, weight, height, width, length, qty, weightUnit, heightUnit, widthUnit, lengthUnit, qtyUnit);
+        savePackage(packageID, partID, weight, height, width, length, qty, weightUnit, heightUnit, widthUnit, lengthUnit, qtyUnit, type);
     });
 
     $(document).on('click', '.edit', function () {
@@ -115,8 +120,9 @@ $(function () {
             var packageUnit = response.packageUOM;
             var dimensionUnit = response.dimensionUOM;
             var weightUnit = response.weightUOM;
+            var type = response.PackageType.ID;
             packageTable.fnDeleteRow($(row).parent().parent().get()[0]);
-            showForm(packageID, weight, height, width, length, qty, packageUnit, dimensionUnit, weightUnit);
+            showForm(packageID, weight, height, width, length, qty, packageUnit, dimensionUnit, weightUnit, type);
         });
     });
 

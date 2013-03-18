@@ -4,16 +4,9 @@
     List<CurtAdmin.Models.ConvertedPart> parts = new List<CurtAdmin.Models.ConvertedPart>();
     if (ViewBag.part != null) { part = ViewBag.part; }
     if (ViewBag.related_parts != null) { related_parts = ViewBag.related_parts; }
-    if (ViewBag.parts != null) { parts = ViewBag.parts; }
     ViewBag.Title = "CURT Admin - Related Parts for " + part.shortDesc;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style type="text/css">
-    #tableContainer
-    {
-        display:none;
-    }
-</style>
 
 @{Html.RenderPartial("PartMenu");}
 
@@ -23,10 +16,6 @@
     <hr style="margin: 10px 0px; border-bottom: 1px dotted #343434;with:95%;margin:auto;" />
 
     <div style="clear:both"></div>
-    <div id="loading_area">
-        <p>Loading parts...</p>
-        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading vehicles..." />
-    </div>
 
     <div id="tableContainer">
         <h3>Related Parts</h3>
@@ -57,34 +46,10 @@
 
         <hr style="margin: 10px 0px; border-bottom: 1px dotted #343434;with:95%;margin:auto;" />
 
-        <h3>All Parts</h3>
-        <table id="allParts">
-            <thead>
-                <tr>
-                    <th>Part #</th>
-                    <th>Part</th>
-                    <th>Last Modified</th>
-                    <th>List Price</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (CurtAdmin.Models.ConvertedPart p in parts) {
-                    List<CurtAdmin.Models.ConvertedPart> found_id = related_parts.Where(x => x.partID == p.partID).ToList<CurtAdmin.Models.ConvertedPart>();
-                    if(found_id.Count == 0){
-                        <tr id="all:@p.partID">
-                            <td>@p.partID</td>
-                            <td>@p.shortDesc</td>
-                            <td>@p.dateModified</td>
-                            <td>@p.listPrice</td>
-                            <td>
-                                <a href="javascript:void(0)" title="Add @p.shortDesc" class="add center" id="@p.partID">Add</a>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
+        <h3>Add a Part</h3>
+        <label for="addPart">Part # <input type="text" id="addPart" data-id="@part.partID" placeholder="Enter a part number" /></label>
+        <button id="submitPart">Add</button>
+
     </div>
     <input type="hidden" name="partID" id="partID" value="@part.partID" />
 </div>

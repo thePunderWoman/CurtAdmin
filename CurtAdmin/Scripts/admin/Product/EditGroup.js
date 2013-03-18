@@ -59,6 +59,7 @@ $(function () {
         e.preventDefault();
         var groupID = $(this).data('id');
         $.getJSON('/Product/GetGroup', { 'groupID': groupID }, function (response) {
+            console.log(response);
             $("#config-dialog").empty();
             var partmsg = '<p>Drag and drop to change order</p><ul id="groupPartList">';
             partmsg += buildPartList(response.Parts);

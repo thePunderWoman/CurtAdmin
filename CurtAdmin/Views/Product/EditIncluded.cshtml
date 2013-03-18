@@ -1,10 +1,8 @@
 ﻿@{
     CurtAdmin.Models.ConvertedPart part = new CurtAdmin.Models.ConvertedPart();
-    List<CurtAdmin.Models.ConvertedPart> included_parts = new List<CurtAdmin.Models.ConvertedPart>();
-    List<CurtAdmin.Models.ConvertedPart> parts = new List<CurtAdmin.Models.ConvertedPart>();
+    List<CurtAdmin.IncludedPart> included_parts = new List<CurtAdmin.IncludedPart>();
     if (ViewBag.part != null) { part = ViewBag.part; }
     if (ViewBag.included_parts != null) { included_parts = ViewBag.included_parts; }
-    if (ViewBag.parts != null) { parts = ViewBag.parts; }
     ViewBag.Title = "CURT Admin - Included Parts with " + part.shortDesc;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -34,57 +32,29 @@
             <thead>
                 <tr>
                     <th>Part #</th>
-                    <th>Part</th>
-                    <th>Last Modified</th>
-                    <th>List Price</th>
+                    <th>Qty</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (CurtAdmin.Models.ConvertedPart ip in included_parts) {
-                    <tr id="included:@ip.partID">
-                        <td>@ip.partID</td>
-                        <td>@ip.shortDesc</td>
-                        <td>@ip.dateModified</td>
-                        <td>@ip.listPrice</td>
+                @foreach (CurtAdmin.IncludedPart ip in included_parts) {
+                    <tr id="included:@ip.includedID">
+                        <td>@ip.includedID</td>
+                        <td>@ip.quantity</td>
                         <td>
-                            <a href="javascript:void(0)" title="Remove @ip.shortDesc" class="remove center" id="@ip.partID">Remove</a>
+                            <a href="javascript:void(0)" title="Remove @ip.includedID" class="remove center removeincluded_@(ip.includedID)" id="@ip.includedID">Remove</a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
 
-        <hr style="margin: 10px 0px; border-bottom: 1px dotted #343434;with:95%;margin:auto;" />
+        <hr style="border-bottom: 1px dotted #343434;width:95%;margin:auto;" />
 
-        <h3>All Parts</h3>
-        <table id="allParts">
-            <thead>
-                <tr>
-                    <th>Part #</th>
-                    <th>Part</th>
-                    <th>Last Modified</th>
-                    <th>List Price</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (CurtAdmin.Models.ConvertedPart p in parts) {
-                    List<CurtAdmin.Models.ConvertedPart> found_id = included_parts.Where(x => x.partID == p.partID).ToList<CurtAdmin.Models.ConvertedPart>();
-                    if(found_id.Count == 0){
-                        <tr id="all:@p.partID">
-                            <td>@p.partID</td>
-                            <td>@p.shortDesc</td>
-                            <td>@p.dateModified</td>
-                            <td>@p.listPrice</td>
-                            <td>
-                                <a href="javascript:void(0)" title="Add @p.shortDesc" class="add center" id="@p.partID">Add</a>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
+        <h3>Add a Part</h3>
+        <label for="addPart">Part # <input type="text" id="addPart" data-id="@part.partID" placeholder="Enter a part number" /></label>
+        <label for="quantity">Qty <input type="number" id="quantity" placeholder="Enter a quantity" value="1" /></label>
+        <button id="submitPart">Add</button>
     </div>
     <input type="hidden" name="partID" id="partID" value="@part.partID" />
 </div>

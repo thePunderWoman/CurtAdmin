@@ -5,6 +5,7 @@
     CurtAdmin.UnitOfMeasure pounds = units.Find(delegate(CurtAdmin.UnitOfMeasure u) { return u.code == "LB"; });
     CurtAdmin.UnitOfMeasure inches = units.Find(delegate(CurtAdmin.UnitOfMeasure u) { return u.code == "IN"; });
     CurtAdmin.UnitOfMeasure each = units.Find(delegate(CurtAdmin.UnitOfMeasure u) { return u.code == "EA"; });
+    List<CurtAdmin.PackageType> types = ViewBag.types ?? new List<CurtAdmin.PackageType>();
     ViewBag.Title = "Edit Packages";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -62,6 +63,14 @@
     <img src="/Content/img/addPackage.png" alt="Add Package" id="addPackage" />
     <hr style="border-bottom: 1px dotted #343434; clear: both" />
     <div class="form_left">
+        <label for="packageType">
+            Type
+            <select name="packageType" id="packageType">
+                @foreach (CurtAdmin.PackageType type in types) {
+                    <option value="@type.ID">@type.name</option>
+                }
+            </select>
+        </label>
         <label for="weight">
             Weight
             <select name="weightUnit" id="weightUnit" class="unit">
@@ -122,6 +131,7 @@
                 <th>Length</th>
                 <th>Quantity</th>
                 <th>Package Unit</th>
+                <th>Type</th>
                 <th></th>
             </tr>
         </thead>
@@ -134,6 +144,7 @@
                     <td>@pkg.length @pkg.dimensionUnit.code</td>
                     <td>@pkg.quantity</td>
                     <td>@pkg.packageUnit.code</td>
+                    <td>@pkg.PackageType.name</td>
                     <td>
                         <a href="javascript:void(0)" id="package_@(pkg.ID)" class="edit" data-id="@pkg.ID">Edit</a> | 
                         <a href="javascript:void(0)" class="delete" data-id="@pkg.ID">Delete</a>

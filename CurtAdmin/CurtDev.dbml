@@ -838,9 +838,11 @@
       <Column Name="weightUOM" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="packageUOM" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="typeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="PartPackage_UnitOfMeasure" Member="dimensionUnit" ThisKey="dimensionUOM" OtherKey="ID" Type="UnitOfMeasure" Cardinality="One" />
       <Association Name="PartPackage_UnitOfMeasure1" Member="weightUnit" ThisKey="weightUOM" OtherKey="ID" Type="UnitOfMeasure" Cardinality="One" />
       <Association Name="PartPackage_UnitOfMeasure2" Member="packageUnit" ThisKey="packageUOM" OtherKey="ID" Type="UnitOfMeasure" Cardinality="One" />
+      <Association Name="PartPackage_PackageType" Member="PackageType" ThisKey="typeID" OtherKey="ID" Type="PackageType" Cardinality="One" />
       <Association Name="Part_PartPackage" Member="Part" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
   </Table>
@@ -1131,6 +1133,7 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="includedID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="IncludedPart_Part" Member="Part" AccessModifier="Internal" ThisKey="includedID" OtherKey="partID" Type="Part" Cardinality="One" />
       <Association Name="Part_IncludedPart" Member="ParentPart" AccessModifier="Internal" ThisKey="partID" OtherKey="partID" Type="Part" IsForeignKey="true" />
     </Type>
@@ -1260,6 +1263,13 @@
       <Column Name="runfrequency" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="interval" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="lastRan" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PackageType" Member="PackageTypes">
+    <Type Name="PackageType">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="PartPackage_PackageType" Member="PartPackage" AccessModifier="Internal" ThisKey="ID" OtherKey="typeID" Type="PartPackage" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">

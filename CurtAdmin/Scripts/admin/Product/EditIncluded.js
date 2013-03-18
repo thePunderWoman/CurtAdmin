@@ -1,50 +1,17 @@
-﻿$(function () {
-    var includedTable = $('#includedParts').dataTable({ "bJQueryUI": true });
-    var allTable = $('#allParts').dataTable({ "bJQueryUI": true });
+﻿var includedTable;
+$(function () {
+    includedTable = $('#includedParts').dataTable({ "bJQueryUI": true });
 
     $("#loading_area").fadeOut();
     $('#tableContainer').fadeIn();
-
-    $('a.add').live('click', function () {
-        var includedID = $(this).attr('id');
-        var partID = $('#partID').val();
-        var part = $(this).attr('title').substr(4, $(this).attr('title').length);
-        if (partID > 0 && includedID > 0 && confirm('Are you sure you want to make ' + part + ' an included part?')) {
-            // execute AJAX
-            $.getJSON('/Product/AddIncluded', { 'partID': partID, 'includedID': includedID }, function (response) {
-                if (response.error == null) {
-                    // Add row to table
-                    includedTable.fnAddData([
-                            response.partID,
-                            response.shortDesc,
-                            response.dateModified,
-                            response.listPrice,
-                            '<a href="javascript:void(0)" title="Remove ' + response.shortDesc + '" class="remove center" id="' + response.partID + '">Remove</a>'
-                        ]);
-                    allTable.fnDeleteRow($('#all\\:' + response.partID).get()[0]);
-                    showMessage(response.shortDesc + ' added.');
-                } else {
-                    showMessage(response.error);
-                }
-            });
-        }
-    });
 
     $('.remove').live('click', function () {
         var includedID = $(this).attr('id');
         var partID = $('#partID').val();
         var part = $(this).attr('title').substr(7, $(this).attr('title').length);
-        if (partID > 0 && relatedID > 0 && confirm('Are you sure you want to remove the relationship to ' + part + '?')) {
+        if (partID > 0 && includedID > 0 && confirm('Are you sure you want to remove the relationship to ' + part + '?')) {
             $.getJSON('/Product/DeleteIncluded', { 'partID': partID, 'includedID': includedID }, function (response) {
                 if (response.error == null) {
-                    // Add row to table
-                    allTable.fnAddData([
-                                response.partID,
-                                response.shortDesc,
-                                response.dateModified,
-                                response.listPrice,
-                                '<a href="javascript:void(0)" title="Add ' + response.shortDesc + '" class="add center" id="' + response.partID + '">Add</a>'
-                            ]);
                     includedTable.fnDeleteRow($('#included\\:' + response.partID).get()[0]);
                     showMessage(response.shortDesc + ' removed.');
                 } else {
@@ -53,4 +20,43 @@
             });
         }
     });
+
+    $(document).on('click', '#submitPart', function (e) {
+        e.preventDefault();
+        var bobj = $(this);
+        var includedID = $('#addPart').val().trim();
+        var quantity = $('#quantity').val();
+        if (partID != "" && quantity != "") {
+            var partID = $('#addPart').data('id');
+            if(Number(quantity) <= 0) {
+                showMessage('Quantity must be a number greater than 0');
+                $('#quantity').focus();
+                return;
+            }
+            $.getJSON('/Product/AddIncluded', { 'partID': partID, 'includedID': includedID, 'quantity': quantity }, function (response) {
+                if (response.error == null) {
+                    if ($('#included\\:' + response.includedID).get()[0] != null) {
+                        includedTable.fnDeleteRow($('#included\\:' + response.includedID).get()[0]);
+                    }
+                    
+                    // Add row to table
+                    includedTable.fnAddData([
+                            response.includedID,
+                            response.quantity,
+                            '<a href="javascript:void(0)" title="Remove ' + response.includedID + '" class="remove center removeincluded_' + response.includedID + '" id="' + response.includedID + '">Remove</a>'
+                    ]);
+                    $('.removeincluded_' + response.includedID).parent().parent().attr('id', 'included:' + response.includedID);
+                    $('#addPart').attr('value', '');
+                    $('#quantity').attr('value', '1');
+                    showMessage(response.includedID + ' added.');
+                } else {
+                    showMessage(response.error);
+                }
+            });
+        } else {
+            $('#addPart').attr('value', '');
+            showMessage("You must enter a part ID and have a quantity greater than 0.");
+        }
+    });
+
 });

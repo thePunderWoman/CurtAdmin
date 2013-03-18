@@ -428,10 +428,6 @@ namespace CurtAdmin.Controllers
             List<ConvertedPart> related_parts = ProductModels.GetRelatedParts(partID);
             ViewBag.related_parts = related_parts;
 
-            // Get all of the parts
-            List<ConvertedPart> parts = ProductModels.GetAllParts();
-            ViewBag.parts = parts;
-
             // Get the part we're working with
             ConvertedPart part = ProductModels.GetPart(partID);
             ViewBag.part = part;
@@ -444,12 +440,8 @@ namespace CurtAdmin.Controllers
         public ActionResult EditIncluded(int partID = 0) {
 
             // Get the related parts for this part
-            List<ConvertedPart> included_parts = ProductModels.GetIncludedParts(partID);
+            List<IncludedPart> included_parts = ProductModels.GetIncludedParts(partID);
             ViewBag.included_parts = included_parts;
-
-            // Get all of the parts
-            List<ConvertedPart> parts = ProductModels.GetAllParts();
-            ViewBag.parts = parts;
 
             // Get the part we're working with
             ConvertedPart part = ProductModels.GetPart(partID);
@@ -662,6 +654,9 @@ namespace CurtAdmin.Controllers
             List<UnitOfMeasure> units = db.UnitOfMeasures.OrderBy(x => x.name).ToList<UnitOfMeasure>();
             ViewBag.units = units;
 
+            List<PackageType> types = ProductModels.GetPackageTypes();
+            ViewBag.types = types;
+
             // Get the prices for this part
             List<PartPackage> packages = ProductModels.GetPackages(partID);
             ViewBag.packages = packages;
@@ -711,8 +706,8 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public string AddIncluded(int partID = 0, int includedID = 0) {
-            return ProductModels.AddIncluded(partID, includedID);
+        public string AddIncluded(int partID = 0, int includedID = 0, int quantity = 1) {
+            return ProductModels.AddIncluded(partID, includedID, quantity);
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
@@ -892,8 +887,8 @@ namespace CurtAdmin.Controllers
 
         [AcceptVerbs(HttpVerbs.Get)]
         public string GetGroup(int groupID) {
-            try {
                 return JsonConvert.SerializeObject(ProductModels.GetGroup(groupID));
+            try {
             } catch (Exception e) {
                 return "{\"error\":\"" + e.Message + "\"}";
             }
@@ -1020,10 +1015,10 @@ namespace CurtAdmin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public string SavePackage(int packageID = 0, int partID = 0, double weight = 0, double height = 0, double width = 0, double length = 0, int qty = 1, int weightUnit = 0, int heightUnit = 0, int widthUnit = 0, int lengthUnit = 0, int qtyUnit = 0) {
+        public string SavePackage(int packageID = 0, int partID = 0, double weight = 0, double height = 0, double width = 0, double length = 0, int qty = 1, int weightUnit = 0, int heightUnit = 0, int widthUnit = 0, int lengthUnit = 0, int qtyUnit = 0, int type = 1) {
             try {
                 PartPackage package = new PartPackage();
-                package = ProductModels.SavePackage(packageID, partID, weight, height, width, length, qty, weightUnit, heightUnit, qtyUnit);
+                package = ProductModels.SavePackage(packageID, partID, weight, height, width, length, qty, weightUnit, heightUnit, qtyUnit, type);
 
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

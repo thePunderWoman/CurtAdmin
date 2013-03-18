@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using CurtAdmin.Models;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace CurtAdmin.Models {
     public class ProductModels {
@@ -87,27 +88,11 @@ namespace CurtAdmin.Models {
             return parts;
         }
 
-        public static List<ConvertedPart> GetIncludedParts(int partID = 0) {
-            List<ConvertedPart> parts = new List<ConvertedPart>();
+        public static List<IncludedPart> GetIncludedParts(int partID = 0) {
+            List<IncludedPart> parts = new List<IncludedPart>();
             CurtDevDataContext db = new CurtDevDataContext();
 
-            parts = (from p in db.Parts
-                     join ip in db.IncludedParts on p.partID equals ip.includedID
-                     where ip.partID.Equals(partID)
-                     select new ConvertedPart {
-                         partID = p.partID,
-                         status = p.status,
-                         dateModified = Convert.ToDateTime(p.dateModified).ToString(),
-                         dateAdded = Convert.ToDateTime(p.dateAdded).ToString(),
-                         shortDesc = p.shortDesc,
-                         oldPartNumber = p.oldPartNumber,
-                         priceCode = Convert.ToInt32(p.priceCode),
-                         pClass = p.classID,
-                         featured = p.featured,
-                         listPrice = String.Format("{0:C}", (from prices in db.Prices
-                                                             where prices.partID.Equals(p.partID) && prices.priceType.Equals("List")
-                                                             select prices.price1 != null ? prices.price1 : (decimal?)0).FirstOrDefault<decimal?>())
-                     }).ToList<ConvertedPart>();
+            parts = db.IncludedParts.Where(x => x.partID.Equals(partID)).ToList();
             return parts;
         }
 
@@ -260,20 +245,19 @@ namespace CurtAdmin.Models {
             try {
                 if (partID > 0 && relatedID > 0) {
                     CurtDevDataContext db = new CurtDevDataContext();
-                    RelatedPart related_part = new RelatedPart {
-                        partID = partID,
-                        relatedID = relatedID
-                    };
-                    db.RelatedParts.InsertOnSubmit(related_part);
-                    db.SubmitChanges();
-
-                    // get the related parts information
-                    ConvertedPart part = new ConvertedPart();
-                    part = GetPart(relatedID);
-                    UpdatePart(partID);
+                    if (!db.RelatedParts.Any(x => x.partID.Equals(partID) && x.relatedID.Equals(relatedID))) {
+                        RelatedPart related_part = new RelatedPart();
+                        related_part = new RelatedPart {
+                            partID = partID,
+                            relatedID = relatedID
+                        };
+                        db.RelatedParts.InsertOnSubmit(related_part);
+                        db.SubmitChanges();
+                    }
                     // Serialize and return
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    return js.Serialize(part);
+                    ConvertedPart part = GetPart(relatedID);
+                    UpdatePart(partID);
+                    return JsonConvert.SerializeObject(part);
                 } else {
                     return "{\"error\":\"Invalid data.\"}";
                 }
@@ -305,15 +289,22 @@ namespace CurtAdmin.Models {
             }
         }
 
-        public static string AddIncluded(int partID = 0, int includedID = 0) {
+        public static string AddIncluded(int partID = 0, int includedID = 0, int quantity = 1) {
             try {
                 if (partID > 0 && includedID > 0) {
                     CurtDevDataContext db = new CurtDevDataContext();
-                    IncludedPart included_part = new IncludedPart {
-                        partID = partID,
-                        includedID = includedID
-                    };
-                    db.IncludedParts.InsertOnSubmit(included_part);
+                    IncludedPart  included_part = new IncludedPart();
+                    if(db.IncludedParts.Any(x => x.partID.Equals(partID) && x.includedID.Equals(includedID))) {
+                        included_part = db.IncludedParts.Where(x => x.partID.Equals(partID) && x.includedID.Equals(includedID)).FirstOrDefault();
+                        included_part.quantity = quantity;
+                    } else {
+                        included_part = new IncludedPart {
+                            partID = partID,
+                            includedID = includedID,
+                            quantity = quantity
+                        };
+                        db.IncludedParts.InsertOnSubmit(included_part);
+                    }
                     db.SubmitChanges();
 
                     // get the related parts information
@@ -321,8 +312,7 @@ namespace CurtAdmin.Models {
                     part = GetPart(includedID);
                     UpdatePart(partID);
                     // Serialize and return
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    return js.Serialize(part);
+                    return JsonConvert.SerializeObject(included_part);
                 } else {
                     return "{\"error\":\"Invalid data.\"}";
                 }
@@ -1216,6 +1206,13 @@ namespace CurtAdmin.Models {
             }
         }
 
+        public static List<PackageType> GetPackageTypes() {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<PackageType> types = new List<PackageType>();
+            types = db.PackageTypes.OrderBy(x => x.name).ToList();
+            return types;
+        }
+
         public static List<PartPackage> GetPackages(int partID) {
             List<PartPackage> packages = new List<PartPackage>();
             try {
@@ -1240,7 +1237,7 @@ namespace CurtAdmin.Models {
             return package;
         }
 
-        public static PartPackage SavePackage(int packageID = 0, int partID = 0, double weight = 0, double height = 0, double width = 0, double length = 0, int qty = 1, int weightUnit = 0, int dimensionUnit = 0, int qtyUnit = 0) {
+        public static PartPackage SavePackage(int packageID = 0, int partID = 0, double weight = 0, double height = 0, double width = 0, double length = 0, int qty = 1, int weightUnit = 0, int dimensionUnit = 0, int qtyUnit = 0, int type = 1) {
             CurtDevDataContext db = new CurtDevDataContext();
             PartPackage package = new PartPackage();
 
@@ -1251,6 +1248,7 @@ namespace CurtAdmin.Models {
             if (weightUnit == 0) throw new Exception("Weight Unit is required.");
             if (dimensionUnit == 0) throw new Exception("Dimensional Unit is required.");
             if (qtyUnit == 0) throw new Exception("Package Unit is required.");
+            if (type <= 0) throw new Exception("Package Type is required.");
 
             if (packageID == 0) {
                 // Create new price object
@@ -1263,7 +1261,8 @@ namespace CurtAdmin.Models {
                     quantity = qty,
                     weightUOM = weightUnit,
                     dimensionUOM = dimensionUnit,
-                    packageUOM = qtyUnit
+                    packageUOM = qtyUnit,
+                    typeID = type
                 };
 
                 db.PartPackages.InsertOnSubmit(package);
@@ -1284,6 +1283,7 @@ namespace CurtAdmin.Models {
                     package.weightUOM = weightUnit;
                     package.dimensionUOM = dimensionUnit;
                     package.packageUOM = qtyUnit;
+                    package.typeID = type;
                     db.SubmitChanges();
                 } else {
                     throw new Exception("Failed to update package.");
