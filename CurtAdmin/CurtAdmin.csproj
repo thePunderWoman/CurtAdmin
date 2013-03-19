@@ -196,6 +196,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="logging.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>logging.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Models\APIAnalytics.cs" />
     <Compile Include="Models\LandingPage.cs" />
     <Compile Include="Models\helpers.cs" />
@@ -468,6 +473,11 @@
     <Content Include="AAIA\qdb.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>qdb.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="logging.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>logging.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
     <None Include="Properties\PublishProfiles\David.pubxml" />
@@ -803,6 +813,11 @@
   <ItemGroup>
     <None Include="AAIA\qdb.dbml.layout">
       <DependentUpon>qdb.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="logging.dbml.layout">
+      <DependentUpon>logging.dbml</DependentUpon>
     </None>
   </ItemGroup>
   <PropertyGroup>

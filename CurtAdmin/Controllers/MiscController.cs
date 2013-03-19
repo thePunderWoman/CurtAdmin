@@ -255,7 +255,6 @@ namespace CurtAdmin.Controllers
 
         public ActionResult APIAnalytics(int page = 1, int perpage = 100) {
 
-            CurtDevDataContext db = new CurtDevDataContext();
             List<APIAnalytic> data = new APIAnalytic().GetAnalytics(page,perpage);
             new IPtoDNS().CheckAddresses();
 

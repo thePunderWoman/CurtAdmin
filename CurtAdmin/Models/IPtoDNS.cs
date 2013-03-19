@@ -8,7 +8,7 @@ namespace CurtAdmin {
     partial class IPtoDNS {
 
         public void CheckAddresses() {
-            CurtDevDataContext db = new CurtDevDataContext();
+            loggingDataContext db = new loggingDataContext();
             List<IPtoDNS> addresses = db.IPtoDNS.Where(x => x.dnsentry == null).Take(10).ToList();
             foreach (IPtoDNS adr in addresses) {
                 LookupAsync(adr.ipaddress);
@@ -37,7 +37,7 @@ namespace CurtAdmin {
         /// <param name="result"></param>
         private void LookupAsyncCompleteCallback(IAsyncResult ar) {
             ResolveState ioContext = (ResolveState)ar.AsyncState;
-            CurtDevDataContext db = new CurtDevDataContext();
+            loggingDataContext db = new loggingDataContext();
             string hostname = "unknown";
             try {
                 ioContext.IPs = Dns.EndGetHostEntry(ar);

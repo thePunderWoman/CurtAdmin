@@ -1231,28 +1231,6 @@
       <Association Name="WebProperty_WebPropNote" Member="WebProperty" ThisKey="webPropID" OtherKey="id" Type="WebProperty" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.APIAnalytics" Member="APIAnalytics">
-    <Type Name="APIAnalytic">
-      <Column Name="ID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="addressID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="url" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="method" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="querystring" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="referrer" Type="System.String" DbType="VarChar(255) NULL" CanBeNull="true" />
-      <Column Name="HttpMethod" Type="System.String" DbType="VarChar(100) NULL" CanBeNull="true" />
-      <Association Name="IPtoDNS_APIAnalytic" Member="IPtoDNS" ThisKey="addressID" OtherKey="ID" Type="IPtoDNS" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.IPtoDNS" Member="IPtoDNS">
-    <Type Name="IPtoDNS">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ipaddress" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="dnsentry" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="dateChecked" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="IPtoDNS_APIAnalytic" Member="APIAnalytics" ThisKey="ID" OtherKey="addressID" Type="APIAnalytic" />
-    </Type>
-  </Table>
   <Table Name="dbo.ScheduledTask" Member="ScheduledTasks">
     <Type Name="ScheduledTask">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
