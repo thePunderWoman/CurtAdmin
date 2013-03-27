@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using CurtAdmin.Models;
 using System.Threading;
+using System.Drawing;
 
 namespace CurtAdmin.Controllers {
     public class ImportController : AsyncController {
