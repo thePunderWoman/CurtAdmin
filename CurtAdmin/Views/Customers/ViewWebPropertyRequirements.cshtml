@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (CurtAdmin.WebPropRequirement wr in webPropRequirements) 
+                @foreach (CurtAdmin.WebPropRequirement wr in webPropRequirements.OrderBy(x=>x.Requirement)) 
                 {
                     <tr>
                         <td class="center">

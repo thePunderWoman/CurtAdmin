@@ -2,7 +2,8 @@
 
     var dt = $('#webRequirements').dataTable({
         "bJQueryUI": true,
-        "iDisplayLength": 50
+        "iDisplayLength": 50,
+        "aaSorting": []
     });
 
     $('.reqCheck').live('click', function () {

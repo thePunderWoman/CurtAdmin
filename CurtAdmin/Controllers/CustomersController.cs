@@ -206,11 +206,8 @@ namespace CurtAdmin.Controllers {
         {
             CurtDevDataContext db = new CurtDevDataContext();
             List<WebPropRequirement> webPropReqs = new List<WebPropRequirement>();
-            List<WebPropRequirementCheck> webPropChecks = new List<WebPropRequirementCheck>();
             ViewBag.webPropID = id;
             // check boxes
-            webPropChecks = db.WebPropRequirementChecks.Where(x => x.WebPropertiesID == id).ToList<WebPropRequirementCheck>();
-            ViewBag.webPropChecks = webPropChecks;
             // requirements
             webPropReqs = db.WebPropRequirements.Where(x => x.ReqType.Equals(type)).ToList<WebPropRequirement>();
             ViewBag.webPropReqs = webPropReqs;

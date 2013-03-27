@@ -372,6 +372,12 @@ namespace CurtAdmin
     partial void InsertPackageType(PackageType instance);
     partial void UpdatePackageType(PackageType instance);
     partial void DeletePackageType(PackageType instance);
+    partial void InsertWebPropRequirementCheck(WebPropRequirementCheck instance);
+    partial void UpdateWebPropRequirementCheck(WebPropRequirementCheck instance);
+    partial void DeleteWebPropRequirementCheck(WebPropRequirementCheck instance);
+    partial void InsertWebPropRequirement(WebPropRequirement instance);
+    partial void UpdateWebPropRequirement(WebPropRequirement instance);
+    partial void DeleteWebPropRequirement(WebPropRequirement instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1329,6 +1335,22 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<PackageType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<WebPropRequirementCheck> WebPropRequirementChecks
+		{
+			get
+			{
+				return this.GetTable<WebPropRequirementCheck>();
+			}
+		}
+		
+		public System.Data.Linq.Table<WebPropRequirement> WebPropRequirements
+		{
+			get
+			{
+				return this.GetTable<WebPropRequirement>();
 			}
 		}
 		
@@ -22016,6 +22038,8 @@ namespace CurtAdmin
 		
 		private EntitySet<WebPropNote> _WebPropNotes;
 		
+		private EntitySet<WebPropRequirementCheck> _WebPropRequirementChecks;
+		
 		private EntityRef<CustUserWebProperty> _CustUserWebProperty;
 		
     #region Extensibility Method Definitions
@@ -22054,6 +22078,7 @@ namespace CurtAdmin
 		{
 			this._WebPropertyTypes = default(EntityRef<WebPropertyType>);
 			this._WebPropNotes = new EntitySet<WebPropNote>(new Action<WebPropNote>(this.attach_WebPropNotes), new Action<WebPropNote>(this.detach_WebPropNotes));
+			this._WebPropRequirementChecks = new EntitySet<WebPropRequirementCheck>(new Action<WebPropRequirementCheck>(this.attach_WebPropRequirementChecks), new Action<WebPropRequirementCheck>(this.detach_WebPropRequirementChecks));
 			this._CustUserWebProperty = default(EntityRef<CustUserWebProperty>);
 			OnCreated();
 		}
@@ -22364,6 +22389,19 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropRequirementCheck", Storage="_WebPropRequirementChecks", ThisKey="id", OtherKey="WebPropertiesID")]
+		public EntitySet<WebPropRequirementCheck> WebPropRequirementChecks
+		{
+			get
+			{
+				return this._WebPropRequirementChecks;
+			}
+			set
+			{
+				this._WebPropRequirementChecks.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CustUserWebProperty_WebProperty", Storage="_CustUserWebProperty", ThisKey="id", OtherKey="webPropID", IsForeignKey=true)]
 		public CustUserWebProperty CustUserWebProperty
 		{
@@ -22425,6 +22463,18 @@ namespace CurtAdmin
 		}
 		
 		private void detach_WebPropNotes(WebPropNote entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebProperty = null;
+		}
+		
+		private void attach_WebPropRequirementChecks(WebPropRequirementCheck entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebProperty = this;
+		}
+		
+		private void detach_WebPropRequirementChecks(WebPropRequirementCheck entity)
 		{
 			this.SendPropertyChanging();
 			entity.WebProperty = null;
@@ -26419,6 +26469,360 @@ namespace CurtAdmin
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.WebPropRequirementCheck")]
+	public partial class WebPropRequirementCheck : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.Nullable<int> _WebPropertiesID;
+		
+		private bool _Compliance;
+		
+		private System.Nullable<int> _WebPropRequirementsID;
+		
+		private EntityRef<WebProperty> _WebProperty;
+		
+		private EntityRef<WebPropRequirement> _WebPropRequirement;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnWebPropertiesIDChanging(System.Nullable<int> value);
+    partial void OnWebPropertiesIDChanged();
+    partial void OnComplianceChanging(bool value);
+    partial void OnComplianceChanged();
+    partial void OnWebPropRequirementsIDChanging(System.Nullable<int> value);
+    partial void OnWebPropRequirementsIDChanged();
+    #endregion
+		
+		public WebPropRequirementCheck()
+		{
+			this._WebProperty = default(EntityRef<WebProperty>);
+			this._WebPropRequirement = default(EntityRef<WebPropRequirement>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WebPropertiesID", DbType="Int")]
+		public System.Nullable<int> WebPropertiesID
+		{
+			get
+			{
+				return this._WebPropertiesID;
+			}
+			set
+			{
+				if ((this._WebPropertiesID != value))
+				{
+					if (this._WebProperty.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnWebPropertiesIDChanging(value);
+					this.SendPropertyChanging();
+					this._WebPropertiesID = value;
+					this.SendPropertyChanged("WebPropertiesID");
+					this.OnWebPropertiesIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Compliance", DbType="Bit NOT NULL")]
+		public bool Compliance
+		{
+			get
+			{
+				return this._Compliance;
+			}
+			set
+			{
+				if ((this._Compliance != value))
+				{
+					this.OnComplianceChanging(value);
+					this.SendPropertyChanging();
+					this._Compliance = value;
+					this.SendPropertyChanged("Compliance");
+					this.OnComplianceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WebPropRequirementsID", DbType="Int")]
+		public System.Nullable<int> WebPropRequirementsID
+		{
+			get
+			{
+				return this._WebPropRequirementsID;
+			}
+			set
+			{
+				if ((this._WebPropRequirementsID != value))
+				{
+					if (this._WebPropRequirement.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnWebPropRequirementsIDChanging(value);
+					this.SendPropertyChanging();
+					this._WebPropRequirementsID = value;
+					this.SendPropertyChanged("WebPropRequirementsID");
+					this.OnWebPropRequirementsIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebProperty_WebPropRequirementCheck", Storage="_WebProperty", ThisKey="WebPropertiesID", OtherKey="id", IsForeignKey=true)]
+		public WebProperty WebProperty
+		{
+			get
+			{
+				return this._WebProperty.Entity;
+			}
+			set
+			{
+				WebProperty previousValue = this._WebProperty.Entity;
+				if (((previousValue != value) 
+							|| (this._WebProperty.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._WebProperty.Entity = null;
+						previousValue.WebPropRequirementChecks.Remove(this);
+					}
+					this._WebProperty.Entity = value;
+					if ((value != null))
+					{
+						value.WebPropRequirementChecks.Add(this);
+						this._WebPropertiesID = value.id;
+					}
+					else
+					{
+						this._WebPropertiesID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("WebProperty");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebPropRequirement_WebPropRequirementCheck", Storage="_WebPropRequirement", ThisKey="WebPropRequirementsID", OtherKey="ID", IsForeignKey=true)]
+		public WebPropRequirement WebPropRequirement
+		{
+			get
+			{
+				return this._WebPropRequirement.Entity;
+			}
+			set
+			{
+				WebPropRequirement previousValue = this._WebPropRequirement.Entity;
+				if (((previousValue != value) 
+							|| (this._WebPropRequirement.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._WebPropRequirement.Entity = null;
+						previousValue.WebPropRequirementChecks.Remove(this);
+					}
+					this._WebPropRequirement.Entity = value;
+					if ((value != null))
+					{
+						value.WebPropRequirementChecks.Add(this);
+						this._WebPropRequirementsID = value.ID;
+					}
+					else
+					{
+						this._WebPropRequirementsID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("WebPropRequirement");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.WebPropRequirements")]
+	public partial class WebPropRequirement : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _ReqType;
+		
+		private string _Requirement;
+		
+		private EntitySet<WebPropRequirementCheck> _WebPropRequirementChecks;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnReqTypeChanging(string value);
+    partial void OnReqTypeChanged();
+    partial void OnRequirementChanging(string value);
+    partial void OnRequirementChanged();
+    #endregion
+		
+		public WebPropRequirement()
+		{
+			this._WebPropRequirementChecks = new EntitySet<WebPropRequirementCheck>(new Action<WebPropRequirementCheck>(this.attach_WebPropRequirementChecks), new Action<WebPropRequirementCheck>(this.detach_WebPropRequirementChecks));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReqType", DbType="VarChar(255)")]
+		public string ReqType
+		{
+			get
+			{
+				return this._ReqType;
+			}
+			set
+			{
+				if ((this._ReqType != value))
+				{
+					this.OnReqTypeChanging(value);
+					this.SendPropertyChanging();
+					this._ReqType = value;
+					this.SendPropertyChanged("ReqType");
+					this.OnReqTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Requirement", DbType="VarChar(1000)")]
+		public string Requirement
+		{
+			get
+			{
+				return this._Requirement;
+			}
+			set
+			{
+				if ((this._Requirement != value))
+				{
+					this.OnRequirementChanging(value);
+					this.SendPropertyChanging();
+					this._Requirement = value;
+					this.SendPropertyChanged("Requirement");
+					this.OnRequirementChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="WebPropRequirement_WebPropRequirementCheck", Storage="_WebPropRequirementChecks", ThisKey="ID", OtherKey="WebPropRequirementsID")]
+		public EntitySet<WebPropRequirementCheck> WebPropRequirementChecks
+		{
+			get
+			{
+				return this._WebPropRequirementChecks;
+			}
+			set
+			{
+				this._WebPropRequirementChecks.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_WebPropRequirementChecks(WebPropRequirementCheck entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebPropRequirement = this;
+		}
+		
+		private void detach_WebPropRequirementChecks(WebPropRequirementCheck entity)
+		{
+			this.SendPropertyChanging();
+			entity.WebPropRequirement = null;
 		}
 	}
 	
