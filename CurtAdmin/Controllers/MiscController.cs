@@ -250,6 +250,13 @@ namespace CurtAdmin.Controllers
             ImportService importservice = new ImportService();
             ImportProcess status = importservice.checkStatus();
             ViewBag.status = status;
+            CurtDevDataContext db = new CurtDevDataContext();
+            if (!status.isRunning()) {
+                List<int> noimages = db.getPartsWithNoImages().Select(x => x.partID).ToList<int>();
+                ViewBag.noimages = noimages;
+                List<int> missingimages = db.getPartsWithMissingImageSizes().Select(x => x.partID).ToList<int>();
+                ViewBag.missingimages = missingimages;
+            }
             return View();
         }
 

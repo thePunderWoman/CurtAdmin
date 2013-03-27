@@ -1280,4 +1280,14 @@
     <Parameter Name="searchparams" Type="System.String" DbType="VarChar(255)" />
     <ElementType IdRef="ID1" />
   </Function>
+  <Function Name="dbo.getPartsWithMissingImageSizes" Method="getPartsWithMissingImageSizes">
+    <ElementType Name="getPartsWithMissingImageSizesResult">
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.getPartsWithNoImages" Method="getPartsWithNoImages">
+    <ElementType Name="getPartsWithNoImagesResult">
+      <Column Name="partID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
 </Database>

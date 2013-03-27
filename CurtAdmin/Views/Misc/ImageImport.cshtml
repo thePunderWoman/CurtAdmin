@@ -4,6 +4,8 @@
     ViewBag.navigation = "_MiscNavigation";
     Layout = "~/Views/Shared/_Layout.cshtml";
     CurtAdmin.ImportProcess status = ViewBag.status ?? new CurtAdmin.ImportProcess();
+    List<int> noimages = ViewBag.noimages ?? new List<int>();
+    List<int> missingimages = ViewBag.missingimages ?? new List<int>();
 }
 <style type="text/css">
     .status {
@@ -27,10 +29,24 @@
             <p>Average Time Per Part: <span id="average">@Convert.ToDecimal(status.average / 1000.0)</span> seconds</p>
         </div>
         <input type="button" id="startImport" value="Start Import" style="@((status.isRunning()) ? "display:none;" : "display:block;")" />
+        if (!status.isRunning()) {
+            <p>Parts With No Images</p>
+            <ul>
+                @foreach(int partID in noimages) {
+                    <li><a href="/Product/EditImages?partID=@partID">@partID</a> - <a href="#" data-id="@partID" class="reimport">re-import</a></li>
+                }
+            </ul>
+            <p>Parts With Missing Images</p>
+            <ul>
+                @foreach (int partID in missingimages) {
+                    <li><a href="/Product/EditImages?partID=@partID">@partID</a> - <a href="#" data-id="@partID" class="reimport">re-import</a></li>
+                }
+            </ul>
+        }
     }
 </div>
 <script type="text/javascript">
-    var statusCheck,checkInterval,startCheck,parseDateTime;
+    var statusCheck,checkInterval,startCheck,parseDateTime,reimportPartImages;
     $(function () {
         $(document).on('click', '#startImport', function (e) {
             event.preventDefault();
@@ -45,6 +61,16 @@
                     }
                 });
             }
+        });
+
+        $(document).on('click', 'a.reimport', function (event) {
+            event.preventDefault();
+            $(this).hide();
+            var partid = $(this).data('id');
+            $.post("/Product/ImportImages", { 'partid': partid }, function (response) {
+                //location.reload(true);
+            }, "text");
+
         });
 
     });

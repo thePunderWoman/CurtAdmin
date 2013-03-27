@@ -1374,6 +1374,20 @@ namespace CurtAdmin
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchparams);
 			return ((ISingleResult<Part>)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.getPartsWithMissingImageSizes")]
+		public ISingleResult<getPartsWithMissingImageSizesResult> getPartsWithMissingImageSizes()
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+			return ((ISingleResult<getPartsWithMissingImageSizesResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.getPartsWithNoImages")]
+		public ISingleResult<getPartsWithNoImagesResult> getPartsWithNoImages()
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+			return ((ISingleResult<getPartsWithNoImagesResult>)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Class")]
@@ -26458,6 +26472,7 @@ namespace CurtAdmin
 		}
 	}
 	
+<<<<<<< HEAD
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.WebPropRequirementCheck")]
 	public partial class WebPropRequirementCheck : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -26810,6 +26825,58 @@ namespace CurtAdmin
 			this.SendPropertyChanging();
 			entity.WebPropRequirement = null;
 		}
+=======
+	public partial class getPartsWithMissingImageSizesResult
+	{
+		
+		private int _partID;
+		
+		public getPartsWithMissingImageSizesResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partID", DbType="Int NOT NULL")]
+		public int partID
+		{
+			get
+			{
+				return this._partID;
+			}
+			set
+			{
+				if ((this._partID != value))
+				{
+					this._partID = value;
+				}
+			}
+		}
+	}
+	
+	public partial class getPartsWithNoImagesResult
+	{
+		
+		private int _partID;
+		
+		public getPartsWithNoImagesResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partID", DbType="Int NOT NULL")]
+		public int partID
+		{
+			get
+			{
+				return this._partID;
+			}
+			set
+			{
+				if ((this._partID != value))
+				{
+					this._partID = value;
+				}
+			}
+		}
+>>>>>>> d124e3eb9331b04f93f88e7ab7a5228a90cdf945
 	}
 }
 #pragma warning restore 1591
