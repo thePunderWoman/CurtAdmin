@@ -16,7 +16,7 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
 
 <div id="content_container">
-    <h2>All Web Properties (@webProperties.Count)</h2>
+    <h2>All Web Properties (@webProperties.Count)</h2><br />
     <strong>Pending Date Color Codes:</strong> ( Web Property needs to be approved or denied. )
         <ul>
             <li><a href="#" title="green" class="searchByColor" style="color:green;">Green:</a> 8-90 Days Left</li>
@@ -50,22 +50,30 @@
             <tbody>
                 @foreach (CurtAdmin.WebProperty wp in webProperties) {
                     <tr id="webProperty:@wp.id">
-                        <td>@wp.name</td>
+                        
+                        @if(wp.cust_ID == 0){
+                            <td>@wp.name</td>
+                        }else{
+                            <td><a href="/Customers/Edit/@wp.CustUserWebProperty.CustomerUser.cust_id">@wp.name</a></td>
+                        }
                         <td style="word-wrap:break-word; word-break:break-all;">@wp.url</td>
                         <td>@wp.sellerID</td>
                         <td>@if(wp.typeID !=0){@wp.WebPropertyTypes.type}</td>
                         <td>@wp.CustUserWebProperty.CustomerUser.email</td>
-                        <td><a href="/Customers/ViewWebPropNotes/@wp.id">View Notes</a></td>
+                        <td><a href="/Customers/ViewWebPropNotes/@wp.id">View Notes (@wp.WebPropNotes.Count)</a></td>
                         <td>@wp.CustUserWebProperty.CustomerUser.customerID</td>
+
                         @if(wp.CustUserWebProperty.CustomerUser.notCustomer == false){
                         <td>Yes</td>
                         }else{
                         <td>No</td>   
                         }
+
                         <td>@wp.badgeID</td>
                         <td>@wp.addedDate</td>
                         <td>@wp.requestedDate</td>
                         <td class="center">
+                            <a href="/Customers/ViewWebPropertyRequirements/@wp.id?type=Pending">Requirements</a>
                             <input type="checkbox" name="isEnabled" @((wp.isEnabled) ? "title='yes'" : "title='no'") id="isEnabled:@wp.id" class="isEnabled" value="1" @((wp.isEnabled) ? "checked" : "") />
                         </td>
                         <td>
@@ -88,6 +96,7 @@
                             }
                         </td>
                         <td class="center">
+                            <a href="/Customers/ViewWebPropertyRequirements/@wp.id?type=Approved">Requirements</a>
                             <input type="checkbox" name="isFinalApproved" id="isFinalApproved:@wp.id" class="isFinalApproved" value="1" @((wp.isFinalApproved) ? "checked" : "") />
                         </td>
                         <td>

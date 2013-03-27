@@ -202,6 +202,23 @@ namespace CurtAdmin.Controllers {
             return View();
         }
 
+        public ActionResult ViewWebPropertyRequirements(int id, string type) 
+        {
+            CurtDevDataContext db = new CurtDevDataContext();
+            List<WebPropRequirement> webPropReqs = new List<WebPropRequirement>();
+            List<WebPropRequirementCheck> webPropChecks = new List<WebPropRequirementCheck>();
+            ViewBag.webPropID = id;
+            // check boxes
+            webPropChecks = db.WebPropRequirementChecks.Where(x => x.WebPropertiesID == id).ToList<WebPropRequirementCheck>();
+            ViewBag.webPropChecks = webPropChecks;
+            // requirements
+            webPropReqs = db.WebPropRequirements.Where(x => x.ReqType.Equals(type)).ToList<WebPropRequirement>();
+            ViewBag.webPropReqs = webPropReqs;
+
+
+            return View();
+        }
+
         public ActionResult ViewUserWebProperties(Guid userID)
         {
             CurtDevDataContext db = new CurtDevDataContext();
@@ -354,7 +371,7 @@ namespace CurtAdmin.Controllers {
                 List<WebProperty> webProperties = new List<WebProperty>();
                 webProperties = db.WebProperties.ToList<WebProperty>();
 
-                csv = "Name, URL, Seller ID, Type, Email, CustomerID, badgeID, Date Added, Requested Date, Approved Pending, Pending Date, Officially Approved, Rejected";
+                csv = "Name, URL, Seller ID, Type, Email, Notes, CustomerID, badgeID, Date Added, Requested Date, Approved Pending, Pending Date, Officially Approved, Rejected";
                 csv += Environment.NewLine;
                 foreach (WebProperty wp in webProperties.OrderBy(x=>x.name)) {
                     csv += wp.name.Replace(",","") + seperator;
@@ -362,6 +379,18 @@ namespace CurtAdmin.Controllers {
                     csv += wp.sellerID.Replace(",", "") + seperator;
                     csv += wp.WebPropertyTypes.type + seperator;
                     csv += wp.CustUserWebProperty.CustomerUser.email + seperator;
+                    if (wp.WebPropNotes.Count > 0)
+                    {
+                        foreach (WebPropNote pn in wp.WebPropNotes)
+                        {
+                            csv += pn.text.Replace(',', ' ') + seperator;
+                        }
+                    }
+                    else
+                    {
+                        csv += "No Note" + seperator;
+                    }
+                    
                     csv += wp.CustUserWebProperty.CustomerUser.customerID + seperator;
                     csv += wp.badgeID + seperator;
                     csv += wp.addedDate + seperator;
@@ -1290,6 +1319,42 @@ namespace CurtAdmin.Controllers {
 
         public string DeleteLocation(int id = 0) {
             return CustomerModel.DeleteLocation(id);
+        }
+
+        [HttpGet]
+        public string SetWebPropertyRequirementStatus(int webPropRequirementID, int webPropID)
+        {
+            try
+            {
+                CurtDevDataContext db = new CurtDevDataContext();
+
+                WebPropRequirementCheck wr = db.WebPropRequirementChecks.Where(x => x.WebPropRequirementsID == webPropRequirementID && x.WebPropertiesID == webPropID).FirstOrDefault<WebPropRequirementCheck>();
+
+                if (wr == null) 
+                { 
+                    WebPropRequirementCheck wpr = new WebPropRequirementCheck();
+                    wpr.WebPropRequirementsID = webPropRequirementID;
+                    wpr.Compliance = true;
+                    wpr.WebPropertiesID = webPropID;
+                    db.WebPropRequirementChecks.InsertOnSubmit(wpr);
+
+                }else{
+                    if (wr.Compliance == true) 
+                    {
+                        db.WebPropRequirementChecks.DeleteOnSubmit(wr);
+                    } else {
+                        wr.Compliance = true;
+                    }
+                }
+
+                db.SubmitChanges();
+                
+                return "";
+            }
+            catch (Exception e)
+            {
+                return "Could not update record: " + e.Message;
+            }
         }
 
     }

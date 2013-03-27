@@ -356,4 +356,32 @@ namespace CurtAdmin.Models {
         public FullState state { get; set; }
         public CustomerType dealerType { get; set; }
     }
+
+}
+
+namespace CurtAdmin
+{
+
+    public partial class WebPropRequirement
+    {
+
+
+
+        public bool getCheck(int webPropID, int webPropReqID)
+        {
+            CurtDevDataContext db = new CurtDevDataContext();
+            WebPropRequirementCheck check = db.WebPropRequirementChecks.Where(x => x.WebPropertiesID == webPropID && x.WebPropRequirementsID == webPropReqID).FirstOrDefault<WebPropRequirementCheck>();
+
+            if (check != null){
+                return check.Compliance;
+            }else{
+                return false;
+            }
+
+        }
+
+       
+    }
+
+
 }

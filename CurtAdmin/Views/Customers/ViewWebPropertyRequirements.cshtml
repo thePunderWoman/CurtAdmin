@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "WebPropertyRequirements";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<CurtAdmin.WebPropRequirement> webPropRequirements = ViewBag.webPropReqs ?? new List<CurtAdmin.WebPropRequirement>();
+    int webPropID = ViewBag.webPropID;
+}
+
+<style>
+    #dlCSV
+    {
+        float:right;
+    }
+
+</style>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+
+<h2>WebPropertyRequirements</h2>
+<p><a href ="/Customers/ViewWebProperties"> Back to Web Properties</a></p>
+ <div style="width: 100%;margin:auto" id="content_container">
+        <table id="webRequirements" style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Requirement</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.WebPropRequirement wr in webPropRequirements) 
+                {
+                    <tr>
+                        <td class="center">
+                           <input type="checkbox" class="reqCheck" name="reqCheck" id="reqCheck:@wr.ID:@webPropID" @((wr.getCheck(webPropID,wr.ID)) ? "checked" : "")/>                        
+                        </td>
+                        <td>@wr.Requirement</td>      
+                    </tr>
+                    
+                }
+            </tbody>
+        </table>
+    </div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/webPropRequirementsEnabled.js")"></script>
+<script>
+    $(document).ready(function () {
+
+        });
+
+    });
+
+
+</script>
