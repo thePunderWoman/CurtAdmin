@@ -30,13 +30,13 @@
         </div>
         <input type="button" id="startImport" value="Start Import" style="@((status.isRunning()) ? "display:none;" : "display:block;")" />
         if (!status.isRunning()) {
-            <p>Parts With No Images</p>
+            <p>Active Parts With No Images</p>
             <ul>
                 @foreach(int partID in noimages) {
                     <li><a href="/Product/EditImages?partID=@partID">@partID</a> - <a href="#" data-id="@partID" class="reimport">re-import</a></li>
                 }
             </ul>
-            <p>Parts With Missing Images</p>
+            <p>Active Parts With Some Missing Images</p>
             <ul>
                 @foreach (int partID in missingimages) {
                     <li><a href="/Product/EditImages?partID=@partID">@partID</a> - <a href="#" data-id="@partID" class="reimport">re-import</a></li>

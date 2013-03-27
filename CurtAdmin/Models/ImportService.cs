@@ -105,17 +105,30 @@ namespace CurtAdmin.Models {
                                 int period = file.IndexOf(".");
                                 int start = file.IndexOf("_", file.IndexOf(size.dimensions)) + 1;
                                 string sort = file.Substring(start, (period - start));
-                                Image i = Image.FromFile(server.MapPath(file));
-
-                                PartImage img = new PartImage {
-                                    sizeID = size.sizeID,
-                                    sort = Convert.ToChar(sort),
-                                    path = "https://www.curtmfg.com" + file.Replace('\\', '/'),
-                                    partID = partid,
-                                    height = i.Height,
-                                    width = i.Width
-                                };
-                                newimgs.Add(img);
+                                Image i = null;
+                                int tries = 0;
+                                while (i == null) {
+                                    try {
+                                        i = Image.FromFile(server.MapPath(file));
+                                    } catch {
+                                        // image failed to map
+                                    }
+                                    tries++;
+                                    if (tries >= 10) {
+                                        break;
+                                    }
+                                }
+                                if (i != null) {
+                                    PartImage img = new PartImage {
+                                        sizeID = size.sizeID,
+                                        sort = Convert.ToChar(sort),
+                                        path = "https://www.curtmfg.com" + file.Replace('\\', '/'),
+                                        partID = partid,
+                                        height = i.Height,
+                                        width = i.Width
+                                    };
+                                    newimgs.Add(img);
+                                }
                             } catch { }
                         }
                     }
