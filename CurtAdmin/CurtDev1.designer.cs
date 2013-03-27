@@ -1352,6 +1352,20 @@ namespace CurtAdmin
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchparams);
 			return ((ISingleResult<Part>)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.getPartsWithMissingImageSizes")]
+		public ISingleResult<getPartsWithMissingImageSizesResult> getPartsWithMissingImageSizes()
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+			return ((ISingleResult<getPartsWithMissingImageSizesResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.getPartsWithNoImages")]
+		public ISingleResult<getPartsWithNoImagesResult> getPartsWithNoImages()
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+			return ((ISingleResult<getPartsWithNoImagesResult>)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Class")]
@@ -26404,6 +26418,58 @@ namespace CurtAdmin
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	public partial class getPartsWithMissingImageSizesResult
+	{
+		
+		private int _partID;
+		
+		public getPartsWithMissingImageSizesResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partID", DbType="Int NOT NULL")]
+		public int partID
+		{
+			get
+			{
+				return this._partID;
+			}
+			set
+			{
+				if ((this._partID != value))
+				{
+					this._partID = value;
+				}
+			}
+		}
+	}
+	
+	public partial class getPartsWithNoImagesResult
+	{
+		
+		private int _partID;
+		
+		public getPartsWithNoImagesResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_partID", DbType="Int NOT NULL")]
+		public int partID
+		{
+			get
+			{
+				return this._partID;
+			}
+			set
+			{
+				if ((this._partID != value))
+				{
+					this._partID = value;
+				}
 			}
 		}
 	}

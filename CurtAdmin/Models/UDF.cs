@@ -61,4 +61,5 @@ namespace CurtAdmin.Models {
             return System.Text.Encoding.ASCII.GetString(bytes);
         }
     }
+
 }
