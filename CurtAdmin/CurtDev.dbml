@@ -1039,7 +1039,6 @@
       <Column Name="addedDate" Type="System.DateTime" CanBeNull="false" />
       <Association Name="WebProperty_WebPropertyType" Member="WebPropertyTypes" ThisKey="typeID" OtherKey="typeID" Type="WebPropertyType" Cardinality="One" />
       <Association Name="WebProperty_WebPropNote" Member="WebPropNotes" ThisKey="id" OtherKey="webPropID" Type="WebPropNote" />
-      <Association Name="WebProperty_WebPropRequirementCheck" Member="WebPropRequirementChecks" ThisKey="id" OtherKey="WebPropertiesID" Type="WebPropRequirementCheck" />
       <Association Name="CustUserWebProperty_WebProperty" Member="CustUserWebProperty" ThisKey="id" OtherKey="webPropID" Type="CustUserWebProperty" IsForeignKey="true" />
     </Type>
   </Table>
@@ -1249,24 +1248,6 @@
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Association Name="PartPackage_PackageType" Member="PartPackage" AccessModifier="Internal" ThisKey="ID" OtherKey="typeID" Type="PartPackage" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.WebPropRequirementCheck" Member="WebPropRequirementChecks">
-    <Type Name="WebPropRequirementCheck">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="WebPropertiesID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Compliance" Type="System.Boolean" DbType="Bit" CanBeNull="false" />
-      <Column Name="WebPropRequirementsID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="WebProperty_WebPropRequirementCheck" Member="WebProperty" ThisKey="WebPropertiesID" OtherKey="id" Type="WebProperty" IsForeignKey="true" />
-      <Association Name="WebPropRequirement_WebPropRequirementCheck" Member="WebPropRequirement" ThisKey="WebPropRequirementsID" OtherKey="ID" Type="WebPropRequirement" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.WebPropRequirements" Member="WebPropRequirements">
-    <Type Name="WebPropRequirement">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ReqType" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Requirement" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Association Name="WebPropRequirement_WebPropRequirementCheck" Member="WebPropRequirementChecks" ThisKey="ID" OtherKey="WebPropRequirementsID" Type="WebPropRequirementCheck" />
     </Type>
   </Table>
   <Function Name="dbo.indexPart" Method="indexPart">
