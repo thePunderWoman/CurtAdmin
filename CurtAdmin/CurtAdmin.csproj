@@ -207,6 +207,7 @@
     <Compile Include="Models\IPtoDNS.cs" />
     <Compile Include="Models\ScheduledTask.cs" />
     <Compile Include="Models\UserManagement.cs" />
+    <Compile Include="Models\WebPropertyRequirement.cs" />
     <Compile Include="Models\Website.cs" />
     <Compile Include="Models\ACES\AcesType.cs" />
     <Compile Include="Models\ACES\ConfigAttributeType.cs" />
