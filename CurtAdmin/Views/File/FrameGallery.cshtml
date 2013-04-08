@@ -114,7 +114,7 @@
 <script type="text/javascript">
     $(function () {
         $('.lifile').live('click', function () {
-            var url = $(this).find("span.filebox img").attr('src');
+            var url = $(this).find("span.filebox img").attr('src').replace('http:',''),replace('https:','');
             window.parent.selectFile(url);
         });
     });

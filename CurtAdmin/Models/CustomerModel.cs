@@ -418,12 +418,10 @@ namespace CurtAdmin
 
                 checksFalseList.Add(FalseList);
             }
-            //this counts 16 somethings - but info = null
 
 
             return checksFalseList;
         }
     }
 
-   
 }
