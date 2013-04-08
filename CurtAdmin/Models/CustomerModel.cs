@@ -380,8 +380,50 @@ namespace CurtAdmin
 
         }
 
-       
+
+        public static List<WebPropRequirement> GetUncheckListForEmail(int webPropID)
+        {
+            CurtDevDataContext db = new CurtDevDataContext();
+
+            List<WebPropRequirement> checksTrue = new List<WebPropRequirement>();
+            List<WebPropRequirement> checksAll = new List<WebPropRequirement>();
+            List<WebPropRequirement> checksFalse = new List<WebPropRequirement>();
+
+            checksTrue = (from wp in db.WebProperties
+                          join wprc in db.WebPropRequirementChecks on wp.id equals wprc.WebPropertiesID
+                          join wpr in db.WebPropRequirements on wprc.WebPropRequirementsID equals wpr.ID
+                          where wp.id.Equals(webPropID)
+                          select wpr).ToList();
+
+            checksAll = (from wp in db.WebPropRequirements
+                         select wp).ToList();
+
+            foreach (WebPropRequirement checkAll in checksAll)
+                {
+                    bool c = checksTrue.Contains(checkAll);
+                    if (c == false)
+                    {
+                       checksFalse.Add(checkAll); 
+                    }
+                 }
+
+            List<WebPropRequirement> checksFalseList = new List<WebPropRequirement>();
+            WebPropRequirement FalseList = new WebPropRequirement();
+            foreach (WebPropRequirement checkFalse in checksFalse)
+            {
+                
+                FalseList = (from z in db.WebPropRequirements
+                                   where z.ID.Equals(checkFalse.ID)
+                                   select z).FirstOrDefault();
+
+                checksFalseList.Add(FalseList);
+            }
+            //this counts 16 somethings - but info = null
+
+
+            return checksFalseList;
+        }
     }
 
-
+   
 }
