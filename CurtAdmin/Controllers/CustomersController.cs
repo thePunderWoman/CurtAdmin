@@ -1360,44 +1360,52 @@ namespace CurtAdmin.Controllers {
             WebProperty wp = (from p in db.WebProperties where p.id.Equals(id) select p).FirstOrDefault();
             List<WebPropRequirement> wpChecks = CurtAdmin.WebPropRequirement.GetUncheckListForEmail(id);
 
-            string subject = "CURT Authorized Internet Dealer badge";
-            string htmlBody = "<p>email address: " + wp.CustUserWebProperty.CustomerUser.email + "</p>";
-            htmlBody += "<p>Dear " + wp.CustUserWebProperty.CustomerUser.name + ",</p>";
-            htmlBody += "<p>Thank you for submitting your application for designation as a CURT Authorized Internet Dealer. You received preliminary approval to display the Authorized Internet Dealer Badge for your web property,  " + wp.url + " on " + wp.addedDate + ". At that time you were advised to review the policy, and make any necessary adjustments to bring your web property into complete compliance with the policy. Since then, we have reviewed your site for official approval as a CURT Authorized Internet Dealer. The following is feedback from our review. ";
-
-
-            switch (type)
+            if (wp != null && wp.id > 0)
             {
-                case "Fix":
-                    htmlBody += "<p>Please note that the qualifying criteria are intended to provide the best customer shopping experience - which translates to more sales of CURT product for your business. For the web property "  + wp.url + "- the following items are currently preventing you from receiving official authorization:</p>";
-                    htmlBody += "<ol>";
-                    foreach (WebPropRequirement wr in wpChecks)
-                    {
-                        htmlBody += "<li>";
-                        htmlBody += wr.Requirement ;
-                        htmlBody += "</li>";
-                    }
-                    htmlBody += "</ol>";
-                    htmlBody += "<p>You may visit the Dealer login area on CURTmfg.com and see the checklist in its entirety. Please submit the changes to " + wp.name + " through <a href='http://dealers.curtmfg.com/AuthorizedDealer/WebProperties'>dealers.curtmfg.com/AuthorizedDealer/WebProperties</a> for review. </p>";
-                    htmlBody += "<p>CURT provides a number of resources to assist you. Please visit the <a href='http://dealers.curtmfg.com/Dealer/Index/7/eBusiness%20Resources'>eBusiness Resources </a>section in the Dealers area of CURTmfg.com for information.</p>";
-                    break;
 
-                case "Congrats":
-                    htmlBody += "<p>Congratulations! " + wp.url + " currently meets the criteria for official approval to display the CURT Authorized Internet Dealer Badge. If you have not already done so, please add the badge to your web property in order to maintain approved status.</p>";
-                    break;
+                string subject = "CURT Authorized Internet Dealer badge";
+                string htmlBody = "<p>email address: " + wp.CustUserWebProperty.CustomerUser.email + "</p>";
+                htmlBody += "<p>Dear " + wp.CustUserWebProperty.CustomerUser.name + ",</p>";
+                htmlBody += "<p>Thank you for submitting your application for designation as a CURT Authorized Internet Dealer. You received preliminary approval to display the Authorized Internet Dealer Badge for your web property,  " + wp.url + " on " + wp.addedDate + ". At that time you were advised to review the policy, and make any necessary adjustments to bring your web property into complete compliance with the policy. Since then, we have reviewed your site for official approval as a CURT Authorized Internet Dealer. The following is feedback from our review. ";
 
-                default:
-                    htmlBody += "<p>You have not been approved as a CURT Authorized Internet Dealer Program because </p> ";
-                    break;
-            }            
 
-            htmlBody += "<p>CURT will periodically review all web properties for adherence to CURT policies. Although we don't anticipate any problems with your web property, CURT maintains the right to revoke authorization to display the Authorized Internet Dealer Badge at any time.</p>";
-            htmlBody += "<p>If you have any questions or need any support for your online selling efforts please don't hesitate to contact us. We appreciate your business and loyal support!</p>";
-            htmlBody += "<p>Warm Regards,</p>";
-            helpers.SendEmail("mmcchesney@curtmfg.com", subject, htmlBody, true);
-            helpers.SendEmail("madelman@curtmfg.com", subject, htmlBody, true);
+                switch (type)
+                {
+                    case "Fix":
+                        htmlBody += "<p>Please note that the qualifying criteria are intended to provide the best customer shopping experience - which translates to more sales of CURT product for your business. For the web property " + wp.url + "- the following items are currently preventing you from receiving official authorization:</p>";
+                        htmlBody += "<ol>";
+                        foreach (WebPropRequirement wr in wpChecks)
+                        {
+                            htmlBody += "<li>";
+                            htmlBody += wr.Requirement;
+                            htmlBody += "</li>";
+                        }
+                        htmlBody += "</ol>";
+                        htmlBody += "<p>You may visit the Dealer login area on CURTmfg.com and see the checklist in its entirety. Please submit the changes to " + wp.name + " through <a href='http://dealers.curtmfg.com/AuthorizedDealer/WebProperties'>dealers.curtmfg.com/AuthorizedDealer/WebProperties</a> for review. </p>";
+                        htmlBody += "<p>CURT provides a number of resources to assist you. Please visit the <a href='http://dealers.curtmfg.com/Dealer/Index/7/eBusiness%20Resources'>eBusiness Resources </a>section in the Dealers area of CURTmfg.com for information.</p>";
+                        break;
 
-            return RedirectToAction("/ViewWebPropertyRequirements", new { id = id, type = "Approved" });
+                    case "Congrats":
+                        htmlBody += "<p>Congratulations! " + wp.url + " currently meets the criteria for official approval to display the CURT Authorized Internet Dealer Badge. If you have not already done so, please add the badge to your web property in order to maintain approved status.</p>";
+                        break;
+
+                    default:
+                        htmlBody += "<p>You have not been approved as a CURT Authorized Internet Dealer Program because </p> ";
+                        break;
+                }
+
+                htmlBody += "<p>CURT will periodically review all web properties for adherence to CURT policies. Although we don't anticipate any problems with your web property, CURT maintains the right to revoke authorization to display the Authorized Internet Dealer Badge at any time.</p>";
+                htmlBody += "<p>If you have any questions or need any support for your online selling efforts please don't hesitate to contact us. We appreciate your business and loyal support!</p>";
+                htmlBody += "<p>Warm Regards,</p>";
+                helpers.SendEmail("mmcchesney@curtmfg.com", subject, htmlBody, true);
+                helpers.SendEmail("madelman@curtmfg.com", subject, htmlBody, true);
+
+                return RedirectToAction("/ViewWebPropertyRequirements", new { id = id, type = "Approved" });
+            }
+            else
+            {
+                return RedirectToAction("/ViewWebProperties");
+            }
 
         }
 
