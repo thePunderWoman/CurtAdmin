@@ -1397,8 +1397,7 @@ namespace CurtAdmin.Controllers {
                 htmlBody += "<p>CURT will periodically review all web properties for adherence to CURT policies. Although we don't anticipate any problems with your web property, CURT maintains the right to revoke authorization to display the Authorized Internet Dealer Badge at any time.</p>";
                 htmlBody += "<p>If you have any questions or need any support for your online selling efforts please don't hesitate to contact us. We appreciate your business and loyal support!</p>";
                 htmlBody += "<p>Warm Regards,</p>";
-                helpers.SendEmail("mmcchesney@curtmfg.com", subject, htmlBody, true);
-                helpers.SendEmail("madelman@curtmfg.com", subject, htmlBody, true);
+                helpers.SendEmail("mmcchesney@curtmfg.com,madelman@curtmfg.com", subject, htmlBody, true);
 
                 return RedirectToAction("/ViewWebPropertyRequirements", new { id = id, type = "Approved" });
             }

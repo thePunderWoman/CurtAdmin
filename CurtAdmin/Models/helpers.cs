@@ -11,13 +11,13 @@ namespace CurtAdmin.Models
     {
         // helpers class is used to extend functionality to the CURT Admin project by including methods that are commonly used
 
-        public static void SendEmail(string email, string subject, string htmlBody, bool isBodyHTML = false)
+        public static void SendEmail(string emails, string subject, string htmlBody, bool isBodyHTML = false)
         {
             try
             {
                 SmtpClient SmtpServer = new SmtpClient();
                 MailMessage mail = new MailMessage();
-                mail.To.Add(email);
+                mail.To.Add(emails);
                 mail.Subject = subject;
                 mail.IsBodyHtml = isBodyHTML;
                 mail.Body = htmlBody;
