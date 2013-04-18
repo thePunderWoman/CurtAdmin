@@ -1,7 +1,21 @@
 ﻿var selectFile, imageSort;
 
 $(function () {
-    $("#tabs").tabs();
+    $("#tabs").tabs({
+        select: function (event, ui) {
+            var hashval = ui.tab.attributes["href"].value;
+            var act = $('form.form').attr('action');
+            console.log(act)
+            if (act.indexOf('#') == -1) {
+                act += hashval
+            } else {
+                // replace hash
+                rhash = act.substring(act.indexOf('#'));
+                act = act.replace(rhash,hashval)
+            }
+            $('form.form').attr('action', act)
+        }
+    });
 
     $('#startDate,#endDate').datetimepicker({
         ampm: true
