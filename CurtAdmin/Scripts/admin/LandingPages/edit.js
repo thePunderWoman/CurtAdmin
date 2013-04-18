@@ -5,7 +5,6 @@ $(function () {
         select: function (event, ui) {
             var hashval = ui.tab.attributes["href"].value;
             var act = $('form.form').attr('action');
-            console.log(act)
             if (act.indexOf('#') == -1) {
                 act += hashval
             } else {
