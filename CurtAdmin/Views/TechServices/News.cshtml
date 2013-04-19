@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "News";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CurtAdmin.TechNews> news = ViewBag.news ?? new List<CurtAdmin.TechNews>();
+    string successMsg = ViewBag.successMsg ?? "";
+}
+<style>
+    #addNews
+    {
+        float:right;
+        margin-bottom:10px;
+    }
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+
+<div id="breadcrumbs"><a href="/TechServices/">Tech Services Home</a> > Tech News </div>
+<div id="content_container">
+    <h2>Tech News</h2>
+        <a href="/TechServices/AddNews" title="Add News Item" id="addNews" class="button">
+        Add News Item
+    </a>
+    @if (successMsg != "") {
+        <p style="color:green">@successMsg</p>
+    }
+    <div style="width: 100%;margin:auto">
+        <table style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Sub Title</th>
+                    <th>For Dealers?</th>
+                    <th>For Public?</th>
+                    <th>Date Modified</th>
+                    <th>Is Active?</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CurtAdmin.TechNews item in news) {
+                    <tr id="item:@item.id">
+                        <td>@item.title</td>
+                        <td>@item.subTitle</td>
+                        <td class="center">
+                           @if (item.showDealers) {
+                                <span>Yes</span>
+                           } else {
+                                <span>No</span>
+                           }
+                        </td>
+                        <td class="center">
+                           @if (item.showPublic) {
+                                <span>Yes</span>
+                           } else {
+                                <span>No</span>
+                           }
+                        </td>
+                        <td>@item.dateModified</td>
+                        <td class="center">
+                           @if (item.active) {
+                                <span>Active</span>
+                           } else {
+                                <span>Not Active</span>
+                           }
+                        </td>
+                        <td class="center">
+                            <select id="action:@item.id" class="item_action">
+                                <option value="0">Select Action</option>
+                                <option value="edit">Edit</option>
+                                <option value="delete">Remove</option>
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/admin/techNews.js")"></script>

@@ -378,6 +378,9 @@ namespace CurtAdmin
     partial void InsertWebPropRequirement(WebPropRequirement instance);
     partial void UpdateWebPropRequirement(WebPropRequirement instance);
     partial void DeleteWebPropRequirement(WebPropRequirement instance);
+    partial void InsertTechNews(TechNews instance);
+    partial void UpdateTechNews(TechNews instance);
+    partial void DeleteTechNews(TechNews instance);
     #endregion
 		
 		public CurtDevDataContext() : 
@@ -1351,6 +1354,14 @@ namespace CurtAdmin
 			get
 			{
 				return this.GetTable<WebPropRequirement>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TechNews> TechNews
+		{
+			get
+			{
+				return this.GetTable<TechNews>();
 			}
 		}
 		
@@ -26823,6 +26834,260 @@ namespace CurtAdmin
 		{
 			this.SendPropertyChanging();
 			entity.WebPropRequirement = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TechNews")]
+	public partial class TechNews : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _pageContent;
+		
+		private bool _showDealers;
+		
+		private bool _showPublic;
+		
+		private System.DateTime _dateModified;
+		
+		private System.Nullable<int> _displayOrder;
+		
+		private bool _active;
+		
+		private string _title;
+		
+		private string _subTitle;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnpageContentChanging(string value);
+    partial void OnpageContentChanged();
+    partial void OnshowDealersChanging(bool value);
+    partial void OnshowDealersChanged();
+    partial void OnshowPublicChanging(bool value);
+    partial void OnshowPublicChanged();
+    partial void OndateModifiedChanging(System.DateTime value);
+    partial void OndateModifiedChanged();
+    partial void OndisplayOrderChanging(System.Nullable<int> value);
+    partial void OndisplayOrderChanged();
+    partial void OnactiveChanging(bool value);
+    partial void OnactiveChanged();
+    partial void OntitleChanging(string value);
+    partial void OntitleChanged();
+    partial void OnsubTitleChanging(string value);
+    partial void OnsubTitleChanged();
+    #endregion
+		
+		public TechNews()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_pageContent", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string pageContent
+		{
+			get
+			{
+				return this._pageContent;
+			}
+			set
+			{
+				if ((this._pageContent != value))
+				{
+					this.OnpageContentChanging(value);
+					this.SendPropertyChanging();
+					this._pageContent = value;
+					this.SendPropertyChanged("pageContent");
+					this.OnpageContentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_showDealers", DbType="Bit NOT NULL")]
+		public bool showDealers
+		{
+			get
+			{
+				return this._showDealers;
+			}
+			set
+			{
+				if ((this._showDealers != value))
+				{
+					this.OnshowDealersChanging(value);
+					this.SendPropertyChanging();
+					this._showDealers = value;
+					this.SendPropertyChanged("showDealers");
+					this.OnshowDealersChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_showPublic", DbType="Bit NOT NULL")]
+		public bool showPublic
+		{
+			get
+			{
+				return this._showPublic;
+			}
+			set
+			{
+				if ((this._showPublic != value))
+				{
+					this.OnshowPublicChanging(value);
+					this.SendPropertyChanging();
+					this._showPublic = value;
+					this.SendPropertyChanged("showPublic");
+					this.OnshowPublicChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_dateModified", DbType="DateTime NOT NULL")]
+		public System.DateTime dateModified
+		{
+			get
+			{
+				return this._dateModified;
+			}
+			set
+			{
+				if ((this._dateModified != value))
+				{
+					this.OndateModifiedChanging(value);
+					this.SendPropertyChanging();
+					this._dateModified = value;
+					this.SendPropertyChanged("dateModified");
+					this.OndateModifiedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_displayOrder", DbType="Int")]
+		public System.Nullable<int> displayOrder
+		{
+			get
+			{
+				return this._displayOrder;
+			}
+			set
+			{
+				if ((this._displayOrder != value))
+				{
+					this.OndisplayOrderChanging(value);
+					this.SendPropertyChanging();
+					this._displayOrder = value;
+					this.SendPropertyChanged("displayOrder");
+					this.OndisplayOrderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_active", DbType="Bit NOT NULL")]
+		public bool active
+		{
+			get
+			{
+				return this._active;
+			}
+			set
+			{
+				if ((this._active != value))
+				{
+					this.OnactiveChanging(value);
+					this.SendPropertyChanging();
+					this._active = value;
+					this.SendPropertyChanged("active");
+					this.OnactiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_title", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+		public string title
+		{
+			get
+			{
+				return this._title;
+			}
+			set
+			{
+				if ((this._title != value))
+				{
+					this.OntitleChanging(value);
+					this.SendPropertyChanging();
+					this._title = value;
+					this.SendPropertyChanged("title");
+					this.OntitleChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_subTitle", DbType="VarChar(500)")]
+		public string subTitle
+		{
+			get
+			{
+				return this._subTitle;
+			}
+			set
+			{
+				if ((this._subTitle != value))
+				{
+					this.OnsubTitleChanging(value);
+					this.SendPropertyChanging();
+					this._subTitle = value;
+					this.SendPropertyChanged("subTitle");
+					this.OnsubTitleChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 	
