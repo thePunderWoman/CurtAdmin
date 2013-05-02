@@ -173,6 +173,7 @@
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\TechServicesController.cs" />
     <Compile Include="Controllers\TestimonialController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VehiclesController.cs" />
@@ -456,6 +457,7 @@
     <Content Include="Scripts\admin\scheduler.js" />
     <Content Include="Scripts\admin\search.js" />
     <Content Include="Scripts\admin\selectfile.js" />
+    <Content Include="Scripts\admin\techNews.js" />
     <Content Include="Scripts\admin\testimonials.js" />
     <Content Include="Scripts\admin\thread.js" />
     <Content Include="Scripts\admin\threads.js" />
@@ -577,6 +579,10 @@
     <Content Include="Views\Misc\APIAnalytics.cshtml" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Customers\ViewWebPropertyRequirements.cshtml" />
+    <Content Include="Views\TechServices\AddNews.cshtml" />
+    <Content Include="Views\TechServices\EditNews.cshtml" />
+    <Content Include="Views\TechServices\Index.cshtml" />
+    <Content Include="Views\TechServices\News.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1269,6 +1269,19 @@
       <Association Name="WebPropRequirement_WebPropRequirementCheck" Member="WebPropRequirementChecks" ThisKey="ID" OtherKey="WebPropRequirementsID" Type="WebPropRequirementCheck" />
     </Type>
   </Table>
+  <Table Name="dbo.TechNews" Member="TechNews">
+    <Type Name="TechNews">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="pageContent" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="showDealers" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="showPublic" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="dateModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="displayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="title" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="subTitle" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.indexPart" Method="indexPart">
     <Parameter Name="partid" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />

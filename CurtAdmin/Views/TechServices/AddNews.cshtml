@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Add News Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CurtAdmin.TechNews item = ViewBag.item ?? new CurtAdmin.TechNews();
+    string error = ViewBag.error ?? "";
+}
+
+<style>
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<script type="text/javascript" src="http://ck.curtmfg.com/ckeditor.js"></script>
+<div id="breadcrumbs"><a href="/TechServices/">Tech Services Home</a> > <a href="/TechServices/News">Tech News</a> > Add News </div>
+<div id="content_container">
+<h2>Add News Item</h2>
+    @if(error != ""){
+        <p style="color:red">@error</p>
+    }
+<form action="/TechServices/AddNews" method="post" id="addNewsForm" class="form_left">
+
+    <label for="title">Title
+        <input type="text" id="title" name="title" value="@item.title" required />
+    </label>
+
+    <label for="subTitle">Sub Title
+        <input type="text" id="subTitle" name="subTitle" value="@item.subTitle" />
+    </label>
+
+    <label for="pageContent">
+         Page Content:
+        <textarea name="pageContent" class="pageContent" rows="10" cols="50" id="pageContent" placeholder="Enter the News Article Content">@Html.Raw(item.pageContent)</textarea>
+    </label>
+
+    <label for="displayOrder">Display Order
+        <input type="text" id="displayOrder" name="displayOrder" value="@item.displayOrder" />
+    </label>
+    <label for="isActive">
+        Is Active?
+        @if (item.active)
+        {
+            <input type="checkbox" name="isActive" id="isActive" checked="checked" />
+        }else{
+            <input type="checkbox" name="isActive" id="isActive" />
+        }
+    </label>
+
+    <label for="showDealers">
+        Visible to Dealers?
+        @if (item.showDealers)
+        {
+            <input type="checkbox" name="showDealers" id="showDealers" checked="checked" />
+        }else{
+            <input type="checkbox" name="showDealers" id="showDealers" />
+        }
+    </label>
+
+    <label for="showPublic">
+        Visible to the Public?
+        @if (item.showPublic)
+        {
+            <input type="checkbox" name="showPublic" id="showPublic" checked="checked" />
+        }else{
+            <input type="checkbox" name="showPublic" id="showPublic" />
+        }
+    </label>
+    <input type="hidden" name="id" id="id" value="@item.id" />
+        <div id="buttons">
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="Add" />
+        </div>
+ </form>
+
+    <script>
+
+        $(document).ready(function () {
+
+            CKEDITOR.replace('pageContent', {
+                filebrowserImageUploadUrl: '/File/CKUpload',
+                filebrowserImageBrowseUrl: '/File/CKIndex',
+                filebrowserImageWindowWidth: '640',
+                filebrowserImageWindowHeight: '480'
+            });
+
+            $('#btnSubmitPublish').click(function () {
+                $('#publish').val("true");
+                $('#saveform').submit();
+            });
+
+        });
+
+    </script>
+
+
+</div>
