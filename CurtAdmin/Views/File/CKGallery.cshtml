@@ -118,7 +118,7 @@
 
     $(function () {
         $('.lifile').live('click', function () {
-            var url = $(this).find("span.filebox img").attr('src').replace('http:',''),replace('https:','');
+            var url = $(this).find("span.filebox img").attr('src').replace('http:','').replace('https:','');
             window.opener.CKEDITOR.tools.callFunction($('#func_num').text(), url, "");
             window.close();
         });
