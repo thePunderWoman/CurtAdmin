@@ -16,6 +16,7 @@
     if(ViewBag.cat != null){
     cat = ViewBag.cat;
     }
+    int lessonID = ViewBag.lessonID ?? 0;
 
     string msg = ViewBag.msg;
     if (msg == null)
@@ -46,10 +47,10 @@
         margin-left:15px;  
     }
 </style>
-<div id="breadcrumbs"><a href="/B2B/">B2B</a> > <a href="/B2B/ViewCerts">Certificates</a> > <a href="/B2B/ViewCats/@cat.certID">Categories</a> > Tests</div>
+<div id="breadcrumbs"><a href="/B2B/">B2B</a> > <a href="/B2B/ViewCerts">Certificates</a> > <a href="/B2B/ViewCats/@cat.certID">Categories</a> > <a href="/B2B/ViewLessons/@cat.id">Lessons</a> > Tests</div>
 <div id="content_container">
     <h2>Viewing B2B Tests</h2>
-    <a href="/B2B/AddTest/@catID" title="Add Test" id="addTest" class="button">
+    <a href="/B2B/AddTest/@lessonID" title="Add Test" id="addTest" class="button">
         Add Test
     </a>
     <hr style="border-bottom:1px dotted #343434;clear:both" />

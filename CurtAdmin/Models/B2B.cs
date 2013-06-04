@@ -77,11 +77,13 @@ namespace CurtAdmin.Models.B2b {
                 throw new Exception("Could not add Lesson: " + e.Message);
             }
         }
-        public static void addTest(int catID, string title, string text, double min_pass_percentage, bool inActive) {
+        public static void addTest(int lessonID, string title, string text, double min_pass_percentage, bool inActive) {
             try {
                 B2BDataContext db = new B2BDataContext();
+                B2BLesson lesson = db.B2BLessons.Where(x => x.id == lessonID).FirstOrDefault<B2BLesson>();
                 B2BTest newTest = new B2BTest();
-                newTest.catID = catID;
+                newTest.lessonID = lessonID;
+                newTest.catID = lesson.catID;
                 newTest.title = title;
                 newTest.text = text;
                 newTest.min_pass_percent = min_pass_percentage;
@@ -202,11 +204,11 @@ namespace CurtAdmin.Models.B2b {
             }
 
         }
-        public static List<B2BTest> getTests(int catID) {
+        public static List<B2BTest> getTests(int lessonID) {
             try {
                 B2BDataContext db = new B2BDataContext();
                 List<B2BTest> listOfTests = new List<B2BTest>();
-                listOfTests = db.B2BTests.Where(x => x.catID == catID).Select(x => x).ToList<B2BTest>();
+                listOfTests = db.B2BTests.Where(x => x.lessonID == lessonID).Select(x => x).ToList<B2BTest>();
                 return listOfTests;
             } catch (Exception e) {
                 throw new Exception("could not load tests: " + e.Message);
