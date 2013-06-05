@@ -710,7 +710,7 @@ namespace CurtAdmin.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public string SetPlaqueStatus(int id, string userID) {
+        public string SetPlaqueStatus(int id, int userID) {
             return B2B.SetPlaqueStatus(id, userID);
         }
     }

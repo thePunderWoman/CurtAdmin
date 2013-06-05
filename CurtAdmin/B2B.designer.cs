@@ -863,11 +863,11 @@ namespace CurtAdmin
 		
 		private bool _inactive;
 		
+		private EntitySet<B2BTest> _B2BTests;
+		
 		private EntitySet<B2BResource> _Resources;
 		
 		private EntitySet<B2BVideo> _Videos;
-		
-		private EntitySet<B2BTest> _B2BTests;
 		
 		private EntityRef<B2BCategory> _Category;
 		
@@ -893,9 +893,9 @@ namespace CurtAdmin
 		
 		public B2BLesson()
 		{
+			this._B2BTests = new EntitySet<B2BTest>(new Action<B2BTest>(this.attach_B2BTests), new Action<B2BTest>(this.detach_B2BTests));
 			this._Resources = new EntitySet<B2BResource>(new Action<B2BResource>(this.attach_Resources), new Action<B2BResource>(this.detach_Resources));
 			this._Videos = new EntitySet<B2BVideo>(new Action<B2BVideo>(this.attach_Videos), new Action<B2BVideo>(this.detach_Videos));
-			this._B2BTests = new EntitySet<B2BTest>(new Action<B2BTest>(this.attach_B2BTests), new Action<B2BTest>(this.detach_B2BTests));
 			this._Category = default(EntityRef<B2BCategory>);
 			OnCreated();
 		}
@@ -1044,6 +1044,19 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BTest", Storage="_B2BTests", ThisKey="id", OtherKey="lessonID")]
+		public EntitySet<B2BTest> B2BTests
+		{
+			get
+			{
+				return this._B2BTests;
+			}
+			set
+			{
+				this._B2BTests.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BResource", Storage="_Resources", ThisKey="id", OtherKey="lessonID")]
 		public EntitySet<B2BResource> B2BResources
 		{
@@ -1067,19 +1080,6 @@ namespace CurtAdmin
 			set
 			{
 				this._Videos.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BTest", Storage="_B2BTests", ThisKey="id", OtherKey="lessonID")]
-		public EntitySet<B2BTest> B2BTests
-		{
-			get
-			{
-				return this._B2BTests;
-			}
-			set
-			{
-				this._B2BTests.Assign(value);
 			}
 		}
 		
@@ -1137,6 +1137,18 @@ namespace CurtAdmin
 			}
 		}
 		
+		private void attach_B2BTests(B2BTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BLesson = this;
+		}
+		
+		private void detach_B2BTests(B2BTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BLesson = null;
+		}
+		
 		private void attach_Resources(B2BResource entity)
 		{
 			this.SendPropertyChanging();
@@ -1156,18 +1168,6 @@ namespace CurtAdmin
 		}
 		
 		private void detach_Videos(B2BVideo entity)
-		{
-			this.SendPropertyChanging();
-			entity.B2BLesson = null;
-		}
-		
-		private void attach_B2BTests(B2BTest entity)
-		{
-			this.SendPropertyChanging();
-			entity.B2BLesson = this;
-		}
-		
-		private void detach_B2BTests(B2BTest entity)
 		{
 			this.SendPropertyChanging();
 			entity.B2BLesson = null;
@@ -3281,7 +3281,7 @@ namespace CurtAdmin
 		
 		private int _id;
 		
-		private System.Guid _userID;
+		private string _userID;
 		
 		private int _numLessonsCompleted;
 		
@@ -3301,8 +3301,8 @@ namespace CurtAdmin
     partial void OnCreated();
     partial void OnidChanging(int value);
     partial void OnidChanged();
-    partial void OnuserIDChanging(System.Guid value);
-    partial void OnuserIDChanged();
+    partial void OncustomerUserEmailChanging(string value);
+    partial void OncustomerUserEmailChanged();
     partial void OnnumLessonsCompletedChanging(int value);
     partial void OnnumLessonsCompletedChanged();
     partial void OnnumCertsCompletedChanging(int value);
@@ -3340,8 +3340,8 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="UniqueIdentifier NOT NULL")]
-		public System.Guid userID
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="Varchar(150)", CanBeNull=false)]
+		public string customerUserEmail
 		{
 			get
 			{
@@ -3351,11 +3351,11 @@ namespace CurtAdmin
 			{
 				if ((this._userID != value))
 				{
-					this.OnuserIDChanging(value);
+					this.OncustomerUserEmailChanging(value);
 					this.SendPropertyChanging();
 					this._userID = value;
-					this.SendPropertyChanged("userID");
-					this.OnuserIDChanged();
+					this.SendPropertyChanged("customerUserEmail");
+					this.OncustomerUserEmailChanged();
 				}
 			}
 		}

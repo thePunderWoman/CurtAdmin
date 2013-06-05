@@ -339,11 +339,11 @@ namespace CurtAdmin.Models.B2b {
                 throw new Exception("Could not load B2B User Info: " + e.Message);
             }
         }
-        public static B2BUser getB2BUser(string userID) {
+        public static B2BUser getB2BUser(string customerUserEmail) {
             try {
                 B2BUser b2bUser = new B2BUser();
                 B2BDataContext db = new B2BDataContext();
-                b2bUser = db.B2BUsers.Where(x => x.userID.ToString() == userID).Select(x => x).FirstOrDefault<B2BUser>();
+                b2bUser = db.B2BUsers.Where(x => x.customerUserEmail == customerUserEmail).Select(x => x).FirstOrDefault<B2BUser>();
                 return b2bUser;
             } catch (Exception) {
                 throw new Exception("Could not retrieve B2B user information.");
@@ -439,7 +439,7 @@ namespace CurtAdmin.Models.B2b {
         }
 
         ///////////////////== AJAX == ////////////////////////////////////
-        public static string SetPlaqueStatus(int certID, string userID) {
+        public static string SetPlaqueStatus(int certID, int userID) {
             try {
                 B2BDataContext db = new B2BDataContext();
                 B2BCompletedCert compCert = new B2BCompletedCert();
@@ -460,10 +460,10 @@ namespace CurtAdmin.Models.B2b {
         }
 
         //////////////////////==  B2B User Interaction ==/////////////////
-        public static CustomerUser getCustomerUser(string customerUserID) {
+        public static CustomerUser getCustomerUser(string customerUserEmail) {
             try {
                 CurtDevDataContext db = new CurtDevDataContext();
-                CustomerUser customerUser = db.CustomerUsers.Where(x => x.id.ToString() == customerUserID.ToString()).Select(x => x).FirstOrDefault<CustomerUser>();
+                CustomerUser customerUser = db.CustomerUsers.Where(x => x.email == customerUserEmail).Select(x => x).FirstOrDefault<CustomerUser>();
                 return customerUser;
             } catch (Exception e) {
                 throw new Exception("Could not get the customer user: " + e.Message);
@@ -495,11 +495,10 @@ namespace CurtAdmin.Models.B2b {
     } // end class B2B
 
     public class B2BFullUser {
-        public int B2BUserID { get; set; }
+        public int b2bUserID { get; set; }
         public int customerID { get; set; }
         public string name { get; set; }
         public string email { get; set; }
-        public bool isCustomerUser { get; set; }
         public int numLessonsCompleted { get; set; }
         public int numCertsCompleted { get; set; }
         public DateTime join_date { get; set; }
@@ -509,15 +508,13 @@ namespace CurtAdmin.Models.B2b {
         public static B2BFullUser castToFullUser(B2BUser user) {
 
             B2BFullUser fullUser = new B2BFullUser();
-
-            fullUser.isCustomerUser = true;
-            fullUser.B2BUserID = user.id;
+            fullUser.b2bUserID = user.id;
             fullUser.join_date = user.join_date;
             fullUser.numCertsCompleted = user.numCertsCompleted;
             fullUser.numLessonsCompleted = user.numLessonsCompleted;
             fullUser.hasSign = user.hasSign;
             
-            CustomerUser customerUser = B2B.getCustomerUser(user.userID.ToString());
+            CustomerUser customerUser = B2B.getCustomerUser(user.customerUserEmail);
             fullUser.email = customerUser.email;
             fullUser.name = customerUser.name;
             fullUser.customerID = Convert.ToInt32(customerUser.customerID);

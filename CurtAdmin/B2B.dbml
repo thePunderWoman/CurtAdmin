@@ -38,9 +38,9 @@
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Association Name="B2BLesson_B2BTest" Member="B2BTests" ThisKey="id" OtherKey="lessonID" Type="B2BTest" />
       <Association Name="B2BLesson_B2BResource" Member="B2BResources" Storage="_Resources" ThisKey="id" OtherKey="lessonID" Type="B2BResource" />
       <Association Name="B2BLesson_B2BVideo" Member="B2BVideos" Storage="_Videos" ThisKey="id" OtherKey="lessonID" Type="B2BVideo" />
-      <Association Name="B2BLesson_B2BTest" Member="B2BTests" ThisKey="id" OtherKey="lessonID" Type="B2BTest" />
       <Association Name="B2BCategory_B2BLesson" Member="B2BCategory" Storage="_Category" ThisKey="catID" OtherKey="id" Type="B2BCategory" IsForeignKey="true" />
     </Type>
   </Table>
@@ -145,7 +145,7 @@
   <Table Name="dbo.B2BUser" Member="B2BUsers">
     <Type Name="B2BUser">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="userID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="customerUserEmail" Storage="_userID" Type="System.String" DbType="Varchar(150)" CanBeNull="false" />
       <Column Name="numLessonsCompleted" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="numCertsCompleted" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="join_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
