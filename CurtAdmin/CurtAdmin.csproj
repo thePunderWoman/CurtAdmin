@@ -583,6 +583,7 @@
     <Content Include="Views\TechServices\EditNews.cshtml" />
     <Content Include="Views\TechServices\Index.cshtml" />
     <Content Include="Views\TechServices\News.cshtml" />
+    <Content Include="Views\B2B\ViewCustomers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

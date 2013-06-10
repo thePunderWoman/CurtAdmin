@@ -1,0 +1,83 @@
+﻿@using CurtAdmin
+@using CurtAdmin.Models.B2b
+@{
+    ViewBag.Title = "View Customers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<Customer> listOfCustomers = new List<Customer>();
+    listOfCustomers = ViewBag.listOfCustomers ?? new List<Customer>();
+
+    string msg = ViewBag.msg ?? "";
+    string err = ViewBag.err ?? "";
+
+}
+    <style type="text/css">
+    table tbody tr td:nth-child(7){
+        text-align: center;
+    }
+    
+    h2{
+        float:left;
+    }
+    
+    #addCert, #massUpload{
+        float:right;
+    }
+    
+    #massUpload{
+        margin-top: 30px;
+    }
+    #breadcrumbs
+    {
+        padding:5px;
+        margin-left:15px;  
+    }
+</style>
+<div id="breadcrumbs"><a href="/B2B">B2B</a> > View Customers</div>
+<div id="content_container">
+    <h2>Viewing B2B Customers</h2>
+    <hr style="border-bottom:1px dotted #343434;clear:both" />
+    <!-- Explain what's here (for Chris) -->
+    <p>This page is for viewing all of the B2B Customers. 
+        <br />
+        <em><strong>Note:</strong> It is possible for there to be B2B users not tied to customer records. These B2B users can not be viewed by customer. To View them, go <a href="/B2B/ViewUsers">here.</a></em>
+
+    </p>
+    @if (err != "") {
+        <p style="font-weight: bold; color: red;">@err</p>
+    }
+    <div id="loading_area">
+        <p>Loading Customers...</p>
+        <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Customers" />
+    </div>
+    <table style="display: none;">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Customer cust in listOfCustomers)
+            {
+                <tr>
+                    <td>@cust.customerID</td>
+                    <td>@cust.name</td>
+                    <td>
+                        <a href="/B2B/ViewUsers/@cust.cust_id" class="users">B2B Users</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        certTable = $('table').dataTable({ "bJQueryUI": true, "bDeferRender": true });
+        $('#loading_area').hide();
+        $('table').fadeIn('fast');
+    });
+</script>
+
+

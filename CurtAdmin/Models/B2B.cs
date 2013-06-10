@@ -214,15 +214,45 @@ namespace CurtAdmin.Models.B2b {
                 throw new Exception("could not load tests: " + e.Message);
             }
         }
-        public static List<B2BFullUser> getB2BUsers() {
+
+        public static List<Customer> getB2BCustomers() {
+            B2BDataContext b2bdb = new B2BDataContext();
+            CurtDevDataContext db = new CurtDevDataContext();
+            // get list of users emails.
+            List<string> listofEmails = b2bdb.B2BUsers.Select(x => x.customerUserEmail).ToList<string>();
+
+            List<CustomerUser> users = new List<CustomerUser>();
+            // loop through the list of emails and get the users with those emails.
+            foreach (string email in listofEmails) {
+                users.Add(db.CustomerUsers.Where(x => x.email == email).FirstOrDefault<CustomerUser>());
+            }
+            List<Customer> listOfCustomers = new List<Customer>();
+            // grab all the distinct customer records from that list of users.
+            listOfCustomers = users.Select(x => x.Customer).Distinct().ToList<Customer>();
+            return listOfCustomers;
+        }
+
+
+
+        public static List<B2BFullUser> getB2BUsers(int custID = 0) {
             List<B2BUser> listOfB2BUsers = new List<B2BUser>();
             B2BDataContext db = new B2BDataContext();
+            CurtDevDataContext cdb = new CurtDevDataContext();
+            if (custID == 0) {
+                listOfB2BUsers = db.B2BUsers.ToList<B2BUser>();
+            } else {
+              
+                List<CustomerUser> listOfUsers = cdb.CustomerUsers.Where(x => x.cust_id == custID).ToList<CustomerUser>();
+                foreach (CustomerUser user in listOfUsers) {
+                   B2BUser b2bUser = db.B2BUsers.Where(x => x.customerUserEmail == user.email).FirstOrDefault<B2BUser>();
+                   if (b2bUser != null) {
+                       listOfB2BUsers.Add(b2bUser);
+                   }
+                }
 
-            listOfB2BUsers = db.B2BUsers.ToList<B2BUser>();
+            }
 
             List<B2BFullUser> listOfFullUsers = new List<B2BFullUser>();
-
-
             foreach (B2BUser user in listOfB2BUsers) {
                 listOfFullUsers.Add(B2BFullUser.castToFullUser(user)); // add the generated full user to the list of Full Users
             }// end foreach b2b user

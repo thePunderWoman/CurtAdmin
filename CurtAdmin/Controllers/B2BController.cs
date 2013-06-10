@@ -74,12 +74,33 @@ namespace CurtAdmin.Controllers {
             ViewBag.question = question;
             return View();
         }
-        // views all B2B users
-        public ActionResult ViewUsers() {
-            List<B2BFullUser> listOfB2BUsers = new List<B2BFullUser>();
+
+        // View B2B customers
+        public ActionResult ViewCustomers() {
+            List<Customer> listOfCustomers = new List<Customer>();
             string err = "";
             try {
-                listOfB2BUsers = B2B.getB2BUsers();
+                listOfCustomers = B2B.getB2BCustomers();
+            } catch (Exception e) {
+                err = "Could not load B2B Users: " + e.Message + " " + e.StackTrace;
+            }
+            ViewBag.err = err;
+            ViewBag.listOfCustomers = listOfCustomers;
+            return View();
+        }
+
+
+        // views all B2B users
+        public ActionResult ViewUsers(int id = 0) {
+            List<B2BFullUser> listOfB2BUsers = new List<B2BFullUser>();
+            string err = "";
+
+            try {
+                if (id == 0) {
+                        listOfB2BUsers = B2B.getB2BUsers(id);            
+                } else {
+                    listOfB2BUsers = B2B.getB2BUsers(id);
+                }
             } catch (Exception e) {
                 err = "Could not load B2B Users: " + e.Message + " " + e.StackTrace;
             }
