@@ -69,7 +69,7 @@ namespace CurtAdmin.Models.B2b {
                 newPDF.sort = 1;
                 newPDF.lessonID = newLesson.id;
                 newPDF.title = title + " PDF";
-                newPDF.image_path = "http://curtmfg.com/Content/img/pdf.png";
+                newPDF.image_path = "https://www.curtmfg.com/assets/f70444af-54b2-4242-8eca-13dacd6e715c.png";
                 db.B2BResources.InsertOnSubmit(newPDF);
                 db.SubmitChanges();
 
