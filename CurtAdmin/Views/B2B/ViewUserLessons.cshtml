@@ -37,14 +37,14 @@
         margin-left:15px;  
     }
 </style>
-<div id="breadcrumbs"><a href="/B2B">B2B</a> > <a href="/B2B/ViewUsers">View Users</a> > <a href="/B2B/ViewUser/@B2BFullUser.B2BUserID">View User Completed Certificates</a> > View User Completed Lessons</div>
+<div id="breadcrumbs"><a href="/B2B">B2B</a> > <a href="/B2B/ViewUsers">View Users</a> > <a href="/B2B/ViewUser/@B2BFullUser.b2bUserID">View User Completed Certificates</a> > View User Completed Lessons</div>
 <div id="content_container">
-    <h2>Viewing B2B @(cert.title) Lessons for: @B2BFullUser.name </h2>
+    <h2>Viewing B2B @(cert.title) Tests for: @B2BFullUser.name </h2>
     <hr style="border-bottom:1px dotted #343434;clear:both" />
     <!-- Explain what's here (for Chris) -->
     <p>This page is for viewing all of the lessons under the @cert.title certificate</p>
     <hr />
-    <h3>Completed Lessons for @cert.title</h3>
+    <h3>Completed Tests for @cert.title</h3>
     <div id="loading_area">
         <p>Loading Completed Lessons...</p>
         <img src="@Url.Content("~/Content/img/ajax_loader.gif")" alt="Loading Completed Lessons" />
@@ -52,7 +52,7 @@
     <table id="completedLessons" style="display: none;">
         <thead>
             <tr>
-                <th>Lesson title</th>
+                <th>Test Title</th>
                 <th>Date completed</th>
                 <th>Score</th>
             </tr>
@@ -61,7 +61,7 @@
             @foreach (B2BCompletedTest compLesson in B2BUser.B2BCompletedTests)
             {
                 <tr>
-                    <td>@(compLesson.B2BTests.FirstOrDefault<B2BTest>().B2BCategory.title)</td>
+                    <td>@(compLesson.B2BTests.FirstOrDefault().title)</td>
                     <td>@compLesson.date_completed</td>
                     <td>@compLesson.score</td>
                 </tr>

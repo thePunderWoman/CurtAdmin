@@ -69,7 +69,7 @@ namespace CurtAdmin.Models.B2b {
                 newPDF.sort = 1;
                 newPDF.lessonID = newLesson.id;
                 newPDF.title = title + " PDF";
-                newPDF.image_path = "http://curtmfg.com/Content/img/pdf.png";
+                newPDF.image_path = "https://www.curtmfg.com/assets/f70444af-54b2-4242-8eca-13dacd6e715c.png";
                 db.B2BResources.InsertOnSubmit(newPDF);
                 db.SubmitChanges();
 
@@ -77,11 +77,13 @@ namespace CurtAdmin.Models.B2b {
                 throw new Exception("Could not add Lesson: " + e.Message);
             }
         }
-        public static void addTest(int catID, string title, string text, double min_pass_percentage, bool inActive) {
+        public static void addTest(int lessonID, string title, string text, double min_pass_percentage, bool inActive) {
             try {
                 B2BDataContext db = new B2BDataContext();
+                B2BLesson lesson = db.B2BLessons.Where(x => x.id == lessonID).FirstOrDefault<B2BLesson>();
                 B2BTest newTest = new B2BTest();
-                newTest.catID = catID;
+                newTest.lessonID = lessonID;
+                newTest.catID = lesson.catID;
                 newTest.title = title;
                 newTest.text = text;
                 newTest.min_pass_percent = min_pass_percentage;
@@ -202,25 +204,55 @@ namespace CurtAdmin.Models.B2b {
             }
 
         }
-        public static List<B2BTest> getTests(int catID) {
+        public static List<B2BTest> getTests(int lessonID) {
             try {
                 B2BDataContext db = new B2BDataContext();
                 List<B2BTest> listOfTests = new List<B2BTest>();
-                listOfTests = db.B2BTests.Where(x => x.catID == catID).Select(x => x).ToList<B2BTest>();
+                listOfTests = db.B2BTests.Where(x => x.lessonID == lessonID).Select(x => x).ToList<B2BTest>();
                 return listOfTests;
             } catch (Exception e) {
                 throw new Exception("could not load tests: " + e.Message);
             }
         }
-        public static List<B2BFullUser> getB2BUsers() {
+
+        public static List<Customer> getB2BCustomers() {
+            B2BDataContext b2bdb = new B2BDataContext();
+            CurtDevDataContext db = new CurtDevDataContext();
+            // get list of users emails.
+            List<string> listofEmails = b2bdb.B2BUsers.Select(x => x.customerUserEmail).ToList<string>();
+
+            List<CustomerUser> users = new List<CustomerUser>();
+            // loop through the list of emails and get the users with those emails.
+            foreach (string email in listofEmails) {
+                users.Add(db.CustomerUsers.Where(x => x.email == email).FirstOrDefault<CustomerUser>());
+            }
+            List<Customer> listOfCustomers = new List<Customer>();
+            // grab all the distinct customer records from that list of users.
+            listOfCustomers = users.Select(x => x.Customer).Distinct().ToList<Customer>();
+            return listOfCustomers;
+        }
+
+
+
+        public static List<B2BFullUser> getB2BUsers(int custID = 0) {
             List<B2BUser> listOfB2BUsers = new List<B2BUser>();
             B2BDataContext db = new B2BDataContext();
+            CurtDevDataContext cdb = new CurtDevDataContext();
+            if (custID == 0) {
+                listOfB2BUsers = db.B2BUsers.ToList<B2BUser>();
+            } else {
+              
+                List<CustomerUser> listOfUsers = cdb.CustomerUsers.Where(x => x.cust_id == custID).ToList<CustomerUser>();
+                foreach (CustomerUser user in listOfUsers) {
+                   B2BUser b2bUser = db.B2BUsers.Where(x => x.customerUserEmail == user.email).FirstOrDefault<B2BUser>();
+                   if (b2bUser != null) {
+                       listOfB2BUsers.Add(b2bUser);
+                   }
+                }
 
-            listOfB2BUsers = db.B2BUsers.ToList<B2BUser>();
+            }
 
             List<B2BFullUser> listOfFullUsers = new List<B2BFullUser>();
-
-
             foreach (B2BUser user in listOfB2BUsers) {
                 listOfFullUsers.Add(B2BFullUser.castToFullUser(user)); // add the generated full user to the list of Full Users
             }// end foreach b2b user
@@ -337,11 +369,11 @@ namespace CurtAdmin.Models.B2b {
                 throw new Exception("Could not load B2B User Info: " + e.Message);
             }
         }
-        public static B2BUser getB2BUser(string userID) {
+        public static B2BUser getB2BUser(string customerUserEmail) {
             try {
                 B2BUser b2bUser = new B2BUser();
                 B2BDataContext db = new B2BDataContext();
-                b2bUser = db.B2BUsers.Where(x => x.userID.ToString() == userID).Select(x => x).FirstOrDefault<B2BUser>();
+                b2bUser = db.B2BUsers.Where(x => x.customerUserEmail == customerUserEmail).Select(x => x).FirstOrDefault<B2BUser>();
                 return b2bUser;
             } catch (Exception) {
                 throw new Exception("Could not retrieve B2B user information.");
@@ -437,7 +469,7 @@ namespace CurtAdmin.Models.B2b {
         }
 
         ///////////////////== AJAX == ////////////////////////////////////
-        public static string SetPlaqueStatus(int certID, string userID) {
+        public static string SetPlaqueStatus(int certID, int userID) {
             try {
                 B2BDataContext db = new B2BDataContext();
                 B2BCompletedCert compCert = new B2BCompletedCert();
@@ -458,10 +490,10 @@ namespace CurtAdmin.Models.B2b {
         }
 
         //////////////////////==  B2B User Interaction ==/////////////////
-        public static CustomerUser getCustomerUser(string customerUserID) {
+        public static CustomerUser getCustomerUser(string customerUserEmail) {
             try {
                 CurtDevDataContext db = new CurtDevDataContext();
-                CustomerUser customerUser = db.CustomerUsers.Where(x => x.id.ToString() == customerUserID.ToString()).Select(x => x).FirstOrDefault<CustomerUser>();
+                CustomerUser customerUser = db.CustomerUsers.Where(x => x.email == customerUserEmail).Select(x => x).FirstOrDefault<CustomerUser>();
                 return customerUser;
             } catch (Exception e) {
                 throw new Exception("Could not get the customer user: " + e.Message);
@@ -493,11 +525,10 @@ namespace CurtAdmin.Models.B2b {
     } // end class B2B
 
     public class B2BFullUser {
-        public int B2BUserID { get; set; }
+        public int b2bUserID { get; set; }
         public int customerID { get; set; }
         public string name { get; set; }
         public string email { get; set; }
-        public bool isCustomerUser { get; set; }
         public int numLessonsCompleted { get; set; }
         public int numCertsCompleted { get; set; }
         public DateTime join_date { get; set; }
@@ -507,15 +538,13 @@ namespace CurtAdmin.Models.B2b {
         public static B2BFullUser castToFullUser(B2BUser user) {
 
             B2BFullUser fullUser = new B2BFullUser();
-
-            fullUser.isCustomerUser = true;
-            fullUser.B2BUserID = user.id;
+            fullUser.b2bUserID = user.id;
             fullUser.join_date = user.join_date;
             fullUser.numCertsCompleted = user.numCertsCompleted;
             fullUser.numLessonsCompleted = user.numLessonsCompleted;
             fullUser.hasSign = user.hasSign;
             
-            CustomerUser customerUser = B2B.getCustomerUser(user.userID.ToString());
+            CustomerUser customerUser = B2B.getCustomerUser(user.customerUserEmail);
             fullUser.email = customerUser.email;
             fullUser.name = customerUser.name;
             fullUser.customerID = Convert.ToInt32(customerUser.customerID);

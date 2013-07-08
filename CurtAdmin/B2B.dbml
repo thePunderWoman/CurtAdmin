@@ -38,6 +38,7 @@
       <Column Name="date_added" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Association Name="B2BLesson_B2BTest" Member="B2BTests" ThisKey="id" OtherKey="lessonID" Type="B2BTest" />
       <Association Name="B2BLesson_B2BResource" Member="B2BResources" Storage="_Resources" ThisKey="id" OtherKey="lessonID" Type="B2BResource" />
       <Association Name="B2BLesson_B2BVideo" Member="B2BVideos" Storage="_Videos" ThisKey="id" OtherKey="lessonID" Type="B2BVideo" />
       <Association Name="B2BCategory_B2BLesson" Member="B2BCategory" Storage="_Category" ThisKey="catID" OtherKey="id" Type="B2BCategory" IsForeignKey="true" />
@@ -54,9 +55,11 @@
       <Column Name="date_modified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="isRandomOrder" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="inactive" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="lessonID" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Association Name="B2BTest_B2BQuestion" Member="B2BQuestions" Storage="_Questions" ThisKey="id" OtherKey="testID" Type="B2BQuestion" />
       <Association Name="B2BCategory_B2BTest" Member="B2BCategory" Storage="_Category" ThisKey="catID" OtherKey="id" Type="B2BCategory" IsForeignKey="true" />
       <Association Name="B2BCompletedTest_B2BTest" Member="B2BCompletedTest" ThisKey="id" OtherKey="testID" Type="B2BCompletedTest" IsForeignKey="true" />
+      <Association Name="B2BLesson_B2BTest" Member="B2BLesson" ThisKey="lessonID" OtherKey="id" Type="B2BLesson" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Questions" Member="B2BQuestions">
@@ -142,13 +145,13 @@
   <Table Name="dbo.B2BUser" Member="B2BUsers">
     <Type Name="B2BUser">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="userID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="customerUserEmail" Storage="_userID" Type="System.String" DbType="Varchar(150)" CanBeNull="false" />
       <Column Name="numLessonsCompleted" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="numCertsCompleted" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="join_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="hasSign" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="B2BUser_B2BCompletedCert" Member="B2BCompletedCerts" ThisKey="id" OtherKey="B2BUserID" Type="B2BCompletedCert" />
       <Association Name="B2BUser_B2BCompletedTest" Member="B2BCompletedTests" ThisKey="id" OtherKey="B2BUserID" Type="B2BCompletedTest" />
+      <Association Name="B2BUser_B2BCompletedCert" Member="B2BCompletedCerts" ThisKey="id" OtherKey="B2BUserID" Type="B2BCompletedCert" />
     </Type>
   </Table>
   <Table Name="dbo.CompletedTests" Member="B2BCompletedTests">
@@ -159,8 +162,8 @@
       <Column Name="testID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="certID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="date_completed" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="B2BCompletedTest_B2BTestResult" Member="B2BTestResults" ThisKey="testID" OtherKey="testTookID" Type="B2BTestResult" />
       <Association Name="B2BCompletedTest_B2BTest" Member="B2BTests" ThisKey="testID" OtherKey="id" Type="B2BTest" />
+      <Association Name="B2BCompletedTest_B2BTestResult" Member="B2BTestResults" ThisKey="testID" OtherKey="testTookID" Type="B2BTestResult" />
       <Association Name="B2BUser_B2BCompletedTest" Member="B2BUser" ThisKey="B2BUserID" OtherKey="id" Type="B2BUser" IsForeignKey="true" />
     </Type>
   </Table>

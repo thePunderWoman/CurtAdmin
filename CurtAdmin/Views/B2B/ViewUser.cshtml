@@ -69,7 +69,7 @@
                     <td>@(compCert.B2BCertificates.FirstOrDefault<B2BCertificate>().title)</td>
                     <td>@compCert.date_completed</td>
                     <td class="center">
-                        <input type="checkbox" name="hasPlaque" title="@B2BUser.userID" id="hasPlaque:@compCert.certID" class="hasPlaque" value="1" @((compCert.hasPlaque) ? "checked" : "") />
+                        <input type="checkbox" name="hasPlaque" title="@B2BUser.id" id="hasPlaque:@compCert.certID" class="hasPlaque" value="1" @((compCert.hasPlaque) ? "checked" : "") />
                     </td>
                     @if (compCert.sentPlaqueEmail)
                     {
@@ -80,7 +80,7 @@
                         <td class="center">No</td>
                     }
                     <td>
-                        <a href="/B2B/ViewUserLessons/@B2BUser.id?certID=@compCert.id" class="locations">View Completed Lessons</a>
+                        <a href="/B2B/ViewUserLessons/@B2BUser.id?certID=@compCert.id" class="locations">View Completed Tests</a>
                     </td>
                 </tr>
             }

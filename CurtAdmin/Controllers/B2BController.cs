@@ -47,11 +47,13 @@ namespace CurtAdmin.Controllers {
         }
 
         public ActionResult ViewTests(int id) {
-            int catID = id;
-            List<CurtAdmin.B2BTest> listOfTests = B2B.getTests(catID);
+            int lessonID = id;
+            List<CurtAdmin.B2BTest> listOfTests = B2B.getTests(lessonID);
+            B2BLesson lesson = B2B.getLesson(lessonID);
             ViewBag.listOfTests = listOfTests;
-            ViewBag.cat = B2B.getCategory(catID);
-            ViewBag.catID = id;
+            ViewBag.cat = lesson.B2BCategory;
+            ViewBag.catID = lesson.catID;
+            ViewBag.lessonID = lessonID;
             return View();
         }
 
@@ -72,12 +74,33 @@ namespace CurtAdmin.Controllers {
             ViewBag.question = question;
             return View();
         }
-        // views all B2B users
-        public ActionResult ViewUsers() {
-            List<B2BFullUser> listOfB2BUsers = new List<B2BFullUser>();
+
+        // View B2B customers
+        public ActionResult ViewCustomers() {
+            List<Customer> listOfCustomers = new List<Customer>();
             string err = "";
             try {
-                listOfB2BUsers = B2B.getB2BUsers();
+                listOfCustomers = B2B.getB2BCustomers();
+            } catch (Exception e) {
+                err = "Could not load B2B Users: " + e.Message + " " + e.StackTrace;
+            }
+            ViewBag.err = err;
+            ViewBag.listOfCustomers = listOfCustomers;
+            return View();
+        }
+
+
+        // views all B2B users
+        public ActionResult ViewUsers(int id = 0) {
+            List<B2BFullUser> listOfB2BUsers = new List<B2BFullUser>();
+            string err = "";
+
+            try {
+                if (id == 0) {
+                        listOfB2BUsers = B2B.getB2BUsers(id);            
+                } else {
+                    listOfB2BUsers = B2B.getB2BUsers(id);
+                }
             } catch (Exception e) {
                 err = "Could not load B2B Users: " + e.Message + " " + e.StackTrace;
             }
@@ -222,23 +245,23 @@ namespace CurtAdmin.Controllers {
         [HttpGet]
         public ActionResult AddTest(int id) {
             ViewBag.error = "";
-            int catID = id;
-            ViewBag.catID = catID;
+            int lessonID = id;
+            ViewBag.lessonID = lessonID;
             return View();
         }
         [HttpPost]
         public ActionResult AddTest(int id, string title, string text, double minPassPercent, string inactive) {
             ViewBag.error = "";
-            int catID = id;
-            ViewBag.catID = catID;
+            int lessonID = id;
+            ViewBag.lessonID = lessonID;
 
             Boolean inActive = false;
             inActive = (inactive == "on") ? true : false;
 
-            if (title != "" && text != "" && catID.ToString().Length > 0 && minPassPercent.ToString().Length > 0) {
+            if (title != "" && text != "" && lessonID.ToString().Length > 0 && minPassPercent.ToString().Length > 0) {
                 try {
-                    B2B.addTest(catID, title, text, minPassPercent, inActive);
-                    return RedirectToAction("ViewTests", new { id = catID });
+                    B2B.addTest(lessonID, title, text, minPassPercent, inActive);
+                    return RedirectToAction("ViewTests", new { id = lessonID });
                 } catch (Exception e) {
                     ViewBag.error = e.Message;
                 }
@@ -708,7 +731,7 @@ namespace CurtAdmin.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public string SetPlaqueStatus(int id, string userID) {
+        public string SetPlaqueStatus(int id, int userID) {
             return B2B.SetPlaqueStatus(id, userID);
         }
     }

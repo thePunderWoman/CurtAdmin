@@ -863,6 +863,8 @@ namespace CurtAdmin
 		
 		private bool _inactive;
 		
+		private EntitySet<B2BTest> _B2BTests;
+		
 		private EntitySet<B2BResource> _Resources;
 		
 		private EntitySet<B2BVideo> _Videos;
@@ -891,6 +893,7 @@ namespace CurtAdmin
 		
 		public B2BLesson()
 		{
+			this._B2BTests = new EntitySet<B2BTest>(new Action<B2BTest>(this.attach_B2BTests), new Action<B2BTest>(this.detach_B2BTests));
 			this._Resources = new EntitySet<B2BResource>(new Action<B2BResource>(this.attach_Resources), new Action<B2BResource>(this.detach_Resources));
 			this._Videos = new EntitySet<B2BVideo>(new Action<B2BVideo>(this.attach_Videos), new Action<B2BVideo>(this.detach_Videos));
 			this._Category = default(EntityRef<B2BCategory>);
@@ -1041,6 +1044,19 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BTest", Storage="_B2BTests", ThisKey="id", OtherKey="lessonID")]
+		public EntitySet<B2BTest> B2BTests
+		{
+			get
+			{
+				return this._B2BTests;
+			}
+			set
+			{
+				this._B2BTests.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BResource", Storage="_Resources", ThisKey="id", OtherKey="lessonID")]
 		public EntitySet<B2BResource> B2BResources
 		{
@@ -1121,6 +1137,18 @@ namespace CurtAdmin
 			}
 		}
 		
+		private void attach_B2BTests(B2BTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BLesson = this;
+		}
+		
+		private void detach_B2BTests(B2BTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BLesson = null;
+		}
+		
 		private void attach_Resources(B2BResource entity)
 		{
 			this.SendPropertyChanging();
@@ -1170,11 +1198,15 @@ namespace CurtAdmin
 		
 		private bool _inactive;
 		
+		private int _lessonID;
+		
 		private EntitySet<B2BQuestion> _Questions;
 		
 		private EntityRef<B2BCategory> _Category;
 		
 		private EntityRef<B2BCompletedTest> _B2BCompletedTest;
+		
+		private EntityRef<B2BLesson> _B2BLesson;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1198,6 +1230,8 @@ namespace CurtAdmin
     partial void OnisRandomOrderChanged();
     partial void OninactiveChanging(bool value);
     partial void OninactiveChanged();
+    partial void OnlessonIDChanging(int value);
+    partial void OnlessonIDChanged();
     #endregion
 		
 		public B2BTest()
@@ -1205,6 +1239,7 @@ namespace CurtAdmin
 			this._Questions = new EntitySet<B2BQuestion>(new Action<B2BQuestion>(this.attach_Questions), new Action<B2BQuestion>(this.detach_Questions));
 			this._Category = default(EntityRef<B2BCategory>);
 			this._B2BCompletedTest = default(EntityRef<B2BCompletedTest>);
+			this._B2BLesson = default(EntityRef<B2BLesson>);
 			OnCreated();
 		}
 		
@@ -1396,6 +1431,30 @@ namespace CurtAdmin
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_lessonID", DbType="int NOT NULL")]
+		public int lessonID
+		{
+			get
+			{
+				return this._lessonID;
+			}
+			set
+			{
+				if ((this._lessonID != value))
+				{
+					if (this._B2BLesson.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnlessonIDChanging(value);
+					this.SendPropertyChanging();
+					this._lessonID = value;
+					this.SendPropertyChanged("lessonID");
+					this.OnlessonIDChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BTest_B2BQuestion", Storage="_Questions", ThisKey="id", OtherKey="testID")]
 		public EntitySet<B2BQuestion> B2BQuestions
 		{
@@ -1473,6 +1532,40 @@ namespace CurtAdmin
 						this._id = default(int);
 					}
 					this.SendPropertyChanged("B2BCompletedTest");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BLesson_B2BTest", Storage="_B2BLesson", ThisKey="lessonID", OtherKey="id", IsForeignKey=true)]
+		public B2BLesson B2BLesson
+		{
+			get
+			{
+				return this._B2BLesson.Entity;
+			}
+			set
+			{
+				B2BLesson previousValue = this._B2BLesson.Entity;
+				if (((previousValue != value) 
+							|| (this._B2BLesson.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._B2BLesson.Entity = null;
+						previousValue.B2BTests.Remove(this);
+					}
+					this._B2BLesson.Entity = value;
+					if ((value != null))
+					{
+						value.B2BTests.Add(this);
+						this._lessonID = value.id;
+					}
+					else
+					{
+						this._lessonID = default(int);
+					}
+					this.SendPropertyChanged("B2BLesson");
 				}
 			}
 		}
@@ -3188,7 +3281,7 @@ namespace CurtAdmin
 		
 		private int _id;
 		
-		private System.Guid _userID;
+		private string _userID;
 		
 		private int _numLessonsCompleted;
 		
@@ -3198,9 +3291,9 @@ namespace CurtAdmin
 		
 		private bool _hasSign;
 		
-		private EntitySet<B2BCompletedCert> _B2BCompletedCerts;
-		
 		private EntitySet<B2BCompletedTest> _B2BCompletedTests;
+		
+		private EntitySet<B2BCompletedCert> _B2BCompletedCerts;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3208,8 +3301,8 @@ namespace CurtAdmin
     partial void OnCreated();
     partial void OnidChanging(int value);
     partial void OnidChanged();
-    partial void OnuserIDChanging(System.Guid value);
-    partial void OnuserIDChanged();
+    partial void OncustomerUserEmailChanging(string value);
+    partial void OncustomerUserEmailChanged();
     partial void OnnumLessonsCompletedChanging(int value);
     partial void OnnumLessonsCompletedChanged();
     partial void OnnumCertsCompletedChanging(int value);
@@ -3222,8 +3315,8 @@ namespace CurtAdmin
 		
 		public B2BUser()
 		{
-			this._B2BCompletedCerts = new EntitySet<B2BCompletedCert>(new Action<B2BCompletedCert>(this.attach_B2BCompletedCerts), new Action<B2BCompletedCert>(this.detach_B2BCompletedCerts));
 			this._B2BCompletedTests = new EntitySet<B2BCompletedTest>(new Action<B2BCompletedTest>(this.attach_B2BCompletedTests), new Action<B2BCompletedTest>(this.detach_B2BCompletedTests));
+			this._B2BCompletedCerts = new EntitySet<B2BCompletedCert>(new Action<B2BCompletedCert>(this.attach_B2BCompletedCerts), new Action<B2BCompletedCert>(this.detach_B2BCompletedCerts));
 			OnCreated();
 		}
 		
@@ -3247,8 +3340,8 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="UniqueIdentifier NOT NULL")]
-		public System.Guid userID
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="Varchar(150)", CanBeNull=false)]
+		public string customerUserEmail
 		{
 			get
 			{
@@ -3258,11 +3351,11 @@ namespace CurtAdmin
 			{
 				if ((this._userID != value))
 				{
-					this.OnuserIDChanging(value);
+					this.OncustomerUserEmailChanging(value);
 					this.SendPropertyChanging();
 					this._userID = value;
-					this.SendPropertyChanged("userID");
-					this.OnuserIDChanged();
+					this.SendPropertyChanged("customerUserEmail");
+					this.OncustomerUserEmailChanged();
 				}
 			}
 		}
@@ -3347,19 +3440,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BUser_B2BCompletedCert", Storage="_B2BCompletedCerts", ThisKey="id", OtherKey="B2BUserID")]
-		public EntitySet<B2BCompletedCert> B2BCompletedCerts
-		{
-			get
-			{
-				return this._B2BCompletedCerts;
-			}
-			set
-			{
-				this._B2BCompletedCerts.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BUser_B2BCompletedTest", Storage="_B2BCompletedTests", ThisKey="id", OtherKey="B2BUserID")]
 		public EntitySet<B2BCompletedTest> B2BCompletedTests
 		{
@@ -3370,6 +3450,19 @@ namespace CurtAdmin
 			set
 			{
 				this._B2BCompletedTests.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BUser_B2BCompletedCert", Storage="_B2BCompletedCerts", ThisKey="id", OtherKey="B2BUserID")]
+		public EntitySet<B2BCompletedCert> B2BCompletedCerts
+		{
+			get
+			{
+				return this._B2BCompletedCerts;
+			}
+			set
+			{
+				this._B2BCompletedCerts.Assign(value);
 			}
 		}
 		
@@ -3393,18 +3486,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		private void attach_B2BCompletedCerts(B2BCompletedCert entity)
-		{
-			this.SendPropertyChanging();
-			entity.B2BUser = this;
-		}
-		
-		private void detach_B2BCompletedCerts(B2BCompletedCert entity)
-		{
-			this.SendPropertyChanging();
-			entity.B2BUser = null;
-		}
-		
 		private void attach_B2BCompletedTests(B2BCompletedTest entity)
 		{
 			this.SendPropertyChanging();
@@ -3412,6 +3493,18 @@ namespace CurtAdmin
 		}
 		
 		private void detach_B2BCompletedTests(B2BCompletedTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BUser = null;
+		}
+		
+		private void attach_B2BCompletedCerts(B2BCompletedCert entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BUser = this;
+		}
+		
+		private void detach_B2BCompletedCerts(B2BCompletedCert entity)
 		{
 			this.SendPropertyChanging();
 			entity.B2BUser = null;
@@ -3436,9 +3529,9 @@ namespace CurtAdmin
 		
 		private System.DateTime _date_completed;
 		
-		private EntitySet<B2BTestResult> _B2BTestResults;
-		
 		private EntitySet<B2BTest> _B2BTests;
+		
+		private EntitySet<B2BTestResult> _B2BTestResults;
 		
 		private EntityRef<B2BUser> _B2BUser;
 		
@@ -3462,8 +3555,8 @@ namespace CurtAdmin
 		
 		public B2BCompletedTest()
 		{
-			this._B2BTestResults = new EntitySet<B2BTestResult>(new Action<B2BTestResult>(this.attach_B2BTestResults), new Action<B2BTestResult>(this.detach_B2BTestResults));
 			this._B2BTests = new EntitySet<B2BTest>(new Action<B2BTest>(this.attach_B2BTests), new Action<B2BTest>(this.detach_B2BTests));
+			this._B2BTestResults = new EntitySet<B2BTestResult>(new Action<B2BTestResult>(this.attach_B2BTestResults), new Action<B2BTestResult>(this.detach_B2BTestResults));
 			this._B2BUser = default(EntityRef<B2BUser>);
 			OnCreated();
 		}
@@ -3592,19 +3685,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BCompletedTest_B2BTestResult", Storage="_B2BTestResults", ThisKey="testID", OtherKey="testTookID")]
-		public EntitySet<B2BTestResult> B2BTestResults
-		{
-			get
-			{
-				return this._B2BTestResults;
-			}
-			set
-			{
-				this._B2BTestResults.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BCompletedTest_B2BTest", Storage="_B2BTests", ThisKey="testID", OtherKey="id")]
 		public EntitySet<B2BTest> B2BTests
 		{
@@ -3615,6 +3695,19 @@ namespace CurtAdmin
 			set
 			{
 				this._B2BTests.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="B2BCompletedTest_B2BTestResult", Storage="_B2BTestResults", ThisKey="testID", OtherKey="testTookID")]
+		public EntitySet<B2BTestResult> B2BTestResults
+		{
+			get
+			{
+				return this._B2BTestResults;
+			}
+			set
+			{
+				this._B2BTestResults.Assign(value);
 			}
 		}
 		
@@ -3672,18 +3765,6 @@ namespace CurtAdmin
 			}
 		}
 		
-		private void attach_B2BTestResults(B2BTestResult entity)
-		{
-			this.SendPropertyChanging();
-			entity.B2BCompletedTest = this;
-		}
-		
-		private void detach_B2BTestResults(B2BTestResult entity)
-		{
-			this.SendPropertyChanging();
-			entity.B2BCompletedTest = null;
-		}
-		
 		private void attach_B2BTests(B2BTest entity)
 		{
 			this.SendPropertyChanging();
@@ -3691,6 +3772,18 @@ namespace CurtAdmin
 		}
 		
 		private void detach_B2BTests(B2BTest entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BCompletedTest = null;
+		}
+		
+		private void attach_B2BTestResults(B2BTestResult entity)
+		{
+			this.SendPropertyChanging();
+			entity.B2BCompletedTest = this;
+		}
+		
+		private void detach_B2BTestResults(B2BTestResult entity)
 		{
 			this.SendPropertyChanging();
 			entity.B2BCompletedTest = null;
