@@ -1562,6 +1562,20 @@ div.configs {
     display: none;
 }
 
+ul.submodels li div.configs ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul.submodels li div.configs ul li {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px dashed #444;
+    font-size: 11px;
+    background-color: #f0f0f0;
+    font-weight: normal;
+}
+
 div.configs table {
     font-size: 12px;
     list-style: none;

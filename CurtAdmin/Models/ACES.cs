@@ -811,120 +811,120 @@ namespace CurtAdmin.Models {
             }
             if (isValid) {
                 List<int> vehicleIDs = vcdb.Vehicles.Where(x => x.SubmodelID.Equals(submodelID) && x.BaseVehicleID.Equals(BaseVehicleID)).Select(x => x.VehicleID).ToList<int>();
-                var predicate = PredicateBuilder.True<AAIA.VehicleConfig>();
+                var predicate = PredicateBuilder.True<AAIA.Vehicle>();
                 predicate = predicate.And(p => vehicleIDs.Contains(p.VehicleID));
                 foreach (ConfigAttribute ca in configs) {
                     switch (ca.ConfigAttributeType.AcesType.name) {
                         case "WheelBase":
-                            predicate = predicate.And(p => p.WheelbaseID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToWheelbases.Any(y => y.WheelbaseID.Equals(ca.vcdbID)));
                             break;
                         case "BodyType":
-                            predicate = predicate.And(p => p.BodyStyleConfig.BodyTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBodyStyleConfigs.Any(y => y.BodyStyleConfig.BodyTypeID.Equals(ca.vcdbID)));
                             break;
                         case "DriveType":
-                            predicate = predicate.And(p => p.DriveTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToDriveTypes.Any(y => y.DriveTypeID.Equals(ca.vcdbID)));
                             break;
                         case "BodyNumDoors":
-                            predicate = predicate.And(p => p.BodyStyleConfig.BodyNumDoorsID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBodyStyleConfigs.Any(y => y.BodyStyleConfig.BodyNumDoorsID.Equals(ca.vcdbID)));
                             break;
                         case "BedLength":
-                            predicate = predicate.And(p => p.BedConfig.BedLengthID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBedConfigs.Any(y => y.BedConfig.BedLengthID.Equals(ca.vcdbID)));
                             break;
                         case "FuelType":
-                            predicate = predicate.And(p => p.EngineConfig.FuelTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelTypeID.Equals(ca.vcdbID)));
                             break;
                         case "EngineBase":
-                            predicate = predicate.And(p => p.EngineConfig.EngineBaseID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineBaseID.Equals(ca.vcdbID)));
                             break;
                         case "Aspiration":
-                            predicate = predicate.And(p => p.EngineConfig.AspirationID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.AspirationID.Equals(ca.vcdbID)));
                             break;
                         case "BedType":
-                            predicate = predicate.And(p => p.BedConfig.BedTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBedConfigs.Any(y => y.BedConfig.BedTypeID.Equals(ca.vcdbID)));
                             break;
                         case "BrakeABS":
-                            predicate = predicate.And(p => p.BrakeConfig.BrakeABSID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.BrakeABSID.Equals(ca.vcdbID)));
                             break;
                         case "BrakeSystem":
-                            predicate = predicate.And(p => p.BrakeConfig.BrakeSystemID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.BrakeSystemID.Equals(ca.vcdbID)));
                             break;
                         case "CylinderHeadType":
-                            predicate = predicate.And(p => p.EngineConfig.CylinderHeadTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.CylinderHeadTypeID.Equals(ca.vcdbID)));
                             break;
                         case "EngineDesignation":
-                            predicate = predicate.And(p => p.EngineConfig.EngineDesignationID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineDesignationID.Equals(ca.vcdbID)));
                             break;
                         case "EngineMfr":
-                            predicate = predicate.And(p => p.EngineConfig.EngineMfrID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineMfrID.Equals(ca.vcdbID)));
                             break;
                         case "EngineVersion":
-                            predicate = predicate.And(p => p.EngineConfig.EngineVersionID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineVersionID.Equals(ca.vcdbID)));
                             break;
                         case "EngineVIN":
-                            predicate = predicate.And(p => p.EngineConfig.EngineVINID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineVINID.Equals(ca.vcdbID)));
                             break;
                         case "FrontBrakeType":
-                            predicate = predicate.And(p => p.BrakeConfig.FrontBrakeTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.FrontBrakeTypeID.Equals(ca.vcdbID)));
                             break;
                         case "FrontSpringType":
-                            predicate = predicate.And(p => p.SpringTypeConfig.FrontSpringTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToSpringTypeConfigs.Any(y => y.SpringTypeConfig.FrontSpringTypeID.Equals(ca.vcdbID)));
                             break;
                         case "FuelDeliverySubType":
-                            predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID.Equals(ca.vcdbID)));
                             break;
                         case "FuelDeliveryType":
-                            predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID.Equals(ca.vcdbID)));
                             break;
                         case "FuelSystemControlType":
-                            predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID.Equals(ca.vcdbID)));
                             break;
                         case "FuelSystemDesign":
-                            predicate = predicate.And(p => p.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID.Equals(ca.vcdbID)));
                             break;
                         case "IgnitionSystemType":
-                            predicate = predicate.And(p => p.EngineConfig.IgnitionSystemTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.IgnitionSystemTypeID.Equals(ca.vcdbID)));
                             break;
                         case "MfrBodyCode":
-                            predicate = predicate.And(p => p.MfrBodyCodeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToMfrBodyCodes.Any(y => y.MfrBodyCode.MfrBodyCodeID.Equals(ca.vcdbID)));
                             break;
                         case "PowerOutput":
-                            predicate = predicate.And(p => p.EngineConfig.PowerOutputID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.PowerOutputID.Equals(ca.vcdbID)));
                             break;
                         case "RearBrakeType":
-                            predicate = predicate.And(p => p.BrakeConfig.RearBrakeTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.RearBrakeTypeID.Equals(ca.vcdbID)));
                             break;
                         case "RearSpringType":
-                            predicate = predicate.And(p => p.SpringTypeConfig.RearSpringTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToSpringTypeConfigs.Any(y => y.SpringTypeConfig.RearSpringTypeID.Equals(ca.vcdbID)));
                             break;
                         case "SteeringSystem":
-                            predicate = predicate.And(p => p.SteeringConfig.SteeringSystemID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToSteeringConfigs.Any(y => y.SteeringConfig.SteeringSystemID.Equals(ca.vcdbID)));
                             break;
                         case "SteeringType":
-                            predicate = predicate.And(p => p.SteeringConfig.SteeringTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToSteeringConfigs.Any(y => y.SteeringConfig.SteeringTypeID.Equals(ca.vcdbID)));
                             break;
                         case "TransElecControlled":
-                            predicate = predicate.And(p => p.Transmission.ElecControlled.ElecControlledID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.ElecControlled.ElecControlledID.Equals(ca.vcdbID)));
                             break;
                         case "Transmission":
-                            predicate = predicate.And(p => p.TransmissionID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionID.Equals(ca.vcdbID)));
                             break;
                         case "TransmissionBase":
-                            predicate = predicate.And(p => p.Transmission.TransmissionBaseID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBaseID.Equals(ca.vcdbID)));
                             break;
                         case "TransmissionControlType":
-                            predicate = predicate.And(p => p.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(ca.vcdbID)));
                             break;
                         case "TransmissionMfrCode":
-                            predicate = predicate.And(p => p.Transmission.TransmissionMfrCodeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionMfrCodeID.Equals(ca.vcdbID)));
                             break;
                         case "TransmissionNumSpeeds":
-                            predicate = predicate.And(p => p.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(ca.vcdbID)));
                             break;
                         case "TransmissionType":
-                            predicate = predicate.And(p => p.Transmission.TransmissionBase.TransmissionTypeID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBase.TransmissionTypeID.Equals(ca.vcdbID)));
                             break;
                         case "ValvesPerEngine":
-                            predicate = predicate.And(p => p.EngineConfig.ValvesID.Equals(ca.vcdbID));
+                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.ValvesID.Equals(ca.vcdbID)));
                             break;
                         default:
                             isValid = false;
@@ -932,7 +932,7 @@ namespace CurtAdmin.Models {
                     }
                     if (isValid) {
                         // run query
-                        List<AAIA.VehicleConfig> vconfigs = vcdb.VehicleConfigs.Where(predicate).ToList<AAIA.VehicleConfig>();
+                        List<AAIA.Vehicle> vconfigs = vcdb.Vehicles.Where(predicate).ToList<AAIA.Vehicle>();
                         isValid = vconfigs.Count > 0;
                     }
                 }
@@ -963,7 +963,16 @@ namespace CurtAdmin.Models {
                                         select new VCDBVehicle {
                                             Submodel = v.Submodel,
                                             Region = v.Region,
-                                            Configs = v.VehicleConfigs.Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>()
+                                            BedConfigs = v.VehicleToBedConfigs.ToList(),
+                                            BodyStyleConfigs = v.VehicleToBodyStyleConfigs.ToList(),
+                                            BrakeConfigs = v.VehicleToBrakeConfigs.ToList(),
+                                            DriveTypes = v.VehicleToDriveTypes.ToList(),
+                                            EngineConfigs = v.VehicleToEngineConfigs.ToList(),
+                                            MfrBodyCodes = v.VehicleToMfrBodyCodes.ToList(),
+                                            SpringTypeConfigs = v.VehicleToSpringTypeConfigs.ToList(),
+                                            SteeringConfigs = v.VehicleToSteeringConfigs.ToList(),
+                                            Transmissions = v.VehicleToTransmissions.ToList(),
+                                            Wheelbases = v.VehicleToWheelbases.ToList(),
                                         }).Distinct().OrderBy(x => x.Region.RegionID).ThenBy(x => x.Submodel.SubmodelID).ToList<VCDBVehicle>()
                         }).OrderByDescending(x => x.Year).ToList<VCDBBaseVehicle>();
             
@@ -981,115 +990,114 @@ namespace CurtAdmin.Models {
             ACESConfigs acesconfigs = new ACESConfigs();
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
-            try {
+            //try {
                 BaseVehicle bv = db.BaseVehicles.Where(x => x.ID.Equals(BaseVehicleID)).First<BaseVehicle>();
                 Submodel submodel = db.Submodels.Where(x => x.ID.Equals(SubmodelID)).First<Submodel>();
                 List<ConfigAttributeType> attrtypes = db.ConfigAttributeTypes.Where(x => x.AcesTypeID != null).OrderBy(x => x.sort).ToList<ConfigAttributeType>();
-                List<AAIA.VehicleConfig> configs = vcdb.VehicleConfigs.Where(x => x.Vehicle.BaseVehicleID.Equals(bv.AAIABaseVehicleID) && x.Vehicle.SubmodelID.Equals(submodel.AAIASubmodelID)).Distinct().OrderBy(x => x.BodyStyleConfig.BodyTypeID).ToList<AAIA.VehicleConfig>();
-                List<ACESVehicleConfig> vehicleconfigs = new List<ACESVehicleConfig>();
+                List<AAIA.Vehicle> vehicles = vcdb.Vehicles.Where(x => x.BaseVehicleID.Equals(bv.AAIABaseVehicleID) && x.SubmodelID.Equals(submodel.AAIASubmodelID)).Distinct().ToList<AAIA.Vehicle>();
                 foreach (ConfigAttributeType type in attrtypes) {
                     switch (type.name) {
                         case "Body Type":
-                            type.count = configs.Select(x => x.BodyStyleConfig.BodyTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBodyStyleConfigs.Select(y => y.BodyStyleConfig.BodyTypeID)).Distinct().Count();
                             break;
                         case "Number of Doors":
-                            type.count = configs.Select(x => x.BodyStyleConfig.BodyNumDoorsID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBodyStyleConfigs.Select(y => y.BodyStyleConfig.BodyNumDoorsID)).Distinct().Count();
                             break;
                         case "Drive Type":
-                            type.count = configs.Select(x => x.DriveTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToDriveTypes.Select(y => y.DriveTypeID)).Distinct().Count();
                             break;
                         case "Bed Length":
-                            type.count = configs.Select(x => x.BedConfig.BedLengthID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBedConfigs.Select(y => y.BedConfig.BedLengthID)).Distinct().Count();
                             break;
                         case "Wheel Base":
-                            type.count = configs.Select(x => x.WheelbaseID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToWheelbases.Select(y => y.WheelbaseID)).Distinct().Count();
                             break;
                         case "Engine":
-                            type.count = configs.Select(x => x.EngineConfig.EngineBaseID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.EngineBaseID)).Distinct().Count();
                             break;
                         case "Fuel Type":
-                            type.count = configs.Select(x => x.EngineConfig.FuelTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.FuelTypeID)).Distinct().Count();
                             break;
                         case "Aspiration":
-                            type.count = configs.Select(x => x.EngineConfig.AspirationID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.AspirationID)).Distinct().Count();
                             break;
                         case "Bed Type":
-                            type.count = configs.Select(x => x.BedConfig.BedTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBedConfigs.Select(y => y.BedConfig.BedTypeID)).Distinct().Count();
                             break;
                         case "Brake ABS":
-                            type.count = configs.Select(x => x.BrakeConfig.BrakeABSID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBrakeConfigs.Select(y => y.BrakeConfig.BrakeABSID)).Distinct().Count();
                             break;
                         case "Brake System":
-                            type.count = configs.Select(x => x.BrakeConfig.BrakeSystemID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBrakeConfigs.Select(y => y.BrakeConfig.BrakeSystemID)).Distinct().Count();
                             break;
                         case "Cylinder Head Type":
-                            type.count = configs.Select(x => x.EngineConfig.CylinderHeadTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.CylinderHeadTypeID)).Distinct().Count();
                             break;
                         case "Engine Designation":
-                            type.count = configs.Select(x => x.EngineConfig.EngineDesignationID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.EngineDesignationID)).Distinct().Count();
                             break;
                         case "Engine Manufacturer":
-                            type.count = configs.Select(x => x.EngineConfig.EngineMfrID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.EngineMfrID)).Distinct().Count();
                             break;
                         case "Engine Version":
-                            type.count = configs.Select(x => x.EngineConfig.EngineVersionID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.EngineVersionID)).Distinct().Count();
                             break;
                         case "Engine VIN":
-                            type.count = configs.Select(x => x.EngineConfig.EngineVINID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.EngineVINID)).Distinct().Count();
                             break;
                         case "Front Brake Type":
-                            type.count = configs.Select(x => x.BrakeConfig.FrontBrakeTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBrakeConfigs.Select(y => y.BrakeConfig.FrontBrakeTypeID)).Distinct().Count();
                             break;
                         case "Front Spring Type":
-                            type.count = configs.Select(x => x.SpringTypeConfig.FrontSpringTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToSpringTypeConfigs.Select(y => y.SpringTypeConfig.FrontSpringTypeID)).Distinct().Count();
                             break;
                         case "Fuel Delivery Sub-Type":
-                            type.count = configs.Select(x => x.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID)).Distinct().Count();
                             break;
                         case "Fuel Delivery Type":
-                            type.count = configs.Select(x => x.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID)).Distinct().Count();
                             break;
                         case "Fuel System Control Type":
-                            type.count = configs.Select(x => x.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID)).Distinct().Count();
                             break;
                         case "Fuel System Design":
-                            type.count = configs.Select(x => x.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID)).Distinct().Count();
                             break;
                         case "Ignition System Type":
-                            type.count = configs.Select(x => x.EngineConfig.IgnitionSystemTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.IgnitionSystemTypeID)).Distinct().Count();
                             break;
                         case "Manufacturer Body Code":
-                            type.count = configs.Select(x => x.MfrBodyCodeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToMfrBodyCodes.Select(y => y.MfrBodyCodeID)).Distinct().Count();
                             break;
                         case "Power Output":
-                            type.count = configs.Select(x => x.EngineConfig.PowerOutputID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.PowerOutputID)).Distinct().Count();
                             break;
                         case "Rear Brake Type":
-                            type.count = configs.Select(x => x.BrakeConfig.RearBrakeTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToBrakeConfigs.Select(y => y.BrakeConfig.RearBrakeTypeID)).Distinct().Count();
                             break;
                         case "Rear Spring Type":
-                            type.count = configs.Select(x => x.SpringTypeConfig.RearSpringTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToSpringTypeConfigs.Select(y => y.SpringTypeConfig.RearSpringTypeID)).Distinct().Count();
                             break;
                         case "Steering System":
-                            type.count = configs.Select(x => x.SteeringConfig.SteeringSystemID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToSteeringConfigs.Select(y => y.SteeringConfig.SteeringSystemID)).Distinct().Count();
                             break;
                         case "Steering Type":
-                            type.count = configs.Select(x => x.SteeringConfig.SteeringTypeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToSteeringConfigs.Select(y => y.SteeringConfig.SteeringTypeID)).Distinct().Count();
                             break;
                         case "Tranmission Electronic Controlled":
-                            type.count = configs.Select(x => x.Transmission.TransmissionElecControlledID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToTransmissions.Select(y => y.Transmission.TransmissionElecControlledID)).Distinct().Count();
                             break;
                         case "Transmission":
-                            type.count = configs.Select(x => x.TransmissionID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToTransmissions.Select(y => y.Transmission.TransmissionID)).Distinct().Count();
                             break;
                         case "Transmission Base":
-                            type.count = configs.Select(x => x.Transmission.TransmissionBaseID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToTransmissions.Select(y => y.Transmission.TransmissionBaseID)).Distinct().Count();
                             break;
                         /*case "Transmission Control Type":
                             type.count = configs.Select(x => x.Transmission.TransmissionBase.TransmissionControlTypeID).Distinct().Count();
                             break;*/
                         case "Tranmission Manufacturer Code":
-                            type.count = configs.Select(x => x.Transmission.TransmissionMfrCodeID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToTransmissions.Select(y => y.Transmission.TransmissionMfrCodeID)).Distinct().Count();
                             break;
                         /*case "Transmission Number of Speeds":
                             type.count = configs.Select(x => x.Transmission.TransmissionBase.TransmissionNumSpeedsID).Distinct().Count();
@@ -1098,7 +1106,7 @@ namespace CurtAdmin.Models {
                             type.count = configs.Select(x => x.Transmission.TransmissionBase.TransmissionTypeID).Distinct().Count();
                             break;*/
                         case "Valves Per Engine":
-                            type.count = configs.Select(x => x.EngineConfig.ValvesID).Distinct().Count();
+                            type.count = vehicles.SelectMany(x => x.VehicleToEngineConfigs.Select(y => y.EngineConfig.ValvesID)).Distinct().Count();
                             break;
                         default:
                             type.count = 0;
@@ -1106,11 +1114,10 @@ namespace CurtAdmin.Models {
                     }
                     acesconfigs.types = attrtypes;
                 }
-                foreach (AAIA.VehicleConfig c in configs) {
-                    vehicleconfigs.Add(ConvertConfig(c, attrtypes));
-                }
-                acesconfigs.configs = vehicleconfigs;
-            } catch { }
+                acesconfigs.vehicle = ConvertConfig(vehicles, attrtypes);
+            /*} catch (Exception e) {
+                string x = e.Message;
+            }*/
             return acesconfigs;
         }
 
@@ -1344,170 +1351,321 @@ namespace CurtAdmin.Models {
             return JsonConvert.SerializeObject(typeobj);
         }
 
-        private ACESVehicleConfig ConvertConfig(AAIA.VehicleConfig config, List<ConfigAttributeType> types) {
-            ACESVehicleConfig vconfig = new ACESVehicleConfig();
-            vconfig.attributes = new List<ConfigAttribute>();
+        private ACESVehicleDetails ConvertConfig(List<AAIA.Vehicle> vehicles, List<ConfigAttributeType> types) {
+            ACESVehicleDetails vdetails = new ACESVehicleDetails();
+            List<ACESVehicleConfigType> results = new List<ACESVehicleConfigType>();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             foreach (ConfigAttributeType type in types) {
-                ConfigAttribute ca = new ConfigAttribute();
-                ca.ConfigAttributeType = type;
+                ACESVehicleConfigType ct = new ACESVehicleConfigType();
+                ct.type = type;
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
                 switch (type.name) {
                     case "Body Type":
-                        ca.vcdbID = config.BodyStyleConfig.BodyTypeID;
-                        ca.value = config.BodyStyleConfig.BodyType.BodyTypeName.Trim();
+                        foreach (AAIA.BodyStyleConfig v in vehicles.SelectMany(y => y.VehicleToBodyStyleConfigs.Select(x => x.BodyStyleConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.BodyTypeID;
+                            ca.value = v.BodyType.BodyTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Number of Doors":
-                        ca.vcdbID = config.BodyStyleConfig.BodyNumDoorsID;
-                        ca.value = config.BodyStyleConfig.BodyNumDoor.BodyNumDoors.Trim();
+                        foreach (AAIA.BodyStyleConfig v in vehicles.SelectMany(y => y.VehicleToBodyStyleConfigs.Select(x => x.BodyStyleConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.BodyNumDoorsID;
+                            ca.value = v.BodyNumDoor.BodyNumDoors.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Drive Type":
-                        ca.vcdbID = config.DriveTypeID;
-                        ca.value = config.DriveType.DriveTypeName.Trim();
+                        foreach (AAIA.DriveType v in vehicles.SelectMany(y => y.VehicleToDriveTypes.Select(x => x.DriveType)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.DriveTypeID;
+                            ca.value = v.DriveTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Bed Length":
-                        ca.vcdbID = config.BedConfig.BedLengthID;
-                        ca.value = config.BedConfig.BedLength.BedLength1.Trim();
+                        foreach (AAIA.BedConfig v in vehicles.SelectMany(y => y.VehicleToBedConfigs.Select(x => x.BedConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.BedLengthID;
+                            ca.value = v.BedLength.BedLength1.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Wheel Base":
-                        ca.vcdbID = config.WheelbaseID;
-                        ca.value = config.WheelBase.WheelBase1.Trim();
+                        foreach (AAIA.WheelBase v in vehicles.SelectMany(y => y.VehicleToWheelbases.Select(x => x.WheelBase)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.WheelBaseID;
+                            ca.value = v.WheelBase1.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Engine":
-                        ca.vcdbID = config.EngineConfig.EngineBaseID;
-                        ca.value = config.EngineConfig.EngineBase.Liter.Trim() + "L " + config.EngineConfig.EngineBase.BlockType.Trim() + config.EngineConfig.EngineBase.Cylinders.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.EngineBaseID;
+                            ca.value = v.EngineBase.Liter.Trim() + "L " + v.EngineBase.BlockType.Trim() + v.EngineBase.Cylinders.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Fuel Type":
-                        ca.vcdbID = config.EngineConfig.FuelTypeID;
-                        ca.value = config.EngineConfig.FuelType.FuelTypeName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.FuelTypeID;
+                            ca.value = v.FuelType.FuelTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Aspiration":
-                        ca.vcdbID = config.EngineConfig.AspirationID;
-                        ca.value = config.EngineConfig.Aspiration.AspirationName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.AspirationID;
+                            ca.value = v.Aspiration.AspirationName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Bed Type":
-                        ca.vcdbID = config.BedConfig.BedTypeID;
-                        ca.value = config.BedConfig.BedType.BedTypeName.Trim();
+                        foreach (AAIA.BedConfig v in vehicles.SelectMany(y => y.VehicleToBedConfigs.Select(x => x.BedConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.BedTypeID;
+                            ca.value = v.BedType.BedTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Brake ABS":
-                        ca.vcdbID = config.BrakeConfig.BrakeABSID;
-                        ca.value = config.BrakeConfig.BrakeAB.BrakeABSName.Trim();
+                        foreach (AAIA.BrakeConfig v in vehicles.SelectMany(y => y.VehicleToBrakeConfigs.Select(x => x.BrakeConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.BrakeABSID;
+                            ca.value = v.BrakeAB.BrakeABSName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Brake System":
-                        ca.vcdbID = config.BrakeConfig.BrakeABSID;
-                        ca.value = config.BrakeConfig.BrakeAB.BrakeABSName.Trim();
+                        foreach (AAIA.BrakeConfig v in vehicles.SelectMany(y => y.VehicleToBrakeConfigs.Select(x => x.BrakeConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.BrakeSystemID;
+                            ca.value = v.BrakeSystem.BrakeSystemName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Cylinder Head Type":
-                        ca.vcdbID = config.EngineConfig.CylinderHeadTypeID;
-                        ca.value = config.EngineConfig.CylinderHeadType.CylinderHeadTypeName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.CylinderHeadTypeID;
+                            ca.value = v.CylinderHeadType.CylinderHeadTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Engine Designation":
-                        ca.vcdbID = config.EngineConfig.EngineDesignationID;
-                        ca.value = config.EngineConfig.EngineDesignation.EngineDesignationName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.EngineDesignationID;
+                            ca.value = v.EngineDesignation.EngineDesignationName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Engine Manufacturer":
-                        ca.vcdbID = config.EngineConfig.EngineMfrID;
-                        ca.value = config.EngineConfig.Mfr.MfrName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.EngineMfrID;
+                            ca.value = v.Mfr.MfrName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Engine Version":
-                        ca.vcdbID = config.EngineConfig.EngineVersionID;
-                        ca.value = config.EngineConfig.EngineVersion.EngineVersion1.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.EngineVersionID;
+                            ca.value = v.EngineVersion.EngineVersion1.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Engine VIN":
-                        ca.vcdbID = config.EngineConfig.EngineVINID;
-                        ca.value = config.EngineConfig.EngineVIN.EngineVINName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.EngineVINID;
+                            ca.value = v.EngineVIN.EngineVINName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Front Brake Type":
-                        ca.vcdbID = config.BrakeConfig.FrontBrakeTypeID;
-                        ca.value = config.BrakeConfig.FrontBrakeType.BrakeTypeName.Trim();
+                        foreach (AAIA.BrakeConfig v in vehicles.SelectMany(y => y.VehicleToBrakeConfigs.Select(x => x.BrakeConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.FrontBrakeTypeID;
+                            ca.value = v.FrontBrakeType.BrakeTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Front Spring Type":
-                        ca.vcdbID = config.SpringTypeConfig.FrontSpringTypeID;
-                        ca.value = config.SpringTypeConfig.FrontSpringType.SpringTypeName.Trim();
+                        foreach (AAIA.SpringTypeConfig v in vehicles.SelectMany(y => y.VehicleToSpringTypeConfigs.Select(x => x.SpringTypeConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.FrontSpringTypeID;
+                            ca.value = v.FrontSpringType.SpringTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Fuel Delivery Sub-Type":
-                        ca.vcdbID = config.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID;
-                        ca.value = config.EngineConfig.FuelDeliveryConfig.FuelDeliverySubType.FuelDeliverySubTypeName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.FuelDeliveryConfig.FuelDeliverySubTypeID;
+                            ca.value = v.FuelDeliveryConfig.FuelDeliverySubType.FuelDeliverySubTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Fuel Delivery Type":
-                        ca.vcdbID = config.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID;
-                        ca.value = config.EngineConfig.FuelDeliveryConfig.FuelDeliveryType.FuelDeliveryTypeName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.FuelDeliveryConfig.FuelDeliveryTypeID;
+                            ca.value = v.FuelDeliveryConfig.FuelDeliveryType.FuelDeliveryTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Fuel System Control Type":
-                        ca.vcdbID = config.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID;
-                        ca.value = config.EngineConfig.FuelDeliveryConfig.FuelSystemControlType.FuelSystemControlTypeName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.FuelDeliveryConfig.FuelSystemControlTypeID;
+                            ca.value = v.FuelDeliveryConfig.FuelSystemControlType.FuelSystemControlTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Fuel System Design":
-                        ca.vcdbID = config.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID;
-                        ca.value = config.EngineConfig.FuelDeliveryConfig.FuelSystemDesign.FuelSystemDesignName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.FuelDeliveryConfig.FuelSystemDesignID;
+                            ca.value = v.FuelDeliveryConfig.FuelSystemDesign.FuelSystemDesignName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Ignition System Type":
-                        ca.vcdbID = config.EngineConfig.IgnitionSystemTypeID;
-                        ca.value = config.EngineConfig.IgnitionSystemType.IgnitionSystemTypeName.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.IgnitionSystemTypeID;
+                            ca.value = v.IgnitionSystemType.IgnitionSystemTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Manufacturer Body Code":
-                        ca.vcdbID = config.MfrBodyCodeID;
-                        ca.value = config.MfrBodyCode.MfrBodyCodeName.Trim();
+                        foreach (AAIA.MfrBodyCode v in vehicles.SelectMany(y => y.VehicleToMfrBodyCodes.Select(x => x.MfrBodyCode)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.MfrBodyCodeID;
+                            ca.value = v.MfrBodyCodeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Power Output":
-                        ca.vcdbID = config.EngineConfig.PowerOutputID;
-                        ca.value = vcdb.PowerOutputs.Where(x => x.PowerOutputID.Equals(config.EngineConfig.PowerOutputID)).Select(x => x.HorsePower).First().Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.PowerOutputID;
+                            ca.value = vcdb.PowerOutputs.Where(x => x.PowerOutputID.Equals(v.PowerOutputID)).Select(x => x.HorsePower).First().Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Rear Brake Type":
-                        ca.vcdbID = config.BrakeConfig.RearBrakeTypeID;
-                        ca.value = config.BrakeConfig.RearBrakeType.BrakeTypeName.Trim();
+                        foreach (AAIA.BrakeConfig v in vehicles.SelectMany(y => y.VehicleToBrakeConfigs.Select(x => x.BrakeConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.RearBrakeTypeID;
+                            ca.value = v.RearBrakeType.BrakeTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Rear Spring Type":
-                        ca.vcdbID = config.SpringTypeConfig.RearSpringTypeID;
-                        ca.value = config.SpringTypeConfig.RearSpringType.SpringTypeName.Trim();
+                        foreach (AAIA.SpringTypeConfig v in vehicles.SelectMany(y => y.VehicleToSpringTypeConfigs.Select(x => x.SpringTypeConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.RearSpringTypeID;
+                            ca.value = v.RearSpringType.SpringTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Steering System":
-                        ca.vcdbID = config.SteeringConfig.SteeringSystemID;
-                        ca.value = config.SteeringConfig.SteeringSystem.SteeringSystemName.Trim();
+                        foreach (AAIA.SteeringConfig v in vehicles.SelectMany(y => y.VehicleToSteeringConfigs.Select(x => x.SteeringConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.SteeringSystemID;
+                            ca.value = v.SteeringSystem.SteeringSystemName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Steering Type":
-                        ca.vcdbID = config.SteeringConfig.SteeringTypeID;
-                        ca.value = config.SteeringConfig.SteeringType.SteeringTypeName.Trim();
+                        foreach (AAIA.SteeringConfig v in vehicles.SelectMany(y => y.VehicleToSteeringConfigs.Select(x => x.SteeringConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.SteeringTypeID;
+                            ca.value = v.SteeringType.SteeringTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     case "Tranmission Electronic Controlled":
-                        ca.vcdbID = config.Transmission.TransmissionElecControlledID;
-                        ca.value = config.Transmission.ElecControlled.ElecControlled1.Trim();
+                        foreach (AAIA.Transmission v in vehicles.SelectMany(y => y.VehicleToTransmissions.Select(x => x.Transmission)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.TransmissionElecControlledID;
+                            ca.value = v.ElecControlled.ElecControlled1.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
-                    /*case "Transmission":
-                        ca.vcdbID = config.TransmissionID;
-                        ca.value = "transmission";
-                        break;*/
                     case "Transmission Base":
-                        ca.vcdbID = config.Transmission.TransmissionBaseID;
-                        ca.value = config.Transmission.TransmissionBase.TransmissionNumSpeed.TransmissionNumSpeeds.Trim() + "sp " + config.Transmission.TransmissionBase.TransmissionControlType.TransmissionControlTypeName.Trim() + " " + config.Transmission.TransmissionBase.TransmissionType.TransmissionTypeName.Trim();
+                        foreach (AAIA.Transmission v in vehicles.SelectMany(y => y.VehicleToTransmissions.Select(x => x.Transmission)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.TransmissionBaseID;
+                            ca.value = v.TransmissionBase.TransmissionNumSpeed.TransmissionNumSpeeds.Trim() + "sp " + v.TransmissionBase.TransmissionControlType.TransmissionControlTypeName.Trim() + " " + v.TransmissionBase.TransmissionType.TransmissionTypeName.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
-                    /*case "Transmission Control Type":
-                        ca.vcdbID = config.Transmission.TransmissionBase.TransmissionControlTypeID;
-                        ca.value = config.Transmission.TransmissionBase.TransmissionControlType.TransmissionControlTypeName.Trim();
-                        break;*/
                     case "Tranmission Manufacturer Code":
-                        ca.vcdbID = config.Transmission.TransmissionMfrCodeID;
-                        ca.value = config.Transmission.TransmissionMfrCode.TransmissionMfrCode1.Trim();
+                        foreach (AAIA.Transmission v in vehicles.SelectMany(y => y.VehicleToTransmissions.Select(x => x.Transmission)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.TransmissionMfrCodeID;
+                            ca.value = v.TransmissionMfrCode.TransmissionMfrCode1.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
-                    /*case "Transmission Number of Speeds":
-                        ca.vcdbID = config.Transmission.TransmissionBase.TransmissionNumSpeedsID;
-                        ca.value = config.Transmission.TransmissionBase.TransmissionNumSpeed.TransmissionNumSpeeds.Trim();
-                        break;*/
-                    /*case "Transmission Type":
-                        ca.vcdbID = config.Transmission.TransmissionBase.TransmissionTypeID;
-                        ca.value = config.Transmission.TransmissionBase.TransmissionType.TransmissionTypeName.Trim();
-                        break;*/
                     case "Valves Per Engine":
-                        ca.vcdbID = config.EngineConfig.ValvesID;
-                        ca.value = config.EngineConfig.Valve.ValvesPerEngine.Trim();
+                        foreach (AAIA.EngineConfig v in vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList()) {
+                            ConfigAttribute ca = new ConfigAttribute();
+                            ca.ConfigAttributeType = type;
+                            ca.vcdbID = v.ValvesID;
+                            ca.value = v.Valve.ValvesPerEngine.Trim();
+                            attribs.Add(ca);
+                        }
                         break;
                     default:
                         type.count = 0;
                         break;
                 }
-                vconfig.attributes.Add(ca);
-
+                ct.attributes = attribs;
+                results.Add(ct);
             }
-            return vconfig;
+            vdetails.configs = results.OrderBy(x => x.type.sort).ToList();
+            return vdetails;
         }
 
         public ACESBaseVehicle addConfig(int BaseVehicleID, int SubmodelID, List<int> configids) {
@@ -2572,7 +2730,16 @@ namespace CurtAdmin.Models {
     public class VCDBVehicle {
         public AAIA.Submodel Submodel { get; set; }
         public AAIA.Region Region { get; set; }
-        public List<AAIA.VehicleConfig> Configs { get; set; }
+        public List<AAIA.VehicleToBedConfig> BedConfigs { get; set; }
+        public List<AAIA.VehicleToBodyStyleConfig> BodyStyleConfigs { get; set; }
+        public List<AAIA.VehicleToBrakeConfig> BrakeConfigs { get; set; }
+        public List<AAIA.VehicleToDriveType> DriveTypes { get; set; }
+        public List<AAIA.VehicleToEngineConfig> EngineConfigs { get; set; }
+        public List<AAIA.VehicleToMfrBodyCode> MfrBodyCodes { get; set; }
+        public List<AAIA.VehicleToSpringTypeConfig> SpringTypeConfigs { get; set; }
+        public List<AAIA.VehicleToSteeringConfig> SteeringConfigs { get; set; }
+        public List<AAIA.VehicleToTransmission> Transmissions { get; set; }
+        public List<AAIA.VehicleToWheelbase> Wheelbases { get; set; }
         public bool exists { get; set; }
     }
 
@@ -2605,6 +2772,7 @@ namespace CurtAdmin.Models {
     public class ACESConfigs {
         public List<ConfigAttributeType> types { get; set; }
         public List<ACESVehicleConfig> configs { get; set; }
+        public ACESVehicleDetails vehicle { get; set; }
 
         public void clearDuplicates() {
             List<ACESVehicleConfig> paredlist = new List<ACESVehicleConfig>();
@@ -2630,6 +2798,14 @@ namespace CurtAdmin.Models {
 
     public class ACESVehicleConfig {
         public List<ConfigAttribute> attributes { get; set; }
+    }
+
+    public class ACESVehicleConfigType {
+        public ConfigAttributeType type { get; set; }
+        public List<ConfigAttribute> attributes { get; set; }
+    }
+    public class ACESVehicleDetails {
+        public List<ACESVehicleConfigType> configs { get; set; }
     }
 
     public class Autocomplete {

@@ -90,10 +90,8 @@ $(function () {
         $("#config-dialog").empty();
         $.getJSON('/ACES/GetConfigs?BaseVehicleID=' + bvid + '&submodelID=' + submodelID, function (data) {
             //console.log(data);
-            if (data == null || data.configs.length == 0) {
+            if (data == null || data.vehicle.configs.length == 0) {
                 $("#config-dialog").append("<p>There are no configurations for this vehicle in the VCDB</p>");
-            } else if (data.configs.length == 1) {
-                    $("#config-dialog").append("<p>There is only one configuration for this vehicle available</p>");
             } else {
                 var configtable = '<div class="configs" style="display:block;" data-bvid="' + bvid + '" data-submodelid="' + submodelID + '"><table><thead>';
                 var checkrow = '<tr>';
@@ -109,7 +107,7 @@ $(function () {
                 configtable += typerow;
                 configtable += checkrow;
                 configtable += '</thead><tbody>';
-                $(data.configs).each(function (i, config) {
+                $(data.vehicle.configs).each(function (i, config) {
                     configtable += '<tr>';
                     $(config.attributes).each(function (x, attr) {
                         if (attr.ConfigAttributeType.count > 1) {
@@ -807,35 +805,110 @@ getVCDBVehicles = function () {
                     if (!vehicle.exists) {
                         opt += '<a href="/ACES/AddSubmodel?basevehicleid=' + obj.BaseVehicleID + '&submodelid=' + vehicle.Submodel.SubmodelID + '" class="add" title="Add Submodel">+</a>';
                     }
-                    if (vehicle.Configs.length > 0) {
-                        opt += ' <a href="#" class="showConfig" title="Show / Hide Configurations">' + vehicle.Configs.length + '<span class="arrow"></span></a>';
-                    }
+                    opt += ' <a href="#" class="showConfig" title="Show / Hide Configurations"><span class="arrow"></span></a>';
                     opt += '</span><span class="clear"></span>';
-                    if (vehicle.Configs.length > 0) {
-                        opt += '<div class="configs"><table>';
-                        opt += '<thead><tr><th>Body Type</th><th>Doors</th><th>Engine</th><th>Engine Version</th><th>Valves</th><th>Drive Type</th><th>Fuel Type</th><th>Transmission</th><th>Bed Config</th><th>ABS</th><th>Brake System</th><th>Front Brakes</th><th>Rear Brakes</th><th>Wheel Base</th><th>MFR Body Code</th></tr></thead><tbody>';
-                        $(vehicle.Configs).each(function (x, config) {
-                            opt += '<tr>';
-                            opt += '<td>' + config.BodyStyleConfig.BodyType.BodyTypeName.trim() + '</td><td>' + config.BodyStyleConfig.BodyNumDoor.BodyNumDoors.trim() + '-dr</td>';
-                            opt += '<td>' + config.EngineConfig.EngineBase.Liter.trim() + 'L ' + config.EngineConfig.EngineBase.BlockType.trim() + config.EngineConfig.EngineBase.Cylinders.trim() + '</td><td>' + config.EngineConfig.EngineVersion.EngineVersion1.trim() + '</td><td>' + config.EngineConfig.Valve.ValvesPerEngine.trim();
-                            opt += '<td>' + config.DriveType.DriveTypeName.trim() + '</td><td>' + config.EngineConfig.FuelType.FuelTypeName.trim() + '</td>';
-                            opt += '<td>' + config.Transmission.TransmissionBase.TransmissionNumSpeed.TransmissionNumSpeeds.trim() + '-SP ' + config.Transmission.TransmissionBase.TransmissionControlType.TransmissionControlTypeName.trim() + ' ' + config.Transmission.TransmissionBase.TransmissionType.TransmissionTypeName.trim() + '</td>';
-                            if (config.BedConfig.BedLength.BedLength1.trim() != 'N/R' && config.BedConfig.BedType.BedTypeName.trim() != 'N/R') {
-                                opt += '<td>' + config.BedConfig.BedLength.BedLength1.trim() + ' In. ' + config.BedConfig.BedType.BedTypeName.trim() + '</td>';
-                            } else {
-                                opt += '<td></td>';
+                    opt += '<div class="configs"><ul>';
+                    if (vehicle.BodyStyleConfigs.length > 0) {
+                        opt += "<li><strong>Body:</strong> ";
+                        $(vehicle.BodyStyleConfigs).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
                             }
-                            opt += '<td>' + config.BrakeConfig.BrakeAB.BrakeABSName.trim() + '</td><td>' + config.BrakeConfig.BrakeSystem.BrakeSystemName.trim() + '</td><td>' + config.BrakeConfig.FrontBrakeType.BrakeTypeName + '</td><td>' + config.BrakeConfig.RearBrakeType.BrakeTypeName + '</td>';
-                            if (config.WheelBase.WheelBase1.trim() != '-') {
-                                opt += '<td>' + config.WheelBase.WheelBase1.trim() + ' In.</td>';
-                            } else {
-                                opt += '<td></td>';
-                            }
-                            opt += '<td>' + config.MfrBodyCode.MfrBodyCodeName.trim() + '</td>';
-                            opt += '</tr>';
+                            opt += $.trim(config.BodyStyleConfig.BodyNumDoor.BodyNumDoors) + "-door " + $.trim(config.BodyStyleConfig.BodyType.BodyTypeName);
                         });
-                        opt += '</tbody></table></div>'
+                        opt += "</li>";
                     }
+                    if (vehicle.BedConfigs.length > 0) {
+                        opt += "<li><strong>Bed:</strong> ";
+                        $(vehicle.BedConfigs).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.BedConfig.BedLength.BedLength1) + " inch " + $.trim(config.BedConfig.BedType.BedTypeName);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.BrakeConfigs.length > 0) {
+                        opt += "<li><strong>Brakes:</strong> ";
+                        $(vehicle.BrakeConfigs).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.BrakeConfig.BrakeSystem.BrakeSystemName) + " " + $.trim(config.BrakeConfig.BrakeAB.BrakeABSName) + " Front " + $.trim(config.BrakeConfig.FrontBrakeType.BrakeTypeName) + " Rear " + $.trim(config.BrakeConfig.RearBrakeType.BrakeTypeName);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.DriveTypes.length > 0) {
+                        opt += "<li><strong>Drive:</strong> ";
+                        $(vehicle.DriveTypes).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.DriveType.DriveTypeName);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.EngineConfigs.length > 0) {
+                        opt += "<li><strong>Engine:</strong> ";
+                        $(vehicle.EngineConfigs).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.EngineConfig.EngineBase.Liter) + "L " + $.trim(config.EngineConfig.EngineBase.BlockType) + $.trim(config.EngineConfig.EngineBase.Cylinders) + " " + $.trim(config.EngineConfig.Valve.ValvesPerEngine) + "V " + $.trim(config.EngineConfig.EngineVersion.EngineVersion1);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.MfrBodyCodes.length > 0) {
+                        opt += "<li><strong>Mfr Body Codes:</strong> ";
+                        $(vehicle.MfrBodyCodes).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.MfrBodyCode.MfrBodyCodeName);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.SpringTypeConfigs.length > 0) {
+                        opt += "<li><strong>Springs:</strong> ";
+                        $(vehicle.SpringTypeConfigs).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += "Front " + $.trim(config.SpringTypeConfig.FrontSpringType.SpringTypeName) + " Rear " + $.trim(config.SpringTypeConfig.RearSpringType.SpringTypeName);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.SteeringConfigs.length > 0) {
+                        opt += "<li><strong>Steering:</strong> ";
+                        $(vehicle.SteeringConfigs).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.SteeringConfig.SteeringSystem.SteeringSystemName) + " " + $.trim(config.SteeringConfig.SteeringType.SteeringTypeName);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.Transmissions.length > 0) {
+                        opt += "<li><strong>Transmission:</strong> ";
+                        $(vehicle.Transmissions).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.Transmission.TransmissionBase.TransmissionNumSpeed.TransmissionNumSpeeds) + "sp " + $.trim(config.Transmission.TransmissionBase.TransmissionControlType.TransmissionControlTypeName);
+                        });
+                        opt += "</li>";
+                    }
+                    if (vehicle.Wheelbases.length > 0) {
+                        opt += "<li><strong>Wheelbase:</strong> ";
+                        $(vehicle.Wheelbases).each(function (z, config) {
+                            if (z != 0) {
+                                opt += ", ";
+                            }
+                            opt += $.trim(config.WheelBase.WheelBase1) + " inches";
+                        });
+                        opt += "</li>";
+                    }
+                    opt += '</ul></div>'
                 });
                 opt += '</ul></li>';
                 $('#vcdbData').append(opt);
