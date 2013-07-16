@@ -90,12 +90,12 @@ $(function () {
         $("#config-dialog").empty();
         $.getJSON('/ACES/GetConfigs?BaseVehicleID=' + bvid + '&submodelID=' + submodelID, function (data) {
             //console.log(data);
-            if (data == null || data.vehicle.configs.length == 0) {
+            if (data == null || data.configs.length == 0) {
                 $("#config-dialog").append("<p>There are no configurations for this vehicle in the VCDB</p>");
             } else {
                 var configcount = 0;
                 var configtable = '<div class="configs" style="display:block;" data-bvid="' + bvid + '" data-submodelid="' + submodelID + '">';
-                $(data.vehicle.configs).each(function (i, config) {
+                $(data.configs).each(function (i, config) {
                     if (config.type.count > 1) {
                         configtable += '<div class="configtable"><table><thead><tr>'
                         configtable += '<th>' + config.type.name + '</th></tr>';
@@ -949,30 +949,27 @@ generateVehicleConfigs = function (data,vID) {
     $("#config-dialog").empty();
     if (data == null || data.configs.length == 0) {
         $("#config-dialog").append("<p>There are no configurations for this vehicle in the VCDB</p>");
-    } else if (data.configs.length == 1) {
-        $("#config-dialog").append("<p>There is only one configuration for this vehicle available</p>");
     } else {
-        var configtable = '<div class="configs" style="display:block;" data-vid="' + vID + '"><table><thead>';
-        var typerow = '<tr>';
-        $(data.types).each(function (i, type) {
-            if (type.count > 1) {
-                typerow += '<th>' + type.name + '</th>';
+        var configcount = 0;
+        var configtable = '<div class="configs" style="display:block;" data-vid="' + vID + '">';
+        $(data.configs).each(function (i, config) {
+            if (config.type.count > 1) {
+                configtable += '<div class="configtable"><table><thead>'
+                configtable += '<tr><th>' + config.type.name + '</th></tr>';
+                configtable += '</thead><tbody>';
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<tr><td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td></tr>';
+                });
+                configtable += "</tbody></table></div>";
+            }
+            if (config.type.count > configcount) {
+                configcount = config.type.count;
             }
         });
-        typerow += '</tr>';
-        configtable += typerow;
-        configtable += '</thead><tbody>';
-        $(data.configs).each(function (i, config) {
-            configtable += '<tr id="row_' + i + '">';
-            $(config.attributes).each(function (x, attr) {
-                if (attr.ConfigAttributeType.count > 1) {
-                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
-                }
-            });
-
-            configtable += '</tr>';
-        });
-        configtable += '</tbody></table></div>';
+        configtable += '</div>';
+        if (configcount < 2) {
+            configtable = '<p>There is only one configuration for this vehicle.</p>'
+        }
     }
     $("#config-dialog").append(configtable);
 };

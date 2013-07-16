@@ -1579,7 +1579,7 @@ ul.submodels li div.configs ul li {
 div.configs div.configtable {
     float: left;
     width:80px;
-    padding: 5px;
+    padding: 1px;
 }
 
 div.configs table {

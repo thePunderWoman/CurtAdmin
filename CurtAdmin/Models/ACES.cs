@@ -1128,11 +1128,8 @@ namespace CurtAdmin.Models {
                 // get vehicle by ID
                 vcdb_Vehicle v = db.vcdb_Vehicles.Where(x => x.ID.Equals(vehicleID)).First();
                 // get all the vehicle configs for the basevehicle and submodel
-                ACESVehicleDetails fullvdetails = getVehicleConfigs(v.BaseVehicleID, (int)v.SubModelID);
-                // set the full list of types
-                acesconfigs.types = fullvdetails;
-                // initialize configs as a new list
-                acesconfigs.configs = new List<ACESVehicleConfig>();
+                vdetails = getVehicleConfigs(v.BaseVehicleID, (int)v.SubModelID);
+
                 List<VehicleConfigAttribute> vattrs = new List<VehicleConfigAttribute>();
                 if (v.ConfigID != null) {
                     // get the ACES ConfigAttributes for the config of the vehicle if it exists
@@ -1140,25 +1137,15 @@ namespace CurtAdmin.Models {
                 }
                 if (vattrs.Count > 0) {
                     // loop through each of the ACES Vehicle Configs
-                    foreach (ACESVehicleConfig config in fullacesconfigs.configs) {
-                        bool add = true;
+                    foreach (ACESVehicleConfigType config in vdetails.configs) {
                         // loop through each of the ConfigAttributes to check for matches
                         foreach (VehicleConfigAttribute attr in vattrs) {
-                            if (config.attributes.Any(x => x.ConfigAttributeTypeID.Equals(attr.ConfigAttribute.ConfigAttributeTypeID) && x.vcdbID.Equals(attr.ConfigAttribute.vcdbID))) {
+                            if (config.type.ID.Equals(attr.ConfigAttribute.ConfigAttributeTypeID) && config.attributes.Any(x => x.vcdbID.Equals(attr.ConfigAttribute.vcdbID))) {
                                 // if there exists a ConfigAttribute that matches on type and vcdbID, make sure it's not shown
-                                ConfigAttributeType t = acesconfigs.types.Where(x => x.ID.Equals(attr.ConfigAttribute.ConfigAttributeTypeID)).First();
-                                t.count = 0;
-                            } else {
-                                add = false;
+                                config.type.count = 0;
                             }
                         }
-                        if (add) {
-                            acesconfigs.configs.Add(config);
-                        }
                     }
-                    vdetails.clearDuplicates();
-                } else {
-                    vdetails = fullvdetails;
                 }
             } catch { }
             return vdetails;
