@@ -1576,10 +1576,20 @@ ul.submodels li div.configs ul li {
     font-weight: normal;
 }
 
+div.configs div.configtable {
+    float: left;
+    width:80px;
+    padding: 5px;
+}
+
 div.configs table {
     font-size: 12px;
     list-style: none;
     border-collapse: collapse;
+}
+
+div.configs div.configtable table {
+    font-size: 11px;
 }
 
 div.configs table th {
@@ -1617,6 +1627,10 @@ div.configs table td.configattr {
 
 div.configs table tr:nth-child(odd) td {
     background-color: #fff;
+}
+
+div.configs div.configtable table thead tr th, div.configs div.configtable table tbody tr td {
+    font-size: 9px;
 }
 
 div#config-dialog ul#configresults {

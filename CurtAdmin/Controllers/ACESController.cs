@@ -371,13 +371,13 @@ namespace CurtAdmin.Controllers {
         }
 
         public string GetConfigs(int BaseVehicleID, int SubmodelID) {
-            ACESConfigs configs = new ACESConfigs();
+            ACESVehicleDetails configs = new ACESVehicleDetails();
             configs = new ACES().getVehicleConfigs(BaseVehicleID, SubmodelID);
             return JsonConvert.SerializeObject(configs);
         }
 
         public string GetConfigsByVehicle(int id) {
-            ACESConfigs configs = new ACESConfigs();
+            ACESVehicleDetails configs = new ACESVehicleDetails();
             configs = new ACES().getVehicleConfigs(id);
             return JsonConvert.SerializeObject(configs);
         }
