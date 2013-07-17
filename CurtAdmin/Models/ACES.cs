@@ -813,128 +813,116 @@ namespace CurtAdmin.Models {
                 List<int> vehicleIDs = vcdb.Vehicles.Where(x => x.SubmodelID.Equals(submodelID) && x.BaseVehicleID.Equals(BaseVehicleID)).Select(x => x.VehicleID).ToList<int>();
                 var predicate = PredicateBuilder.True<AAIA.Vehicle>();
                 predicate = predicate.And(p => vehicleIDs.Contains(p.VehicleID));
-                foreach (ConfigAttribute ca in configs) {
-                    switch (ca.ConfigAttributeType.AcesType.name) {
-                        case "WheelBase":
-                            predicate = predicate.And(p => p.VehicleToWheelbases.Any(y => y.WheelbaseID.Equals(ca.vcdbID)));
-                            break;
-                        case "BodyType":
-                            predicate = predicate.And(p => p.VehicleToBodyStyleConfigs.Any(y => y.BodyStyleConfig.BodyTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "DriveType":
-                            predicate = predicate.And(p => p.VehicleToDriveTypes.Any(y => y.DriveTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "BodyNumDoors":
-                            predicate = predicate.And(p => p.VehicleToBodyStyleConfigs.Any(y => y.BodyStyleConfig.BodyNumDoorsID.Equals(ca.vcdbID)));
-                            break;
-                        case "BedLength":
-                            predicate = predicate.And(p => p.VehicleToBedConfigs.Any(y => y.BedConfig.BedLengthID.Equals(ca.vcdbID)));
-                            break;
-                        case "FuelType":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "EngineBase":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineBaseID.Equals(ca.vcdbID)));
-                            break;
-                        case "Aspiration":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.AspirationID.Equals(ca.vcdbID)));
-                            break;
-                        case "BedType":
-                            predicate = predicate.And(p => p.VehicleToBedConfigs.Any(y => y.BedConfig.BedTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "BrakeABS":
-                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.BrakeABSID.Equals(ca.vcdbID)));
-                            break;
-                        case "BrakeSystem":
-                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.BrakeSystemID.Equals(ca.vcdbID)));
-                            break;
-                        case "CylinderHeadType":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.CylinderHeadTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "EngineDesignation":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineDesignationID.Equals(ca.vcdbID)));
-                            break;
-                        case "EngineMfr":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineMfrID.Equals(ca.vcdbID)));
-                            break;
-                        case "EngineVersion":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineVersionID.Equals(ca.vcdbID)));
-                            break;
-                        case "EngineVIN":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.EngineVINID.Equals(ca.vcdbID)));
-                            break;
-                        case "FrontBrakeType":
-                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.FrontBrakeTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "FrontSpringType":
-                            predicate = predicate.And(p => p.VehicleToSpringTypeConfigs.Any(y => y.SpringTypeConfig.FrontSpringTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "FuelDeliverySubType":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "FuelDeliveryType":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "FuelSystemControlType":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "FuelSystemDesign":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID.Equals(ca.vcdbID)));
-                            break;
-                        case "IgnitionSystemType":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.IgnitionSystemTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "MfrBodyCode":
-                            predicate = predicate.And(p => p.VehicleToMfrBodyCodes.Any(y => y.MfrBodyCode.MfrBodyCodeID.Equals(ca.vcdbID)));
-                            break;
-                        case "PowerOutput":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.PowerOutputID.Equals(ca.vcdbID)));
-                            break;
-                        case "RearBrakeType":
-                            predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => y.BrakeConfig.RearBrakeTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "RearSpringType":
-                            predicate = predicate.And(p => p.VehicleToSpringTypeConfigs.Any(y => y.SpringTypeConfig.RearSpringTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "SteeringSystem":
-                            predicate = predicate.And(p => p.VehicleToSteeringConfigs.Any(y => y.SteeringConfig.SteeringSystemID.Equals(ca.vcdbID)));
-                            break;
-                        case "SteeringType":
-                            predicate = predicate.And(p => p.VehicleToSteeringConfigs.Any(y => y.SteeringConfig.SteeringTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "TransElecControlled":
-                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.ElecControlled.ElecControlledID.Equals(ca.vcdbID)));
-                            break;
-                        case "Transmission":
-                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionID.Equals(ca.vcdbID)));
-                            break;
-                        case "TransmissionBase":
-                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBaseID.Equals(ca.vcdbID)));
-                            break;
-                        case "TransmissionControlType":
-                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "TransmissionMfrCode":
-                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionMfrCodeID.Equals(ca.vcdbID)));
-                            break;
-                        case "TransmissionNumSpeeds":
-                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(ca.vcdbID)));
-                            break;
-                        case "TransmissionType":
-                            predicate = predicate.And(p => p.VehicleToTransmissions.Any(y => y.Transmission.TransmissionBase.TransmissionTypeID.Equals(ca.vcdbID)));
-                            break;
-                        case "ValvesPerEngine":
-                            predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y => y.EngineConfig.ValvesID.Equals(ca.vcdbID)));
-                            break;
-                        default:
-                            isValid = false;
-                            break;
-                    }
-                    if (isValid) {
-                        // run query
-                        List<AAIA.Vehicle> vconfigs = vcdb.Vehicles.Where(predicate).ToList<AAIA.Vehicle>();
-                        isValid = vconfigs.Count > 0;
-                    }
+                List<string> AcesNodes = configs.Select(x => x.ConfigAttributeType.AcesType.name).ToList();
+                if(configs.Where(x => x.ConfigAttributeType.AcesTypeID.Equals(null)).Count() > 0) {
+                    // Non Aces Types present
+                    isValid = false;
+                }
+                if(AcesNodes.Contains("BodyType") || AcesNodes.Contains("BodyNumDoors")) {
+                    int BodyTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("BodyType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int BodyNumDoorsID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("BodyNumDoors")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToBodyStyleConfigs.Any(y => ((BodyTypeID > 0) ? y.BodyStyleConfig.BodyTypeID.Equals(BodyTypeID) : true) && ((BodyNumDoorsID > 0 ) ? y.BodyStyleConfig.BodyNumDoorsID.Equals(BodyNumDoorsID) : true)));
+                }
+                if(AcesNodes.Contains("WheelBase")) {
+                    int WheelBaseID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("WheelBase")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToWheelbases.Any(y => y.WheelbaseID.Equals(WheelBaseID)));
+                }
+                if (AcesNodes.Contains("MfrBodyCode")) {
+                    int MfrBodyCodeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("MfrBodyCode")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToMfrBodyCodes.Any(y => y.MfrBodyCodeID.Equals(MfrBodyCodeID)));
+                }
+                if (AcesNodes.Contains("DriveType")) {
+                    int DriveTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("DriveType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToDriveTypes.Any(y => y.DriveTypeID.Equals(DriveTypeID)));
+                }
+                if (AcesNodes.Contains("BedLength") || AcesNodes.Contains("BedType")) {
+                    int BedLengthID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("BedLength")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int BedTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("BedType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToBedConfigs.Any(y => ((BedLengthID > 0) ? y.BedConfig.BedLengthID.Equals(BedLengthID) : true) && ((BedTypeID > 0) ? y.BedConfig.BedTypeID.Equals(BedTypeID) : true)));
+                }
+                if (AcesNodes.Contains("SteeringSystem") || AcesNodes.Contains("SteeringType")) {
+                    int SteeringSystemID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("SteeringSystem")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int SteeringTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("SteeringType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToSteeringConfigs.Any(y => ((SteeringSystemID > 0) ? y.SteeringConfig.SteeringSystemID.Equals(SteeringSystemID) : true) && ((SteeringTypeID > 0) ? y.SteeringConfig.SteeringTypeID.Equals(SteeringTypeID) : true)));
+                }
+                if (AcesNodes.Contains("FrontSpringType") || AcesNodes.Contains("RearSpringType")) {
+                    int FrontSpringTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("FrontSpringType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int RearSpringTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("RearSpringType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToSpringTypeConfigs.Any(y => ((FrontSpringTypeID > 0) ? y.SpringTypeConfig.FrontSpringTypeID.Equals(FrontSpringTypeID) : true) && ((RearSpringTypeID > 0) ? y.SpringTypeConfig.RearSpringTypeID.Equals(RearSpringTypeID) : true)));
+                }
+                if (AcesNodes.Contains("BrakeABS") || AcesNodes.Contains("BrakeSystem") || AcesNodes.Contains("FrontBrakeType") || AcesNodes.Contains("RearBrakeType")) {
+                    int BrakeABSID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("BrakeABS")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int BrakeSystemID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("BrakeSystem")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int FrontBrakeTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("FrontBrakeType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int RearBrakeTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("RearBrakeType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    predicate = predicate.And(p => p.VehicleToBrakeConfigs.Any(y => ((BrakeABSID > 0) ? y.BrakeConfig.BrakeABSID.Equals(BrakeABSID) : true)
+                                                 && ((BrakeSystemID > 0) ? y.BrakeConfig.BrakeSystemID.Equals(BrakeSystemID) : true)
+                                                 && ((FrontBrakeTypeID > 0) ? y.BrakeConfig.FrontBrakeTypeID.Equals(FrontBrakeTypeID) : true)
+                                                 && ((RearBrakeTypeID > 0) ? y.BrakeConfig.RearBrakeTypeID.Equals(RearBrakeTypeID) : true)));
+                }
+                if (AcesNodes.Contains("FuelType") || AcesNodes.Contains("EngineBase") || AcesNodes.Contains("Aspiration") || AcesNodes.Contains("CylinderHeadType")
+                    || AcesNodes.Contains("EngineDesignation") || AcesNodes.Contains("EngineMfr") || AcesNodes.Contains("EngineVersion") || AcesNodes.Contains("EngineVIN")
+                    || AcesNodes.Contains("FuelDeliverySubType") || AcesNodes.Contains("FuelDeliveryType") || AcesNodes.Contains("FuelSystemControlType")
+                    || AcesNodes.Contains("IgnitionSystemType") || AcesNodes.Contains("PowerOutput") || AcesNodes.Contains("ValvesPerEngine")) {
+           
+                    int FuelTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("FuelType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int EngineBaseID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("EngineBase")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int AspirationID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("Aspiration")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int CylinderHeadTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("CylinderHeadType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int EngineDesignationID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("EngineDesignation")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int EngineMfrID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("EngineMfr")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int EngineVersionID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("EngineVersion")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int EngineVINID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("EngineVIN")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int FuelDeliverySubTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("FuelDeliverySubType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int FuelDeliveryTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("FuelDeliveryType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int FuelSystemControlTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("FuelSystemControlType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int FuelSystemDesignID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("FuelSystemDesign")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int IgnitionSystemTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("IgnitionSystemType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int PowerOutputID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("PowerOutput")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int ValvesPerEngineID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("ValvesPerEngine")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+
+                    predicate = predicate.And(p => p.VehicleToEngineConfigs.Any(y =>
+                                ((FuelTypeID > 0) ? y.EngineConfig.FuelTypeID.Equals(FuelTypeID) : true) &&
+                                ((EngineBaseID > 0) ? y.EngineConfig.EngineBaseID.Equals(EngineBaseID) : true) &&
+                                ((AspirationID > 0) ? y.EngineConfig.AspirationID.Equals(AspirationID) : true) &&
+                                ((CylinderHeadTypeID > 0) ? y.EngineConfig.CylinderHeadTypeID.Equals(CylinderHeadTypeID) : true) &&
+                                ((EngineDesignationID > 0) ? y.EngineConfig.EngineDesignationID.Equals(EngineDesignationID) : true) &&
+                                ((EngineMfrID > 0) ? y.EngineConfig.EngineMfrID.Equals(EngineMfrID) : true) &&
+                                ((EngineVersionID > 0) ? y.EngineConfig.EngineVersionID.Equals(EngineVersionID) : true) &&
+                                ((EngineVINID > 0) ? y.EngineConfig.EngineVINID.Equals(EngineVINID) : true) &&
+                                ((FuelDeliverySubTypeID > 0) ? y.EngineConfig.FuelDeliveryConfig.FuelDeliverySubTypeID.Equals(FuelDeliverySubTypeID) : true) &&
+                                ((FuelDeliveryTypeID > 0) ? y.EngineConfig.FuelDeliveryConfig.FuelDeliveryTypeID.Equals(FuelDeliveryTypeID) : true) &&
+                                ((FuelSystemControlTypeID > 0) ? y.EngineConfig.FuelDeliveryConfig.FuelSystemControlTypeID.Equals(FuelSystemControlTypeID) : true) &&
+                                ((FuelSystemDesignID > 0) ? y.EngineConfig.FuelDeliveryConfig.FuelSystemDesignID.Equals(FuelSystemDesignID) : true) &&
+                                ((IgnitionSystemTypeID > 0) ? y.EngineConfig.IgnitionSystemTypeID.Equals(IgnitionSystemTypeID) : true) &&
+                                ((PowerOutputID > 0) ? y.EngineConfig.PowerOutputID.Equals(PowerOutputID) : true) &&
+                                ((ValvesPerEngineID > 0) ? y.EngineConfig.ValvesID.Equals(ValvesPerEngineID) : true)));
+                }
+                if (AcesNodes.Contains("TransElecControlled") || AcesNodes.Contains("Transmission") || AcesNodes.Contains("TransmissionBase") || AcesNodes.Contains("TransmissionControlType")
+                    || AcesNodes.Contains("TransmissionMfrCode") || AcesNodes.Contains("TransmissionNumSpeeds") || AcesNodes.Contains("TransmissionType")) {
+
+                    int TransElecControlledID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("TransElecControlled")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int TransmissionID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("Transmission")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int TransmissionBaseID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("TransmissionBase")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int TransmissionControlTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("TransmissionControlType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int TransmissionMfrCodeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("TransmissionMfrCode")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int TransmissionNumSpeedsID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("TransmissionNumSpeeds")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+                    int TransmissionTypeID = configs.Where(x => x.ConfigAttributeType.AcesType.name.Equals("TransmissionType")).Select(x => x.vcdbID).FirstOrDefault() ?? 0;
+
+                    predicate = predicate.And(p => p.VehicleToTransmissions.Any(y =>
+                                ((TransElecControlledID > 0) ? y.Transmission.TransmissionElecControlledID.Equals(TransElecControlledID) : true) &&
+                                ((TransmissionID > 0) ? y.Transmission.TransmissionID.Equals(TransmissionID) : true) &&
+                                ((TransmissionBaseID > 0) ? y.Transmission.TransmissionBaseID.Equals(TransmissionBaseID) : true) &&
+                                ((TransmissionControlTypeID > 0) ? y.Transmission.TransmissionBase.TransmissionControlTypeID.Equals(TransmissionControlTypeID) : true) &&
+                                ((TransmissionMfrCodeID > 0) ? y.Transmission.TransmissionMfrCodeID.Equals(TransmissionMfrCodeID) : true) &&
+                                ((TransmissionNumSpeedsID > 0) ? y.Transmission.TransmissionBase.TransmissionNumSpeedsID.Equals(TransmissionNumSpeedsID) : true) &&
+                                ((TransmissionTypeID > 0) ? y.Transmission.TransmissionBase.TransmissionTypeID.Equals(TransmissionTypeID) : true)));
+                } 
+
+                if (isValid) {
+                    // run query
+                    List<AAIA.Vehicle> vconfigs = vcdb.Vehicles.Where(predicate).ToList<AAIA.Vehicle>();
+                    isValid = vconfigs.Count > 0;
                 }
             }
             return isValid;
