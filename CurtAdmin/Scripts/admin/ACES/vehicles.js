@@ -90,25 +90,224 @@ $(function () {
         $("#config-dialog").empty();
         $.getJSON('/ACES/GetConfigs?BaseVehicleID=' + bvid + '&submodelID=' + submodelID, function (data) {
             //console.log(data);
-            if (data == null || data.configs.length == 0) {
+            if (data == null || (data.BodyStyles.length == 0 && data.WheelBases.length == 0 && data.MfrBodyCodes.length == 0
+                && data.DriveTypes.length == 0 && data.Beds.length == 0 && data.Steering.length == 0 && data.Springs.length == 0
+                && data.Brakes.length == 0 && data.Engines.length == 0 && data.Transmissions.length == 0)) {
                 $("#config-dialog").append("<p>There are no configurations for this vehicle in the VCDB</p>");
             } else {
                 var configcount = 0;
                 var configtable = '<div class="configs" style="display:block;" data-bvid="' + bvid + '" data-submodelid="' + submodelID + '">';
-                $(data.configs).each(function (i, config) {
-                    if (config.type.count > 1) {
-                        configtable += '<div class="configtable"><table><thead><tr>'
-                        configtable += '<th>' + config.type.name + '</th></tr>';
-                        configtable += '<tr><th><input type="checkbox" class="configattributes" value="' + config.type.ID + '" /></th></tr></thead><tbody>';
+                if (data.BodyStyles.length > 1) {
+                    if (data.BodyStyles.length > configcount) {
+                        configcount = data.BodyStyles.length;
+                    }
+                    configtable += '<div class="configtable"><p>Body Styles</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.BodyStyles[0].types).each(function(i,type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.BodyStyles).each(function (i, config) {
+                        configtable += '<tr>'
                         $(config.attributes).each(function (i, attr) {
-                            configtable += '<tr><td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td></tr>';
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
                         });
-                        configtable += "</tbody></table></div>";
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.WheelBases.length > 1) {
+                    if (data.WheelBases.length > configcount) {
+                        configcount = data.WheelBases.length;
                     }
-                    if (config.type.count > configcount) {
-                        configcount = config.type.count;
+                    configtable += '<div class="configtable"><p>Wheel Base</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.WheelBases[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.WheelBases).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.MfrBodyCodes.length > 1) {
+                    if (data.MfrBodyCodes.length > configcount) {
+                        configcount = data.MfrBodyCodes.length;
                     }
-                });
+                    configtable += '<div class="configtable"><p>Mfr Body Codes</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.MfrBodyCodes[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.MfrBodyCodes).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.DriveTypes.length > 1) {
+                    if (data.DriveTypes.length > configcount) {
+                        configcount = data.DriveTypes.length;
+                    }
+                    configtable += '<div class="configtable"><p>Drive Types</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.DriveTypes[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.DriveTypes).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.Beds.length > 1) {
+                    if (data.Beds.length > configcount) {
+                        configcount = data.Beds.length;
+                    }
+                    configtable += '<div class="configtable"><p>Bed</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.Beds[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.Beds).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.Steering.length > 1) {
+                    if (data.Steering.length > configcount) {
+                        configcount = data.Steering.length;
+                    }
+                    configtable += '<div class="configtable"><p>Steering</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.Steering[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.Steering).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.Springs.length > 1) {
+                    if (data.Springs.length > configcount) {
+                        configcount = data.Springs.length;
+                    }
+                    configtable += '<div class="configtable"><p>Springs</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.Springs[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.Springs).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+
+                if (data.Brakes.length > 1) {
+                    if (data.Brakes.length > configcount) {
+                        configcount = data.Brakes.length;
+                    }
+                    configtable += '<div class="configtable"><p>Brakes</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.Brakes[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.Brakes).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.Engines.length > 1) {
+                    if (data.Engines.length > configcount) {
+                        configcount = data.Engines.length;
+                    }
+                    configtable += '<div class="configtable"><p>Engines</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.Engines[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.Engines).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
+                if (data.Transmissions.length > 1) {
+                    if (data.Transmissions.length > configcount) {
+                        configcount = data.Transmissions.length;
+                    }
+                    configtable += '<div class="configtable"><p>Transmissions</p><table><thead>'
+                    var tabletop = '';
+                    var tablebot = '';
+                    $(data.Transmissions[0].types).each(function (i, type) {
+                        tabletop += '<th>' + type.name + '</th>';
+                        tablebot += '<th><input type="checkbox" class="configattributes" value="' + type.ID + '" /></th>';
+                    });
+                    configtable += '<tr>' + tabletop + '</tr><tr>' + tablebot + '</tr></thead><tbody>';
+                    $(data.Transmissions).each(function (i, config) {
+                        configtable += '<tr>'
+                        $(config.attributes).each(function (i, attr) {
+                            configtable += '<td class="configattr" data-id="' + attr.vcdbID + '">' + attr.value + '</td>';
+                        });
+                        configtable += '</tr>';
+                    });
+                    configtable += '</tbody></table></div>';
+                }
                 configtable += '</div>';
                 if (configcount < 2) {
                     configtable = '<p>There is only one configuration for this vehicle.</p>'
@@ -947,25 +1146,204 @@ generateConfigTable = function (submodel) {
 
 generateVehicleConfigs = function (data,vID) {
     $("#config-dialog").empty();
-    if (data == null || data.configs.length == 0) {
+    if (data == null || (data.BodyStyles.length == 0 && data.WheelBases.length == 0 && data.MfrBodyCodes.length == 0
+                && data.DriveTypes.length == 0 && data.Beds.length == 0 && data.Steering.length == 0 && data.Springs.length == 0
+                && data.Brakes.length == 0 && data.Engines.length == 0 && data.Transmissions.length == 0)) {
         $("#config-dialog").append("<p>There are no configurations for this vehicle in the VCDB</p>");
     } else {
         var configcount = 0;
         var configtable = '<div class="configs" style="display:block;" data-vid="' + vID + '">';
-        $(data.configs).each(function (i, config) {
-            if (config.type.count > 1) {
-                configtable += '<div class="configtable"><table><thead>'
-                configtable += '<tr><th>' + config.type.name + '</th></tr>';
-                configtable += '</thead><tbody>';
+        if (data.BodyStyles.length > 1) {
+            if (data.BodyStyles.length > configcount) {
+                configcount = data.BodyStyles.length;
+            }
+            configtable += '<div class="configtable"><p>Body Styles</p><table><thead>'
+            var tabletop = '';
+            $(data.BodyStyles[0].types).each(function(i,type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.BodyStyles).each(function (i, config) {
+                configtable += '<tr>'
                 $(config.attributes).each(function (i, attr) {
-                    configtable += '<tr><td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td></tr>';
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
                 });
-                configtable += "</tbody></table></div>";
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.WheelBases.length > 1) {
+            if (data.WheelBases.length > configcount) {
+                configcount = data.WheelBases.length;
             }
-            if (config.type.count > configcount) {
-                configcount = config.type.count;
+            configtable += '<div class="configtable"><p>Wheel Base</p><table><thead>'
+            var tabletop = '';
+            $(data.WheelBases[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.WheelBases).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.MfrBodyCodes.length > 1) {
+            if (data.MfrBodyCodes.length > configcount) {
+                configcount = data.MfrBodyCodes.length;
             }
-        });
+            configtable += '<div class="configtable"><p>Mfr Body Codes</p><table><thead>'
+            var tabletop = '';
+            $(data.MfrBodyCodes[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.MfrBodyCodes).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.DriveTypes.length > 1) {
+            if (data.DriveTypes.length > configcount) {
+                configcount = data.DriveTypes.length;
+            }
+            configtable += '<div class="configtable"><p>Drive Types</p><table><thead>'
+            var tabletop = '';
+            $(data.DriveTypes[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.DriveTypes).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.Beds.length > 1) {
+            if (data.Beds.length > configcount) {
+                configcount = data.Beds.length;
+            }
+            configtable += '<div class="configtable"><p>Bed</p><table><thead>'
+            var tabletop = '';
+            $(data.Beds[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.Beds).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.Steering.length > 1) {
+            if (data.Steering.length > configcount) {
+                configcount = data.Steering.length;
+            }
+            configtable += '<div class="configtable"><p>Steering</p><table><thead>'
+            var tabletop = '';
+            $(data.Steering[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.Steering).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.Springs.length > 1) {
+            if (data.Springs.length > configcount) {
+                configcount = data.Springs.length;
+            }
+            configtable += '<div class="configtable"><p>Springs</p><table><thead>'
+            var tabletop = '';
+            $(data.Springs[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.Springs).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+
+        if (data.Brakes.length > 1) {
+            if (data.Brakes.length > configcount) {
+                configcount = data.Brakes.length;
+            }
+            configtable += '<div class="configtable"><p>Brakes</p><table><thead>'
+            var tabletop = '';
+            $(data.Brakes[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.Brakes).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.Engines.length > 1) {
+            if (data.Engines.length > configcount) {
+                configcount = data.Engines.length;
+            }
+            configtable += '<div class="configtable"><p>Engines</p><table><thead>'
+            var tabletop = '';
+            $(data.Engines[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.Engines).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
+        if (data.Transmissions.length > 1) {
+            if (data.Transmissions.length > configcount) {
+                configcount = data.Transmissions.length;
+            }
+            configtable += '<div class="configtable"><p>Transmissions</p><table><thead>'
+            var tabletop = '';
+            $(data.Transmissions[0].types).each(function (i, type) {
+                tabletop += '<th>' + type.name + '</th>';
+            });
+            configtable += '<tr>' + tabletop + '</tr></thead><tbody>';
+            $(data.Transmissions).each(function (i, config) {
+                configtable += '<tr>'
+                $(config.attributes).each(function (i, attr) {
+                    configtable += '<td class="configattr"><input type="checkbox" class="addedAttrib" id="attrib-' + attr.vcdbID + attr.ConfigAttributeTypeID + '" data-id="' + attr.vcdbID + '" data-typeid="' + attr.ConfigAttributeTypeID + '" data-value="' + attr.value + '" /> ' + attr.value + '</td>';
+                });
+                configtable += '</tr>';
+            });
+            configtable += '</tbody></table></div>';
+        }
         configtable += '</div>';
         if (configcount < 2) {
             configtable = '<p>There is only one configuration for this vehicle.</p>'

@@ -974,6 +974,518 @@ namespace CurtAdmin.Models {
             return vehicles;
         }
 
+        private ACESVehicleOptions generateConfig(List<AAIA.Vehicle> vehicles) {
+            CurtDevDataContext db = new CurtDevDataContext();
+            ACESVehicleOptions vdetails = new ACESVehicleOptions();
+            List<ConfigAttributeType> types = db.ConfigAttributeTypes.Where(x => x.AcesTypeID != null).OrderBy(x => x.sort).ToList<ConfigAttributeType>();
+
+            List<ACESConfig> BodyStyles = new List<ACESConfig>();
+            List<ACESConfig> WheelBases = new List<ACESConfig>();
+            List<ACESConfig> MfrBodyCodes = new List<ACESConfig>();
+            List<ACESConfig> DriveTypes = new List<ACESConfig>();
+            List<ACESConfig> Beds = new List<ACESConfig>();
+            List<ACESConfig> SteeringConfigs = new List<ACESConfig>();
+            List<ACESConfig> Springs = new List<ACESConfig>();
+            List<ACESConfig> Brakes = new List<ACESConfig>();
+            List<ACESConfig> Engines = new List<ACESConfig>();
+            List<ACESConfig> Transmissions = new List<ACESConfig>();
+
+            //BodyStyles
+            List<AAIA.BodyStyleConfig> bodystyleconfigs = vehicles.SelectMany(y => y.VehicleToBodyStyleConfigs.Select(x => x.BodyStyleConfig)).Distinct().ToList();
+            foreach (AAIA.BodyStyleConfig bodystyle in bodystyleconfigs) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = bodystyle.BodyStyleConfigID;
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (bodystyleconfigs.Select(x => x.BodyTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Body Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = bodystyle.BodyTypeID,
+                        value = bodystyle.BodyType.BodyTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (bodystyleconfigs.Select(x => x.BodyNumDoorsID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Number of Doors")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = bodystyle.BodyNumDoorsID,
+                        value = bodystyle.BodyNumDoor.BodyNumDoors.Trim()
+                    });
+                }
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                BodyStyles.Add(config);
+                vdetails.BodyStyles = BodyStyles;
+            }
+
+            //DriveTypes
+            List<AAIA.DriveType> drivetypes = vehicles.SelectMany(y => y.VehicleToDriveTypes.Select(x => x.DriveType)).Distinct().ToList();
+            foreach (AAIA.DriveType drivetype in drivetypes) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = drivetype.DriveTypeID;
+
+                type = types.Where(x => x.name.Equals("Drive Type")).FirstOrDefault();
+                config.types.Add(type);
+                attribs.Add(new ConfigAttribute {
+                    ConfigAttributeType = type,
+                    vcdbID = drivetype.DriveTypeID,
+                    value = drivetype.DriveTypeName.Trim()
+                });
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                DriveTypes.Add(config);
+                vdetails.DriveTypes = DriveTypes;
+            }
+
+            //WheelBases
+            List<AAIA.WheelBase> wheelbases = vehicles.SelectMany(y => y.VehicleToWheelbases.Select(x => x.WheelBase)).Distinct().ToList();
+            foreach (AAIA.WheelBase wheelbase in wheelbases) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = wheelbase.WheelBaseID;
+
+                type = types.Where(x => x.name.Equals("Wheel Base")).FirstOrDefault();
+                config.types.Add(type);
+                attribs.Add(new ConfigAttribute {
+                    ConfigAttributeType = type,
+                    vcdbID = wheelbase.WheelBaseID,
+                    value = wheelbase.WheelBase1.Trim()
+                });
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                WheelBases.Add(config);
+                vdetails.WheelBases = WheelBases;
+            }
+            //MfrBodyCodes
+            List<AAIA.MfrBodyCode> mfrbodycodes = vehicles.SelectMany(y => y.VehicleToMfrBodyCodes.Select(x => x.MfrBodyCode)).Distinct().ToList();
+            foreach (AAIA.MfrBodyCode bcode in mfrbodycodes) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = bcode.MfrBodyCodeID;
+
+                type = types.Where(x => x.name.Equals("Manufacturer Body Code")).FirstOrDefault();
+                config.types.Add(type);
+                attribs.Add(new ConfigAttribute {
+                    ConfigAttributeType = type,
+                    vcdbID = bcode.MfrBodyCodeID,
+                    value = bcode.MfrBodyCodeName.Trim()
+                });
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                MfrBodyCodes.Add(config);
+                vdetails.MfrBodyCodes = MfrBodyCodes;
+            }
+
+            //BedConfigs
+            List<AAIA.BedConfig> bedconfigs = vehicles.SelectMany(y => y.VehicleToBedConfigs.Select(x => x.BedConfig)).Distinct().ToList();
+            foreach (AAIA.BedConfig bed in bedconfigs) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = bed.BedConfigID;
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (bedconfigs.Select(x => x.BedLengthID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Bed Length")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = bed.BedLengthID,
+                        value = bed.BedLength.BedLength1.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (bedconfigs.Select(x => x.BedTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Bed Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = bed.BedTypeID,
+                        value = bed.BedType.BedTypeName.Trim()
+                    });
+                }
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                Beds.Add(config);
+                vdetails.Beds = Beds;
+            }
+
+            //SpringConfigs
+            List<AAIA.SpringTypeConfig> springconfigs = vehicles.SelectMany(y => y.VehicleToSpringTypeConfigs.Select(x => x.SpringTypeConfig)).Distinct().ToList();
+            foreach (AAIA.SpringTypeConfig springs in springconfigs) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = springs.SpringTypeConfigID;
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (springconfigs.Select(x => x.FrontSpringTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Front Spring Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = springs.FrontSpringTypeID,
+                        value = springs.FrontSpringType.SpringTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (springconfigs.Select(x => x.RearSpringTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Rear Spring Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = springs.RearSpringTypeID,
+                        value = springs.RearSpringType.SpringTypeName.Trim()
+                    });
+                }
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                Springs.Add(config);
+                vdetails.Springs = Springs;
+            }
+
+            //Steering
+            List<AAIA.SteeringConfig> steeringconfigs = vehicles.SelectMany(y => y.VehicleToSteeringConfigs.Select(x => x.SteeringConfig)).Distinct().ToList();
+            foreach (AAIA.SteeringConfig steering in steeringconfigs) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = steering.SteeringConfigID;
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (steeringconfigs.Select(x => x.SteeringSystemID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Steering System")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = steering.SteeringSystemID,
+                        value = steering.SteeringSystem.SteeringSystemName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (steeringconfigs.Select(x => x.SteeringTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Steering Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = steering.SteeringTypeID,
+                        value = steering.SteeringType.SteeringTypeName.Trim()
+                    });
+                }
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                SteeringConfigs.Add(config);
+                vdetails.Steering = SteeringConfigs;
+            }
+
+            //Brakes
+            List<AAIA.BrakeConfig> brakeconfigs = vehicles.SelectMany(y => y.VehicleToBrakeConfigs.Select(x => x.BrakeConfig)).Distinct().ToList();
+            foreach (AAIA.BrakeConfig brakes in brakeconfigs) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = brakes.BrakeConfigID;
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (brakeconfigs.Select(x => x.BrakeABSID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Brake ABS")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = brakes.BrakeABSID,
+                        value = brakes.BrakeAB.BrakeABSName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (brakeconfigs.Select(x => x.BrakeSystemID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Brake System")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = brakes.BrakeSystemID,
+                        value = brakes.BrakeSystem.BrakeSystemName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (brakeconfigs.Select(x => x.FrontBrakeTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Front Brake Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = brakes.FrontBrakeTypeID,
+                        value = brakes.FrontBrakeType.BrakeTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (brakeconfigs.Select(x => x.RearBrakeTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Rear Brake Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = brakes.RearBrakeTypeID,
+                        value = brakes.RearBrakeType.BrakeTypeName.Trim()
+                    });
+                }
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                Brakes.Add(config);
+                vdetails.Brakes = Brakes;
+            }
+
+            //Transmission
+            List<AAIA.Transmission> transmissions = vehicles.SelectMany(y => y.VehicleToTransmissions.Select(x => x.Transmission)).Distinct().ToList();
+            foreach (AAIA.Transmission trans in transmissions) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = trans.TransmissionID;
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (transmissions.Select(x => x.TransmissionElecControlledID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Tranmission Electronic Controlled")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = trans.TransmissionElecControlledID,
+                        value = trans.ElecControlled.ElecControlled1.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (transmissions.Select(x => x.TransmissionBaseID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Transmission Base")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = trans.TransmissionBaseID,
+                        value = trans.TransmissionBase.TransmissionNumSpeed.TransmissionNumSpeeds.Trim() + "sp " + trans.TransmissionBase.TransmissionControlType.TransmissionControlTypeName.Trim() + " " + trans.TransmissionBase.TransmissionType.TransmissionTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (transmissions.Select(x => x.TransmissionMfrCodeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Tranmission Manufacturer Code")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = trans.TransmissionMfrCodeID,
+                        value = trans.TransmissionMfrCode.TransmissionMfrCode1.Trim()
+                    });
+                }
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                Transmissions.Add(config);
+                vdetails.Transmissions = Transmissions;
+            }
+
+            //Engines
+            List<AAIA.EngineConfig> enginesconfigs = vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList();
+            foreach (AAIA.EngineConfig engine in enginesconfigs) {
+                ACESConfig config = new ACESConfig();
+                config.types = new List<ConfigAttributeType>();
+                ConfigAttributeType type = new ConfigAttributeType();
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                config.configID = engine.EngineConfigID;
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.EngineBaseID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Engine")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.EngineBaseID,
+                        value = engine.EngineBase.Liter.Trim() + "L " + engine.EngineBase.BlockType.Trim() + engine.EngineBase.Cylinders.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.FuelTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Fuel Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.FuelTypeID,
+                        value = engine.FuelType.FuelTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.AspirationID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Aspiration")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.AspirationID,
+                        value = engine.Aspiration.AspirationName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.CylinderHeadTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Cylinder Head Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.CylinderHeadTypeID,
+                        value = engine.CylinderHeadType.CylinderHeadTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.EngineDesignationID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Engine Designation")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.EngineDesignationID,
+                        value = engine.EngineDesignation.EngineDesignationName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.EngineMfrID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Engine Manufacturer")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.EngineMfrID,
+                        value = engine.Mfr.MfrName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.EngineVersionID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Engine Version")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.EngineVersionID,
+                        value = engine.EngineVersion.EngineVersion1.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.EngineVINID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Engine VIN")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.EngineVINID,
+                        value = engine.EngineVIN.EngineVINName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.FuelDeliveryConfig.FuelDeliverySubTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Fuel Delivery Sub-Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.FuelDeliveryConfig.FuelDeliverySubTypeID,
+                        value = engine.FuelDeliveryConfig.FuelDeliverySubType.FuelDeliverySubTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.FuelDeliveryConfig.FuelDeliveryTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Fuel Delivery Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.FuelDeliveryConfig.FuelDeliveryTypeID,
+                        value = engine.FuelDeliveryConfig.FuelDeliveryType.FuelDeliveryTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.FuelDeliveryConfig.FuelSystemControlTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Fuel System Control Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.FuelDeliveryConfig.FuelSystemControlTypeID,
+                        value = engine.FuelDeliveryConfig.FuelSystemControlType.FuelSystemControlTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.FuelDeliveryConfig.FuelSystemDesignID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Fuel System Design")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.FuelDeliveryConfig.FuelSystemDesignID,
+                        value = engine.FuelDeliveryConfig.FuelSystemDesign.FuelSystemDesignName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.IgnitionSystemTypeID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Ignition System Type")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.IgnitionSystemTypeID,
+                        value = engine.IgnitionSystemType.IgnitionSystemTypeName.Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.PowerOutputID).Distinct().Count() > 1) {
+                    AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
+                    type = types.Where(x => x.name.Equals("Power Output")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.PowerOutputID,
+                        value = vcdb.PowerOutputs.Where(x => x.PowerOutputID.Equals(engine.PowerOutputID)).Select(x => x.HorsePower).First().Trim()
+                    });
+                }
+
+                // if block prevents showing options if the attribute is the same for every config
+                if (enginesconfigs.Select(x => x.ValvesID).Distinct().Count() > 1) {
+                    type = types.Where(x => x.name.Equals("Valves Per Engine")).FirstOrDefault();
+                    config.types.Add(type);
+                    attribs.Add(new ConfigAttribute {
+                        ConfigAttributeType = type,
+                        vcdbID = engine.ValvesID,
+                        value = engine.Valve.ValvesPerEngine.Trim()
+                    });
+                }
+                config.attributes = attribs.OrderBy(x => x.ConfigAttributeType.sort).ToList();
+                config.types = config.types.OrderBy(x => x.sort).ToList();
+                Engines.Add(config);
+                vdetails.Engines = Engines;
+            }
+            return vdetails;
+        }
+
         internal ACESVehicleOptions getVehicleConfigs(int BaseVehicleID, int SubmodelID) {
             ACESVehicleOptions vdetails = new ACESVehicleOptions();
             CurtDevDataContext db = new CurtDevDataContext();
@@ -981,394 +1493,17 @@ namespace CurtAdmin.Models {
             try {
                 BaseVehicle bv = db.BaseVehicles.Where(x => x.ID.Equals(BaseVehicleID)).First<BaseVehicle>();
                 Submodel submodel = db.Submodels.Where(x => x.ID.Equals(SubmodelID)).First<Submodel>();
-                List<AAIA.Vehicle> vehicles = vcdb.Vehicles.Where(x => x.BaseVehicleID.Equals(bv.AAIABaseVehicleID) && x.SubmodelID.Equals(submodel.AAIASubmodelID)).Distinct().ToList<AAIA.Vehicle>();
-
-                List<ConfigAttributeType> types = db.ConfigAttributeTypes.Where(x => x.AcesTypeID != null).OrderBy(x => x.sort).ToList<ConfigAttributeType>();
-
-                List<ACESConfig> BodyStyles = new List<ACESConfig>();
-                List<ACESConfig> WheelBases = new List<ACESConfig>();
-                List<ACESConfig> MfrBodyCodes = new List<ACESConfig>();
-                List<ACESConfig> DriveTypes = new List<ACESConfig>();
-                List<ACESConfig> Beds = new List<ACESConfig>();
-                List<ACESConfig> SteeringConfigs = new List<ACESConfig>();
-                List<ACESConfig> Springs = new List<ACESConfig>();
-                List<ACESConfig> Brakes = new List<ACESConfig>();
-                List<ACESConfig> Engines = new List<ACESConfig>();
-                List<ACESConfig> Transmissions = new List<ACESConfig>();
+                List<AAIA.Vehicle> aaiavehicles = vcdb.Vehicles.Where(x => x.BaseVehicleID.Equals(bv.AAIABaseVehicleID) && x.SubmodelID.Equals(submodel.AAIASubmodelID)).Distinct().ToList<AAIA.Vehicle>();
                 
-                //BodyStyles
-                List<AAIA.BodyStyleConfig> bodystyleconfigs = vehicles.SelectMany(y => y.VehicleToBodyStyleConfigs.Select(x => x.BodyStyleConfig)).Distinct().ToList();
-                foreach (AAIA.BodyStyleConfig bodystyle in bodystyleconfigs) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = bodystyle.BodyStyleConfigID;
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr1 = new ACESConfigAttribute();
-                    attr1.type = types.Where(x => x.name.Equals("Body Type")).FirstOrDefault();
-                    attr1.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr1.type,
-                        vcdbID = bodystyle.BodyTypeID,
-                        value = bodystyle.BodyType.BodyTypeName.Trim()
-                    };
-                    attribs.Add(attr1);
-                    ACESConfigAttribute attr2 = new ACESConfigAttribute();
-                    attr2.type = types.Where(x => x.name.Equals("Number of Doors")).FirstOrDefault();
-                    attr2.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr2.type,
-                        vcdbID = bodystyle.BodyNumDoorsID,
-                        value = bodystyle.BodyNumDoor.BodyNumDoors.Trim()
-                    };
-                    attribs.Add(attr2);
-                    config.attributes = attribs;
-                    BodyStyles.Add(config);
-                }
-
-                //DriveTypes
-                List<AAIA.DriveType> drivetypes = vehicles.SelectMany(y => y.VehicleToDriveTypes.Select(x => x.DriveType)).Distinct().ToList();
-                foreach (AAIA.DriveType drivetype in drivetypes) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = drivetype.DriveTypeID;
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr = new ACESConfigAttribute();
-                    attr.type = types.Where(x => x.name.Equals("Drive Type")).FirstOrDefault();
-                    attr.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr.type,
-                        vcdbID = drivetype.DriveTypeID,
-                        value = drivetype.DriveTypeName.Trim()
-                    };
-                    attribs.Add(attr);
-                    config.attributes = attribs;
-                    DriveTypes.Add(config);
-                }
-
-                //WheelBases
-                List<AAIA.WheelBase> wheelbases = vehicles.SelectMany(y => y.VehicleToWheelbases.Select(x => x.WheelBase)).Distinct().ToList();
-                foreach (AAIA.WheelBase wheelbase in wheelbases) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = wheelbase.WheelBaseID;
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr = new ACESConfigAttribute();
-                    attr.type = types.Where(x => x.name.Equals("Wheel Base")).FirstOrDefault();
-                    attr.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr.type,
-                        vcdbID = wheelbase.WheelBaseID,
-                        value = wheelbase.WheelBase1.Trim()
-                    };
-                    attribs.Add(attr);
-                    config.attributes = attribs;
-                    WheelBases.Add(config);
-                }
-                //MfrBodyCodes
-                List<AAIA.MfrBodyCode> mfrbodycodes = vehicles.SelectMany(y => y.VehicleToMfrBodyCodes.Select(x => x.MfrBodyCode)).Distinct().ToList();
-                foreach (AAIA.MfrBodyCode bcode in mfrbodycodes) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = bcode.MfrBodyCodeID;
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr = new ACESConfigAttribute();
-                    attr.type = types.Where(x => x.name.Equals("Manufacturer Body Code")).FirstOrDefault();
-                    attr.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr.type,
-                        vcdbID = bcode.MfrBodyCodeID,
-                        value = bcode.MfrBodyCodeName.Trim()
-                    };
-                    attribs.Add(attr);
-                    config.attributes = attribs;
-                    MfrBodyCodes.Add(config);
-                }
-
-                //BedConfigs
-                List<AAIA.BedConfig> bedconfigs = vehicles.SelectMany(y => y.VehicleToBedConfigs.Select(x => x.BedConfig)).Distinct().ToList();
-                foreach (AAIA.BedConfig bed in bedconfigs) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = bed.BedConfigID;
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr1 = new ACESConfigAttribute();
-                    attr1.type = types.Where(x => x.name.Equals("Bed Length")).FirstOrDefault();
-                    attr1.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr1.type,
-                        vcdbID = bed.BedLengthID,
-                        value = bed.BedLength.BedLength1.Trim()
-                    };
-                    attribs.Add(attr1);
-                    ACESConfigAttribute attr2 = new ACESConfigAttribute();
-                    attr2.type = types.Where(x => x.name.Equals("Bed Type")).FirstOrDefault();
-                    attr2.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr2.type,
-                        vcdbID = bed.BedTypeID,
-                        value = bed.BedType.BedTypeName.Trim()
-                    };
-                    attribs.Add(attr2);
-                    config.attributes = attribs;
-                    Beds.Add(config);
-                }
-
-                //SpringConfigs
-                List<AAIA.SpringTypeConfig> springconfigs = vehicles.SelectMany(y => y.VehicleToSpringTypeConfigs.Select(x => x.SpringTypeConfig)).Distinct().ToList();
-                foreach (AAIA.SpringTypeConfig springs in springconfigs) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = springs.SpringTypeConfigID;
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr1 = new ACESConfigAttribute();
-                    attr1.type = types.Where(x => x.name.Equals("Front Spring Type")).FirstOrDefault();
-                    attr1.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr1.type,
-                        vcdbID = springs.FrontSpringTypeID,
-                        value = springs.FrontSpringType.SpringTypeName.Trim()
-                    };
-                    attribs.Add(attr1);
-                    ACESConfigAttribute attr2 = new ACESConfigAttribute();
-                    attr2.type = types.Where(x => x.name.Equals("Rear Spring Type")).FirstOrDefault();
-                    attr2.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr2.type,
-                        vcdbID = springs.RearSpringTypeID,
-                        value = springs.RearSpringType.SpringTypeName.Trim()
-                    };
-                    attribs.Add(attr2);
-                    config.attributes = attribs;
-                    Springs.Add(config);
-                }
-
-                //Steering
-                List<AAIA.SteeringConfig> steeringconfigs = vehicles.SelectMany(y => y.VehicleToSteeringConfigs.Select(x => x.SteeringConfig)).Distinct().ToList();
-                foreach (AAIA.SteeringConfig steering in steeringconfigs) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = steering.SteeringConfigID;
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr1 = new ACESConfigAttribute();
-                    attr1.type = types.Where(x => x.name.Equals("Steering System")).FirstOrDefault();
-                    attr1.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr1.type,
-                        vcdbID = steering.SteeringSystemID,
-                        value = steering.SteeringSystem.SteeringSystemName.Trim()
-                    };
-                    attribs.Add(attr1);
-                    ACESConfigAttribute attr2 = new ACESConfigAttribute();
-                    attr2.type = types.Where(x => x.name.Equals("Steering Type")).FirstOrDefault();
-                    attr2.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr2.type,
-                        vcdbID = steering.SteeringTypeID,
-                        value = steering.SteeringType.SteeringTypeName.Trim()
-                    };
-                    attribs.Add(attr2);
-                    config.attributes = attribs;
-                    SteeringConfigs.Add(config);
-                }
-
-                //Brakes
-                List<AAIA.BrakeConfig> brakeconfigs = vehicles.SelectMany(y => y.VehicleToBrakeConfigs.Select(x => x.BrakeConfig)).Distinct().ToList();
-                foreach (AAIA.BrakeConfig brakes in brakeconfigs) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = brakes.BrakeConfigID;
-
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr1 = new ACESConfigAttribute();
-                    attr1.type = types.Where(x => x.name.Equals("Brake ABS")).FirstOrDefault();
-                    attr1.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr1.type,
-                        vcdbID = brakes.BrakeABSID,
-                        value = brakes.BrakeAB.BrakeABSName.Trim()
-                    };
-                    attribs.Add(attr1);
-                    ACESConfigAttribute attr2 = new ACESConfigAttribute();
-                    attr2.type = types.Where(x => x.name.Equals("Brake System")).FirstOrDefault();
-                    attr2.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr2.type,
-                        vcdbID = brakes.BrakeSystemID,
-                        value = brakes.BrakeSystem.BrakeSystemName.Trim()
-                    };
-                    attribs.Add(attr2);
-                    ACESConfigAttribute attr3 = new ACESConfigAttribute();
-                    attr3.type = types.Where(x => x.name.Equals("Front Brake Type")).FirstOrDefault();
-                    attr3.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr3.type,
-                        vcdbID = brakes.FrontBrakeTypeID,
-                        value = brakes.FrontBrakeType.BrakeTypeName.Trim()
-                    };
-                    attribs.Add(attr3);
-                    ACESConfigAttribute attr4 = new ACESConfigAttribute();
-                    attr4.type = types.Where(x => x.name.Equals("Rear Brake Type")).FirstOrDefault();
-                    attr4.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr4.type,
-                        vcdbID = brakes.RearBrakeTypeID,
-                        value = brakes.RearBrakeType.BrakeTypeName.Trim()
-                    };
-                    attribs.Add(attr4);
-                    config.attributes = attribs;
-                    Brakes.Add(config);
-                }
-
-                //Transmission
-                List<AAIA.Transmission> transmissions = vehicles.SelectMany(y => y.VehicleToTransmissions.Select(x => x.Transmission)).Distinct().ToList();
-                foreach (AAIA.Transmission trans in transmissions) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = trans.TransmissionID;
-
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr1 = new ACESConfigAttribute();
-                    attr1.type = types.Where(x => x.name.Equals("Tranmission Electronic Controlled")).FirstOrDefault();
-                    attr1.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr1.type,
-                        vcdbID = trans.TransmissionElecControlledID,
-                        value = trans.ElecControlled.ElecControlled1.Trim()
-                    };
-                    attribs.Add(attr1);
-                    ACESConfigAttribute attr2 = new ACESConfigAttribute();
-                    attr2.type = types.Where(x => x.name.Equals("Transmission Base")).FirstOrDefault();
-                    attr2.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr2.type,
-                        vcdbID = trans.TransmissionBaseID,
-                        value = trans.TransmissionBase.TransmissionNumSpeed.TransmissionNumSpeeds.Trim() + "sp " + trans.TransmissionBase.TransmissionControlType.TransmissionControlTypeName.Trim() + " " + trans.TransmissionBase.TransmissionType.TransmissionTypeName.Trim()
-                    };
-                    attribs.Add(attr2);
-                    ACESConfigAttribute attr3 = new ACESConfigAttribute();
-                    attr3.type = types.Where(x => x.name.Equals("Tranmission Manufacturer Code")).FirstOrDefault();
-                    attr3.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr3.type,
-                        vcdbID = trans.TransmissionMfrCodeID,
-                        value = trans.TransmissionMfrCode.TransmissionMfrCode1.Trim()
-                    };
-                    attribs.Add(attr3);
-                    config.attributes = attribs;
-                    Transmissions.Add(config);
-                }
-
-                //Transmission
-                List<AAIA.EngineConfig> enginesconfigs = vehicles.SelectMany(y => y.VehicleToEngineConfigs.Select(x => x.EngineConfig)).Distinct().ToList();
-                foreach (AAIA.EngineConfig engine in enginesconfigs) {
-                    ACESConfig config = new ACESConfig();
-                    config.configID = engine.EngineConfigID;
-
-                    List<ACESConfigAttribute> attribs = new List<ACESConfigAttribute>();
-                    ACESConfigAttribute attr1 = new ACESConfigAttribute();
-                    attr1.type = types.Where(x => x.name.Equals("Engine")).FirstOrDefault();
-                    attr1.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr1.type,
-                        vcdbID = engine.EngineBaseID,
-                        value = engine.EngineBase.Liter.Trim() + "L " + engine.EngineBase.BlockType.Trim() + engine.EngineBase.Cylinders.Trim()
-                    };
-                    attribs.Add(attr1);
-                    ACESConfigAttribute attr2 = new ACESConfigAttribute();
-                    attr2.type = types.Where(x => x.name.Equals("Fuel Type")).FirstOrDefault();
-                    attr2.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr2.type,
-                        vcdbID = engine.FuelTypeID,
-                        value = engine.FuelType.FuelTypeName.Trim()
-                    };
-                    attribs.Add(attr2);
-                    ACESConfigAttribute attr3 = new ACESConfigAttribute();
-                    attr3.type = types.Where(x => x.name.Equals("Aspiration")).FirstOrDefault();
-                    attr3.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr3.type,
-                        vcdbID = engine.AspirationID,
-                        value = engine.Aspiration.AspirationName.Trim()
-                    };
-                    attribs.Add(attr3);
-                    ACESConfigAttribute attr4 = new ACESConfigAttribute();
-                    attr4.type = types.Where(x => x.name.Equals("Cylinder Head Type")).FirstOrDefault();
-                    attr4.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr4.type,
-                        vcdbID = engine.CylinderHeadTypeID,
-                        value = engine.CylinderHeadType.CylinderHeadTypeName.Trim()
-                    };
-                    attribs.Add(attr4);
-                    ACESConfigAttribute attr5 = new ACESConfigAttribute();
-                    attr5.type = types.Where(x => x.name.Equals("Engine Designation")).FirstOrDefault();
-                    attr5.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr5.type,
-                        vcdbID = engine.EngineDesignationID,
-                        value = engine.EngineDesignation.EngineDesignationName.Trim()
-                    };
-                    attribs.Add(attr5);
-                    ACESConfigAttribute attr6 = new ACESConfigAttribute();
-                    attr6.type = types.Where(x => x.name.Equals("Engine Manufacturer")).FirstOrDefault();
-                    attr6.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr6.type,
-                        vcdbID = engine.EngineMfrID,
-                        value = engine.Mfr.MfrName.Trim()
-                    };
-                    attribs.Add(attr6);
-                    ACESConfigAttribute attr7 = new ACESConfigAttribute();
-                    attr7.type = types.Where(x => x.name.Equals("Engine Version")).FirstOrDefault();
-                    attr7.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr7.type,
-                        vcdbID = engine.EngineVersionID,
-                        value = engine.EngineVersion.EngineVersion1.Trim()
-                    };
-                    attribs.Add(attr7);
-                    ACESConfigAttribute attr8 = new ACESConfigAttribute();
-                    attr8.type = types.Where(x => x.name.Equals("Engine VIN")).FirstOrDefault();
-                    attr8.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr8.type,
-                        vcdbID = engine.EngineVINID,
-                        value = engine.EngineVIN.EngineVINName.Trim()
-                    };
-                    attribs.Add(attr8);
-                    ACESConfigAttribute attr9 = new ACESConfigAttribute();
-                    attr9.type = types.Where(x => x.name.Equals("Fuel Delivery Sub-Type")).FirstOrDefault();
-                    attr9.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr9.type,
-                        vcdbID = engine.FuelDeliveryConfig.FuelDeliverySubTypeID,
-                        value = engine.FuelDeliveryConfig.FuelDeliverySubType.FuelDeliverySubTypeName.Trim()
-                    };
-                    attribs.Add(attr9);
-                    ACESConfigAttribute attr10 = new ACESConfigAttribute();
-                    attr10.type = types.Where(x => x.name.Equals("Fuel Delivery Type")).FirstOrDefault();
-                    attr10.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr10.type,
-                        vcdbID = engine.FuelDeliveryConfig.FuelDeliveryTypeID,
-                        value = engine.FuelDeliveryConfig.FuelDeliveryType.FuelDeliveryTypeName.Trim()
-                    };
-                    attribs.Add(attr10);
-                    ACESConfigAttribute attr11 = new ACESConfigAttribute();
-                    attr11.type = types.Where(x => x.name.Equals("Fuel System Control Type")).FirstOrDefault();
-                    attr11.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr11.type,
-                        vcdbID = engine.FuelDeliveryConfig.FuelSystemControlTypeID,
-                        value = engine.FuelDeliveryConfig.FuelSystemControlType.FuelSystemControlTypeName.Trim()
-                    };
-                    attribs.Add(attr11);
-                    ACESConfigAttribute attr12 = new ACESConfigAttribute();
-                    attr12.type = types.Where(x => x.name.Equals("Fuel System Design")).FirstOrDefault();
-                    attr12.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr12.type,
-                        vcdbID = engine.FuelDeliveryConfig.FuelSystemDesignID,
-                        value = engine.FuelDeliveryConfig.FuelSystemDesign.FuelSystemDesignName.Trim()
-                    };
-                    attribs.Add(attr12);
-                    ACESConfigAttribute attr13 = new ACESConfigAttribute();
-                    attr13.type = types.Where(x => x.name.Equals("Ignition System Type")).FirstOrDefault();
-                    attr13.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr13.type,
-                        vcdbID = engine.IgnitionSystemTypeID,
-                        value = engine.IgnitionSystemType.IgnitionSystemTypeName.Trim()
-                    };
-                    attribs.Add(attr13);
-                    ACESConfigAttribute attr14 = new ACESConfigAttribute();
-                    attr14.type = types.Where(x => x.name.Equals("Power Output")).FirstOrDefault();
-                    attr14.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr14.type,
-                        vcdbID = engine.PowerOutputID,
-                        value = vcdb.PowerOutputs.Where(x => x.PowerOutputID.Equals(engine.PowerOutputID)).Select(x => x.HorsePower).First().Trim()
-                    };
-                    attribs.Add(attr14);
-                    ACESConfigAttribute attr15 = new ACESConfigAttribute();
-                    attr15.type = types.Where(x => x.name.Equals("Valves Per Engine")).FirstOrDefault();
-                    attr15.attribute = new ConfigAttribute {
-                        ConfigAttributeType = attr15.type,
-                        vcdbID = engine.ValvesID,
-                        value = engine.Valve.ValvesPerEngine.Trim()
-                    };
-                    attribs.Add(attr15);
-                    config.attributes = attribs;
-                    Transmissions.Add(config);
-                }
+                vdetails = generateConfig(aaiavehicles);
             } catch (Exception e) {
                 string x = e.Message;
             }
             return vdetails;
         }
 
-        internal ACESVehicleDetails getVehicleConfigs(int vehicleID) {
-            ACESVehicleDetails vdetails = new ACESVehicleDetails();
+        internal ACESVehicleOptions getVehicleConfigs(int vehicleID) {
+            ACESVehicleOptions vdetails = new ACESVehicleOptions();
             CurtDevDataContext db = new CurtDevDataContext();
             AAIA.VCDBDataContext vcdb = new AAIA.VCDBDataContext();
             try {
@@ -1383,14 +1518,187 @@ namespace CurtAdmin.Models {
                     vattrs = v.VehicleConfig.VehicleConfigAttributes.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesTypeID != null).ToList();
                 }
                 if (vattrs.Count > 0) {
-                    // loop through each of the ACES Vehicle Configs
-                    foreach (ACESVehicleConfigType config in vdetails.configs) {
-                        // loop through each of the ConfigAttributes to check for matches
-                        foreach (VehicleConfigAttribute attr in vattrs) {
-                            if (config.type.ID.Equals(attr.ConfigAttribute.ConfigAttributeTypeID) && config.attributes.Any(x => x.vcdbID.Equals(attr.ConfigAttribute.vcdbID))) {
-                                // if there exists a ConfigAttribute that matches on type and vcdbID, make sure it's not shown
-                                config.type.count = 0;
-                            }
+                    List<string> AcesNodes = vattrs.Select(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name).ToList();
+                    if (AcesNodes.Contains("BodyType") || AcesNodes.Contains("BodyNumDoors")) {
+                        int BodyTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("BodyType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int BodyNumDoorsID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("BodyNumDoors")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> bstyles = vdetails.BodyStyles.Where(x => 
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("BodyType") && y.vcdbID.Equals(BodyTypeID)) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("BodyNumDoors") && y.vcdbID.Equals(BodyNumDoorsID)))
+                            )).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in bstyles) {
+                            vdetails.BodyStyles.Remove(config);
+                        }*/
+                        if (bstyles.Count > 0) {
+                            vdetails.BodyStyles = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("WheelBase")) {
+                        int WheelBaseID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("WheelBase")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> wheelbases = vdetails.WheelBases.Where(x =>
+                            x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("WheelBase") && y.vcdbID.Equals(WheelBaseID))
+                            ).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in wheelbases) {
+                            vdetails.WheelBases.Remove(config);
+                        }*/
+                        if (wheelbases.Count > 0) {
+                            vdetails.WheelBases = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("MfrBodyCode")) {
+                        int MfrBodyCodeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("MfrBodyCode")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> configs = vdetails.MfrBodyCodes.Where(x =>
+                            x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("MfrBodyCode") && y.vcdbID.Equals(MfrBodyCodeID))
+                            ).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.MfrBodyCodes.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.MfrBodyCodes = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("DriveType")) {
+                        int DriveTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("DriveType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> configs = vdetails.DriveTypes.Where(x =>
+                            x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("DriveType") && y.vcdbID.Equals(DriveTypeID))
+                            ).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.DriveTypes.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.DriveTypes = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("BedLength") || AcesNodes.Contains("BedType")) {
+                        int BedLengthID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("BedLength")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int BedTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("BedType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> configs = vdetails.Beds.Where(x =>
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("BedLength") && y.vcdbID.Equals(BedLengthID)) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("BedType") && y.vcdbID.Equals(BedTypeID)))
+                            )).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.Beds.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.Beds = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("SteeringSystem") || AcesNodes.Contains("SteeringType")) {
+                        int SteeringSystemID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("SteeringSystem")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int SteeringTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("SteeringType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> configs = vdetails.Steering.Where(x =>
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("SteeringSystem") && y.vcdbID.Equals(SteeringSystemID)) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("SteeringType") && y.vcdbID.Equals(SteeringTypeID)))
+                            )).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.Steering.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.Steering = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("FrontSpringType") || AcesNodes.Contains("RearSpringType")) {
+                        int FrontSpringTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("FrontSpringType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int RearSpringTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("RearSpringType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> configs = vdetails.Springs.Where(x =>
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("FrontSpringType") && y.vcdbID.Equals(FrontSpringTypeID)) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("RearSpringType") && y.vcdbID.Equals(RearSpringTypeID)))
+                            )).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.Springs.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.Springs = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("BrakeABS") || AcesNodes.Contains("BrakeSystem") || AcesNodes.Contains("FrontBrakeType") || AcesNodes.Contains("RearBrakeType")) {
+                        int BrakeABSID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("BrakeABS")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int BrakeSystemID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("BrakeSystem")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int FrontBrakeTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("FrontBrakeType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int RearBrakeTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("RearBrakeType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> configs = vdetails.Brakes.Where(x =>
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("BrakeABS") && y.vcdbID.Equals(BrakeABSID)) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("BrakeSystem") && y.vcdbID.Equals(BrakeSystemID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("FrontBrakeType") && y.vcdbID.Equals(FrontBrakeTypeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("RearBrakeType") && y.vcdbID.Equals(RearBrakeTypeID)))
+                            )).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.Brakes.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.Brakes = new List<ACESConfig>();
+                        }
+                    }
+                    if (AcesNodes.Contains("FuelType") || AcesNodes.Contains("EngineBase") || AcesNodes.Contains("Aspiration") || AcesNodes.Contains("CylinderHeadType")
+                        || AcesNodes.Contains("EngineDesignation") || AcesNodes.Contains("EngineMfr") || AcesNodes.Contains("EngineVersion") || AcesNodes.Contains("EngineVIN")
+                        || AcesNodes.Contains("FuelDeliverySubType") || AcesNodes.Contains("FuelDeliveryType") || AcesNodes.Contains("FuelSystemControlType")
+                        || AcesNodes.Contains("IgnitionSystemType") || AcesNodes.Contains("PowerOutput") || AcesNodes.Contains("ValvesPerEngine")) {
+
+                        int FuelTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("FuelType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int EngineBaseID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("EngineBase")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int AspirationID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("Aspiration")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int CylinderHeadTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("CylinderHeadType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int EngineDesignationID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("EngineDesignation")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int EngineMfrID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("EngineMfr")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int EngineVersionID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("EngineVersion")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int EngineVINID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("EngineVIN")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int FuelDeliverySubTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("FuelDeliverySubType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int FuelDeliveryTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("FuelDeliveryType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int FuelSystemControlTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("FuelSystemControlType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int FuelSystemDesignID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("FuelSystemDesign")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int IgnitionSystemTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("IgnitionSystemType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int PowerOutputID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("PowerOutput")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int ValvesPerEngineID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("ValvesPerEngine")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        List<ACESConfig> configs = vdetails.Engines.Where(x =>
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("FuelType") && y.vcdbID.Equals(FuelTypeID)) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("EngineBase") && y.vcdbID.Equals(EngineBaseID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("Aspiration") && y.vcdbID.Equals(AspirationID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("CylinderHeadType") && y.vcdbID.Equals(CylinderHeadTypeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("EngineDesignation") && y.vcdbID.Equals(EngineDesignationID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("EngineMfr") && y.vcdbID.Equals(EngineMfrID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("EngineVersion") && y.vcdbID.Equals(EngineVersionID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("EngineVIN") && y.vcdbID.Equals(EngineVINID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("FuelDeliverySubType") && y.vcdbID.Equals(FuelDeliverySubTypeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("FuelDeliveryType") && y.vcdbID.Equals(FuelDeliveryTypeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("FuelSystemControlType") && y.vcdbID.Equals(FuelSystemControlTypeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("FuelSystemDesign") && y.vcdbID.Equals(FuelSystemDesignID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("IgnitionSystemType") && y.vcdbID.Equals(IgnitionSystemTypeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("PowerOutput") && y.vcdbID.Equals(PowerOutputID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("ValvesPerEngine") && y.vcdbID.Equals(ValvesPerEngineID)))
+                            )).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.Engines.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.Engines = new List<ACESConfig>();
+                        }
+
+                    }
+                    if (AcesNodes.Contains("TransElecControlled") || AcesNodes.Contains("Transmission") || AcesNodes.Contains("TransmissionBase") || AcesNodes.Contains("TransmissionControlType")
+                        || AcesNodes.Contains("TransmissionMfrCode") || AcesNodes.Contains("TransmissionNumSpeeds") || AcesNodes.Contains("TransmissionType")) {
+
+                        int TransElecControlledID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("TransElecControlled")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int TransmissionID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("Transmission")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int TransmissionBaseID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("TransmissionBase")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int TransmissionControlTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("TransmissionControlType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int TransmissionMfrCodeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("TransmissionMfrCode")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int TransmissionNumSpeedsID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("TransmissionNumSpeeds")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+                        int TransmissionTypeID = vattrs.Where(x => x.ConfigAttribute.ConfigAttributeType.AcesType.name.Equals("TransmissionType")).Select(x => x.ConfigAttribute.vcdbID).FirstOrDefault() ?? 0;
+
+                        List<ACESConfig> configs = vdetails.Transmissions.Where(x =>
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("TransElecControlled") && y.vcdbID.Equals(TransElecControlledID)) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("Transmission") && y.vcdbID.Equals(TransmissionID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("TransmissionBase") && y.vcdbID.Equals(TransmissionBaseID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("TransmissionControlType") && y.vcdbID.Equals(TransmissionControlTypeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("TransmissionMfrCode") && y.vcdbID.Equals(TransmissionMfrCodeID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("TransmissionNumSpeeds") && y.vcdbID.Equals(TransmissionNumSpeedsID))) ||
+                            (x.attributes.Any(y => y.ConfigAttributeType.AcesType.name.Equals("TransmissionType") && y.vcdbID.Equals(TransmissionTypeID)))
+                            )).ToList<ACESConfig>();
+                        /*foreach (ACESConfig config in configs) {
+                            vdetails.Transmissions.Remove(config);
+                        }*/
+                        if (configs.Count > 0) {
+                            vdetails.Transmissions = new List<ACESConfig>();
                         }
                     }
                 }
@@ -1586,14 +1894,34 @@ namespace CurtAdmin.Models {
 
         public ACESBaseVehicle addConfig(int BaseVehicleID, int SubmodelID, List<int> configids) {
             CurtDevDataContext db = new CurtDevDataContext();
-            ACESVehicleDetails vdetails = new ACESVehicleDetails();
+            ACESVehicleOptions vdetails = new ACESVehicleOptions();
             List<vcdb_Vehicle> newVehicles = new List<vcdb_Vehicle>();
             vdetails = new ACES().getVehicleConfigs(BaseVehicleID, SubmodelID);
             //Dictionary<int, List<ConfigAttribute>> attributeSet = new Dictionary<int, List<ConfigAttribute>>();
             List<List<ConfigAttribute>> attributeSet = new List<List<ConfigAttribute>>();
             foreach (int id in configids) {
-                List<ConfigAttribute> attributes = vdetails.configs.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
-                attributeSet.Add(attributes);
+                List<ConfigAttribute> attribs = new List<ConfigAttribute>();
+                List<ConfigAttribute> bodyattributes = vdetails.BodyStyles.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(bodyattributes);
+                List<ConfigAttribute> bedattributes = vdetails.Beds.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(bedattributes);
+                List<ConfigAttribute> brakeattributes = vdetails.Brakes.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(brakeattributes);
+                List<ConfigAttribute> driveattributes = vdetails.DriveTypes.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(driveattributes);
+                List<ConfigAttribute> engineattributes = vdetails.Engines.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(engineattributes);
+                List<ConfigAttribute> mfrattributes = vdetails.MfrBodyCodes.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(mfrattributes);
+                List<ConfigAttribute> springattributes = vdetails.Springs.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(springattributes);
+                List<ConfigAttribute> steeringattributes = vdetails.Steering.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(steeringattributes);
+                List<ConfigAttribute> transattributes = vdetails.Transmissions.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(transattributes);
+                List<ConfigAttribute> wheelattributes = vdetails.WheelBases.SelectMany(x => x.attributes.Where(y => y.ConfigAttributeTypeID.Equals(id))).ToList<ConfigAttribute>();
+                attribs.AddRange(wheelattributes);
+                attributeSet.Add(attribs);
             }
             List<ACESVehicleConfig> vehicleConfigs = new List<ACESVehicleConfig>();
             vehicleConfigs = buildConfig(attributeSet, vehicleConfigs,0);
@@ -2655,12 +2983,8 @@ namespace CurtAdmin.Models {
 
     public class ACESConfig {
         public int configID { get; set; }
-        public List<ACESConfigAttribute> attributes { get; set; }
-    }
-
-    public class ACESConfigAttribute {
-        public ConfigAttributeType type { get; set; }
-        public ConfigAttribute attribute { get; set; }
+        public List<ConfigAttributeType> types { get; set; }
+        public List<ConfigAttribute> attributes { get; set; }
     }
 
     public class ACESVehicleConfigType {
